@@ -1,8 +1,10 @@
 import dynamic from "next/dynamic";
 import { X } from "lucide-react";
+import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
 import type { Document } from "@/types/api.types";
 
 type ContractFormModalProps = {
+  availableFolders?: readonly ContractFolder[];
   editMode?: boolean;
   initialData?: Document;
   onClose: () => void;
@@ -22,6 +24,7 @@ const ContractForm = dynamic(() => import("@/features/contracts/components/form/
 });
 
 export function ContractFormModal({
+  availableFolders,
   editMode = false,
   initialData,
   onClose,
@@ -45,6 +48,7 @@ export function ContractFormModal({
           <X className="h-5 w-5" />
         </button>
         <ContractForm
+          availableFolders={availableFolders}
           onAdd={onSubmit}
           onClose={onClose}
           editMode={editMode}

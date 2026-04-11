@@ -68,6 +68,7 @@ type WorkerFormFields = {
 type WorkerFormErrors = Partial<Record<keyof WorkerFormFields, string>>;
 
 export type NewContractModalProps = {
+  defaultFolderId?: number | null;
   open: boolean;
   onClose: () => void;
   onSubmit: (contract: Document) => void;
@@ -282,7 +283,7 @@ function SectionTitle({ children }: { children: ReactNode }) {
 
 // ── Main Component ─────────────────────────────────────────────────────────
 
-export function NewContractModal({ open, onClose, onSubmit }: NewContractModalProps) {
+export function NewContractModal({ defaultFolderId = null, open, onClose, onSubmit }: NewContractModalProps) {
   const [flow, setFlow] = useState<Flow>("select-action");
   const [form, setForm] = useState<WorkerFormFields>(INITIAL_FORM);
   const [touched, setTouched] = useState<Partial<Record<keyof WorkerFormFields, boolean>>>({});
@@ -378,6 +379,7 @@ export function NewContractModal({ open, onClose, onSubmit }: NewContractModalPr
         dia_firma: String(now.getDate()),
         mes_firma: MESES_ES[now.getMonth()],
         anio_firma: String(now.getFullYear()),
+        ...(defaultFolderId !== null && { folder_id: defaultFolderId }),
       };
 
       const doc = await generateWorkerContract(template.id, payload);
@@ -391,7 +393,7 @@ export function NewContractModal({ open, onClose, onSubmit }: NewContractModalPr
       setPreviewState("error");
       setPreviewError(err instanceof Error ? err.message : "Error al generar el contrato");
     }
-  }, [form, isFormValid, touchAllFields, onSubmit]);
+  }, [defaultFolderId, form, isFormValid, touchAllFields, onSubmit]);
 
   if (!open) return null;
 
@@ -445,7 +447,7 @@ export function NewContractModal({ open, onClose, onSubmit }: NewContractModalPr
 
         {/* ── Upload: formulario existente ── */}
         {flow === "upload" && (
-          <ContractForm onAdd={onSubmit} onClose={() => setFlow("select-action")} />
+          <ContractForm defaultFolderId={defaultFolderId} onAdd={onSubmit} onClose={() => setFlow("select-action")} />
         )}
 
         {/* ── PASO 2: Selector de tipo de contrato ── */}

@@ -6,6 +6,7 @@ interface AuthState {
   accessToken: string | null;
   isAuthenticated: boolean;
   isHydrating: boolean;
+  setAccessToken: (accessToken: string | null) => void;
   setHydrating: (isHydrating: boolean) => void;
   setUser: (user: AuthDisplayUser) => void;
   setSession: (user: AuthDisplayUser, accessToken: string | null) => void;
@@ -17,6 +18,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   isAuthenticated: false,
   isHydrating: true,
+  setAccessToken: (accessToken) =>
+    set((state) => ({
+      accessToken,
+      isAuthenticated: state.user !== null,
+      user: state.user,
+      isHydrating: false,
+    })),
   setHydrating: (isHydrating) => set({ isHydrating }),
   setUser: (user) =>
     set((state) => ({

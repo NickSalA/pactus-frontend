@@ -1,16 +1,24 @@
+import type { UserRole } from "@/types/api.types";
 import type { GooglePickerFile } from "@/lib/googlePicker";
 import { DOCUMENT_STATE_OPTIONS } from "@/lib/document.utils";
 import type { Document, DocumentState } from "@/types/api.types";
 
 export type DocumentFilterValue = "all" | DocumentState;
+export type ContractFolder = {
+  documents_count: number;
+  id: number;
+  isEditable?: boolean;
+  name: string;
+  owner_role?: UserRole;
+  isSystem?: boolean;
+};
+
 export const GOOGLE_DRIVE_FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 
 export const FILTER_OPTIONS: Array<{ value: DocumentFilterValue; label: string }> = [
   { value: "all", label: "Todos" },
   ...DOCUMENT_STATE_OPTIONS,
 ];
-
-export const createFolderId = (): number => Date.now() + Math.floor(Math.random() * 1_000);
 
 export const getServiceCountLabel = (count: number): string => {
   if (count === 0) {

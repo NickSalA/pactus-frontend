@@ -11,6 +11,7 @@ type AuthUserPreview = {
   name: string;
   email: string;
   avatarUrl: string | null;
+  role: string | null;
 };
 
 export default function LoginPage() {
@@ -32,6 +33,7 @@ export default function LoginPage() {
         name: user.name,
         email: user.email,
         avatarUrl: user.avatarUrl,
+        role: user.role,
       }
     : null;
 
@@ -252,10 +254,10 @@ export default function LoginPage() {
                 </div>
 
                 <button
-                  onClick={() => router.push("/dashboard")}
+                  onClick={() => router.push(authUser.role === "ADMIN" ? "/admin" : "/dashboard")}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/30"
                 >
-                  <span>Ir al dashboard</span>
+                  <span>Ir al {authUser.role === "ADMIN" ? "panel de administrador" : "dashboard"}</span>
                   <svg
                     className="h-4 w-4"
                     fill="none"

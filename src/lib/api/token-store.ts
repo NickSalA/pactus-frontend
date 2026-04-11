@@ -25,12 +25,19 @@ export const onApiSessionChange = (listener: () => void): (() => void) => {
   };
 };
 
-export function setApiAccessToken(token: string | null): void {
+type SetApiAccessTokenOptions = {
+  notify?: boolean;
+};
+
+export function setApiAccessToken(token: string | null, options: SetApiAccessTokenOptions = {}): void {
+  const { notify = true } = options;
   const normalizedToken = token || null;
 
   if (accessTokenMemory !== normalizedToken) {
     accessTokenMemory = normalizedToken;
-    notifySessionChange();
+    if (notify) {
+      notifySessionChange();
+    }
   }
 
   if (typeof window === "undefined") {

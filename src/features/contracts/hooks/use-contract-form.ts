@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { buildFormState, type FormState } from "@/features/contracts/lib/contract-form.utils";
+import { buildFormStateWithDefaultType, type FormState } from "@/features/contracts/lib/contract-form.utils";
 import { buildContractFormDataPayload } from "@/features/contracts/lib/contract-form-payloads";
 import { useContractFormFile } from "@/features/contracts/hooks/use-contract-form-file";
 import { useContractFormServices } from "@/features/contracts/hooks/use-contract-form-services";
@@ -10,9 +10,14 @@ import {
   type ContractFormStep,
 } from "@/features/contracts/hooks/use-contract-form-wizard";
 import { updateDocument, uploadDocument } from "@/lib/api";
-import type { Document } from "@/types/api.types";
+import { canManageDocumentType, getDefaultWritableDocumentType, getWritableDocumentTypes } from "@/lib/permissions";
+import { useAuthStore } from "@/store";
+import type { Document, DocumentState } from "@/types/api.types";
+import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
 
 type ContractFormProps = {
+  readonly availableFolders?: readonly ContractFolder[];
+  readonly defaultFolderId?: number | null;
   readonly editMode?: boolean;
   readonly initialData?: Document;
   readonly onAdd: (contract: Document) => void;
@@ -22,14 +27,19 @@ type ContractFormProps = {
 export type { ContractFormStep };
 
 export function useContractForm({
+  availableFolders = [],
+  defaultFolderId = null,
   editMode = false,
   initialData,
   onAdd,
   onClose,
 }: ContractFormProps) {
+  const userRole = useAuthStore((state) => state.user?.role ?? null);
+  const allowedDocumentTypes = getWritableDocumentTypes(userRole);
+  const defaultDocumentType = getDefaultWritableDocumentType(userRole) ?? "COMPANY";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [form, setForm] = useState<FormState>(() => buildFormState(initialData));
+  const [form, setForm] = useState<FormState>(() => buildFormStateWithDefaultType(initialData, defaultDocumentType));
 
   const fileState = useContractFormFile({
     editMode,
@@ -66,17 +76,13 @@ export function useContractForm({
       return "Guarda o cancela el servicio actual antes de continuar.";
     }
 
-    if (form.service_items.length === 0) {
-      return "Debe agregar al menos un servicio.";
-    }
-
     try {
       buildServiceItemsPayload();
       return null;
     } catch (err) {
       return err instanceof Error ? err.message : "Error en los servicios.";
     }
-  }, [addingService, buildServiceItemsPayload, form.service_items.length]);
+  }, [addingService, buildServiceItemsPayload]);
 
   const wizardState = useContractFormWizard({
     form,
@@ -117,12 +123,26 @@ export function useContractForm({
     setStepError(serviceError);
   }, [commitNewService, setStepError]);
 
+  const setContractState = useCallback((nextState: DocumentState) => {
+    setForm((previous) => ({ ...previous, state: nextState }));
+  }, []);
+
   const handleFieldChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = event.target;
+
+      if (name === "folder_id") {
+        setForm((previous) => ({ ...previous, folder_id: value ? Number(value) : null }));
+        return;
+      }
+
+      if (name === "type" && allowedDocumentTypes && !allowedDocumentTypes.includes(value as FormState["type"])) {
+        return;
+      }
+
       setForm((previous) => ({ ...previous, [name]: value }));
     },
-    [],
+    [allowedDocumentTypes],
   );
 
   const {
@@ -140,11 +160,6 @@ export function useContractForm({
   } = fileState;
 
   const handleSubmit = useCallback(async () => {
-    if (form.service_items.length === 0) {
-      setError("Debe agregar al menos un servicio.");
-      return;
-    }
-
     if (!hasValidFile) {
       setFileError(true);
       setError("Adjuntar un archivo asociado al contrato.");
@@ -154,6 +169,11 @@ export function useContractForm({
     if (!editMode && !file) {
       setFileError(true);
       setError("Debes seleccionar un archivo.");
+      return;
+    }
+
+    if (!canManageDocumentType(userRole, form.type)) {
+      setError("No tienes permisos para gestionar este tipo de contrato.");
       return;
     }
 
@@ -175,6 +195,7 @@ export function useContractForm({
             client: form.client.trim(),
             end_date: form.end_date,
             file: file || undefined,
+            folder_id: form.folder_id,
             form_data: formDataPayload,
             name: form.name.trim(),
             service_items: serviceItemsPayload,
@@ -186,6 +207,7 @@ export function useContractForm({
             client: form.client.trim(),
             end_date: form.end_date,
             file: file!,
+            folder_id: defaultFolderId,
             form_data: formDataPayload,
             name: form.name.trim(),
             service_items: serviceItemsPayload,
@@ -206,6 +228,7 @@ export function useContractForm({
   }, [
     buildServiceItemsPayload,
     contractTotal,
+    defaultFolderId,
     editMode,
     file,
     form,
@@ -214,10 +237,13 @@ export function useContractForm({
     onAdd,
     onClose,
     setFileError,
+    userRole,
   ]);
 
   return {
     addingService,
+    allowedDocumentTypes,
+    availableFolders,
     cancelNewService,
     closeSummary1,
     contractTotal,
@@ -250,6 +276,7 @@ export function useContractForm({
     serviceOptions,
     servicesLoadError,
     servicesLoading,
+    setContractState,
     setEditingServiceKey,
     setKeepOriginalFile,
     setSummary2Expanded,

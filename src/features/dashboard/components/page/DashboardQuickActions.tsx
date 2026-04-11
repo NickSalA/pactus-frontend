@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight, Bot, FileText, Upload } from "lucide-react";
 
-export function DashboardQuickActions() {
+type DashboardQuickActionsProps = {
+  canCreateContract: boolean;
+};
+
+export function DashboardQuickActions({ canCreateContract }: DashboardQuickActionsProps) {
   return (
     <div className="space-y-6 xl:col-span-4">
       <article className="rounded-2xl bg-white p-6 shadow-md">
@@ -11,18 +15,20 @@ export function DashboardQuickActions() {
         </p>
 
         <div className="mt-5 space-y-3">
-          <Link
-            href="/contracts?new=1"
-            className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-medium text-slate-700 transition-all duration-200 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-          >
-            <span className="flex items-center gap-3">
-              <span className="rounded-lg bg-white p-2 text-blue-600 shadow-sm">
-                <Upload className="h-4 w-4" />
+          {canCreateContract && (
+            <Link
+              href="/contracts?new=1"
+              className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm font-medium text-slate-700 transition-all duration-200 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+            >
+              <span className="flex items-center gap-3">
+                <span className="rounded-lg bg-white p-2 text-blue-600 shadow-sm">
+                  <Upload className="h-4 w-4" />
+                </span>
+                Nuevo contrato
               </span>
-              Nuevo contrato
-            </span>
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          )}
 
           <Link
             href="/contracts"

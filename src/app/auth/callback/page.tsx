@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { logout as clearApiSession, setApiAccessToken } from "@/lib/api";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuthStore } from "@/store";
+import { resolveSessionUser } from "@/features/auth/lib/resolve-session-user";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -43,7 +44,17 @@ export default function AuthCallbackPage() {
 
         if (session) {
           setApiAccessToken(session.access_token);
-          router.replace("/dashboard");
+          const authUser = await resolveSessionUser(session);
+          
+          if (!mounted) {
+            return;
+          }
+
+          if (authUser.role === "ADMIN" || authUser.role === "Administrador") {
+            router.replace("/admin");
+          } else {
+            router.replace("/dashboard");
+          }
           return;
         }
 

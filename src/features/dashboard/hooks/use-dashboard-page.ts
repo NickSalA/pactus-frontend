@@ -7,6 +7,7 @@ import {
   buildRecentDocuments,
 } from "@/features/dashboard/lib/dashboard-data";
 import { toFirstName } from "@/lib/authUser";
+import { canCreateContracts } from "@/lib/permissions";
 import { useAuthStore } from "@/store";
 
 const ITEMS_PER_PAGE = 4;
@@ -17,6 +18,7 @@ export function useDashboardPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const firstName = toFirstName(user?.name || "Usuario");
+  const canCreateContract = canCreateContracts(user?.role);
   const metrics = useMemo(() => buildDashboardMetrics(documents), [documents]);
   const recentDocuments = useMemo(() => buildRecentDocuments(documents), [documents]);
   const totalPages = Math.max(1, Math.ceil(recentDocuments.length / ITEMS_PER_PAGE));
@@ -30,6 +32,7 @@ export function useDashboardPage() {
   };
 
   return {
+    canCreateContract,
     endIndex,
     error,
     firstName,

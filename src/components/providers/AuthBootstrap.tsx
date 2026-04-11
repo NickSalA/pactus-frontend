@@ -12,35 +12,43 @@ type Props = {
 };
 
 export default function AuthBootstrap({ children }: Props) {
-  const { logout, setHydrating, setSession } = useAuthStore();
+  const { logout, setAccessToken, setHydrating, setSession } = useAuthStore();
 
   useEffect(() => {
     let mounted = true;
     let syncRun = 0;
+    let lastSupabaseUserId: string | null = null;
 
     const resetSessionState = () => {
-      setApiAccessToken(null);
+      setApiAccessToken(null, { notify: true });
       logout();
       setHydrating(false);
     };
 
-    const syncSession = async (session: Session | null) => {
+    const syncSession = async (
+      session: Session | null,
+      options: { blockUi: boolean; notifySessionChange: boolean },
+    ) => {
       const currentRun = ++syncRun;
 
       if (!mounted) {
         return;
       }
 
-      setHydrating(true);
+      if (options.blockUi) {
+        setHydrating(true);
+      }
 
       if (!session?.user) {
+        lastSupabaseUserId = null;
         if (mounted && currentRun === syncRun) {
           resetSessionState();
         }
         return;
       }
 
-      setApiAccessToken(session.access_token);
+      lastSupabaseUserId = session.user.id;
+      setApiAccessToken(session.access_token, { notify: options.notifySessionChange });
 
       try {
         const authUser = await resolveSessionUser(session);
@@ -67,7 +75,7 @@ export default function AuthBootstrap({ children }: Props) {
           return;
         }
 
-        await syncSession(session);
+        await syncSession(session, { blockUi: true, notifySessionChange: true });
       } catch {
         clearApiSession();
         if (mounted) {
@@ -80,15 +88,37 @@ export default function AuthBootstrap({ children }: Props) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      void syncSession(session);
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "INITIAL_SESSION") {
+        return;
+      }
+
+      if (!session?.user) {
+        void syncSession(session, { blockUi: false, notifySessionChange: true });
+        return;
+      }
+
+      const currentUser = useAuthStore.getState().user;
+      const sameUser = lastSupabaseUserId === session.user.id;
+
+      if (event === "TOKEN_REFRESHED" && sameUser && currentUser) {
+        lastSupabaseUserId = session.user.id;
+        setApiAccessToken(session.access_token, { notify: false });
+        setAccessToken(session.access_token);
+        return;
+      }
+
+      void syncSession(session, {
+        blockUi: currentUser === null,
+        notifySessionChange: !sameUser,
+      });
     });
 
     return () => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [logout, setHydrating, setSession]);
+  }, [logout, setAccessToken, setHydrating, setSession]);
 
   return <>{children}</>;
 }

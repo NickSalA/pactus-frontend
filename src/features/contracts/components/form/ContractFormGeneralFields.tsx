@@ -1,14 +1,23 @@
 import type { ChangeEvent } from "react";
 import { CURRENCY_OPTIONS, DOCUMENT_STATE_OPTIONS, DOCUMENT_TYPE_OPTIONS } from "@/lib/document.utils";
 import { HelpTip, type Step1Draft } from "@/features/contracts/lib/contract-form.utils";
+import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
+import type { DocumentType } from "@/types/api.types";
 import { contractFormStyles } from "./contract-form.styles";
 
 type ContractFormGeneralFieldsProps = {
+  allowedDocumentTypes?: readonly DocumentType[] | null;
   data: Step1Draft;
+  folderOptions?: readonly ContractFolder[];
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  showFolderField?: boolean;
 };
 
-export function ContractFormGeneralFields({ data, onChange }: ContractFormGeneralFieldsProps) {
+export function ContractFormGeneralFields({ allowedDocumentTypes, data, folderOptions = [], onChange, showFolderField = false }: ContractFormGeneralFieldsProps) {
+  const documentTypeOptions = allowedDocumentTypes
+    ? DOCUMENT_TYPE_OPTIONS.filter((option) => allowedDocumentTypes.includes(option.value))
+    : DOCUMENT_TYPE_OPTIONS;
+
   return (
     <div className="grid grid-cols-2 gap-x-5 gap-y-4">
       <div>
@@ -31,18 +40,40 @@ export function ContractFormGeneralFields({ data, onChange }: ContractFormGenera
           className={contractFormStyles.input}
         />
       </div>
+      {showFolderField && (
+        <div>
+          <label className={contractFormStyles.label}>
+            Carpeta
+            <HelpTip text="Usa este campo solo si necesitas corregir la carpeta donde se guarda el contrato." />
+          </label>
+          <select
+            name="folder_id"
+            value={data.folder_id ?? ""}
+            onChange={onChange}
+            className={contractFormStyles.select}
+          >
+            <option value="">Sin carpeta</option>
+            {folderOptions.map((folder) => (
+              <option key={folder.id} value={folder.id}>
+                {folder.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       <div>
         <label className={contractFormStyles.label}>
           Tipo de contrato
-          <HelpTip text="Servicios = prestacion de servicios profesionales. Licencias = uso de software. Soporte = mantenimiento y asistencia tecnica." />
+          <HelpTip text="Empresa = contratos corporativos, comerciales o con clientes. Trabajador = contratos laborales, de personal o gestionados por RRHH." />
         </label>
         <select
           name="type"
           value={data.type}
           onChange={onChange}
           className={contractFormStyles.select}
+          disabled={documentTypeOptions.length <= 1}
         >
-          {DOCUMENT_TYPE_OPTIONS.map((option) => (
+          {documentTypeOptions.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
@@ -52,7 +83,7 @@ export function ContractFormGeneralFields({ data, onChange }: ContractFormGenera
       <div>
         <label className={contractFormStyles.label}>
           Estado
-          <HelpTip text="Activo = contrato vigente. Pendiente = en revision o pendiente de firma. Expirado = fuera del periodo de vigencia." />
+          <HelpTip text="Borrador = en preparacion. Pendiente de firma = generado pero aun no firmado. Por vencer = dentro de la ventana de alerta. Terminado = cierre anticipado." />
         </label>
         <select
           name="state"

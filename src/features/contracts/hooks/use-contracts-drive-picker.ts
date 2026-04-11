@@ -3,11 +3,14 @@
 import { useCallback, useState } from "react";
 import { openGooglePicker, type GooglePickerFile } from "@/lib/googlePicker";
 import { importGoogleDriveFiles } from "@/lib/api";
+import { getDefaultWritableDocumentType } from "@/lib/permissions";
 import { mergeDriveSelections } from "@/features/contracts/lib/contracts-utils";
 import { useAuthStore } from "@/store";
 
 export function useContractsDrivePicker() {
+  const userRole = useAuthStore((state) => state.user?.role ?? null);
   const googleLoginHint = useAuthStore((state) => state.user?.email ?? null);
+  const importDocumentType = getDefaultWritableDocumentType(userRole) ?? "COMPANY";
   const [isOpeningDrivePicker, setIsOpeningDrivePicker] = useState(false);
   const [isImportingDriveFiles, setIsImportingDriveFiles] = useState(false);
   const [drivePickerError, setDrivePickerError] = useState<string | null>(null);
@@ -63,7 +66,11 @@ export function useContractsDrivePicker() {
     setIsImportingDriveFiles(true);
 
     try {
-      const result = await importGoogleDriveFiles(googleDriveAccessToken, selectedDriveFiles);
+      const result = await importGoogleDriveFiles(
+        googleDriveAccessToken,
+        selectedDriveFiles,
+        importDocumentType,
+      );
       const skippedMessage =
         result.skipped_files > 0
           ? ` Se omitieron ${result.skipped_files} carpeta${result.skipped_files === 1 ? "" : "s"}.`
@@ -79,7 +86,7 @@ export function useContractsDrivePicker() {
     } finally {
       setIsImportingDriveFiles(false);
     }
-  }, [googleDriveAccessToken, selectedDriveFiles]);
+  }, [googleDriveAccessToken, importDocumentType, selectedDriveFiles]);
 
   const clearDriveSelection = useCallback(() => {
     setSelectedDriveFiles([]);

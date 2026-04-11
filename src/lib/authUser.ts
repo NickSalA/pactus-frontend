@@ -1,5 +1,5 @@
 import type { User as SupabaseUser } from "@supabase/supabase-js";
-import type { User as BackendUser } from "@/types/api.types";
+import type { User as BackendUser, UserRole } from "@/types/api.types";
 
 type AuthMetadata = {
   full_name?: string;
@@ -11,8 +11,15 @@ export type AuthDisplayUser = {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: UserRole | string;
   avatarUrl: string | null;
+};
+
+const ROLE_LABELS: Record<UserRole, string> = {
+  ADMIN: "Administrador",
+  HR: "RRHH",
+  MANAGER: "Gestor de Contratos",
+  WORKER: "Colaborador",
 };
 
 const sanitizeSpaces = (value: string) => value.trim().replace(/\s+/g, " ");
@@ -47,6 +54,14 @@ export const toFirstName = (fullName: string): string => {
   return normalized.split(" ")[0] || "Usuario";
 };
 
+export const getUserRoleLabel = (role: UserRole | string): string => {
+  if (role in ROLE_LABELS) {
+    return ROLE_LABELS[role as UserRole];
+  }
+
+  return role || "Sin rol";
+};
+
 export const mapSupabaseUserToAuthUser = (user: SupabaseUser): AuthDisplayUser => {
   const metadata = (user.user_metadata || {}) as AuthMetadata;
   const email = user.email || "sin-email@usuario.local";
@@ -57,7 +72,7 @@ export const mapSupabaseUserToAuthUser = (user: SupabaseUser): AuthDisplayUser =
     id: user.id,
     name,
     email,
-    role: "worker",
+    role: "WORKER",
     avatarUrl: metadata.avatar_url || null,
   };
 };

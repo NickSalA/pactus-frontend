@@ -6,7 +6,7 @@ import { Bell, User, LogOut } from "lucide-react";
 import { logout as clearApiSession, getNotifications } from "@/lib/api";
 import { useAuthStore } from "@/store";
 import { supabase } from "@/lib/supabaseClient";
-import { toNameAndLastName } from "@/lib/authUser";
+import { getUserRoleLabel, toNameAndLastName } from "@/lib/authUser";
 import NotificationDropdown from "./NotificationDropdown";
 import NotificationSidebar from "./NotificationSidebar";
 import type { Notification } from "@/types/api.types";
@@ -36,13 +36,13 @@ export default function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [raw, setRaw] = useState<Notification[]>([]);
-  const [readIds, setReadIds] = useState<Set<string>>(new Set());
-  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+  const [readIds, setReadIds] = useState<Set<string>>(() => loadSet(LS_READ));
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(() => loadSet(LS_DISMISSED));
   const router = useRouter();
   const { isHydrating, user, logout } = useAuthStore();
 
   const userName = toNameAndLastName(user?.name || (isHydrating ? "Cargando usuario" : "Usuario"));
-  const userRole = user?.role || (isHydrating ? "..." : "Sin rol");
+  const userRole = user?.role ? getUserRoleLabel(user.role) : (isHydrating ? "..." : "Sin rol");
   const userInitials =
     userName
       .split(" ")
@@ -57,27 +57,31 @@ export default function Header() {
 
   const hasUnread = notifications.some((n) => !n.read);
 
-  // Cargar notificaciones y estado localStorage al montar, con polling cada 3s
+  // Las alertas se recalculan a nivel diario y en este flujo local se cargan una sola vez por sesión visible.
   useEffect(() => {
-    setReadIds(loadSet(LS_READ));
-    setDismissedIds(loadSet(LS_DISMISSED));
-
     let mounted = true;
 
-    const fetchNotifications = () => {
-      getNotifications()
-        .then((data) => { if (mounted) setRaw(data); })
-        .catch(() => { /* notificaciones no son críticas */ });
-    };
+    if (!user) {
+      setRaw([]);
+      return () => {
+        mounted = false;
+      };
+    }
 
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 3000);
+    getNotifications()
+      .then((data) => {
+        if (mounted) {
+          setRaw(data);
+        }
+      })
+      .catch(() => {
+        /* notificaciones no son críticas */
+      });
 
     return () => {
       mounted = false;
-      clearInterval(interval);
     };
-  }, []);
+  }, [user]);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();

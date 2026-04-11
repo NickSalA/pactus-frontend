@@ -6,7 +6,7 @@ import { TIMEOUTS } from "./constants";
 import { fetchAPI } from "./fetch-client";
 
 const DEFAULT_DRIVE_IMPORT_CLIENT = "Google Drive";
-const DEFAULT_DRIVE_IMPORT_TYPE: DocumentType = "SERVICES";
+const DEFAULT_DRIVE_IMPORT_TYPE: DocumentType = "COMPANY";
 const DEFAULT_DRIVE_IMPORT_STATE: DocumentState = "ACTIVE";
 
 type DriveImportDocumentPayload = {
@@ -47,13 +47,16 @@ const getTodayDate = (): string => {
   return new Date().toISOString().slice(0, 10);
 };
 
-const buildDriveImportDocument = (file: GooglePickerFile): DriveImportDocumentPayload => {
+const buildDriveImportDocument = (
+  file: GooglePickerFile,
+  documentType: DocumentType,
+): DriveImportDocumentPayload => {
   const today = getTodayDate();
 
   return {
     name: file.name.trim() || "Documento de Google Drive",
     client: DEFAULT_DRIVE_IMPORT_CLIENT,
-    type: DEFAULT_DRIVE_IMPORT_TYPE,
+    type: documentType,
     start_date: today,
     end_date: today,
     form_data: {},
@@ -65,6 +68,7 @@ const buildDriveImportDocument = (file: GooglePickerFile): DriveImportDocumentPa
 export async function importGoogleDriveFiles(
   accessToken: string,
   files: GooglePickerFile[],
+  documentType: DocumentType = DEFAULT_DRIVE_IMPORT_TYPE,
 ): Promise<GoogleDriveImportResponse> {
   const importableFiles = files.filter((file) => !isDriveFolder(file));
   const skippedFiles = files.length - importableFiles.length;
@@ -88,7 +92,7 @@ export async function importGoogleDriveFiles(
         },
         files: importableFiles.map((file) => ({
           file_id: file.id,
-          document: buildDriveImportDocument(file),
+          document: buildDriveImportDocument(file, documentType),
         })),
       } satisfies DriveImportRequest),
     },

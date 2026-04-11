@@ -18,7 +18,7 @@ export interface LoginResponse {
 // ============================================
 // USER TYPES
 // ============================================
-export type UserRole = 'admin' | 'worker';
+export type UserRole = 'ADMIN' | 'HR' | 'MANAGER' | 'WORKER';
 
 export interface User {
   id: number;
@@ -28,6 +28,7 @@ export interface User {
   role: UserRole;
   full_name?: string | null;
   avatar_url?: string | null;
+  receives_notifications?: boolean;
   is_active?: boolean;
   created_at?: string;
   updated_at?: string;
@@ -38,6 +39,7 @@ export interface UserCreateRequest {
   full_name?: string | null;
   avatar_url?: string | null;
   role: UserRole;
+  receives_notifications?: boolean;
   is_active?: boolean;
 }
 
@@ -46,7 +48,19 @@ export interface UserUpdateRequest {
   full_name?: string | null;
   avatar_url?: string | null;
   role?: UserRole;
+  receives_notifications?: boolean;
   is_active?: boolean;
+}
+
+export type OrganizationMember = User;
+
+export interface OrganizationMemberCreateRequest {
+  email: string;
+  role: UserRole;
+}
+
+export interface OrganizationMemberNotificationsUpdateRequest {
+  receives_notifications: boolean;
 }
 
 // ============================================
@@ -65,11 +79,10 @@ export interface ChatResponse {
 // ============================================
 // CONVERSATION TYPES
 // ============================================
-export type MessageSender = 'user' | 'bot';
-
 export interface ConversationMessage {
-  sender: MessageSender;
-  message: string;
+  role: 'user' | 'bot';
+  content: string;
+  timestamp: string;
 }
 
 export interface Conversation {
@@ -85,8 +98,8 @@ export interface ConversationWithContent extends Conversation {
 // ============================================
 // DOCUMENT TYPES
 // ============================================
-export type DocumentType = 'SERVICES' | 'LICENSES' | 'SUPPORT';
-export type DocumentState = 'ACTIVE' | 'PENDING' | 'EXPIRED';
+export type DocumentType = 'COMPANY' | 'LABOR';
+export type DocumentState = 'DRAFT' | 'PENDING_SIGNATURE' | 'ACTIVE' | 'EXPIRING_SOON' | 'EXPIRED' | 'TERMINATED';
 export type CurrencyType = 'PEN' | 'USD' | 'EUR';
 
 export interface DocumentFormData {
@@ -111,6 +124,41 @@ export interface DocumentServiceItem extends DocumentServiceItemPayload {
 export interface ServiceCatalogItem {
   id: number;
   name: string;
+  is_active: boolean;
+  documents_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ServiceCatalogItemCreateRequest {
+  name: string;
+  is_active?: boolean;
+}
+
+export interface ServiceCatalogItemUpdateRequest {
+  name?: string;
+  is_active?: boolean;
+}
+
+export interface DocumentFolder {
+  id: number;
+  organization_id: number;
+  name: string;
+  owner_role: UserRole;
+  created_by: number;
+  created_by_name?: string | null;
+  created_by_email?: string | null;
+  documents_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DocumentFolderCreateRequest {
+  name: string;
+}
+
+export interface DocumentFolderUpdateRequest {
+  name?: string;
 }
 
 export interface Document {
@@ -123,6 +171,7 @@ export interface Document {
   form_data: DocumentFormData;
   state: DocumentState;
   service_items: DocumentServiceItem[];
+  folder_id?: number | null;
   file_path?: string | null;
   file_name?: string | null;
   created_at: string;
@@ -138,6 +187,7 @@ export interface DocumentCreateRequest {
   end_date: string;
   form_data: DocumentFormData;
   state?: DocumentState;
+  folder_id?: number | null;
   service_items?: DocumentServiceItemPayload[];
 }
 
@@ -149,6 +199,7 @@ export interface DocumentUpdateRequest {
   end_date?: string;
   form_data?: DocumentFormData;
   state?: DocumentState;
+  folder_id?: number | null;
   service_items?: DocumentServiceItemPayload[];
   file?: File;
 }
@@ -169,6 +220,89 @@ export interface Notification {
   title: string;
   description: string;
   days_remaining: number;
+}
+
+export interface NotificationRule {
+  id: number;
+  organization_id: number;
+  document_id?: number | null;
+  days_before_due: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface NotificationRuleCreateRequest {
+  document_id?: number | null;
+  days_before_due: number;
+  is_active?: boolean;
+}
+
+export interface NotificationRuleUpdateRequest {
+  days_before_due?: number;
+  is_active?: boolean;
+}
+
+export type TemplateState = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+
+export interface TemplateField {
+  key: string;
+  label: string;
+  type: string;
+  required: boolean;
+}
+
+export interface TemplateContent {
+  body_md: string;
+  fields: TemplateField[];
+  version?: string | null;
+}
+
+export interface Template {
+  id: number;
+  organization_id: number;
+  name: string;
+  description?: string | null;
+  content: TemplateContent;
+  created_at?: string | null;
+  state: TemplateState;
+}
+
+export interface TemplateCreateRequest {
+  name: string;
+  description?: string | null;
+  content: TemplateContent;
+}
+
+export interface TemplateUpdateRequest {
+  name?: string;
+  description?: string | null;
+  content?: TemplateContent;
+}
+
+export interface TemplatePreviewRequest {
+  content: TemplateContent;
+  sample_data?: Record<string, unknown>;
+}
+
+export interface TemplatePreviewResponse {
+  markdown: string;
+  resolved_payload: Record<string, unknown>;
+  warnings: string[];
+}
+
+export interface GenerateTemplateDraftRequest {
+  name?: string | null;
+  description?: string | null;
+  instructions?: string | null;
+  contract_type?: string | null;
+  jurisdiction?: string | null;
+}
+
+export interface PersistedTemplateDraftResponse {
+  template: Template;
+  warnings: string[];
+  source: Record<string, unknown>;
 }
 
 // ============================================

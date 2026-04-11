@@ -17,6 +17,8 @@ import { getServiceCountLabel, getVisiblePageNumbers } from "@/features/contract
 import type { Document } from "@/types/api.types";
 
 type ContractsTableProps = {
+  canDelete: boolean;
+  canEdit: boolean;
   contracts: Document[];
   currentPage: number;
   filteredCount: number;
@@ -31,6 +33,8 @@ type ContractsTableProps = {
 };
 
 export function ContractsTable({
+  canDelete,
+  canEdit,
   contracts,
   currentPage,
   filteredCount,
@@ -124,20 +128,24 @@ export function ContractsTable({
                       >
                         <Eye className="h-4 w-4" />
                       </button>
-                      <button
-                        onClick={() => onEdit(contract)}
-                        className="rounded-lg p-2 text-slate-400 transition-all hover:bg-amber-50 hover:text-amber-600"
-                        title="Editar"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => onDelete(contract)}
-                        className="rounded-lg p-2 text-slate-400 transition-all hover:bg-red-50 hover:text-red-600"
-                        title="Eliminar"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      {canEdit && (
+                        <button
+                          onClick={() => onEdit(contract)}
+                          className="rounded-lg p-2 text-slate-400 transition-all hover:bg-amber-50 hover:text-amber-600"
+                          title="Editar"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                      )}
+                      {canDelete && (
+                        <button
+                          onClick={() => onDelete(contract)}
+                          className="rounded-lg p-2 text-slate-400 transition-all hover:bg-red-50 hover:text-red-600"
+                          title="Eliminar"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

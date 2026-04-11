@@ -22,6 +22,7 @@ export type ServiceItemDraftField = keyof Omit<ServiceItemDraft, "key">;
 export type FormState = {
   name: string;
   client: string;
+  folder_id: number | null;
   type: DocumentType;
   start_date: string;
   end_date: string;
@@ -32,7 +33,7 @@ export type FormState = {
 
 export type Step1Draft = Pick<
   FormState,
-  "name" | "client" | "type" | "state" | "start_date" | "end_date" | "contract_currency"
+  "name" | "client" | "folder_id" | "type" | "state" | "start_date" | "end_date" | "contract_currency"
 >;
 
 const ALLOWED_EXTENSIONS = new Set(["pdf", "xlsx", "xls", "doc", "docx"]);
@@ -56,7 +57,8 @@ export const createEmptyServiceItem = (start: string, end: string): ServiceItemD
 export const buildFormState = (document?: Document): FormState => ({
   name: document?.name ?? "",
   client: document?.client ?? "",
-  type: document?.type ?? "SERVICES",
+  folder_id: document?.folder_id ?? null,
+  type: document?.type ?? "COMPANY",
   start_date: document?.start_date ?? "",
   end_date: document?.end_date ?? "",
   state: document?.state ?? "ACTIVE",
@@ -70,6 +72,14 @@ export const buildFormState = (document?: Document): FormState => ({
       start_date: item.start_date,
       end_date: item.end_date,
     })) ?? [],
+});
+
+export const buildFormStateWithDefaultType = (
+  document: Document | undefined,
+  defaultType: DocumentType,
+): FormState => ({
+  ...buildFormState(document),
+  type: document?.type ?? defaultType,
 });
 
 export const parseOptionalNumber = (value: string): number | undefined => {
@@ -136,6 +146,10 @@ export const getServiceOptions = (
       servicesById.set(item.service_id, {
         id: Number(item.service_id),
         name: `Servicio #${item.service_id}`,
+        is_active: true,
+        documents_count: 0,
+        created_at: new Date(0).toISOString(),
+        updated_at: new Date(0).toISOString(),
       });
     }
   });

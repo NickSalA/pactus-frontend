@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Check, Plus } from "lucide-react";
 import { formatCurrencyValue, formatFormDate } from "@/features/contracts/lib/contract-form.utils";
 import { useContractForm } from "@/features/contracts/hooks/use-contract-form";
+import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
 import { getDocumentStateLabel, getDocumentTypeLabel } from "@/lib/document.utils";
 import type { Document } from "@/types/api.types";
 import { ContractFormDocumentSection } from "./ContractFormDocumentSection";
@@ -12,14 +14,18 @@ import { ContractFormServicesSection } from "./ContractFormServicesSection";
 import { ContractFormSummaryAccordion } from "./ContractFormSummaryAccordion";
 
 type Props = {
+  readonly availableFolders?: readonly ContractFolder[];
+  readonly defaultFolderId?: number | null;
   readonly onAdd: (contract: Document) => void;
   readonly onClose: () => void;
   readonly editMode?: boolean;
   readonly initialData?: Document;
 };
 
-export default function ContractForm({ onAdd, onClose, editMode = false, initialData }: Props) {
-  const formState = useContractForm({ editMode, initialData, onAdd, onClose });
+export default function ContractForm({ availableFolders, defaultFolderId, onAdd, onClose, editMode = false, initialData }: Props) {
+  const formState = useContractForm({ availableFolders, defaultFolderId, editMode, initialData, onAdd, onClose });
+  const showSignedToggle = editMode && initialData?.state === "PENDING_SIGNATURE";
+  const [markAsSigned, setMarkAsSigned] = useState(false);
 
   const generalPreview = (
     <p className="mt-0.5 truncate text-sm text-slate-700">
@@ -65,8 +71,11 @@ export default function ContractForm({ onAdd, onClose, editMode = false, initial
   const summary1Content = formState.summary1Draft ? (
     <div className="border-t border-slate-200 bg-white px-4 pb-4 pt-4">
       <ContractFormGeneralFields
+        allowedDocumentTypes={formState.allowedDocumentTypes}
         data={formState.summary1Draft}
+        folderOptions={formState.availableFolders}
         onChange={formState.handleSummary1DraftChange}
+        showFolderField={editMode}
       />
       <div className="mt-4 flex justify-end gap-2 border-t border-slate-100 pt-3">
         <button
@@ -158,8 +167,11 @@ export default function ContractForm({ onAdd, onClose, editMode = false, initial
         <div className={`transition-opacity duration-150 ${formState.visible ? "opacity-100" : "opacity-0"}`}>
           {formState.currentStep === 1 && (
             <ContractFormGeneralFields
+              allowedDocumentTypes={formState.allowedDocumentTypes}
               data={formState.form}
+              folderOptions={formState.availableFolders}
               onChange={formState.handleFieldChange}
+              showFolderField={editMode}
             />
           )}
 
@@ -224,6 +236,36 @@ export default function ContractForm({ onAdd, onClose, editMode = false, initial
                 onFileChange={formState.handleFileChange}
                 onRemoveFile={formState.removeFile}
               />
+
+              {showSignedToggle && (
+                <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">Marcar como firmado</p>
+                    <p className="mt-0.5 text-xs text-slate-500">
+                      El contrato pasará a estado &quot;Activo&quot; al guardar
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={markAsSigned}
+                    onClick={() => {
+                      const next = !markAsSigned;
+                      setMarkAsSigned(next);
+                      formState.setContractState(next ? "ACTIVE" : "PENDING_SIGNATURE");
+                    }}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 ${
+                      markAsSigned ? "bg-emerald-500" : "bg-slate-300"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition duration-200 ease-in-out ${
+                        markAsSigned ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -7,7 +7,7 @@ import type { Document, DocumentState } from "@/types/api.types";
 export type DashboardMetricTone = "primary" | "warning" | "danger";
 
 export type DashboardMetric = {
-  id: "total" | "pending" | "expired";
+  id: "total" | "expiring" | "expired";
   title: string;
   value: string;
   change: string;
@@ -87,8 +87,8 @@ export const buildDashboardMetrics = (documents: Document[]): DashboardMetric[] 
     return accumulator;
   }, {});
 
-  const pendingByUpdatedMonth = documents.reduce<Record<string, number>>((accumulator, document) => {
-    if (document.state !== "PENDING") {
+  const expiringByUpdatedMonth = documents.reduce<Record<string, number>>((accumulator, document) => {
+    if (document.state !== "EXPIRING_SOON") {
       return accumulator;
     }
 
@@ -108,16 +108,16 @@ export const buildDashboardMetrics = (documents: Document[]): DashboardMetric[] 
   }, {});
 
   const totalContracts = documents.length;
-  const pendingContracts = documents.filter((document) => document.state === "PENDING").length;
+  const expiringContracts = documents.filter((document) => document.state === "EXPIRING_SOON").length;
   const expiredContracts = documents.filter((document) => document.state === "EXPIRED").length;
 
   const totalChange = formatChange(
     docsByCreationMonth[currentMonth] || 0,
     docsByCreationMonth[previousMonth] || 0,
   );
-  const pendingChange = formatChange(
-    pendingByUpdatedMonth[currentMonth] || 0,
-    pendingByUpdatedMonth[previousMonth] || 0,
+  const expiringChange = formatChange(
+    expiringByUpdatedMonth[currentMonth] || 0,
+    expiringByUpdatedMonth[previousMonth] || 0,
   );
   const expiredChange = formatChange(
     expiredByUpdatedMonth[currentMonth] || 0,
@@ -134,11 +134,11 @@ export const buildDashboardMetrics = (documents: Document[]): DashboardMetric[] 
       tone: "primary",
     },
     {
-      id: "pending",
-      title: "PENDIENTES",
-      value: pendingContracts.toLocaleString("es-ES"),
-      change: pendingChange.label,
-      positive: !pendingChange.positive,
+      id: "expiring",
+      title: "POR VENCER",
+      value: expiringContracts.toLocaleString("es-ES"),
+      change: expiringChange.label,
+      positive: !expiringChange.positive,
       tone: "warning",
     },
     {

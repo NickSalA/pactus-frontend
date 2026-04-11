@@ -7,15 +7,17 @@ import {
 } from "@/types/api.types";
 
 export const DOCUMENT_TYPE_OPTIONS: Array<{ value: DocumentType; label: string }> = [
-  { value: "SERVICES", label: "Servicios" },
-  { value: "LICENSES", label: "Licencias" },
-  { value: "SUPPORT", label: "Soporte" },
+  { value: "COMPANY", label: "Empresa" },
+  { value: "LABOR", label: "Trabajador" },
 ];
 
 export const DOCUMENT_STATE_OPTIONS: Array<{ value: DocumentState; label: string }> = [
+  { value: "DRAFT", label: "Borrador" },
+  { value: "PENDING_SIGNATURE", label: "Pendiente de firma" },
   { value: "ACTIVE", label: "Activo" },
-  { value: "PENDING", label: "Pendiente" },
+  { value: "EXPIRING_SOON", label: "Por vencer" },
   { value: "EXPIRED", label: "Expirado" },
+  { value: "TERMINATED", label: "Terminado" },
 ];
 
 export const CURRENCY_OPTIONS: CurrencyType[] = ["USD", "EUR", "PEN"];
@@ -52,12 +54,18 @@ export const getDocumentStateLabel = (state: DocumentState): string => {
 
 export const getDocumentStateClasses = (state: DocumentState): string => {
   switch (state) {
+    case "DRAFT":
+      return "bg-slate-100 text-slate-700 ring-1 ring-slate-600/20";
+    case "PENDING_SIGNATURE":
+      return "bg-blue-50 text-blue-700 ring-1 ring-blue-600/20";
     case "ACTIVE":
       return "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20";
-    case "PENDING":
+    case "EXPIRING_SOON":
       return "bg-amber-50 text-amber-700 ring-1 ring-amber-600/20";
     case "EXPIRED":
       return "bg-red-50 text-red-700 ring-1 ring-red-600/20";
+    case "TERMINATED":
+      return "bg-zinc-100 text-zinc-700 ring-1 ring-zinc-600/20";
     default:
       return "bg-slate-50 text-slate-700 ring-1 ring-slate-600/20";
   }
@@ -65,12 +73,18 @@ export const getDocumentStateClasses = (state: DocumentState): string => {
 
 export const getDashboardDocumentStateClasses = (state: DocumentState): string => {
   switch (state) {
+    case "DRAFT":
+      return "bg-slate-100 text-slate-700";
+    case "PENDING_SIGNATURE":
+      return "bg-blue-100 text-blue-700";
     case "ACTIVE":
       return "bg-emerald-100 text-emerald-700";
-    case "PENDING":
+    case "EXPIRING_SOON":
       return "bg-amber-100 text-amber-700";
     case "EXPIRED":
       return "bg-red-100 text-red-600";
+    case "TERMINATED":
+      return "bg-zinc-100 text-zinc-700";
     default:
       return "bg-slate-100 text-slate-700";
   }

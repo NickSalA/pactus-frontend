@@ -97,6 +97,7 @@ export function useContractFormWizard({
       client: form.client,
       contract_currency: form.contract_currency,
       end_date: form.end_date,
+      folder_id: form.folder_id,
       name: form.name,
       start_date: form.start_date,
       state: form.state,
@@ -135,7 +136,17 @@ export function useContractFormWizard({
 
   const handleSummary1DraftChange = useCallback((event: FieldChangeEvent) => {
     const { name, value } = event.target;
-    setSummary1Draft((previous) => (previous ? { ...previous, [name]: value } : previous));
+    setSummary1Draft((previous) => {
+      if (!previous) {
+        return previous;
+      }
+
+      if (name === "folder_id") {
+        return { ...previous, folder_id: value ? Number(value) : null };
+      }
+
+      return { ...previous, [name]: value };
+    });
   }, []);
 
   return {

@@ -6,12 +6,13 @@ import { X, AlertCircle, AlertTriangle, Info, Trash2 } from "lucide-react";
 import { getDaysLabel, type NotificationType } from "@/lib/mockNotifications";
 import type { DisplayNotification } from "./Header";
 
-type Filter = "all" | "critical" | "warning";
+type Filter = "all" | NotificationType;
 
 const filterLabels: Record<Filter, string> = {
   all: "Todos",
   critical: "Críticos",
   warning: "Advertencias",
+  info: "Informativas",
 };
 
 const typeConfig: Record<

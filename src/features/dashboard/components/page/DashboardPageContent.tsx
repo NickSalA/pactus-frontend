@@ -32,7 +32,7 @@ export function DashboardPageContent() {
           totalPages={page.totalPages}
           totalRecords={page.recentDocuments.length}
         />
-        <DashboardQuickActions />
+        <DashboardQuickActions canCreateContract={page.canCreateContract} />
       </section>
     </div>
   );

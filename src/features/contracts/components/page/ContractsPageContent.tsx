@@ -58,31 +58,47 @@ export function ContractsPageContent({
       </div>
 
       <ContractsFolderTabs
-        activeFolderId={page.activeFolder.id}
+        activeFolder={page.activeFolder}
+        canManageActiveFolder={page.canManageActiveFolder}
+        canCreateFolder={page.canCreateFolder}
         folders={page.folders}
         onCreateFolder={page.createFolder}
+        onDeleteFolder={page.deleteFolder}
+        onRenameFolder={page.renameFolder}
         onSelectFolder={page.selectFolder}
       />
 
-      <NewContractModal onClose={page.closeCreateForm} onSubmit={page.addContract} open={page.showForm} />
+      {page.canCreateContract && (
+        <NewContractModal
+          defaultFolderId={page.activeFolder.id === 0 ? null : page.activeFolder.id}
+          onClose={page.closeCreateForm}
+          onSubmit={page.addContract}
+          open={page.showForm}
+        />
+      )}
 
-      <ContractFormModal
-        editMode
-        initialData={page.contractToEdit ?? undefined}
-        onClose={page.closeEditForm}
-        onSubmit={page.updateContract}
-        open={page.showEditForm && Boolean(page.contractToEdit)}
-      />
+      {page.canEditContract && (
+        <ContractFormModal
+          availableFolders={page.availableFolders}
+          editMode
+          initialData={page.contractToEdit ?? undefined}
+          onClose={page.closeEditForm}
+          onSubmit={page.updateContract}
+          open={page.showEditForm && Boolean(page.contractToEdit)}
+        />
+      )}
 
-      <ContractDeleteModal
-        contractName={page.contractToDelete?.name ?? null}
-        deleting={page.deleting}
-        onClose={page.closeDeleteModal}
-        onConfirm={() => {
-          void page.confirmDelete();
-        }}
-        open={page.showDeleteModal}
-      />
+      {page.canDeleteContract && (
+        <ContractDeleteModal
+          contractName={page.contractToDelete?.name ?? null}
+          deleting={page.deleting}
+          onClose={page.closeDeleteModal}
+          onConfirm={() => {
+            void page.confirmDelete();
+          }}
+          open={page.showDeleteModal}
+        />
+      )}
 
       <ContractPreviewModal
         contract={page.previewContract}
@@ -94,69 +110,74 @@ export function ContractsPageContent({
         previewUrl={page.previewUrl}
       />
 
-      {page.drivePickerError && (
+      {page.canImportContract && page.drivePickerError && (
         <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {page.drivePickerError}
         </div>
       )}
 
-      {page.driveImportError && (
+      {page.canImportContract && page.driveImportError && (
         <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {page.driveImportError}
         </div>
       )}
 
-      {page.driveImportMessage && (
+      {page.canImportContract && page.driveImportMessage && (
         <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {page.driveImportMessage}
         </div>
       )}
 
-      <ContractsDriveSelection
-        activeFolderName={page.activeFolder.name}
-        isImportingDriveFiles={page.isImportingDriveFiles}
-        isOpeningDrivePicker={page.isOpeningDrivePicker}
-        onClearSelection={page.clearDriveSelection}
-        onImportSelection={() => {
-          void page.importSelectedDriveFiles();
-        }}
-        onRemoveFile={page.removeDriveFile}
-        onSelectMore={() => {
-          void page.openDrivePicker();
-        }}
-        selectedFiles={page.selectedDriveFiles}
-      />
+      {page.canImportContract && (
+        <ContractsDriveSelection
+          activeFolderName={page.activeFolder.name}
+          isImportingDriveFiles={page.isImportingDriveFiles}
+          isOpeningDrivePicker={page.isOpeningDrivePicker}
+          onClearSelection={page.clearDriveSelection}
+          onImportSelection={() => {
+            void page.importSelectedDriveFiles();
+          }}
+          onRemoveFile={page.removeDriveFile}
+          onSelectMore={() => {
+            void page.openDrivePicker();
+          }}
+          selectedFiles={page.selectedDriveFiles}
+        />
+      )}
 
       {page.isEmpty ? (
         <ContractsEmptyState
-          importControl={
+          importControl={page.canImportContract ? (
             <ContractsImportMenu
               align="left"
               isImportingDriveFiles={page.isImportingDriveFiles}
               isOpeningDrivePicker={page.isOpeningDrivePicker}
               onOpenDrive={page.openDrivePicker}
             />
-          }
-          onCreateContract={page.openCreateForm}
+          ) : undefined}
+          onCreateContract={page.canCreateContract ? page.openCreateForm : undefined}
         />
       ) : (
         <>
           <ContractsActionsBar
+            contracts={page.activeContracts}
             filter={page.filter}
-            importControl={
+            importControl={page.canImportContract ? (
               <ContractsImportMenu
                 isImportingDriveFiles={page.isImportingDriveFiles}
                 isOpeningDrivePicker={page.isOpeningDrivePicker}
                 onOpenDrive={page.openDrivePicker}
               />
-            }
-            onCreateContract={page.openCreateForm}
+            ) : undefined}
+            onCreateContract={page.canCreateContract ? page.openCreateForm : undefined}
             onFilterChange={page.changeFilter}
             onSearchChange={page.changeSearch}
             search={page.search}
           />
 
           <ContractsTable
+            canDelete={page.canDeleteContract}
+            canEdit={page.canEditContract}
             contracts={page.paginatedContracts}
             currentPage={page.safeCurrentPage}
             filteredCount={page.filteredContracts.length}
