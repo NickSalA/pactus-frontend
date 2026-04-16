@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ContractAI - Inteligencia para el Notariado Moderno",
-  description: "Automatiza la gestión de tus contratos y consultas legales con inteligencia artificial de nivel empresarial. Diseñado específicamente para documentación legal de alto impacto.",
+  title: "ContractAI - Inteligencia para los Contratos Modernos",
+  description: "Optimiza contratos y consultas legales con inteligencia artificial de nivel empresarial. Precisión, rapidez y control para documentación legal de alto impacto.",
   icons: {
     icon: "/logo-contractAI-azul.png",
   },
