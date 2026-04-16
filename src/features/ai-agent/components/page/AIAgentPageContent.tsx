@@ -13,40 +13,19 @@ export function AIAgentPageContent() {
   return (
     <div className="-m-8 flex h-[calc(100vh-95px)] overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
       <ChatHistorySidebar
+        activeConversationId={page.threadId}
         conversations={page.conversations}
         isLoading={page.isHistoryLoading}
         onSelectConversation={(conversationId) => {
           void page.loadConversation(conversationId);
         }}
+        onToggle={page.toggleHistory}
         showHistory={page.showHistory}
       />
 
       <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden">
         <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200/60 bg-white/70 px-8 py-4 shadow-sm backdrop-blur-xl">
           <div className="flex items-center gap-4">
-            <button
-              onClick={page.toggleHistory}
-              className={`rounded-xl p-2.5 transition-all duration-200 ${
-                page.showHistory ? "bg-blue-100 text-blue-600" : "text-slate-500 hover:bg-slate-100"
-              }`}
-              title="Historial"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3A9 9 0 113 12a9 9 0 0118 0Z"
-                />
-              </svg>
-            </button>
-
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30">
                 <RobotIcon size="md" />
@@ -79,7 +58,14 @@ export function AIAgentPageContent() {
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-8">
-          {page.messages.length === 0 ? (
+          {page.isConversationLoading ? (
+            <div className="flex h-full items-center justify-center">
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-blue-500" />
+                Cargando conversación...
+              </div>
+            </div>
+          ) : page.messages.length === 0 ? (
             <ChatEmptyState onSuggestionSelect={page.handleSuggestionSelect} />
           ) : (
             <ChatMessageList

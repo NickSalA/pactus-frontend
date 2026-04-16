@@ -40,7 +40,7 @@ export function ChatMessageList({ bottomRef, isLoading, messages, now }: ChatMes
               </div>
             )}
 
-            <div className="flex flex-col">
+            <div className="flex min-w-0 flex-col">
               <div
                 className={`px-5 py-3.5 ${
                   message.sender === "user"

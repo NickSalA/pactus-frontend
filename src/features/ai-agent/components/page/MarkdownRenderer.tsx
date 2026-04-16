@@ -209,7 +209,7 @@ function parseMarkdownTable(lines: string[]): ReactNode | null {
   if (lines.length < 2) return null;
 
   const headerCells = lines[0].split("|").map((c) => c.trim()).filter(Boolean);
-  const isSeparator = /^[\s|:-]+$/.test(lines[1]);
+  const isSeparator = lines[1] !== undefined && /^[\s|:-]+$/.test(lines[1]);
   if (!isSeparator || headerCells.length === 0) return null;
 
   const rows = lines.slice(2).map((row) => row.split("|").map((c) => c.trim()).filter(Boolean));
@@ -382,7 +382,8 @@ function parseBlocks(rawLines: string[]): Block[] {
       i < rawLines.length &&
       rawLines[i].trim() !== "" &&
       !/^(#{1,3}\s|```|>\s?|[-*+]\s|\d+\.\s)/.test(rawLines[i]) &&
-      !/^(-{3,}|\*{3,}|_{3,})$/.test(rawLines[i].trim())
+      !/^(-{3,}|\*{3,}|_{3,})$/.test(rawLines[i].trim()) &&
+      !(rawLines[i].includes("|") && rawLines[i + 1]?.match(/^[\s|:-]+$/))
     ) {
       paraLines.push(rawLines[i]);
       i++;

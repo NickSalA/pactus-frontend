@@ -5,7 +5,7 @@ import { getConversationById, getConversations, sendMessage } from "@/lib/api";
 import { useLiveNow } from "@/features/ai-agent/hooks/use-live-now";
 import { mapConversationToMessages } from "@/features/ai-agent/lib/chat-utils";
 import type { ChatMessage } from "@/features/ai-agent/lib/chat.types";
-import type { Conversation } from "@/types/api.types";
+import type { Conversation, ConversationWithContent } from "@/types/api.types";
 import { useAuthStore } from "@/store";
 
 export function useAIAgentPage() {
@@ -14,10 +14,12 @@ export function useAIAgentPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [threadId, setThreadId] = useState<number | undefined>(undefined);
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [showHistory, setShowHistory] = useState(false);
+  const [showHistory, setShowHistory] = useState(true);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [isConversationLoading, setIsConversationLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const conversationCache = useRef<Map<number, ConversationWithContent>>(new Map());
   const now = useLiveNow();
 
   useEffect(() => {
@@ -39,14 +41,30 @@ export function useAIAgentPage() {
     }
   }, []);
 
+  useEffect(() => {
+    void loadConversations();
+  }, [loadConversations]);
+
   const loadConversation = useCallback(async (conversationId: number) => {
+    // Optimistic update: highlight the item and clear stale messages immediately
+    setThreadId(conversationId);
+
+    const cached = conversationCache.current.get(conversationId);
+    if (cached) {
+      setMessages(mapConversationToMessages(cached));
+      return;
+    }
+
+    setMessages([]);
+    setIsConversationLoading(true);
     try {
       const conversation = await getConversationById(conversationId);
+      conversationCache.current.set(conversationId, conversation);
       setMessages(mapConversationToMessages(conversation));
-      setThreadId(conversationId);
-      setShowHistory(false);
     } catch (error) {
       console.error("Error loading conversation:", error);
+    } finally {
+      setIsConversationLoading(false);
     }
   }, []);
 
@@ -87,6 +105,7 @@ export function useAIAgentPage() {
 
       setMessages((currentMessages) => [...currentMessages, botMessage]);
       setThreadId(response.thread_id);
+      conversationCache.current.delete(response.thread_id);
     } catch {
       const errorMessage: ChatMessage = {
         id: `error-${Date.now()}`,
@@ -161,6 +180,7 @@ export function useAIAgentPage() {
     handleInputChange,
     handleSuggestionSelect,
     inputValue,
+    isConversationLoading,
     isHistoryLoading,
     isLoading,
     loadConversation,
@@ -170,6 +190,7 @@ export function useAIAgentPage() {
     showHistory,
     startNewConversation,
     textareaRef,
+    threadId,
     toggleHistory,
   };
 }
