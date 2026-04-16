@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { AdminModalShell } from "@/features/admin/components/shared/AdminModalShell";
+import { Select } from "@/components/ui/Select";
 import type { Document, NotificationRule } from "@/types/api.types";
 
 type RuleDraft = {
@@ -46,7 +47,7 @@ export function AdminNotificationRuleModal({
   const [error, setError] = useState<string | null>(null);
 
   const sortedDocuments = useMemo(
-    () => [...documents].sort((left, right) => left.name.localeCompare(right.name, "es")),
+    () => [...documents].sort((left, right) => (left.name ?? "").localeCompare(right.name ?? "", "es")),
     [documents],
   );
 
@@ -97,7 +98,9 @@ export function AdminNotificationRuleModal({
       <div className="space-y-5">
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">Alcance de la alerta</label>
-          <select
+          <Select
+            variant="lg"
+            className="w-full"
             value={draft.document_id ?? ""}
             disabled={Boolean(rule)}
             onChange={(event) => {
@@ -107,7 +110,6 @@ export function AdminNotificationRuleModal({
                 document_id: value ? Number(value) : null,
               }));
             }}
-            className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition-all focus:border-blue-400 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
           >
             <option value="">Toda la organización</option>
             {sortedDocuments.map((document) => (
@@ -115,7 +117,7 @@ export function AdminNotificationRuleModal({
                 {document.name}
               </option>
             ))}
-          </select>
+          </Select>
           {rule && (
             <p className="mt-2 text-xs text-slate-500">
               El alcance solo puede definirse al crear la regla. Para cambiarlo, crea una nueva.

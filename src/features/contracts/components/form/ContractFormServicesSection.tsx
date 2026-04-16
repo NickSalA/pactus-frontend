@@ -8,6 +8,7 @@ import {
   type ServiceItemDraft,
 } from "@/features/contracts/lib/contract-form.utils";
 import type { ServiceCatalogItem } from "@/types/api.types";
+import { Select } from "@/components/ui/Select";
 import { contractFormStyles } from "./contract-form.styles";
 
 type ServiceItemDraftField = keyof Omit<ServiceItemDraft, "key">;
@@ -134,12 +135,13 @@ export function ContractFormServicesSection({
                     <div className="grid grid-cols-2 gap-2">
                       <div className="col-span-2">
                         <label className="mb-1 block text-xs font-medium text-slate-500">Servicio</label>
-                        <select
+                        <Select
+                          variant="sm"
+                          className="w-full"
                           value={item.service_id}
                           onChange={(event) =>
                             onServiceChange(item.key, "service_id", event.target.value)
                           }
-                          className={contractFormStyles.smallSelect}
                         >
                           <option value="">Selecciona un servicio</option>
                           {serviceOptions.map((service) => (
@@ -147,7 +149,7 @@ export function ContractFormServicesSection({
                               {service.name}
                             </option>
                           ))}
-                        </select>
+                        </Select>
                       </div>
                       <div className="col-span-2">
                         <label className="mb-1 block text-xs font-medium text-slate-500">Descripcion</label>
@@ -230,10 +232,11 @@ export function ContractFormServicesSection({
           <div className="grid grid-cols-2 gap-2">
             <div className="col-span-2">
               <label className="mb-1 block text-xs font-medium text-slate-600">Servicio</label>
-              <select
+              <Select
+                variant="sm"
+                className="w-full"
                 value={newServiceDraft.service_id}
                 onChange={(event) => onNewDraftChange("service_id", event.target.value)}
-                className={contractFormStyles.smallSelect}
               >
                 <option value="">Selecciona un servicio</option>
                 {serviceOptions.map((service) => (
@@ -241,7 +244,7 @@ export function ContractFormServicesSection({
                     {service.name}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
             <div className="col-span-2">
               <label className="mb-1 block text-xs font-medium text-slate-600">Descripcion</label>

@@ -8,13 +8,13 @@ import {
   Trash2,
 } from "lucide-react";
 import {
-  getDocumentFileLabel,
   getDocumentStateClasses,
   getDocumentStateLabel,
   getDocumentTypeLabel,
 } from "@/lib/document.utils";
-import { getServiceCountLabel, getVisiblePageNumbers } from "@/features/contracts/lib/contracts-utils";
-import type { Document } from "@/types/api.types";
+import { getVisiblePageNumbers } from "@/features/contracts/lib/contracts-utils";
+import { Select } from "@/components/ui/Select";
+import type { Document, UserRole } from "@/types/api.types";
 
 type ContractsTableProps = {
   canDelete: boolean;
@@ -30,6 +30,7 @@ type ContractsTableProps = {
   onView: (contract: Document) => void;
   startIndex: number;
   totalPages: number;
+  userRole?: UserRole | null;
 };
 
 export function ContractsTable({
@@ -46,49 +47,66 @@ export function ContractsTable({
   onView,
   startIndex,
   totalPages,
+  userRole,
 }: ContractsTableProps) {
   const visiblePageNumbers = getVisiblePageNumbers(currentPage, totalPages);
+
+  // Column visibility rules
+  const showServicesColumn = userRole === "WORKER" || userRole === "MANAGER";
+  const clientColumnLabel = userRole === "HR" ? "Colaborador" : "Cliente";
+  const totalColumns = showServicesColumn ? 8 : 7;
 
   return (
     <div className="flex flex-col rounded-2xl border border-slate-200/60 bg-white shadow-sm">
       <div className="overflow-x-auto">
         <table className="min-w-full table-fixed text-sm">
           <colgroup>
-            <col className="w-[5%]" />
-            <col className="w-[20%]" />
-            <col className="w-[14%]" />
-            <col className="w-[10%]" />
-            <col className="w-[10%]" />
-            <col className="w-[10%]" />
-            <col className="w-[12%]" />
-            <col className="w-[8%]" />
-            <col className="w-[9%]" />
-            <col className="w-[8%]" />
+            {showServicesColumn ? (
+              <>
+                <col className="w-[26%]" />
+                <col className="w-[15%]" />
+                <col className="w-[13%]" />
+                <col className="w-[10%]" />
+                <col className="w-[10%]" />
+                <col className="w-[10%]" />
+                <col className="w-[8%]" />
+                <col className="w-[8%]" />
+              </>
+            ) : (
+              <>
+                <col className="w-[30%]" />
+                <col className="w-[18%]" />
+                <col className="w-[12%]" />
+                <col className="w-[12%]" />
+                <col className="w-[12%]" />
+                <col className="w-[8%]" />
+                <col className="w-[8%]" />
+              </>
+            )}
           </colgroup>
           <thead>
             <tr className="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100/80">
-              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">ID</th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Contrato</th>
-              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Cliente</th>
+              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">{clientColumnLabel}</th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Tipo</th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Inicio</th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Vencimiento</th>
-              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Archivo</th>
-              <th className="px-4 py-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">Servicios</th>
+              {showServicesColumn && (
+                <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Servicios</th>
+              )}
               <th className="px-4 py-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">Estado</th>
               <th className="px-4 py-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">Acciones</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {contracts.map((contract, index) => {
-              const fileLabel = getDocumentFileLabel(contract);
+              const serviceCount = contract.service_items?.length ?? 0;
 
               return (
                 <tr
                   key={contract.id}
                   className={`group transition-colors hover:bg-blue-50/50 ${index % 2 === 0 ? "bg-white" : "bg-slate-50/30"}`}
                 >
-                  <td className="px-4 py-3 font-mono text-xs text-slate-500">{contract.id}</td>
                   <td className="px-4 py-3">
                     <span className="block font-medium text-slate-800">{contract.name}</span>
                   </td>
@@ -100,19 +118,17 @@ export function ContractsTable({
                   </td>
                   <td className="px-4 py-3 tabular-nums text-slate-600">{contract.start_date}</td>
                   <td className="px-4 py-3 tabular-nums text-slate-600">{contract.end_date}</td>
-                  <td className="px-4 py-3">
-                    <span className={`block truncate text-sm ${contract.file_name ? "text-slate-700" : "text-slate-400"}`}>
-                      {fileLabel}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <span className="inline-flex min-w-[2.5rem] items-center justify-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">
-                      {contract.service_items.length}
-                    </span>
-                    <span className="mt-1 block text-[11px] text-slate-500">
-                      {getServiceCountLabel(contract.service_items.length)}
-                    </span>
-                  </td>
+                  {showServicesColumn && (
+                    <td className="px-4 py-3">
+                      {serviceCount > 0 ? (
+                        <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+                          {serviceCount} servicio{serviceCount === 1 ? "" : "s"}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">—</span>
+                      )}
+                    </td>
+                  )}
                   <td className="px-4 py-3 text-center">
                     <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${getDocumentStateClasses(contract.state)}`}>
                       {getDocumentStateLabel(contract.state)}
@@ -154,7 +170,7 @@ export function ContractsTable({
 
             {contracts.length === 0 && (
               <tr>
-                <td colSpan={10} className="px-4 py-12 text-center">
+                <td colSpan={totalColumns} className="px-4 py-12 text-center">
                   <div className="flex flex-col items-center">
                     <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
                       <svg className="h-7 w-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,18 +200,18 @@ export function ContractsTable({
               <label htmlFor="itemsPerPage" className="text-slate-500">
                 Filas:
               </label>
-              <select
+              <Select
+                variant="mini"
                 id="itemsPerPage"
                 value={itemsPerPage}
                 onChange={(event) => onItemsPerPageChange(Number(event.target.value))}
-                className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm font-medium text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               >
                 {[5, 9, 10, 15, 20].map((rows) => (
                   <option key={rows} value={rows}>
                     {rows}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
           </div>
           <div className="flex items-center gap-1">

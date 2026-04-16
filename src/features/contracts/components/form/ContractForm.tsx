@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Check, Plus } from "lucide-react";
 import { formatCurrencyValue, formatFormDate } from "@/features/contracts/lib/contract-form.utils";
 import { useContractForm } from "@/features/contracts/hooks/use-contract-form";
@@ -12,6 +11,7 @@ import { ContractFormGeneralFields } from "./ContractFormGeneralFields";
 import { ContractFormProgress } from "./ContractFormProgress";
 import { ContractFormServicesSection } from "./ContractFormServicesSection";
 import { ContractFormSummaryAccordion } from "./ContractFormSummaryAccordion";
+import { ContractStatusChanger } from "./ContractStatusChanger";
 
 type Props = {
   readonly availableFolders?: readonly ContractFolder[];
@@ -24,8 +24,7 @@ type Props = {
 
 export default function ContractForm({ availableFolders, defaultFolderId, onAdd, onClose, editMode = false, initialData }: Props) {
   const formState = useContractForm({ availableFolders, defaultFolderId, editMode, initialData, onAdd, onClose });
-  const showSignedToggle = editMode && initialData?.state === "PENDING_SIGNATURE";
-  const [markAsSigned, setMarkAsSigned] = useState(false);
+  const showStatusChanger = editMode && (initialData?.state === "DRAFT" || initialData?.state === "PENDING_SIGNATURE");
 
   const generalPreview = (
     <p className="mt-0.5 truncate text-sm text-slate-700">
@@ -237,34 +236,13 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
                 onRemoveFile={formState.removeFile}
               />
 
-              {showSignedToggle && (
-                <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800">Marcar como firmado</p>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      El contrato pasará a estado &quot;Activo&quot; al guardar
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={markAsSigned}
-                    onClick={() => {
-                      const next = !markAsSigned;
-                      setMarkAsSigned(next);
-                      formState.setContractState(next ? "ACTIVE" : "PENDING_SIGNATURE");
-                    }}
-                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 ${
-                      markAsSigned ? "bg-emerald-500" : "bg-slate-300"
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition duration-200 ease-in-out ${
-                        markAsSigned ? "translate-x-6" : "translate-x-1"
-                      }`}
-                    />
-                  </button>
-                </div>
+              {showStatusChanger && initialData && (
+                <ContractStatusChanger
+                  currentState={initialData.state}
+                  onStatusChange={(nextState) => {
+                    formState.setContractState(nextState ?? initialData.state);
+                  }}
+                />
               )}
             </div>
           )}

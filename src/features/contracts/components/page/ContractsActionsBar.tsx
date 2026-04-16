@@ -82,7 +82,7 @@ export function ContractsActionsBar({
           <input
             type="text"
             value={search}
-            placeholder="Buscar por contrato, cliente o archivo..."
+            placeholder="Buscar por contrato o cliente..."
             className="w-full rounded-xl border border-slate-200/80 bg-white pl-10 pr-4 py-2.5 text-sm text-slate-700 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-blue-400 focus:ring-[3px] focus:ring-blue-500/10"
             onChange={(event) => onSearchChange(event.target.value)}
           />

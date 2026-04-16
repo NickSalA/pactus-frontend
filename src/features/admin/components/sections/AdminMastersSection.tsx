@@ -9,6 +9,8 @@ import {
 } from "@/features/admin/hooks/use-admin-document-management-page";
 import { useAdminDocumentTypes } from "@/features/admin/hooks/use-admin-document-types";
 import { useAdminServices } from "@/features/admin/hooks/use-admin-services";
+import { useAdminTablePagination } from "@/features/admin/hooks/use-admin-table-pagination";
+import { AdminTablePagination } from "@/features/admin/components/shared/AdminTablePagination";
 import { formatAdminDate } from "@/features/admin/lib/admin-formatters";
 
 type AdminMastersSectionProps = {
@@ -19,6 +21,7 @@ type AdminMastersSectionProps = {
 export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMastersSectionProps) {
   const servicesSection = useAdminServices();
   const documentTypesSection = useAdminDocumentTypes();
+  const servicesPagination = useAdminTablePagination(servicesSection.services);
 
   if ((activeCatalog === "services" && servicesSection.loading) || (activeCatalog === "document-types" && documentTypesSection.loading)) {
     return <AdminLoadingState />;
@@ -94,7 +97,7 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200/80 bg-white text-sm text-slate-700">
-                  {servicesSection.services.map((service) => (
+                  {servicesPagination.paginatedItems.map((service) => (
                     <tr key={service.id}>
                       <td className="px-6 py-4 font-medium text-slate-900">{service.name}</td>
                       <td className="px-6 py-4">
@@ -144,8 +147,18 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
               </table>
             </div>
 
-            {servicesSection.services.length === 0 && (
+            {servicesSection.services.length === 0 ? (
               <div className="px-6 py-8 text-center text-sm text-slate-500">Aún no hay servicios configurados para esta organización.</div>
+            ) : (
+              <AdminTablePagination
+                currentPage={servicesPagination.currentPage}
+                itemsPerPage={servicesPagination.itemsPerPage}
+                onItemsPerPageChange={servicesPagination.changeItemsPerPage}
+                onPageChange={servicesPagination.changePage}
+                startIndex={servicesPagination.startIndex}
+                totalCount={servicesPagination.totalCount}
+                totalPages={servicesPagination.totalPages}
+              />
             )}
           </section>
 
@@ -168,8 +181,7 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
               <article key={item.code} className="rounded-[28px] border border-slate-200/80 bg-white p-6 shadow-sm shadow-slate-200/70">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{item.code}</p>
-                    <h3 className="mt-2 text-2xl font-semibold text-slate-900">{item.label}</h3>
+                    <h3 className="text-2xl font-semibold text-slate-900">{item.label}</h3>
                   </div>
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 text-slate-500">
                     <BookType className="h-5 w-5" />

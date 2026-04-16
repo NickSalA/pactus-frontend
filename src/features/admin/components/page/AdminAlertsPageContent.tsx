@@ -5,11 +5,14 @@ import { AdminNotificationRuleModal } from "@/features/admin/components/modals/A
 import { AdminSummaryCard } from "@/features/admin/components/cards/AdminSummaryCard";
 import { AdminErrorState } from "@/features/admin/components/shared/AdminErrorState";
 import { AdminLoadingState } from "@/features/admin/components/shared/AdminLoadingState";
+import { AdminTablePagination } from "@/features/admin/components/shared/AdminTablePagination";
 import { formatAdminDate } from "@/features/admin/lib/admin-formatters";
 import { useAdminAlertRules } from "@/features/admin/hooks/use-admin-alert-rules";
+import { useAdminTablePagination } from "@/features/admin/hooks/use-admin-table-pagination";
 
 export function AdminAlertsPageContent() {
   const page = useAdminAlertRules();
+  const pagination = useAdminTablePagination(page.rules);
 
   if (page.shouldBlockContent || page.loading) {
     return <AdminLoadingState />;
@@ -34,25 +37,27 @@ export function AdminAlertsPageContent() {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={page.openCreateModal}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
-          >
-            <Plus className="h-4 w-4" />
-            Nueva alerta
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              void page.triggerEmailAlerts();
-            }}
-            disabled={page.sendingAlerts}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/80 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            <Bell className="h-4 w-4" />
-            {page.sendingAlerts ? "Enviando alertas..." : "Enviar alertas ahora"}
-          </button>
+          <div className="flex w-full flex-col gap-3 sm:w-auto lg:min-w-[230px] lg:items-stretch">
+            <button
+              type="button"
+              onClick={page.openCreateModal}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
+            >
+              <Plus className="h-4 w-4" />
+              Nueva alerta
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                void page.triggerEmailAlerts();
+              }}
+              disabled={page.sendingAlerts}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/80 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <Bell className="h-4 w-4" />
+              {page.sendingAlerts ? "Enviando alertas..." : "Enviar alertas ahora"}
+            </button>
+          </div>
         </div>
       </section>
 
@@ -81,14 +86,14 @@ export function AdminAlertsPageContent() {
             <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
               <tr>
                 <th className="px-6 py-4">Alcance</th>
-                <th className="px-6 py-4">Anticipación</th>
-                <th className="px-6 py-4">Estado</th>
-                <th className="px-6 py-4">Actualizada</th>
+                <th className="px-6 py-4 text-center">Anticipación</th>
+                <th className="px-6 py-4 text-center">Estado</th>
+                <th className="px-6 py-4 text-center">Actualizada</th>
                 <th className="px-6 py-4 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200/80 bg-white text-sm text-slate-700">
-              {page.rules.map((rule) => {
+              {pagination.paginatedItems.map((rule) => {
                 const linkedDocument = rule.document_id ? page.documentById.get(rule.document_id) : null;
 
                 return (
@@ -99,13 +104,13 @@ export function AdminAlertsPageContent() {
                         <p className="text-slate-500">{linkedDocument ? linkedDocument.client : "Regla general"}</p>
                       </div>
                     </td>
-                    <td className="px-6 py-4">{rule.days_before_due} día{rule.days_before_due === 1 ? "" : "s"} antes</td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 text-center">{rule.days_before_due} día{rule.days_before_due === 1 ? "" : "s"} antes</td>
+                    <td className="px-6 py-4 text-center">
                       <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] ${rule.is_active ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>
                         {rule.is_active ? "Activa" : "Inactiva"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-500">{formatAdminDate(rule.updated_at)}</td>
+                    <td className="px-6 py-4 text-center text-slate-500">{formatAdminDate(rule.updated_at)}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <button
@@ -137,8 +142,18 @@ export function AdminAlertsPageContent() {
           </table>
         </div>
 
-        {page.rules.length === 0 && (
+        {page.rules.length === 0 ? (
           <div className="px-6 py-8 text-center text-sm text-slate-500">Aún no hay reglas de alerta configuradas.</div>
+        ) : (
+          <AdminTablePagination
+            currentPage={pagination.currentPage}
+            itemsPerPage={pagination.itemsPerPage}
+            onItemsPerPageChange={pagination.changeItemsPerPage}
+            onPageChange={pagination.changePage}
+            startIndex={pagination.startIndex}
+            totalCount={pagination.totalCount}
+            totalPages={pagination.totalPages}
+          />
         )}
       </section>
 

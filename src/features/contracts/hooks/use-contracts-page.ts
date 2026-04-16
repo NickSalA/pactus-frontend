@@ -271,6 +271,7 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
     startIndex,
     totalPages,
     updateContract,
+    userRole,
     viewContract: openPreview,
     openCreateForm: handleOpenCreateForm,
     openDeleteModal: handleOpenDeleteModal,

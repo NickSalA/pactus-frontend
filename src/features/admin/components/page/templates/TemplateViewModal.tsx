@@ -1,12 +1,21 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CalendarClock, FileText, Layers3, Tag, X } from "lucide-react";
-import type { Template } from "@/types/api.types";
+import { AlertTriangle, CalendarClock, FileText, Layers3, Tag, X } from "lucide-react";
+import {
+  getAllTemplateFields,
+  getTemplateFieldCount,
+  getTemplateOperationalFields,
+  normalizeTemplateFieldType,
+  TEMPLATE_FIELD_TYPE_LABELS,
+} from "@/lib/template-fields";
+import { getDocumentTypeLabel } from "@/lib/document.utils";
+import type { Template, TemplateField } from "@/types/api.types";
 import { TemplateWizardProgress } from "./TemplateWizardProgress";
 
 type TemplateViewModalProps = {
   template: Template | null;
+  warnings?: string[];
   onClose: () => void;
 };
 
@@ -19,26 +28,69 @@ const STATE_STYLES: Record<Template["state"], string> = {
   ARCHIVED: "bg-slate-200 text-slate-700",
 };
 
-const FIELD_TYPE_LABELS: Record<string, string> = {
-  text: "Texto",
-  number: "Número",
-  date: "Fecha",
-  boolean: "Sí / No",
-};
-
-export function TemplateViewModal({ template, onClose }: TemplateViewModalProps) {
+export function TemplateViewModal({ template, warnings = [], onClose }: TemplateViewModalProps) {
   const [currentStep, setCurrentStep] = useState<ViewStep>(1);
+  const contractFields = template?.content.fields ?? [];
+  const operationalFields = useMemo(() => getTemplateOperationalFields(template?.content), [template?.content]);
 
   const markdownLines = useMemo(
     () => template?.content.body_md.split(/\r?\n/).filter((l) => l.trim()).length ?? 0,
     [template?.content.body_md],
   );
   const requiredFieldsCount = useMemo(
-    () => template?.content.fields.filter((f) => f.required).length ?? 0,
-    [template?.content.fields],
+    () => getAllTemplateFields(template?.content).filter((f) => f.required).length,
+    [template?.content],
   );
 
   if (!template) return null;
+
+  const renderFieldTable = (fields: TemplateField[], emptyMessage: string) => {
+    if (fields.length === 0) {
+      return (
+        <div className="mt-4 rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
+          {emptyMessage}
+        </div>
+      );
+    }
+
+    return (
+      <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200">
+        <table className="min-w-full text-sm">
+          <thead>
+            <tr className="bg-slate-50">
+              {["Clave", "Etiqueta", "Tipo", "Placeholder", "Requerido"].map((header) => (
+                <th
+                  key={header}
+                  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
+                >
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100 bg-white">
+            {fields.map((field) => (
+              <tr key={field.key} className="hover:bg-slate-50">
+                <td className="px-4 py-3 font-mono text-xs text-slate-700">{field.key}</td>
+                <td className="px-4 py-3 font-medium text-slate-800">{field.label}</td>
+                <td className="px-4 py-3 text-slate-600">
+                  {TEMPLATE_FIELD_TYPE_LABELS[normalizeTemplateFieldType(field.type)]}
+                </td>
+                <td className="px-4 py-3 text-slate-500">{field.placeholder?.trim() || "-"}</td>
+                <td className="px-4 py-3">
+                  {field.required ? (
+                    <span className="text-red-600">Sí</span>
+                  ) : (
+                    <span className="text-slate-400">No</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -84,6 +136,22 @@ export function TemplateViewModal({ template, onClose }: TemplateViewModalProps)
             {/* Step 1 — Resumen */}
             {currentStep === 1 && (
               <div className="space-y-5">
+                {warnings.length > 0 && (
+                  <section className="rounded-3xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
+                    <div className="flex items-start gap-3">
+                      <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+                      <div>
+                        <p className="text-sm font-semibold text-amber-900">Advertencias del borrador</p>
+                        <ul className="mt-2 space-y-2 text-sm text-amber-800">
+                          {warnings.map((warning, index) => (
+                            <li key={`${warning}-${index}`}>{warning}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                )}
+
                 <section className="rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-blue-50 p-6 shadow-sm">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
@@ -114,8 +182,18 @@ export function TemplateViewModal({ template, onClose }: TemplateViewModalProps)
                         <dd className="font-medium text-slate-800">{template.content.version ?? "1.0"}</dd>
                       </div>
                       <div className="flex items-center justify-between gap-4">
+                        <dt>Tipo documental</dt>
+                        <dd className="font-medium text-slate-800">{getDocumentTypeLabel(template.document_type)}</dd>
+                      </div>
+                      <div className="flex items-center justify-between gap-4">
+                        <dt>Formato</dt>
+                        <dd className="text-right font-medium text-slate-800">
+                          <span className="block">{template.format_label ?? "Sin formato"}</span>
+                        </dd>
+                      </div>
+                      <div className="flex items-center justify-between gap-4">
                         <dt>Campos</dt>
-                        <dd className="font-medium text-slate-800">{template.content.fields.length}</dd>
+                        <dd className="font-medium text-slate-800">{getTemplateFieldCount(template.content)}</dd>
                       </div>
                     </dl>
                   </div>
@@ -162,53 +240,23 @@ export function TemplateViewModal({ template, onClose }: TemplateViewModalProps)
 
             {/* Step 3 — Campos (tabla) */}
             {currentStep === 3 && (
-              <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <Layers3 className="h-4 w-4 text-slate-500" />
-                  <p className="text-sm font-semibold text-slate-800">Campos detectados</p>
-                </div>
+              <div className="space-y-5">
+                <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <Layers3 className="h-4 w-4 text-slate-500" />
+                    <p className="text-sm font-semibold text-slate-800">Campos del contrato</p>
+                  </div>
+                  {renderFieldTable(contractFields, "Esta plantilla no define campos visibles dentro del contrato.")}
+                </section>
 
-                {template.content.fields.length === 0 ? (
-                  <div className="mt-4 rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
-                    Esta plantilla no define campos manuales en backend.
+                <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <Layers3 className="h-4 w-4 text-slate-500" />
+                    <p className="text-sm font-semibold text-slate-800">Campos operativos</p>
                   </div>
-                ) : (
-                  <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200">
-                    <table className="min-w-full text-sm">
-                      <thead>
-                        <tr className="bg-slate-50">
-                          {["Clave", "Etiqueta", "Tipo", "Requerido"].map((h) => (
-                            <th
-                              key={h}
-                              className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
-                            >
-                              {h}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 bg-white">
-                        {template.content.fields.map((field) => (
-                          <tr key={field.key} className="hover:bg-slate-50">
-                            <td className="px-4 py-3 font-mono text-xs text-slate-700">{field.key}</td>
-                            <td className="px-4 py-3 font-medium text-slate-800">{field.label}</td>
-                            <td className="px-4 py-3 text-slate-600">
-                              {FIELD_TYPE_LABELS[field.type] ?? field.type}
-                            </td>
-                            <td className="px-4 py-3">
-                              {field.required ? (
-                                <span className="text-red-600">Sí</span>
-                              ) : (
-                                <span className="text-slate-400">No</span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </section>
+                  {renderFieldTable(operationalFields, "Esta plantilla no define campos operativos adicionales.")}
+                </section>
+              </div>
             )}
           </div>
         </div>

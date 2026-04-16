@@ -11,7 +11,7 @@ import { ContractFormModal } from "@/features/contracts/components/modals/Contra
 import { ContractPreviewModal } from "@/features/contracts/components/modals/ContractPreviewModal";
 import { NewContractModal } from "@/features/contracts/components/modals/NewContractModal";
 import { useContractsPage } from "@/features/contracts/hooks/use-contracts-page";
-import type { Document } from "@/types/api.types";
+import type { Document, UserRole } from "@/types/api.types";
 
 type ContractsPageContentProps = {
   shouldOpenCreateModal?: boolean;
@@ -70,6 +70,7 @@ export function ContractsPageContent({
 
       {page.canCreateContract && (
         <NewContractModal
+          availableFolders={page.availableFolders}
           defaultFolderId={page.activeFolder.id === 0 ? null : page.activeFolder.id}
           onClose={page.closeCreateForm}
           onSubmit={page.addContract}
@@ -179,6 +180,7 @@ export function ContractsPageContent({
             canDelete={page.canDeleteContract}
             canEdit={page.canEditContract}
             contracts={page.paginatedContracts}
+            userRole={page.userRole as UserRole | null}
             currentPage={page.safeCurrentPage}
             filteredCount={page.filteredContracts.length}
             itemsPerPage={page.itemsPerPage}

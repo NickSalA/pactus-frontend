@@ -1,24 +1,11 @@
 import type { GooglePickerFile } from "@/lib/googlePicker";
 import { GOOGLE_DRIVE_SCOPE } from "@/lib/googlePicker";
 import { isDriveFolder } from "@/features/contracts/lib/contracts-utils";
-import type { DocumentState, DocumentType } from "@/types/api.types";
+import type { DocumentUpdateRequest } from "@/types/api.types";
 import { TIMEOUTS } from "./constants";
 import { fetchAPI } from "./fetch-client";
 
-const DEFAULT_DRIVE_IMPORT_CLIENT = "Google Drive";
-const DEFAULT_DRIVE_IMPORT_TYPE: DocumentType = "COMPANY";
-const DEFAULT_DRIVE_IMPORT_STATE: DocumentState = "ACTIVE";
-
-type DriveImportDocumentPayload = {
-  name: string;
-  client: string;
-  type: DocumentType;
-  start_date: string;
-  end_date: string;
-  form_data: Record<string, never>;
-  state: DocumentState;
-  service_items: [];
-};
+type DriveImportDocumentPayload = Omit<DocumentUpdateRequest, "file">;
 
 type DriveImportFilePayload = {
   file_id: string;
@@ -43,32 +30,9 @@ export type GoogleDriveImportResponse = DriveImportApiResponse & {
   skipped_files: number;
 };
 
-const getTodayDate = (): string => {
-  return new Date().toISOString().slice(0, 10);
-};
-
-const buildDriveImportDocument = (
-  file: GooglePickerFile,
-  documentType: DocumentType,
-): DriveImportDocumentPayload => {
-  const today = getTodayDate();
-
-  return {
-    name: file.name.trim() || "Documento de Google Drive",
-    client: DEFAULT_DRIVE_IMPORT_CLIENT,
-    type: documentType,
-    start_date: today,
-    end_date: today,
-    form_data: {},
-    state: DEFAULT_DRIVE_IMPORT_STATE,
-    service_items: [],
-  };
-};
-
 export async function importGoogleDriveFiles(
   accessToken: string,
   files: GooglePickerFile[],
-  documentType: DocumentType = DEFAULT_DRIVE_IMPORT_TYPE,
 ): Promise<GoogleDriveImportResponse> {
   const importableFiles = files.filter((file) => !isDriveFolder(file));
   const skippedFiles = files.length - importableFiles.length;
@@ -92,7 +56,7 @@ export async function importGoogleDriveFiles(
         },
         files: importableFiles.map((file) => ({
           file_id: file.id,
-          document: buildDriveImportDocument(file, documentType),
+          document: {} satisfies DriveImportDocumentPayload,
         })),
       } satisfies DriveImportRequest),
     },

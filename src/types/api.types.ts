@@ -244,18 +244,28 @@ export interface NotificationRuleUpdateRequest {
 }
 
 export type TemplateState = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+export type TemplateFieldType = "text" | "number" | "date" | "time" | "boolean";
+export type TemplateGenerationMode = "adaptive" | "strict";
 
 export interface TemplateField {
   key: string;
   label: string;
-  type: string;
+  type: TemplateFieldType | (string & {});
   required: boolean;
+  placeholder?: string | null;
+}
+
+export interface TemplateContractDateMapping {
+  start_date_field: string;
+  end_date_field: string;
 }
 
 export interface TemplateContent {
   body_md: string;
   fields: TemplateField[];
+  operational_fields?: TemplateField[];
   version?: string | null;
+  contract_date_mapping?: TemplateContractDateMapping | null;
 }
 
 export interface Template {
@@ -263,14 +273,20 @@ export interface Template {
   organization_id: number;
   name: string;
   description?: string | null;
+  document_type: DocumentType;
+  template_format_id?: number | null;
+  format_code?: string | null;
+  format_label?: string | null;
   content: TemplateContent;
   created_at?: string | null;
   state: TemplateState;
 }
 
 export interface TemplateCreateRequest {
-  name: string;
+  name?: string | null;
   description?: string | null;
+  document_type?: DocumentType | null;
+  format_code: string;
   content: TemplateContent;
 }
 
@@ -281,6 +297,8 @@ export interface TemplateUpdateRequest {
 }
 
 export interface TemplatePreviewRequest {
+  document_type?: DocumentType | null;
+  format_code: string;
   content: TemplateContent;
   sample_data?: Record<string, unknown>;
 }
@@ -295,14 +313,32 @@ export interface GenerateTemplateDraftRequest {
   name?: string | null;
   description?: string | null;
   instructions?: string | null;
-  contract_type?: string | null;
   jurisdiction?: string | null;
+  document_type?: DocumentType | null;
+  format_code: string;
+  generation_mode?: TemplateGenerationMode;
+}
+
+export interface TemplateUsage {
+  input_tokens: number;
+  output_tokens: number;
+  total_tokens: number;
+}
+
+export interface TemplateFormatResponse {
+  id: number;
+  document_type: DocumentType;
+  format_code: string;
+  label: string;
+  default_name: string;
+  default_description?: string | null;
 }
 
 export interface PersistedTemplateDraftResponse {
   template: Template;
   warnings: string[];
   source: Record<string, unknown>;
+  usage?: TemplateUsage | null;
 }
 
 // ============================================

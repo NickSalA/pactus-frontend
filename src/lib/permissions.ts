@@ -52,6 +52,15 @@ export const canAccessAdminConsole = (role: RoleValue): boolean => {
   return isAdminRole(role);
 };
 
+export const canAuthorTemplates = (role: RoleValue): boolean => {
+  const allowedTypes = getAllowedDocumentTypes(role, WRITABLE_DOCUMENT_TYPES_BY_ROLE);
+  return allowedTypes === null || allowedTypes.length > 0;
+};
+
+export const getTemplateAuthoringDocumentTypes = (role: RoleValue): readonly DocumentType[] | null => {
+  return getWritableDocumentTypes(role);
+};
+
 export const canViewDocumentType = (role: RoleValue, documentType: DocumentType): boolean => {
   const allowedTypes = getAllowedDocumentTypes(role, READABLE_DOCUMENT_TYPES_BY_ROLE);
   return allowedTypes === null || allowedTypes.includes(documentType);
@@ -76,8 +85,7 @@ export const getDefaultWritableDocumentType = (role: RoleValue): DocumentType | 
 };
 
 export const canCreateContracts = (role: RoleValue): boolean => {
-  const allowedTypes = getAllowedDocumentTypes(role, WRITABLE_DOCUMENT_TYPES_BY_ROLE);
-  return allowedTypes === null || allowedTypes.length > 0;
+  return canAuthorTemplates(role);
 };
 
 export const canImportContracts = (role: RoleValue): boolean => {

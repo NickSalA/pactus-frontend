@@ -3,6 +3,7 @@ import { CURRENCY_OPTIONS, DOCUMENT_STATE_OPTIONS, DOCUMENT_TYPE_OPTIONS } from 
 import { HelpTip, type Step1Draft } from "@/features/contracts/lib/contract-form.utils";
 import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
 import type { DocumentType } from "@/types/api.types";
+import { Select } from "@/components/ui/Select";
 import { contractFormStyles } from "./contract-form.styles";
 
 type ContractFormGeneralFieldsProps = {
@@ -46,11 +47,12 @@ export function ContractFormGeneralFields({ allowedDocumentTypes, data, folderOp
             Carpeta
             <HelpTip text="Usa este campo solo si necesitas corregir la carpeta donde se guarda el contrato." />
           </label>
-          <select
+          <Select
+            variant="md"
+            className="w-full"
             name="folder_id"
             value={data.folder_id ?? ""}
             onChange={onChange}
-            className={contractFormStyles.select}
           >
             <option value="">Sin carpeta</option>
             {folderOptions.map((folder) => (
@@ -58,7 +60,7 @@ export function ContractFormGeneralFields({ allowedDocumentTypes, data, folderOp
                 {folder.name}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       )}
       <div>
@@ -66,11 +68,12 @@ export function ContractFormGeneralFields({ allowedDocumentTypes, data, folderOp
           Tipo de contrato
           <HelpTip text="Empresa = contratos corporativos, comerciales o con clientes. Trabajador = contratos laborales, de personal o gestionados por RRHH." />
         </label>
-        <select
+        <Select
+          variant="md"
+          className="w-full"
           name="type"
           value={data.type}
           onChange={onChange}
-          className={contractFormStyles.select}
           disabled={documentTypeOptions.length <= 1}
         >
           {documentTypeOptions.map((option) => (
@@ -78,25 +81,26 @@ export function ContractFormGeneralFields({ allowedDocumentTypes, data, folderOp
               {option.label}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
       <div>
         <label className={contractFormStyles.label}>
           Estado
           <HelpTip text="Borrador = en preparacion. Pendiente de firma = generado pero aun no firmado. Por vencer = dentro de la ventana de alerta. Terminado = cierre anticipado." />
         </label>
-        <select
+        <Select
+          variant="md"
+          className="w-full"
           name="state"
           value={data.state}
           onChange={onChange}
-          className={contractFormStyles.select}
         >
           {DOCUMENT_STATE_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
       <div>
         <label className={contractFormStyles.label}>Fecha de inicio</label>
@@ -123,18 +127,19 @@ export function ContractFormGeneralFields({ allowedDocumentTypes, data, folderOp
           Moneda del contrato
           <HelpTip text="La moneda elegida se aplicara automaticamente a todos los servicios. No se puede cambiar por servicio individual." />
         </label>
-        <select
+        <Select
+          variant="md"
+          className="w-full"
           name="contract_currency"
           value={data.contract_currency}
           onChange={onChange}
-          className={contractFormStyles.select}
         >
           {CURRENCY_OPTIONS.map((currency) => (
             <option key={currency} value={currency}>
               {currency}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
     </div>
   );

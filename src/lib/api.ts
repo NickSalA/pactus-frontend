@@ -32,9 +32,13 @@ export {
 } from "./api/organizations";
 export { importGoogleDriveFiles } from "./api/integrations";
 export {
+  archiveTemplate,
   createTemplate,
   getTemplateById,
+  getTemplateFormats,
   getTemplates,
+  generateContractFromTemplate,
+  generateTemplateDraft,
   previewTemplate,
   publishTemplate,
   updateTemplate,

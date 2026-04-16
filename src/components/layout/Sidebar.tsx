@@ -6,17 +6,17 @@ import { usePathname } from "next/navigation";
 import {
   Bell,
   Bot,
+  FileStack,
   FileText,
   LayoutDashboard,
   PanelLeftClose,
   PanelLeftOpen,
-  Plus,
   Settings2,
   ShieldCheck,
   Users,
 } from "lucide-react";
 import { type ComponentType, useState } from "react";
-import { canAccessAdminConsole } from "@/lib/permissions";
+import { canAccessAdminConsole, canAuthorTemplates } from "@/lib/permissions";
 import { useAuthStore, useSidebarStore } from "@/store";
 
 type MenuItem = {
@@ -26,11 +26,19 @@ type MenuItem = {
   name: string;
 };
 
-const mainMenuItems: MenuItem[] = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Contratos", href: "/contracts", icon: FileText },
-  { name: "Agente IA", href: "/ai-agent", icon: Bot },
-];
+const buildMainMenuItems = (hasTemplateAuthoringAccess: boolean): MenuItem[] => {
+  const items: MenuItem[] = [
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Contratos", href: "/contracts", icon: FileText },
+  ];
+
+  if (hasTemplateAuthoringAccess) {
+    items.push({ name: "Plantillas", href: "/templates", icon: FileStack, match: "prefix" });
+  }
+
+  items.push({ name: "Agente IA", href: "/ai-agent", icon: Bot });
+  return items;
+};
 
 const adminMenuItems: MenuItem[] = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard, match: "exact" },
@@ -60,7 +68,10 @@ export default function Sidebar() {
   const [isHoveringLogo, setIsHoveringLogo] = useState(false);
 
   const hasAdminAccess = canAccessAdminConsole(userRole);
+  const hasTemplateAuthoringAccess = canAuthorTemplates(userRole);
   const isAdminConsole = hasAdminAccess && pathname.startsWith("/admin");
+  const expandedSidebarWidth = isAdminConsole ? "w-72" : "w-64";
+  const mainMenuItems = buildMainMenuItems(hasTemplateAuthoringAccess);
   const menuItems = isAdminConsole
     ? adminMenuItems
     : hasAdminAccess
@@ -69,7 +80,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`${isCollapsed ? "w-20" : "w-64"} flex min-h-screen flex-col transition-all duration-300`}
+      className={`${isCollapsed ? "w-20" : expandedSidebarWidth} flex min-h-screen flex-col transition-all duration-300`}
       style={{
         background: "linear-gradient(180deg, #3b82f6 0%, #4f46e5 50%, #1e40af 100%)",
       }}
@@ -108,22 +119,11 @@ export default function Sidebar() {
             }`}
           >
             <span className="block text-2xl font-semibold">ContractAI</span>
-            {isAdminConsole && <span className="block text-[10px] font-medium uppercase tracking-[0.24em] text-white/70">Admin Console</span>}
+            {isAdminConsole && <span className="block text-[10px] font-medium uppercase tracking-[0.24em] text-white/70">Administrador</span>}
           </div>
         </div>
       </div>
 
-      {isAdminConsole && (
-        <div className="px-3 pb-3">
-          <Link
-            href="/contracts?new=1"
-            className="flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-white/15"
-          >
-            <Plus size={18} className="flex-shrink-0" />
-            {!isCollapsed && <span>Nuevo Documento</span>}
-          </Link>
-        </div>
-      )}
 
       <nav className="flex-1 px-3 py-4">
         {menuItems.map((item) => {
@@ -142,7 +142,7 @@ export default function Sidebar() {
             >
               <Icon size={22} className="flex-shrink-0" />
               <span
-                className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${
+                className={`min-w-0 overflow-hidden whitespace-nowrap text-[15px] transition-all duration-300 ${
                   isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100"
                 }`}
               >

@@ -1,17 +1,34 @@
 import type {
   Document,
+  DocumentServiceItemPayload,
+  DocumentType,
   GenerateTemplateDraftRequest,
   PersistedTemplateDraftResponse,
   Template,
   TemplateCreateRequest,
+  TemplateFormatResponse,
   TemplatePreviewRequest,
   TemplatePreviewResponse,
+  TemplateState,
   TemplateUpdateRequest,
 } from "@/types/api.types";
 import { TIMEOUTS } from "./constants";
 import { fetchAPI, fetchWithFormData } from "./fetch-client";
 
-export interface WorkerContractFormData {
+export interface TemplateListFilters {
+  documentType?: DocumentType;
+  formatCode?: string;
+  state?: TemplateState;
+}
+
+export interface TemplateGenerateContractRequest extends Record<string, unknown> {
+  cliente_nombre?: string;
+  folder_id?: number | null;
+  service_items?: DocumentServiceItemPayload[];
+  trabajador_nombre?: string;
+}
+
+export interface WorkerContractFormData extends TemplateGenerateContractRequest {
   trabajador_nombre: string;
   trabajador_dni: string;
   trabajador_domicilio: string;
@@ -31,11 +48,46 @@ export interface WorkerContractFormData {
   dia_firma: string;
   mes_firma: string;
   anio_firma: string;
-  folder_id?: number | null;
 }
 
-export async function getTemplates(): Promise<Template[]> {
-  return fetchAPI<Template[]>("/templates/", { method: "GET", cache: "no-store" }, TIMEOUTS.DEFAULT);
+const buildQueryString = (params: Record<string, string | null | undefined>): string => {
+  const query = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) {
+      query.set(key, value);
+    }
+  });
+
+  const serialized = query.toString();
+  return serialized ? `?${serialized}` : "";
+};
+
+const normalizeDraftRequest = (request: GenerateTemplateDraftRequest): GenerateTemplateDraftRequest => {
+  return Object.fromEntries(
+    Object.entries(request).filter(([, value]) => {
+      if (value == null) {
+        return false;
+      }
+
+      return typeof value !== "string" || value.trim() !== "";
+    }),
+  ) as GenerateTemplateDraftRequest;
+};
+
+export async function getTemplates(filters: TemplateListFilters = {}): Promise<Template[]> {
+  const query = buildQueryString({
+    document_type: filters.documentType,
+    format_code: filters.formatCode,
+    state: filters.state,
+  });
+
+  return fetchAPI<Template[]>(`/templates/${query}`, { method: "GET", cache: "no-store" }, TIMEOUTS.DEFAULT);
+}
+
+export async function getTemplateFormats(documentType?: DocumentType): Promise<TemplateFormatResponse[]> {
+  const query = buildQueryString({ document_type: documentType });
+  return fetchAPI<TemplateFormatResponse[]>(`/templates/formats${query}`, { method: "GET", cache: "no-store" }, TIMEOUTS.DEFAULT);
 }
 
 export async function getTemplateById(templateId: number): Promise<Template> {
@@ -62,6 +114,10 @@ export async function publishTemplate(templateId: number): Promise<Template> {
   return fetchAPI<Template>(`/templates/${templateId}/publish`, { method: "POST" }, TIMEOUTS.AUTH);
 }
 
+export async function archiveTemplate(templateId: number): Promise<Template> {
+  return fetchAPI<Template>(`/templates/${templateId}/archive`, { method: "POST" }, TIMEOUTS.AUTH);
+}
+
 export async function previewTemplate(payload: TemplatePreviewRequest): Promise<TemplatePreviewResponse> {
   return fetchAPI<TemplatePreviewResponse>(
     "/templates/preview",
@@ -71,26 +127,20 @@ export async function previewTemplate(payload: TemplatePreviewRequest): Promise<
 }
 
 export async function generateTemplateDraft(
-  request?: GenerateTemplateDraftRequest | null,
+  request: GenerateTemplateDraftRequest,
   file?: File | null,
 ): Promise<PersistedTemplateDraftResponse> {
+  const normalizedRequest = normalizeDraftRequest(request);
+
+  if (!normalizedRequest.format_code?.trim()) {
+    throw new Error("Debes seleccionar un formato.");
+  }
+
   const formData = new FormData();
+  formData.append("request", JSON.stringify(normalizedRequest));
 
   if (file) {
     formData.append("file", file);
-  }
-
-  if (request) {
-    const normalized = Object.fromEntries(
-      Object.entries(request).filter(([, v]) => v != null && String(v).trim() !== ""),
-    );
-    if (Object.keys(normalized).length > 0) {
-      formData.append("request", JSON.stringify(normalized));
-    }
-  }
-
-  if (!file && (!request || Object.keys(request).every((k) => !request[k as keyof GenerateTemplateDraftRequest]?.toString().trim()))) {
-    throw new Error("Debes completar el formulario, subir un PDF o ambas opciones.");
   }
 
   return fetchWithFormData<PersistedTemplateDraftResponse>(
@@ -101,9 +151,9 @@ export async function generateTemplateDraft(
   );
 }
 
-export async function generateWorkerContract(
+export async function generateContractFromTemplate(
   templateId: number,
-  data: WorkerContractFormData,
+  data: TemplateGenerateContractRequest,
 ): Promise<Document> {
   return fetchAPI<Document>(
     `/templates/${templateId}/generate`,

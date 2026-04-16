@@ -3,11 +3,14 @@
 import { FolderKanban, Pencil, Plus, Trash2 } from "lucide-react";
 import { AdminFolderModal } from "@/features/admin/components/modals/AdminFolderModal";
 import { AdminLoadingState } from "@/features/admin/components/shared/AdminLoadingState";
+import { AdminTablePagination } from "@/features/admin/components/shared/AdminTablePagination";
 import { useAdminFolders } from "@/features/admin/hooks/use-admin-folders";
+import { useAdminTablePagination } from "@/features/admin/hooks/use-admin-table-pagination";
 import { formatAdminDate, getFolderVisibilityLabel } from "@/features/admin/lib/admin-formatters";
 
 export function AdminFoldersSection() {
   const section = useAdminFolders();
+  const pagination = useAdminTablePagination(section.folders);
 
   if (section.loading) {
     return <AdminLoadingState />;
@@ -73,7 +76,7 @@ export function AdminFoldersSection() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200/80 bg-white text-sm text-slate-700">
-              {section.folders.map((folder) => (
+              {pagination.paginatedItems.map((folder) => (
                 <tr key={folder.id}>
                   <td className="px-6 py-4 font-medium text-slate-900">{folder.name}</td>
                   <td className="px-6 py-4">
@@ -119,8 +122,18 @@ export function AdminFoldersSection() {
           </table>
         </div>
 
-        {section.folders.length === 0 && (
+        {section.folders.length === 0 ? (
           <div className="px-6 py-8 text-center text-sm text-slate-500">Aún no existen carpetas registradas en la organización.</div>
+        ) : (
+          <AdminTablePagination
+            currentPage={pagination.currentPage}
+            itemsPerPage={pagination.itemsPerPage}
+            onItemsPerPageChange={pagination.changeItemsPerPage}
+            onPageChange={pagination.changePage}
+            startIndex={pagination.startIndex}
+            totalCount={pagination.totalCount}
+            totalPages={pagination.totalPages}
+          />
         )}
       </section>
 

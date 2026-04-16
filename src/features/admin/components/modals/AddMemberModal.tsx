@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, X } from "lucide-react";
 import { getUserRoleLabel } from "@/lib/authUser";
+import { Select } from "@/components/ui/Select";
 import type { OrganizationMemberCreateRequest, UserRole } from "@/types/api.types";
 
 type AddMemberModalProps = {
@@ -73,17 +74,18 @@ export function AddMemberModal({ isSubmitting, onClose, onSubmit, open }: AddMem
 
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">Rol asignado</label>
-            <select
+            <Select
+              variant="lg"
+              className="w-full"
               value={role}
               onChange={(event) => setRole(event.target.value as UserRole)}
-              className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition-all focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
             >
               {AVAILABLE_ROLES.map((availableRole) => (
                 <option key={availableRole} value={availableRole}>
                   {getUserRoleLabel(availableRole)}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           {error && <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}

@@ -20,14 +20,6 @@ export const FILTER_OPTIONS: Array<{ value: DocumentFilterValue; label: string }
   ...DOCUMENT_STATE_OPTIONS,
 ];
 
-export const getServiceCountLabel = (count: number): string => {
-  if (count === 0) {
-    return "Sin servicios";
-  }
-
-  return `${count} servicio${count === 1 ? "" : "s"}`;
-};
-
 export const mergeDriveSelections = (
   currentFiles: GooglePickerFile[],
   nextFiles: GooglePickerFile[],
@@ -69,10 +61,8 @@ export const filterContracts = (
     const matchesFilter = filter === "all" || contract.state === filter;
     const matchesSearch =
       searchTerm.length === 0 ||
-      contract.id.toString().includes(searchTerm) ||
       contract.name.toLowerCase().includes(searchTerm) ||
-      contract.client.toLowerCase().includes(searchTerm) ||
-      (contract.file_name ?? "").toLowerCase().includes(searchTerm);
+      contract.client.toLowerCase().includes(searchTerm);
 
     return matchesFilter && matchesSearch;
   });
