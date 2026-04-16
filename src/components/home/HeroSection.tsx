@@ -11,18 +11,16 @@ export default function HeroSection() {
           </span>
           INTELIGENCIA LEGAL DE CONFIANZA
         </span>
-        
+
         <h1 className="text-6xl font-bold leading-tight mb-8">
-          Inteligencia para el{" "}
-          <span className="text-[var(--primary)]">Notario Moderno</span>
+          Inteligencia para los{" "}
+          <span className="text-[var(--primary)]">Contratos Modernos</span>
         </h1>
-        
+
         <p className="text-gray-600 text-xl mb-10 leading-relaxed">
-          Automatiza la gestión de tus contratos y consultas legales con 
-          inteligencia artificial de nivel empresarial. Diseñado específicamente 
-          para documentación legal de alto impacto.
+          Optimiza contratos y consultas legales con inteligencia artificial de nivel empresarial. Precisión, rapidez y control para documentación legal de alto impacto.
         </p>
-        
+
         <Link
           href="/login"
           className="inline-block bg-[var(--primary)] text-white px-10 py-5 rounded-lg text-xl font-medium hover:bg-[var(--primary-dark)] transition-colors"
@@ -30,7 +28,7 @@ export default function HeroSection() {
           Iniciar sesión
         </Link>
       </div>
-      
+
       <div className="hidden lg:block -mt-16 flex-shrink-0">
         <Image
           src="/imagen-ContractAI-laptop.png"
