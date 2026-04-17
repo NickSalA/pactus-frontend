@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo-contractAI-azul.png",
   },
+  verification: {
+    google: "-sOhJfT_dGPqlZ7Tu48h_uW6nKh69lZ5HMCm1T9AgdY",
+  },
 };
 
 export default function RootLayout({
