@@ -61,7 +61,7 @@ export function AdminTemplatesSection() {
             <div>
               <h2 className="text-3xl font-semibold tracking-tight text-slate-900">Plantillas de contratos</h2>
               <p className="mt-1 text-sm text-slate-500">
-                Crea, edita, previsualiza y publica plantillas usando los endpoints del backend.
+                Crea, edita, previsualiza y publica plantillas.
               </p>
             </div>
           </div>
