@@ -9,7 +9,7 @@ export default function HeroSection() {
           <span className="w-6 h-6 bg-[var(--primary)] rounded-full flex items-center justify-center">
             <span className="text-white text-sm">✓</span>
           </span>
-          INTELIGENCIA LEGAL DE CONFIANZA
+          GESTIÓN INTELIGENTE DE CONTRATOS
         </span>
 
         <h1 className="text-6xl font-bold leading-tight mb-8">
@@ -18,7 +18,7 @@ export default function HeroSection() {
         </h1>
 
         <p className="text-gray-600 text-xl mb-10 leading-relaxed">
-          Optimiza contratos y consultas legales con inteligencia artificial de nivel empresarial. Precisión, rapidez y control para documentación legal de alto impacto.
+          Optimiza contratos y consultas con inteligencia artificial de nivel empresarial. Precisión, rapidez y control para documentación de alto impacto.
         </p>
 
         <Link
