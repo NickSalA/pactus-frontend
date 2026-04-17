@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { GOOGLE_DRIVE_SCOPE } from "@/lib/googlePicker";
@@ -211,6 +212,24 @@ export default function LoginPage() {
                     <p className="text-sm text-red-700">{error}</p>
                   </div>
                 )}
+
+                <p className="mt-6 text-center text-xs leading-5 text-slate-500">
+                  Al continuar, aceptas nuestros{" "}
+                  <Link
+                    href="/terms-of-service"
+                    className="font-medium text-slate-700 underline underline-offset-4 hover:text-slate-950"
+                  >
+                    Términos de Servicio
+                  </Link>{" "}
+                  y la{" "}
+                  <Link
+                    href="/privacy-policy"
+                    className="font-medium text-slate-700 underline underline-offset-4 hover:text-slate-950"
+                  >
+                    Política de Privacidad
+                  </Link>
+                  .
+                </p>
               </>
             ) : (
               <div className="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50/50 p-5">
