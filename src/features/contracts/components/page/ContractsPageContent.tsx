@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import { ContractsActionsBar } from "@/features/contracts/components/page/ContractsActionsBar";
 import { ContractsDriveSelection } from "@/features/contracts/components/page/ContractsDriveSelection";
 import { ContractsEmptyState } from "@/features/contracts/components/page/ContractsEmptyState";
@@ -10,6 +11,7 @@ import { ContractDeleteModal } from "@/features/contracts/components/modals/Cont
 import { ContractFormModal } from "@/features/contracts/components/modals/ContractFormModal";
 import { ContractPreviewModal } from "@/features/contracts/components/modals/ContractPreviewModal";
 import { NewContractModal } from "@/features/contracts/components/modals/NewContractModal";
+import { TableBulkActionBar } from "@/components/ui/TableBulkActionBar";
 import { useContractsPage } from "@/features/contracts/hooks/use-contracts-page";
 import type { Document, UserRole } from "@/types/api.types";
 
@@ -21,6 +23,38 @@ export function ContractsPageContent({
   shouldOpenCreateModal = false,
 }: ContractsPageContentProps) {
   const page = useContractsPage({ shouldOpenCreateModal });
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [page.filter, page.search, page.activeFolder.id, page.dateRange]);
+
+  const toggleSelectContract = useCallback((id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }, []);
+
+  const selectAllContracts = useCallback(() => {
+    setSelectedIds(new Set(page.filteredContracts.map((c) => c.id)));
+  }, [page.filteredContracts]);
+
+  const handleBulkDelete = useCallback(async () => {
+    setIsBulkDeleting(true);
+    try {
+      await page.bulkDeleteContracts([...selectedIds]);
+      setSelectedIds(new Set());
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  }, [page, selectedIds]);
 
   if (page.loading) {
     return (
@@ -162,6 +196,7 @@ export function ContractsPageContent({
         <>
           <ContractsActionsBar
             contracts={page.activeContracts}
+            dateRange={page.dateRange}
             filter={page.filter}
             importControl={page.canImportContract ? (
               <ContractsImportMenu
@@ -171,10 +206,27 @@ export function ContractsPageContent({
               />
             ) : undefined}
             onCreateContract={page.canCreateContract ? page.openCreateForm : undefined}
+            onDateRangeChange={page.changeDateRange}
             onFilterChange={page.changeFilter}
             onSearchChange={page.changeSearch}
+            onSortOrderChange={page.changeSortOrder}
             search={page.search}
+            sortOrder={page.sortOrder}
           />
+
+          {page.canDeleteContract && selectedIds.size > 0 && (
+            <div className="mb-3">
+              <TableBulkActionBar
+                isDeleting={isBulkDeleting}
+                itemLabel="contrato"
+                onDelete={handleBulkDelete}
+                onDeselectAll={() => setSelectedIds(new Set())}
+                onSelectAll={selectAllContracts}
+                selectedCount={selectedIds.size}
+                totalCount={page.filteredContracts.length}
+              />
+            </div>
+          )}
 
           <ContractsTable
             canDelete={page.canDeleteContract}
@@ -188,9 +240,11 @@ export function ContractsPageContent({
             onEdit={page.openEditForm}
             onItemsPerPageChange={page.changeItemsPerPage}
             onPageChange={page.changePage}
+            onToggleSelect={page.canDeleteContract ? toggleSelectContract : undefined}
             onView={(contract: Document) => {
               void page.viewContract(contract);
             }}
+            selectedIds={page.canDeleteContract ? selectedIds : undefined}
             startIndex={page.startIndex}
             totalPages={page.totalPages}
           />

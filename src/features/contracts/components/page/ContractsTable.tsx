@@ -27,7 +27,9 @@ type ContractsTableProps = {
   onEdit: (contract: Document) => void;
   onItemsPerPageChange: (value: number) => void;
   onPageChange: (page: number) => void;
+  onToggleSelect?: (id: number) => void;
   onView: (contract: Document) => void;
+  selectedIds?: Set<number>;
   startIndex: number;
   totalPages: number;
   userRole?: UserRole | null;
@@ -44,23 +46,27 @@ export function ContractsTable({
   onEdit,
   onItemsPerPageChange,
   onPageChange,
+  onToggleSelect,
   onView,
+  selectedIds,
   startIndex,
   totalPages,
   userRole,
 }: ContractsTableProps) {
   const visiblePageNumbers = getVisiblePageNumbers(currentPage, totalPages);
 
-  // Column visibility rules
+  const showCheckboxes = canDelete && onToggleSelect !== undefined;
   const showServicesColumn = userRole === "WORKER" || userRole === "MANAGER";
   const clientColumnLabel = userRole === "HR" ? "Colaborador" : "Cliente";
-  const totalColumns = showServicesColumn ? 8 : 7;
+  const baseColumns = showServicesColumn ? 8 : 7;
+  const totalColumns = showCheckboxes ? baseColumns + 1 : baseColumns;
 
   return (
     <div className="flex flex-col rounded-2xl border border-slate-200/60 bg-white shadow-sm">
       <div className="overflow-x-auto">
         <table className="min-w-full table-fixed text-sm">
           <colgroup>
+            {showCheckboxes && <col className="w-10" />}
             {showServicesColumn ? (
               <>
                 <col className="w-[26%]" />
@@ -86,6 +92,7 @@ export function ContractsTable({
           </colgroup>
           <thead>
             <tr className="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100/80">
+              {showCheckboxes && <th className="w-10 px-4 py-4" />}
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Contrato</th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">{clientColumnLabel}</th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Tipo</th>
@@ -105,8 +112,27 @@ export function ContractsTable({
               return (
                 <tr
                   key={contract.id}
-                  className={`group transition-colors hover:bg-blue-50/50 ${index % 2 === 0 ? "bg-white" : "bg-slate-50/30"}`}
+                  className={`group transition-colors hover:bg-blue-50/50 ${
+                    showCheckboxes && selectedIds?.has(contract.id)
+                      ? "bg-blue-50/60"
+                      : index % 2 === 0
+                        ? "bg-white"
+                        : "bg-slate-50/30"
+                  }`}
                 >
+                  {showCheckboxes && (
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds?.has(contract.id) ?? false}
+                        onChange={() => onToggleSelect?.(contract.id)}
+                        className={`h-4 w-4 cursor-pointer rounded border-slate-300 accent-blue-600 transition-opacity duration-150 ${
+                          selectedIds?.has(contract.id) ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        }`}
+                        aria-label={`Seleccionar ${contract.name}`}
+                      />
+                    </td>
+                  )}
                   <td className="px-4 py-3">
                     <span className="block font-medium text-slate-800">{contract.name}</span>
                   </td>

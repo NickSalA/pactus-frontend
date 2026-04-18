@@ -44,7 +44,10 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
     changeFilter,
     changeItemsPerPage,
     changePage,
+    changeDateRange,
     changeSearch,
+    changeSortOrder,
+    dateRange,
     filter,
     filteredContracts,
     isEmpty,
@@ -53,6 +56,7 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
     resetPagination,
     safeCurrentPage,
     search,
+    sortOrder,
     startIndex,
     totalPages,
   } = useContractsFilters(activeContracts);
@@ -122,6 +126,16 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
       setDeleting(false);
     }
   }, [closeDeleteModal, contractToDelete, removeContract, setDeleting]);
+
+  const bulkDeleteContracts = useCallback(async (ids: number[]): Promise<void> => {
+    try {
+      await Promise.all(ids.map((id) => deleteDocument(id)));
+      ids.forEach((id) => removeContract(id));
+    } catch (err) {
+      console.error("Error en eliminación masiva:", err);
+      window.alert(err instanceof Error ? err.message : "Error al eliminar los contratos");
+    }
+  }, [removeContract]);
 
   const createFolder = useCallback(
     async (name: string) => {
@@ -216,6 +230,11 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
     activeContracts,
     activeFolder,
     addContract,
+    bulkDeleteContracts,
+    changeDateRange,
+    changeSortOrder,
+    dateRange,
+    sortOrder,
     availableFolders: editableFolders,
     canCreateContract,
     canCreateFolder,

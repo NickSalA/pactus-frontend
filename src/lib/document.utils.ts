@@ -17,7 +17,6 @@ export const DOCUMENT_STATE_OPTIONS: Array<{ value: DocumentState; label: string
   { value: "ACTIVE", label: "Activo" },
   { value: "EXPIRING_SOON", label: "Por vencer" },
   { value: "EXPIRED", label: "Expirado" },
-  { value: "TERMINATED", label: "Terminado" },
 ];
 
 export const CURRENCY_OPTIONS: CurrencyType[] = ["USD", "EUR", "PEN"];
@@ -64,8 +63,6 @@ export const getDocumentStateClasses = (state: DocumentState): string => {
       return "bg-amber-50 text-amber-700 ring-1 ring-amber-600/20";
     case "EXPIRED":
       return "bg-red-50 text-red-700 ring-1 ring-red-600/20";
-    case "TERMINATED":
-      return "bg-zinc-100 text-zinc-700 ring-1 ring-zinc-600/20";
     default:
       return "bg-slate-50 text-slate-700 ring-1 ring-slate-600/20";
   }
@@ -83,8 +80,6 @@ export const getDashboardDocumentStateClasses = (state: DocumentState): string =
       return "bg-amber-100 text-amber-700";
     case "EXPIRED":
       return "bg-red-100 text-red-600";
-    case "TERMINATED":
-      return "bg-zinc-100 text-zinc-700";
     default:
       return "bg-slate-100 text-slate-700";
   }

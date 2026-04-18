@@ -1,6 +1,6 @@
 "use client";
 
-import { FolderKanban, Pencil, Plus, Trash2 } from "lucide-react";
+import { FolderKanban } from "lucide-react";
 import { AdminFolderModal } from "@/features/admin/components/modals/AdminFolderModal";
 import { AdminLoadingState } from "@/features/admin/components/shared/AdminLoadingState";
 import { AdminTablePagination } from "@/features/admin/components/shared/AdminTablePagination";
@@ -26,35 +26,29 @@ export function AdminFoldersSection() {
             </div>
             <div>
               <h2 className="text-3xl font-semibold tracking-tight text-slate-900">Gestor de Carpetas</h2>
-              <p className="mt-1 text-sm text-slate-500">Vista administrativa de carpetas creadas por RRHH y Manager dentro de la organización.</p>
+              <p className="mt-1 text-sm text-slate-500">Vista administrativa de carpetas creadas por RRHH y Gestor de Contratos dentro de la organización.</p>
             </div>
           </div>
 
-          <button
-            type="button"
-            disabled
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-100 px-5 py-3 text-sm font-medium text-slate-400"
-            title="Las carpetas se crean desde cuentas HR o Manager"
-          >
-            <Plus className="h-4 w-4" />
-            Nueva carpeta
-          </button>
         </div>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-3">
+      <section className="grid gap-4 lg:grid-cols-4">
         <article className="rounded-[28px] border border-slate-200/80 bg-white px-6 py-5 shadow-sm shadow-slate-200/70">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Carpetas totales</p>
           <p className="mt-3 text-4xl font-semibold text-slate-900">{section.stats.totalFolders}</p>
         </article>
         <article className="rounded-[28px] border border-slate-200/80 bg-white px-6 py-5 shadow-sm shadow-slate-200/70">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Documentos organizados</p>
-          <p className="mt-3 text-4xl font-semibold text-blue-600">{section.stats.totalDocuments}</p>
+          <p className="mt-3 text-4xl font-semibold text-slate-900">{section.stats.totalDocuments}</p>
         </article>
         <article className="rounded-[28px] border border-slate-200/80 bg-white px-6 py-5 shadow-sm shadow-slate-200/70">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Carpetas RRHH</p>
-          <p className="mt-3 text-4xl font-semibold text-emerald-600">{section.stats.hrCount}</p>
-          <p className="mt-2 text-sm text-slate-500">{section.stats.managerCount} carpetas de Manager</p>
+          <p className="mt-3 text-4xl font-semibold text-slate-900">{section.stats.hrCount}</p>
+        </article>
+        <article className="rounded-[28px] border border-slate-200/80 bg-white px-6 py-5 shadow-sm shadow-slate-200/70">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Carpetas Gestor Contratos</p>
+          <p className="mt-3 text-4xl font-semibold text-slate-900">{section.stats.managerCount}</p>
         </article>
       </section>
 
@@ -72,7 +66,6 @@ export function AdminFoldersSection() {
                 <th className="px-6 py-4">Creada por</th>
                 <th className="px-6 py-4">Documentos</th>
                 <th className="px-6 py-4">Creada</th>
-                <th className="px-6 py-4 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200/80 bg-white text-sm text-slate-700">
@@ -92,30 +85,6 @@ export function AdminFoldersSection() {
                   </td>
                   <td className="px-6 py-4 text-blue-600">{folder.documents_count}</td>
                   <td className="px-6 py-4 text-slate-500">{formatAdminDate(folder.created_at)}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <button
-                        type="button"
-                        onClick={() => section.openEditFolder(folder)}
-                        className="rounded-xl p-2 text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                        title="Editar carpeta"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (window.confirm("¿Eliminar esta carpeta? Los documentos quedarán sin carpeta asignada.")) {
-                            void section.removeFolder(folder.id);
-                          }
-                        }}
-                        className="rounded-xl p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                        title="Eliminar carpeta"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
                 </tr>
               ))}
             </tbody>

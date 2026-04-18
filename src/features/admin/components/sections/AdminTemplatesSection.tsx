@@ -152,11 +152,11 @@ export function AdminTemplatesSection() {
           </article>
           <article className="rounded-[24px] border border-slate-200/80 bg-white px-5 py-4 shadow-sm shadow-slate-200/70">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Borradores</p>
-            <p className="mt-2 text-3xl font-semibold text-amber-600">{section.stats.draftCount}</p>
+            <p className="mt-2 text-3xl font-semibold text-slate-900">{section.stats.draftCount}</p>
           </article>
           <article className="rounded-[24px] border border-slate-200/80 bg-white px-5 py-4 shadow-sm shadow-slate-200/70">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Publicadas</p>
-            <p className="mt-2 text-3xl font-semibold text-emerald-600">{section.stats.publishedCount}</p>
+            <p className="mt-2 text-3xl font-semibold text-slate-900">{section.stats.publishedCount}</p>
           </article>
         </div>
       </section>

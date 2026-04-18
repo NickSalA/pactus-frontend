@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowDownRight, ArrowUpRight, FileText, ShieldAlert } from "lucide-react";
+import { AlertTriangle, FileText, ShieldAlert } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { DashboardMetric, DashboardMetricTone } from "@/features/dashboard/lib/dashboard-data";
 
@@ -33,7 +33,6 @@ export function DashboardMetricsGrid({ isLoading, metrics }: DashboardMetricsGri
     <section className="grid gap-4 md:grid-cols-3">
       {metrics.map((metric) => {
         const { icon: Icon, iconStyle } = metricStyles[metric.tone];
-        const ChangeIcon = metric.positive ? ArrowUpRight : ArrowDownRight;
 
         return (
           <article
@@ -52,15 +51,6 @@ export function DashboardMetricsGrid({ isLoading, metrics }: DashboardMetricsGri
               <div className={`rounded-xl p-3 ${iconStyle}`}>
                 <Icon className="h-5 w-5" />
               </div>
-            </div>
-            <div className="mt-4 flex items-center gap-1 text-sm">
-              <ChangeIcon
-                className={`h-4 w-4 ${metric.positive ? "text-emerald-500" : "text-red-500"}`}
-              />
-              <span className={metric.positive ? "text-emerald-500" : "text-red-500"}>
-                {isLoading ? "..." : metric.change}
-              </span>
-              <span className="text-[var(--gray-medium)]">vs. mes anterior</span>
             </div>
           </article>
         );

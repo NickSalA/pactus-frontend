@@ -1,11 +1,13 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import { Bell, CalendarClock, Pencil, Plus, Trash2 } from "lucide-react";
 import { AdminNotificationRuleModal } from "@/features/admin/components/modals/AdminNotificationRuleModal";
 import { AdminSummaryCard } from "@/features/admin/components/cards/AdminSummaryCard";
 import { AdminErrorState } from "@/features/admin/components/shared/AdminErrorState";
 import { AdminLoadingState } from "@/features/admin/components/shared/AdminLoadingState";
 import { AdminTablePagination } from "@/features/admin/components/shared/AdminTablePagination";
+import { TableBulkActionBar } from "@/components/ui/TableBulkActionBar";
 import { formatAdminDate } from "@/features/admin/lib/admin-formatters";
 import { useAdminAlertRules } from "@/features/admin/hooks/use-admin-alert-rules";
 import { useAdminTablePagination } from "@/features/admin/hooks/use-admin-table-pagination";
@@ -13,6 +15,36 @@ import { useAdminTablePagination } from "@/features/admin/hooks/use-admin-table-
 export function AdminAlertsPageContent() {
   const page = useAdminAlertRules();
   const pagination = useAdminTablePagination(page.rules);
+  const [selectedRuleIds, setSelectedRuleIds] = useState<Set<number>>(new Set());
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+
+  useEffect(() => {
+    setSelectedRuleIds(new Set());
+  }, [pagination.currentPage]);
+
+  const toggleSelectRule = useCallback((id: number) => {
+    setSelectedRuleIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const selectAllRules = useCallback(() => {
+    setSelectedRuleIds(new Set(page.rules.map((r) => r.id)));
+  }, [page.rules]);
+
+  const handleBulkDeleteRules = useCallback(async () => {
+    setIsBulkDeleting(true);
+    try {
+      for (const id of selectedRuleIds) {
+        await page.removeRule(id);
+      }
+      setSelectedRuleIds(new Set());
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  }, [page, selectedRuleIds]);
 
   if (page.shouldBlockContent || page.loading) {
     return <AdminLoadingState />;
@@ -79,12 +111,26 @@ export function AdminAlertsPageContent() {
         <div className="border-b border-slate-200/80 px-6 py-5">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Listado de Alertas</p>
           <h2 className="mt-2 text-2xl font-semibold text-slate-900">Reglas de Notificación</h2>
+          {selectedRuleIds.size > 0 && (
+            <div className="mt-4">
+              <TableBulkActionBar
+                isDeleting={isBulkDeleting}
+                itemLabel="regla"
+                onDelete={handleBulkDeleteRules}
+                onDeselectAll={() => setSelectedRuleIds(new Set())}
+                onSelectAll={selectAllRules}
+                selectedCount={selectedRuleIds.size}
+                totalCount={page.rules.length}
+              />
+            </div>
+          )}
         </div>
 
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-200/80 text-left">
             <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
               <tr>
+                <th className="w-10 px-6 py-4" />
                 <th className="px-6 py-4">Alcance</th>
                 <th className="px-6 py-4 text-center">Anticipación</th>
                 <th className="px-6 py-4 text-center">Estado</th>
@@ -95,9 +141,21 @@ export function AdminAlertsPageContent() {
             <tbody className="divide-y divide-slate-200/80 bg-white text-sm text-slate-700">
               {pagination.paginatedItems.map((rule) => {
                 const linkedDocument = rule.document_id ? page.documentById.get(rule.document_id) : null;
+                const isSelected = selectedRuleIds.has(rule.id);
 
                 return (
-                  <tr key={rule.id}>
+                  <tr key={rule.id} className={`group ${isSelected ? "bg-blue-50/50" : ""}`}>
+                    <td className="px-6 py-4">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleSelectRule(rule.id)}
+                        className={`h-4 w-4 cursor-pointer rounded border-slate-300 accent-blue-600 transition-opacity duration-150 ${
+                          isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        }`}
+                        aria-label="Seleccionar regla"
+                      />
+                    </td>
                     <td className="px-6 py-4">
                       <div>
                         <p className="font-medium text-slate-900">{linkedDocument ? linkedDocument.name : "Toda la organización"}</p>

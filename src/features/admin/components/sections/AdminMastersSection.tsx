@@ -1,9 +1,11 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import { BookType, BriefcaseBusiness, Pencil, Plus, Trash2 } from "lucide-react";
 import { AdminServiceModal } from "@/features/admin/components/modals/AdminServiceModal";
 import { AdminLoadingState } from "@/features/admin/components/shared/AdminLoadingState";
 import { AdminSegmentedTabs } from "@/features/admin/components/shared/AdminSegmentedTabs";
+import { TableBulkActionBar } from "@/components/ui/TableBulkActionBar";
 import {
   type DocumentManagementCatalog,
 } from "@/features/admin/hooks/use-admin-document-management-page";
@@ -22,6 +24,38 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
   const servicesSection = useAdminServices();
   const documentTypesSection = useAdminDocumentTypes();
   const servicesPagination = useAdminTablePagination(servicesSection.services);
+  const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set());
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+
+  useEffect(() => {
+    setSelectedServiceIds(new Set());
+  }, [servicesPagination.currentPage]);
+
+  const toggleSelectService = useCallback((id: number) => {
+    setSelectedServiceIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const deletableServices = servicesSection.services.filter((s) => s.documents_count === 0);
+
+  const selectAllDeletableServices = useCallback(() => {
+    setSelectedServiceIds(new Set(deletableServices.map((s) => s.id)));
+  }, [deletableServices]);
+
+  const handleBulkDeleteServices = useCallback(async () => {
+    setIsBulkDeleting(true);
+    try {
+      for (const id of selectedServiceIds) {
+        await servicesSection.removeService(id);
+      }
+      setSelectedServiceIds(new Set());
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  }, [selectedServiceIds, servicesSection]);
 
   if ((activeCatalog === "services" && servicesSection.loading) || (activeCatalog === "document-types" && documentTypesSection.loading)) {
     return <AdminLoadingState />;
@@ -36,8 +70,8 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
               <BriefcaseBusiness className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="text-3xl font-semibold tracking-tight text-slate-900">Maestros del Negocio</h2>
-              <p className="mt-1 text-sm text-slate-500">Catálogos editables de servicios y referencia operativa para tipos de documento.</p>
+              <h2 className="text-3xl font-semibold tracking-tight text-slate-900">Gestión de servicios</h2>
+              <p className="mt-1 text-sm text-slate-500">Catálogos editables de servicios y referencia de los tipos de documento.</p>
             </div>
           </div>
 
@@ -72,11 +106,11 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
             </article>
             <article className="rounded-[28px] border border-slate-200/80 bg-white px-6 py-5 shadow-sm shadow-slate-200/70">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Activos</p>
-              <p className="mt-3 text-4xl font-semibold text-emerald-600">{servicesSection.stats.activeCount}</p>
+              <p className="mt-3 text-4xl font-semibold text-slate-900">{servicesSection.stats.activeCount}</p>
             </article>
             <article className="rounded-[28px] border border-slate-200/80 bg-white px-6 py-5 shadow-sm shadow-slate-200/70">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">En uso</p>
-              <p className="mt-3 text-4xl font-semibold text-blue-600">{servicesSection.stats.inUseCount}</p>
+              <p className="mt-3 text-4xl font-semibold text-slate-900">{servicesSection.stats.inUseCount}</p>
             </article>
           </section>
 
@@ -85,10 +119,24 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
           )}
 
           <section className="overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-sm shadow-slate-200/70">
+            {selectedServiceIds.size > 0 && (
+              <div className="border-b border-slate-200/80 px-6 py-4">
+                <TableBulkActionBar
+                  isDeleting={isBulkDeleting}
+                  itemLabel="servicio"
+                  onDelete={handleBulkDeleteServices}
+                  onDeselectAll={() => setSelectedServiceIds(new Set())}
+                  onSelectAll={selectAllDeletableServices}
+                  selectedCount={selectedServiceIds.size}
+                  totalCount={deletableServices.length}
+                />
+              </div>
+            )}
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-slate-200/80 text-left">
                 <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
                   <tr>
+                    <th className="w-10 px-6 py-4" />
                     <th className="px-6 py-4">Servicio</th>
                     <th className="px-6 py-4">Estado</th>
                     <th className="px-6 py-4">Contratos</th>
@@ -97,8 +145,23 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200/80 bg-white text-sm text-slate-700">
-                  {servicesPagination.paginatedItems.map((service) => (
-                    <tr key={service.id}>
+                  {servicesPagination.paginatedItems.map((service) => {
+                    const canDelete = service.documents_count === 0;
+                    const isSelected = selectedServiceIds.has(service.id);
+                    return (
+                    <tr key={service.id} className={`group ${isSelected ? "bg-blue-50/50" : ""}`}>
+                      <td className="px-6 py-4">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectService(service.id)}
+                          disabled={!canDelete}
+                          className={`h-4 w-4 cursor-pointer rounded border-slate-300 accent-blue-600 transition-opacity duration-150 disabled:cursor-not-allowed ${
+                            isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 disabled:opacity-0"
+                          }`}
+                          aria-label={`Seleccionar ${service.name}`}
+                        />
+                      </td>
                       <td className="px-6 py-4 font-medium text-slate-900">{service.name}</td>
                       <td className="px-6 py-4">
                         <button
@@ -133,7 +196,7 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
                                 void servicesSection.removeService(service.id);
                               }
                             }}
-                            disabled={service.documents_count > 0}
+                            disabled={!canDelete}
                             className="rounded-xl p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
                             title="Eliminar servicio"
                           >
@@ -142,7 +205,8 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
                         </div>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

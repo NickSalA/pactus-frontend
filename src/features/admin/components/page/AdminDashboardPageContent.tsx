@@ -109,7 +109,7 @@ export function AdminDashboardPageContent() {
             title="Configuración de Alertas"
           />
           <AdminModuleCard
-            description="Plantillas, carpetas y maestros del negocio"
+            description="Plantillas, carpetas y Gestion de servicios"
             href="/admin/document-management"
             icon={<Shield className="h-5 w-5" />}
             title="Gestión Documental"

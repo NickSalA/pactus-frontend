@@ -23,7 +23,7 @@ export function AdminDocumentManagementPageContent() {
           tabs={[
             { id: "templates", label: "Plantillas de Contratos" },
             { id: "folders", label: "Gestor de Carpetas" },
-            { id: "masters", label: "Maestros del Negocio" },
+            { id: "masters", label: "Gestión de servicios" },
           ]}
         />
       </div>
