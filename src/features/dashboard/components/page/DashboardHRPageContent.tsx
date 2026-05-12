@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardAlertCenter } from "@/features/dashboard/components/charts/DashboardAlertCenter";
 import { DashboardAreaChart } from "@/features/dashboard/components/charts/DashboardAreaChart";
 import { DashboardRecentDocumentsTable } from "@/features/dashboard/components/page/DashboardRecentDocumentsTable";
 import { DashboardWelcome } from "@/features/dashboard/components/page/DashboardWelcome";
@@ -15,7 +16,7 @@ const PlaceholderCell = ({ label }: { label: string }) => (
 
 export function DashboardHRPageContent() {
   const { user } = useAuthStore();
-  const { areaChart, recentContracts, isLoading, error } = useDashboardHRPage();
+  const { areaChart, alerts, recentContracts, isLoading, error } = useDashboardHRPage();
   const firstName = toFirstName(user?.name || "Usuario");
 
   return (
@@ -37,7 +38,10 @@ export function DashboardHRPageContent() {
           isLoading={isLoading}
           documentType="LABOR"
         />
-        <PlaceholderCell label="Alertas (próximamente)" />
+        <DashboardAlertCenter
+          alerts={alerts}
+          isLoading={isLoading}
+        />
         <DashboardRecentDocumentsTable
           documents={recentContracts}
           isLoading={isLoading}
@@ -48,7 +52,7 @@ export function DashboardHRPageContent() {
           endIndex={recentContracts.length}
           onPageChange={() => {}}
         />
-        <PlaceholderCell label="Alertas (próximamente)" />
+        <PlaceholderCell label="Placeholder (próximamente)" />
       </section>
     </div>
   );
