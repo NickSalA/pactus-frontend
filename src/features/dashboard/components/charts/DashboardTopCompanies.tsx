@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   BarChart,
   Bar,
@@ -9,8 +9,8 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
-import type { DocumentType, TopCompanyResponse } from "@/types/api.types";
+} from 'recharts';
+import type { DocumentType, TopCompanyResponse } from '@/types/api.types';
 
 type DashboardTopCompaniesProps = {
   data: TopCompanyResponse[];
@@ -18,29 +18,33 @@ type DashboardTopCompaniesProps = {
   documentType: DocumentType;
 };
 
-type MetricKey = "contracts" | "amount";
+type MetricKey = 'contracts' | 'amount';
 
 const COLORS = {
-  COMPANY: "#10B981",
-  LABOR: "#EF4444",
+  COMPANY: '#3B82F6',
+  LABOR: '#EF4444',
 } as const;
 
 const LoadingSkeleton = () => (
-  <div className="flex h-64 animate-pulse items-center justify-center rounded-xl bg-gray-100">
+  <div className="flex flex-1 animate-pulse items-center justify-center rounded-xl bg-gray-50">
     <span className="text-sm text-gray-400">Cargando ranking...</span>
   </div>
 );
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("es-PE", {
-    style: "currency",
-    currency: "PEN",
+  new Intl.NumberFormat('es-PE', {
+    style: 'currency',
+    currency: 'PEN',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value);
 
-export function DashboardTopCompanies({ data, isLoading, documentType }: DashboardTopCompaniesProps) {
-  const [activeMetric, setActiveMetric] = useState<MetricKey>("amount");
+export function DashboardTopCompanies({
+  data,
+  isLoading,
+  documentType,
+}: DashboardTopCompaniesProps) {
+  const [activeMetric, setActiveMetric] = useState<MetricKey>('amount');
 
   if (isLoading) {
     return <LoadingSkeleton />;
@@ -50,72 +54,95 @@ export function DashboardTopCompanies({ data, isLoading, documentType }: Dashboa
 
   const chartData = data.map((item) => ({
     name: item.name,
-    [activeMetric]: activeMetric === "amount" ? item.amount : item.contracts,
+    [activeMetric]: activeMetric === 'amount' ? item.amount : item.contracts,
   }));
 
   const tooltipFormatter = (value: unknown, name: unknown) => {
-    if (typeof value !== "number") return ["—", String(name)];
-    if (String(name) === "amount") {
-      return [formatCurrency(value), "Monto"];
+    if (typeof value !== 'number') return ['—', String(name)];
+    if (String(name) === 'amount') {
+      return [formatCurrency(value), 'Monto'];
     }
-    return [value, "Contratos"];
+    return [value, 'Contratos'];
   };
 
   return (
-    <section className="rounded-2xl bg-white p-5 shadow-md">
+    <section className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
       <header className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-slate-800">Top Empresas</h3>
-        <div className="flex rounded-lg border border-gray-200 p-0.5">
+<div className="flex rounded-lg bg-gray-100 p-0.5">
           <button
             onClick={() => setActiveMetric("contracts")}
             className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
               activeMetric === "contracts"
-                ? "bg-gray-900 text-white"
-                : "text-gray-600 hover:bg-gray-50"
+                ? "bg-white text-blue-600 shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
             }`}
           >
-            Cantidad
+            VOL
           </button>
           <button
             onClick={() => setActiveMetric("amount")}
             className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
               activeMetric === "amount"
-                ? "bg-gray-900 text-white"
-                : "text-gray-600 hover:bg-gray-50"
+                ? "bg-white text-blue-600 shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
             }`}
           >
-            Monto
+            VALOR
           </button>
         </div>
       </header>
 
-      <ResponsiveContainer height={200} width="100%">
-        <BarChart
-          data={chartData}
-          layout="vertical"
-          margin={{ top: 0, right: 20, left: 80, bottom: 0 }}
-        >
-          <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#64748B" }} />
-          <YAxis
-            type="category"
-            dataKey="name"
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 11, fill: "#64748B" }}
-            width={75}
-          />
-          <Tooltip formatter={tooltipFormatter} cursor={{ fill: "transparent" }} />
-          <Bar dataKey={activeMetric} radius={[0, 4, 4, 0]}>
-            {chartData.map((_, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={barColor}
-                fillOpacity={0.85 - index * 0.1}
-              />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="flex-1 relative min-h-48 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={chartData}
+            layout="vertical"
+            margin={{ top: 0, right: 20, left: 80, bottom: 0 }}
+          >
+            <XAxis
+              type="number"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 11, fill: '#64748B' }}
+            />
+            <YAxis
+              type="category"
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={({ x, y, payload }) => (
+                <text
+                  x={x}
+                  y={y}
+                  dy={4}
+                  fill="#64748B"
+                  fontSize={11}
+                  textAnchor="end"
+                >
+                  {payload.value.length > 12
+                    ? `${payload.value.substring(0, 12)}...`
+                    : payload.value}
+                </text>
+              )}
+              width={80}
+            />
+            <Tooltip
+              formatter={tooltipFormatter}
+              cursor={{ fill: 'transparent' }}
+            />
+            <Bar dataKey={activeMetric} radius={[0, 4, 4, 0]}>
+              {chartData.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={barColor}
+                  fillOpacity={0.85 - index * 0.1}
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </section>
   );
 }

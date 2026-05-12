@@ -22,7 +22,7 @@ const COLORS = {
 } as const;
 
 const LoadingSkeleton = () => (
-  <div className="flex h-64 animate-pulse items-center justify-center rounded-xl bg-gray-100">
+  <div className="flex flex-1 animate-pulse items-center justify-center rounded-xl bg-gray-50">
     <span className="text-sm text-gray-400">Cargando gráfico...</span>
   </div>
 );
@@ -55,17 +55,18 @@ export function DashboardAreaChart({ data, isLoading, documentType }: DashboardA
   };
 
   return (
-    <section className="rounded-2xl bg-white p-5 shadow-md">
+    <section className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
       <header className="mb-4">
         <h3 className="text-lg font-semibold text-slate-800">{props.title}</h3>
         <p className="text-sm text-slate-500">{props.subtitle}</p>
       </header>
 
-      <ResponsiveContainer height={240} width="100%">
-        <AreaChart
-          data={formattedData}
-          margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-        >
+      <div className="flex-1 relative min-h-64 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={formattedData}
+            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+          >
           <defs>
             <linearGradient id={`gradient-${documentType}`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={lineColor} stopOpacity={0.3} />
@@ -104,9 +105,10 @@ export function DashboardAreaChart({ data, isLoading, documentType }: DashboardA
               fill={`url(#gradient-${documentType})`}
               activeDot={{ r: 6, stroke: lineColor, strokeWidth: 2, fill: "#fff" }}
             />
-          ))}
-        </AreaChart>
-      </ResponsiveContainer>
+))}
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
 
       <p className="mt-2 text-xs text-slate-400">
         * Datos con línea punteada son proyecciones

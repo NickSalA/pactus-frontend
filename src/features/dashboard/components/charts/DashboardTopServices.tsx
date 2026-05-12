@@ -21,12 +21,12 @@ type DashboardTopServicesProps = {
 type MetricKey = "quantity" | "amount";
 
 const COLORS = {
-  COMPANY: "#10B981",
+  COMPANY: "#3B82F6",
   LABOR: "#EF4444",
 } as const;
 
 const LoadingSkeleton = () => (
-  <div className="flex h-64 animate-pulse items-center justify-center rounded-xl bg-gray-100">
+  <div className="flex flex-1 animate-pulse items-center justify-center rounded-xl bg-gray-50">
     <span className="text-sm text-gray-400">Cargando ranking...</span>
   </div>
 );
@@ -62,34 +62,35 @@ export function DashboardTopServices({ data, isLoading, documentType }: Dashboar
   };
 
   return (
-    <section className="rounded-2xl bg-white p-5 shadow-md">
+    <section className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
       <header className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-slate-800">Top Servicios</h3>
-        <div className="flex rounded-lg border border-gray-200 p-0.5">
+        <div className="flex rounded-lg bg-gray-100 p-0.5">
           <button
             onClick={() => setActiveMetric("quantity")}
             className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
               activeMetric === "quantity"
-                ? "bg-gray-900 text-white"
-                : "text-gray-600 hover:bg-gray-50"
+                ? "bg-white text-blue-600 shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
             }`}
           >
-            Cantidad
+            VOL
           </button>
           <button
             onClick={() => setActiveMetric("amount")}
             className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
               activeMetric === "amount"
-                ? "bg-gray-900 text-white"
-                : "text-gray-600 hover:bg-gray-50"
+                ? "bg-white text-blue-600 shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
             }`}
           >
-            Monto
+            VALOR
           </button>
         </div>
       </header>
 
-      <ResponsiveContainer height={200} width="100%">
+      <div className="flex-1 relative min-h-48 w-full">
+        <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={chartData}
           layout="vertical"
@@ -101,8 +102,21 @@ export function DashboardTopServices({ data, isLoading, documentType }: Dashboar
             dataKey="name"
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 11, fill: "#64748B" }}
-            width={75}
+            tick={({ x, y, payload }) => (
+              <text
+                x={x}
+                y={y}
+                dy={4}
+                fill="#64748B"
+                fontSize={11}
+                textAnchor="end"
+              >
+                {payload.value.length > 12
+                  ? `${payload.value.substring(0, 12)}...`
+                  : payload.value}
+              </text>
+            )}
+            width={80}
           />
           <Tooltip formatter={tooltipFormatter} cursor={{ fill: "transparent" }} />
           <Bar dataKey={activeMetric} radius={[0, 4, 4, 0]}>
@@ -115,7 +129,8 @@ export function DashboardTopServices({ data, isLoading, documentType }: Dashboar
             ))}
           </Bar>
         </BarChart>
-      </ResponsiveContainer>
+        </ResponsiveContainer>
+      </div>
     </section>
   );
 }

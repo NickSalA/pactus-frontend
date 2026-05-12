@@ -9,7 +9,7 @@ import { useAuthStore } from "@/store";
 import { useDashboardManagerPage } from "@/features/dashboard/hooks/use-dashboard-manager-page";
 
 const PlaceholderCell = ({ label }: { label: string }) => (
-  <div className="flex min-h-48 items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50">
+  <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50">
     <span className="text-sm text-gray-400">{label}</span>
   </div>
 );
@@ -29,7 +29,10 @@ export function DashboardManagerPageContent() {
         </section>
       )}
 
-      <section className="grid gap-4 md:grid-cols-2">
+      <section
+        className="grid gap-4 md:grid-cols-2"
+        style={{ gridTemplateRows: "1fr 1fr" }}
+      >
         <DashboardAreaChart
           data={areaChart!}
           isLoading={isLoading}
