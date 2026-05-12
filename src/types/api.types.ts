@@ -99,7 +99,13 @@ export interface ConversationWithContent extends Conversation {
 // DOCUMENT TYPES
 // ============================================
 export type DocumentType = 'COMPANY' | 'LABOR';
-export type DocumentState = 'DRAFT' | 'PENDING_SIGNATURE' | 'ACTIVE' | 'EXPIRING_SOON' | 'EXPIRED' | 'TERMINATED';
+export type DocumentState =
+  | 'DRAFT'
+  | 'PENDING_SIGNATURE'
+  | 'ACTIVE'
+  | 'EXPIRING_SOON'
+  | 'EXPIRED'
+  | 'TERMINATED';
 export type CurrencyType = 'PEN' | 'USD' | 'EUR';
 
 export interface DocumentFormData {
@@ -211,10 +217,10 @@ export interface DocumentFileUrlResponse {
 // ============================================
 // NOTIFICATION TYPES
 // ============================================
-export type NotificationType = "critical" | "warning" | "info";
+export type NotificationType = 'critical' | 'warning' | 'info';
 
 export interface Notification {
-  id: string;         // "contract-{doc_id}-{days}" — stable for localStorage
+  id: string; // "contract-{doc_id}-{days}" — stable for localStorage
   document_id: number;
   type: NotificationType;
   title: string;
@@ -243,9 +249,9 @@ export interface NotificationRuleUpdateRequest {
   is_active?: boolean;
 }
 
-export type TemplateState = "DRAFT" | "PUBLISHED" | "ARCHIVED";
-export type TemplateFieldType = "text" | "number" | "date" | "time" | "boolean";
-export type TemplateGenerationMode = "adaptive" | "strict";
+export type TemplateState = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+export type TemplateFieldType = 'text' | 'number' | 'date' | 'time' | 'boolean';
+export type TemplateGenerationMode = 'adaptive' | 'strict';
 
 export interface TemplateField {
   key: string;
@@ -339,6 +345,80 @@ export interface PersistedTemplateDraftResponse {
   warnings: string[];
   source: Record<string, unknown>;
   usage?: TemplateUsage | null;
+}
+
+// ============================================
+// DASHBOARD TYPES
+// ============================================
+export type TopRankingSortBy = 'volume' | 'value';
+
+export interface AreaChartPoint {
+  x: string;
+  y: number;
+  is_forecast: boolean;
+}
+
+export interface AreaChartSeries {
+  currency: string;
+  name: string;
+  data: AreaChartPoint[];
+}
+
+export interface AreaChartYAxis {
+  format: string;
+  labels: number[];
+}
+
+export interface AreaChartProps {
+  title: string;
+  subtitle: string;
+  y_axis: AreaChartYAxis;
+  threshold_date: string;
+  series: AreaChartSeries[];
+}
+
+export interface AreaChartResponse {
+  props: AreaChartProps;
+}
+
+export interface AlertColor {
+  accent: string;
+  bg: string;
+}
+
+export interface AlertItem {
+  id: number;
+  name: string;
+  detail: string | null;
+  status: string;
+}
+
+export interface AlertCategory {
+  label: string;
+  color: AlertColor;
+  due_to: number | null;
+  count: number;
+  items: AlertItem[];
+}
+
+export interface RecentContractResponse {
+  id: number;
+  title: string;
+  services: string[];
+  name: string;
+  dates: string;
+}
+
+export interface TopCompanyResponse {
+  name: string;
+  contracts: number;
+  amount: number;
+}
+
+export interface TopServiceResponse {
+  name: string;
+  quantity: number;
+  amount: number;
 }
 
 // ============================================
