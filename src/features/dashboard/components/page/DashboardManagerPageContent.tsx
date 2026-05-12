@@ -1,0 +1,52 @@
+"use client";
+
+import { DashboardAreaChart } from "@/features/dashboard/components/charts/DashboardAreaChart";
+import { DashboardTopCompanies } from "@/features/dashboard/components/charts/DashboardTopCompanies";
+import { DashboardTopServices } from "@/features/dashboard/components/charts/DashboardTopServices";
+import { DashboardWelcome } from "@/features/dashboard/components/page/DashboardWelcome";
+import { toFirstName } from "@/lib/authUser";
+import { useAuthStore } from "@/store";
+import { useDashboardManagerPage } from "@/features/dashboard/hooks/use-dashboard-manager-page";
+
+const PlaceholderCell = ({ label }: { label: string }) => (
+  <div className="flex min-h-48 items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50">
+    <span className="text-sm text-gray-400">{label}</span>
+  </div>
+);
+
+export function DashboardManagerPageContent() {
+  const { user } = useAuthStore();
+  const { areaChart, topCompanies, topServices, isLoading, error } = useDashboardManagerPage();
+  const firstName = toFirstName(user?.name || "Usuario");
+
+  return (
+    <div className="space-y-6">
+      <DashboardWelcome firstName={firstName} />
+
+      {error && (
+        <section className="rounded-2xl border border-red-200 bg-red-50 px-6 py-4 text-sm text-red-700 shadow-sm">
+          No se pudieron cargar los datos del dashboard: {error}
+        </section>
+      )}
+
+      <section className="grid gap-4 md:grid-cols-2">
+        <DashboardAreaChart
+          data={areaChart!}
+          isLoading={isLoading}
+          documentType="COMPANY"
+        />
+        <DashboardTopCompanies
+          data={topCompanies!}
+          isLoading={isLoading}
+          documentType="COMPANY"
+        />
+        <DashboardTopServices
+          data={topServices!}
+          isLoading={isLoading}
+          documentType="COMPANY"
+        />
+        <PlaceholderCell label="Alertas (próximamente)" />
+      </section>
+    </div>
+  );
+}
