@@ -17,6 +17,24 @@ type DashboardRecentDocumentsTableProps = {
   totalRecords: number;
 };
 
+const LoadingSkeleton = () => (
+  <div className="flex flex-1 flex-col px-6 py-4">
+    {[1, 2, 3].map((i) => (
+      <div key={i} className="flex items-center gap-4 py-3 border-b border-slate-100 last:border-0">
+        <div className="flex items-center gap-3 flex-1">
+          <div className="h-10 w-10 rounded-lg bg-gray-200 animate-pulse" />
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-3/4 rounded bg-gray-200 animate-pulse" />
+            <div className="h-3 w-1/2 rounded bg-gray-200 animate-pulse" />
+          </div>
+        </div>
+        <div className="h-6 w-20 rounded-full bg-gray-200 animate-pulse" />
+        <div className="h-4 w-20 rounded bg-gray-200 animate-pulse" />
+      </div>
+    ))}
+  </div>
+);
+
 export function DashboardRecentDocumentsTable({
   currentPage,
   documents,
@@ -27,6 +45,19 @@ export function DashboardRecentDocumentsTable({
   totalPages,
   totalRecords,
 }: DashboardRecentDocumentsTableProps) {
+  if (isLoading) {
+    return (
+      <article className="flex flex-col h-full rounded-2xl bg-white shadow-md">
+        <div className="border-b border-slate-100 px-6 py-5">
+          <h2 className="text-lg font-semibold text-slate-800">Contratos recientes</h2>
+          <p className="mt-1 text-sm text-[var(--gray-medium)]">
+            Ultimas actualizaciones registradas en tus contratos.
+          </p>
+        </div>
+        <LoadingSkeleton />
+      </article>
+    );
+  }
   return (
     <article className="flex flex-col h-full rounded-2xl bg-white shadow-md">
       <div className="border-b border-slate-100 px-6 py-5">
@@ -53,22 +84,14 @@ export function DashboardRecentDocumentsTable({
             </tr>
           </thead>
           <tbody>
-            {isLoading && (
-              <tr>
-                <td className="px-6 py-6 text-sm text-[var(--gray-medium)]" colSpan={4}>
-                  Cargando documentos...
-                </td>
-              </tr>
-            )}
-            {!isLoading && documents.length === 0 && (
+            {documents.length === 0 && (
               <tr>
                 <td className="px-6 py-6 text-sm text-[var(--gray-medium)]" colSpan={4}>
                   No hay documentos disponibles.
                 </td>
               </tr>
             )}
-            {!isLoading &&
-              documents.map((document) => (
+            {documents.map((document) => (
                 <tr key={document.id} className="border-t border-slate-100 hover:bg-slate-50/70">
                   <td className="px-6 py-4 align-middle">
                     <div className="flex items-start gap-3">
