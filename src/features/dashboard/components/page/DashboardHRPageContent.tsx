@@ -8,12 +8,6 @@ import { toFirstName } from "@/lib/authUser";
 import { useAuthStore } from "@/store";
 import { useDashboardHRPage } from "@/features/dashboard/hooks/use-dashboard-hr-page";
 
-const PlaceholderCell = ({ label }: { label: string }) => (
-  <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50">
-    <span className="text-sm text-gray-400">{label}</span>
-  </div>
-);
-
 export function DashboardHRPageContent() {
   const { user } = useAuthStore();
   const { areaChart, alerts, recentContracts, isLoading, error } = useDashboardHRPage();
@@ -42,17 +36,18 @@ export function DashboardHRPageContent() {
           alerts={alerts}
           isLoading={isLoading}
         />
-        <DashboardRecentDocumentsTable
-          documents={recentContracts}
-          isLoading={isLoading}
-          currentPage={1}
-          totalPages={1}
-          totalRecords={recentContracts.length}
-          startIndex={0}
-          endIndex={recentContracts.length}
-          onPageChange={() => {}}
-        />
-        <PlaceholderCell label="Placeholder (próximamente)" />
+        <div className="col-span-2">
+          <DashboardRecentDocumentsTable
+            documents={recentContracts}
+            isLoading={isLoading}
+            currentPage={1}
+            totalPages={1}
+            totalRecords={recentContracts.length}
+            startIndex={0}
+            endIndex={recentContracts.length}
+            onPageChange={() => {}}
+          />
+        </div>
       </section>
     </div>
   );
