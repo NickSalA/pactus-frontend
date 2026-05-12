@@ -44,5 +44,15 @@ export {
   updateTemplate,
 } from "./api/templates";
 export { TIMEOUTS } from "./api/constants";
+export {
+  getAreaChartCompany,
+  getAreaChartLabor,
+  getAlertCenterCompany,
+  getAlertCenterLabor,
+  getRecentContractsCompany,
+  getRecentContractsLabor,
+  getTopCompanies,
+  getTopServices,
+} from "./api/dashboard";
 export { fetchAPI } from "./api/fetch-client";
 export { setApiAccessToken } from "./api/token-store";
