@@ -273,10 +273,16 @@ export default function LoginPage() {
                 </div>
 
                 <button
-                  onClick={() => router.push(authUser.role === "ADMIN" ? "/admin" : "/dashboard")}
+                  onClick={() => router.push(
+                        authUser.role === "ADMIN"
+                          ? "/admin"
+                          : authUser.role === "MANAGER"
+                            ? "/dashboard/manager"
+                            : "/dashboard/hr"
+                      )}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/30"
                 >
-                  <span>Ir al {authUser.role === "ADMIN" ? "panel de administrador" : "dashboard"}</span>
+                  <span>Ir al {authUser.role === "ADMIN" ? "panel de administrador" : authUser.role === "MANAGER" ? "dashboard de manager" : "dashboard de RRHH"}</span>
                   <svg
                     className="h-4 w-4"
                     fill="none"

@@ -52,8 +52,10 @@ export default function AuthCallbackPage() {
 
           if (authUser.role === "ADMIN" || authUser.role === "Administrador") {
             router.replace("/admin");
+          } else if (authUser.role === "MANAGER") {
+            router.replace("/dashboard/manager");
           } else {
-            router.replace("/dashboard");
+            router.replace("/dashboard/hr");
           }
           return;
         }
