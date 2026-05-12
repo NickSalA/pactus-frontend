@@ -2,7 +2,7 @@ import {
   getDocumentFileLabel,
   getDocumentTypeLabel,
 } from "@/lib/document.utils";
-import type { Document, DocumentState } from "@/types/api.types";
+import type { Document, DocumentState, RecentContractResponse } from "@/types/api.types";
 
 export type DashboardMetricTone = "primary" | "warning" | "danger";
 
@@ -162,4 +162,16 @@ export const buildRecentDocuments = (documents: Document[]): RecentDashboardDocu
       status: document.state,
       modified: formatRelative(document.updated_at),
     }));
+};
+
+export const buildRecentDocumentsFromAPI = (
+  contracts: RecentContractResponse[]
+): RecentDashboardDocument[] => {
+  return contracts.map((contract) => ({
+    id: contract.id,
+    name: contract.title,
+    subtitle: "Sin detalles",
+    status: "ACTIVE" as DocumentState,
+    modified: contract.dates,
+  }));
 };

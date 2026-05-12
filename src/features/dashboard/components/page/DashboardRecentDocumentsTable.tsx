@@ -28,7 +28,7 @@ export function DashboardRecentDocumentsTable({
   totalRecords,
 }: DashboardRecentDocumentsTableProps) {
   return (
-    <article className="flex flex-col rounded-2xl bg-white shadow-md xl:col-span-8">
+    <article className="flex flex-col h-full rounded-2xl bg-white shadow-md">
       <div className="border-b border-slate-100 px-6 py-5">
         <h2 className="text-lg font-semibold text-slate-800">Contratos recientes</h2>
         <p className="mt-1 text-sm text-[var(--gray-medium)]">

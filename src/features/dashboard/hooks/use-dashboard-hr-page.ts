@@ -6,16 +6,17 @@ import {
   getAreaChartLabor,
   getRecentContractsLabor,
 } from "@/lib/api";
+import { buildRecentDocumentsFromAPI } from "@/features/dashboard/lib/dashboard-data";
+import type { RecentDashboardDocument } from "@/features/dashboard/lib/dashboard-data";
 import type {
   AlertCategory,
   AreaChartResponse,
-  RecentContractResponse,
 } from "@/types/api.types";
 
 export function useDashboardHRPage() {
   const [areaChart, setAreaChart] = useState<AreaChartResponse | null>(null);
   const [alerts, setAlerts] = useState<AlertCategory[]>([]);
-  const [recentContracts, setRecentContracts] = useState<RecentContractResponse[]>([]);
+  const [recentContracts, setRecentContracts] = useState<RecentDashboardDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +31,7 @@ export function useDashboardHRPage() {
       ]);
       setAreaChart(areaChartData);
       setAlerts(alertData);
-      setRecentContracts(recentData);
+      setRecentContracts(buildRecentDocumentsFromAPI(recentData));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al cargar el dashboard");
     } finally {

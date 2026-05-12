@@ -8,10 +8,11 @@ import {
   getTopCompanies,
   getTopServices,
 } from "@/lib/api";
+import { buildRecentDocumentsFromAPI } from "@/features/dashboard/lib/dashboard-data";
+import type { RecentDashboardDocument } from "@/features/dashboard/lib/dashboard-data";
 import type {
   AlertCategory,
   AreaChartResponse,
-  RecentContractResponse,
   TopCompanyResponse,
   TopServiceResponse,
 } from "@/types/api.types";
@@ -19,7 +20,7 @@ import type {
 export function useDashboardManagerPage() {
   const [areaChart, setAreaChart] = useState<AreaChartResponse | null>(null);
   const [alerts, setAlerts] = useState<AlertCategory[]>([]);
-  const [recentContracts, setRecentContracts] = useState<RecentContractResponse[]>([]);
+  const [recentContracts, setRecentContracts] = useState<RecentDashboardDocument[]>([]);
   const [topCompanies, setTopCompanies] = useState<TopCompanyResponse[]>([]);
   const [topServices, setTopServices] = useState<TopServiceResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,7 +39,7 @@ export function useDashboardManagerPage() {
       ]);
       setAreaChart(areaChartData);
       setAlerts(alertData);
-      setRecentContracts(recentData);
+      setRecentContracts(buildRecentDocumentsFromAPI(recentData));
       setTopCompanies(topCompaniesData);
       setTopServices(topServicesData);
     } catch (err) {

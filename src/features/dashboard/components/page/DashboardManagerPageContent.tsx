@@ -1,6 +1,7 @@
 "use client";
 
 import { DashboardAreaChart } from "@/features/dashboard/components/charts/DashboardAreaChart";
+import { DashboardRecentDocumentsTable } from "@/features/dashboard/components/page/DashboardRecentDocumentsTable";
 import { DashboardTopCompanies } from "@/features/dashboard/components/charts/DashboardTopCompanies";
 import { DashboardTopServices } from "@/features/dashboard/components/charts/DashboardTopServices";
 import { DashboardWelcome } from "@/features/dashboard/components/page/DashboardWelcome";
@@ -16,7 +17,7 @@ const PlaceholderCell = ({ label }: { label: string }) => (
 
 export function DashboardManagerPageContent() {
   const { user } = useAuthStore();
-  const { areaChart, topCompanies, topServices, isLoading, error } = useDashboardManagerPage();
+  const { areaChart, recentContracts, topCompanies, topServices, isLoading, error } = useDashboardManagerPage();
   const firstName = toFirstName(user?.name || "Usuario");
 
   return (
@@ -48,7 +49,16 @@ export function DashboardManagerPageContent() {
           isLoading={isLoading}
           documentType="COMPANY"
         />
-        <PlaceholderCell label="Alertas (próximamente)" />
+        <DashboardRecentDocumentsTable
+          documents={recentContracts}
+          isLoading={isLoading}
+          currentPage={1}
+          totalPages={1}
+          totalRecords={recentContracts.length}
+          startIndex={0}
+          endIndex={recentContracts.length}
+          onPageChange={() => {}}
+        />
       </section>
     </div>
   );
