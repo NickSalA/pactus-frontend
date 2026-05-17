@@ -14,7 +14,7 @@ import type {
 } from "@/types/api.types";
 import { createCacheEntry, hasFreshCache, type CacheEntry } from "./cache";
 import { DOCUMENTS_CACHE_TTL_MS, TIMEOUTS } from "./constants";
-import { fetchAPI, fetchWithFormData } from "./fetch-client";
+import { apiGet, apiPost, apiPatch, apiDelete } from "./axiosInstance";
 import { onApiSessionChange } from "./token-store";
 
 let documentsCache: CacheEntry<Document[]> | null = null;
@@ -77,7 +77,7 @@ const appendDocumentPayload = (
     state?: Document["state"];
     folder_id?: number | null;
     service_items?: DocumentCreateRequest["service_items"];
-  },
+  }
 ) => {
   formData.append("document", JSON.stringify(data));
 };
@@ -99,7 +99,10 @@ export async function uploadDocument(data: DocumentCreateRequest): Promise<Docum
   });
 
   const createdDocument = normalizeDocument(
-    await fetchWithFormData<Document>("/documents/", "POST", formData, TIMEOUTS.UPLOAD),
+    await apiPost<Document>("/documents/", formData, {
+      timeout: TIMEOUTS.UPLOAD,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
   );
 
   resetDocumentsCache();
@@ -117,13 +120,7 @@ export async function getDocuments(): Promise<Document[]> {
     return documentsInFlight;
   }
 
-  documentsInFlight = fetchAPI<Document[]>(
-    "/documents/",
-    {
-      method: "GET",
-    },
-    TIMEOUTS.DEFAULT,
-  )
+  documentsInFlight = apiGet<Document[]>("/documents/", { timeout: TIMEOUTS.DEFAULT })
     .then((documents) => {
       const normalizedDocuments = documents.map(normalizeDocument);
       documentsCache = createCacheEntry(normalizedDocuments);
@@ -145,13 +142,7 @@ export async function getServices(): Promise<ServiceCatalogItem[]> {
     return servicesInFlight;
   }
 
-  servicesInFlight = fetchAPI<ServiceCatalogItem[]>(
-    "/services",
-    {
-      method: "GET",
-    },
-    TIMEOUTS.DEFAULT,
-  )
+  servicesInFlight = apiGet<ServiceCatalogItem[]>("/services", { timeout: TIMEOUTS.DEFAULT })
     .then((services) => {
       servicesCache = createCacheEntry(services);
       return services;
@@ -164,21 +155,18 @@ export async function getServices(): Promise<ServiceCatalogItem[]> {
 }
 
 export async function getServicesAdmin(includeInactive: boolean = true): Promise<ServiceCatalogItem[]> {
-  return fetchAPI<ServiceCatalogItem[]>(
-    `/services?include_inactive=${includeInactive ? "true" : "false"}`,
-    { method: "GET", cache: "no-store" },
-    TIMEOUTS.DEFAULT,
-  );
+  return apiGet<ServiceCatalogItem[]>(`/services?include_inactive=${includeInactive ? "true" : "false"}`, {
+    timeout: TIMEOUTS.DEFAULT,
+    headers: { "Cache-Control": "no-store" },
+  });
 }
 
 export async function createServiceCatalogItem(
-  payload: ServiceCatalogItemCreateRequest,
+  payload: ServiceCatalogItemCreateRequest
 ): Promise<ServiceCatalogItem> {
-  const service = await fetchAPI<ServiceCatalogItem>(
-    "/services",
-    { method: "POST", body: JSON.stringify(payload) },
-    TIMEOUTS.AUTH,
-  );
+  const service = await apiPost<ServiceCatalogItem>("/services", payload, {
+    timeout: TIMEOUTS.AUTH,
+  });
 
   resetServicesCache();
   return service;
@@ -186,22 +174,19 @@ export async function createServiceCatalogItem(
 
 export async function updateServiceCatalogItem(
   serviceId: number,
-  payload: ServiceCatalogItemUpdateRequest,
+  payload: ServiceCatalogItemUpdateRequest
 ): Promise<ServiceCatalogItem> {
-  const service = await fetchAPI<ServiceCatalogItem>(
-    `/services/${serviceId}`,
-    { method: "PATCH", body: JSON.stringify(payload) },
-    TIMEOUTS.AUTH,
-  );
+  const service = await apiPatch<ServiceCatalogItem>(`/services/${serviceId}`, payload, {
+    timeout: TIMEOUTS.AUTH,
+  });
 
   resetServicesCache();
   return service;
 }
 
 export async function deleteServiceCatalogItem(serviceId: number): Promise<void> {
-  const result = await fetchAPI<void>(`/services/${serviceId}`, { method: "DELETE" }, TIMEOUTS.AUTH);
+  await apiDelete(`/services/${serviceId}`, { timeout: TIMEOUTS.AUTH });
   resetServicesCache();
-  return result;
 }
 
 export async function getDocumentFolders(): Promise<DocumentFolder[]> {
@@ -213,11 +198,10 @@ export async function getDocumentFolders(): Promise<DocumentFolder[]> {
     return foldersInFlight;
   }
 
-  foldersInFlight = fetchAPI<DocumentFolder[]>(
-    "/folders",
-    { method: "GET", cache: "no-store" },
-    TIMEOUTS.DEFAULT,
-  )
+  foldersInFlight = apiGet<DocumentFolder[]>("/folders", {
+    timeout: TIMEOUTS.DEFAULT,
+    headers: { "Cache-Control": "no-store" },
+  })
     .then((folders) => {
       foldersCache = createCacheEntry(folders);
       return folders;
@@ -229,16 +213,16 @@ export async function getDocumentFolders(): Promise<DocumentFolder[]> {
   return foldersInFlight;
 }
 
-export async function createDocumentFolder(payload: DocumentFolderCreateRequest): Promise<DocumentFolder> {
-  const folder = await fetchAPI<DocumentFolder>(
-    "/folders",
-    { method: "POST", body: JSON.stringify(payload) },
-    TIMEOUTS.AUTH,
-  );
+export async function createDocumentFolder(
+  payload: DocumentFolderCreateRequest
+): Promise<DocumentFolder> {
+  const folder = await apiPost<DocumentFolder>("/folders", payload, {
+    timeout: TIMEOUTS.AUTH,
+  });
 
   if (foldersCache) {
     updateFoldersCache((previousFolders) =>
-      [...previousFolders, folder].sort((left, right) => left.name.localeCompare(right.name, "es")),
+      [...previousFolders, folder].sort((left, right) => left.name.localeCompare(right.name, "es"))
     );
   }
 
@@ -247,61 +231,44 @@ export async function createDocumentFolder(payload: DocumentFolderCreateRequest)
 
 export async function updateDocumentFolder(
   folderId: number,
-  payload: DocumentFolderUpdateRequest,
+  payload: DocumentFolderUpdateRequest
 ): Promise<DocumentFolder> {
-  const folder = await fetchAPI<DocumentFolder>(
-    `/folders/${folderId}`,
-    { method: "PATCH", body: JSON.stringify(payload) },
-    TIMEOUTS.AUTH,
-  );
+  const folder = await apiPatch<DocumentFolder>(`/folders/${folderId}`, payload, {
+    timeout: TIMEOUTS.AUTH,
+  });
 
   updateFoldersCache((previousFolders) =>
     previousFolders
       .map((currentFolder) => (currentFolder.id === folder.id ? folder : currentFolder))
-      .sort((left, right) => left.name.localeCompare(right.name, "es")),
+      .sort((left, right) => left.name.localeCompare(right.name, "es"))
   );
   return folder;
 }
 
 export async function deleteDocumentFolder(folderId: number): Promise<void> {
-  const result = await fetchAPI<void>(`/folders/${folderId}`, { method: "DELETE" }, TIMEOUTS.AUTH);
-  updateFoldersCache((previousFolders) => previousFolders.filter((folder) => folder.id !== folderId));
-  return result;
+  await apiDelete(`/folders/${folderId}`, { timeout: TIMEOUTS.AUTH });
+  updateFoldersCache((previousFolders) =>
+    previousFolders.filter((folder) => folder.id !== folderId)
+  );
 }
 
 export async function deleteDocument(id: number): Promise<void> {
-  const result = await fetchAPI<void>(
-    `/documents/${id}`,
-    {
-      method: "DELETE",
-    },
-    TIMEOUTS.AUTH,
-  );
-
+  await apiDelete(`/documents/${id}`, { timeout: TIMEOUTS.AUTH });
   resetDocumentApiState();
-  return result;
 }
 
 export async function getDocumentById(id: number): Promise<Document> {
-  const document = await fetchAPI<Document>(
-    `/documents/${id}`,
-    {
-      method: "GET",
-    },
-    TIMEOUTS.DEFAULT,
-  );
+  const document = await apiGet<Document>(`/documents/${id}`, {
+    timeout: TIMEOUTS.DEFAULT,
+  });
 
   return normalizeDocument(document);
 }
 
 export async function getDocumentFileUrl(id: number): Promise<string> {
-  const response = await fetchAPI<DocumentFileUrlResponse>(
-    `/documents/${id}/file-url`,
-    {
-      method: "GET",
-    },
-    TIMEOUTS.DEFAULT,
-  );
+  const response = await apiGet<DocumentFileUrlResponse>(`/documents/${id}/file-url`, {
+    timeout: TIMEOUTS.DEFAULT,
+  });
 
   return response.url;
 }
@@ -326,7 +293,10 @@ export async function updateDocument(id: number, data: DocumentUpdateRequest): P
   });
 
   const updatedDocument = normalizeDocument(
-    await fetchWithFormData<Document>(`/documents/${id}`, "PATCH", formData, TIMEOUTS.UPLOAD),
+    await apiPatch<Document>(`/documents/${id}`, formData, {
+      timeout: TIMEOUTS.UPLOAD,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
   );
 
   resetDocumentsCache();

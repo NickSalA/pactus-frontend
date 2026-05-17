@@ -4,44 +4,41 @@ import type {
   NotificationRuleCreateRequest,
   NotificationRuleUpdateRequest,
 } from "@/types/api.types";
-import { fetchAPI } from "./fetch-client";
+import { apiGet, apiPost, apiPatch, apiDelete } from "./axiosInstance";
 import { TIMEOUTS } from "./constants";
 
 export async function getNotifications(): Promise<Notification[]> {
-  return fetchAPI<Notification[]>("/notifications/", { method: "GET", cache: "no-store" });
+  return apiGet<Notification[]>("/notifications/", { headers: { "Cache-Control": "no-store" } });
 }
 
 export async function getNotificationRules(): Promise<NotificationRule[]> {
-  return fetchAPI<NotificationRule[]>("/notifications/rules", { method: "GET", cache: "no-store" }, TIMEOUTS.DEFAULT);
+  return apiGet<NotificationRule[]>("/notifications/rules", {
+    timeout: TIMEOUTS.DEFAULT,
+    headers: { "Cache-Control": "no-store" },
+  });
 }
 
 export async function sendEmailAlerts(): Promise<{ emails_sent: number }> {
-  return fetchAPI<{ emails_sent: number }>(
-    "/notifications/send-email-alerts",
-    { method: "POST" },
-    TIMEOUTS.AUTH,
-  );
+  return apiPost<{ emails_sent: number }>("/notifications/send-email-alerts", undefined, {
+    timeout: TIMEOUTS.AUTH,
+  });
 }
 
-export async function createNotificationRule(payload: NotificationRuleCreateRequest): Promise<NotificationRule> {
-  return fetchAPI<NotificationRule>(
-    "/notifications/rules",
-    { method: "POST", body: JSON.stringify(payload) },
-    TIMEOUTS.AUTH,
-  );
+export async function createNotificationRule(
+  payload: NotificationRuleCreateRequest
+): Promise<NotificationRule> {
+  return apiPost<NotificationRule>("/notifications/rules", payload, { timeout: TIMEOUTS.AUTH });
 }
 
 export async function updateNotificationRule(
   ruleId: number,
-  payload: NotificationRuleUpdateRequest,
+  payload: NotificationRuleUpdateRequest
 ): Promise<NotificationRule> {
-  return fetchAPI<NotificationRule>(
-    `/notifications/rules/${ruleId}`,
-    { method: "PATCH", body: JSON.stringify(payload) },
-    TIMEOUTS.AUTH,
-  );
+  return apiPatch<NotificationRule>(`/notifications/rules/${ruleId}`, payload, {
+    timeout: TIMEOUTS.AUTH,
+  });
 }
 
 export async function deleteNotificationRule(ruleId: number): Promise<void> {
-  return fetchAPI<void>(`/notifications/rules/${ruleId}`, { method: "DELETE" }, TIMEOUTS.AUTH);
+  return apiDelete(`/notifications/rules/${ruleId}`, { timeout: TIMEOUTS.AUTH });
 }

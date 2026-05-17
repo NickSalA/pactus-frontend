@@ -5,7 +5,7 @@ import type {
 } from "@/types/api.types";
 import { createCacheEntry, hasFreshCache, type CacheEntry } from "./cache";
 import { TIMEOUTS } from "./constants";
-import { fetchAPI } from "./fetch-client";
+import { apiGet, apiPost, apiPatch } from "./axiosInstance";
 import { onApiSessionChange } from "./token-store";
 
 let membersCache: CacheEntry<OrganizationMember[]> | null = null;
@@ -37,11 +37,7 @@ export async function getOrganizationMembers(): Promise<OrganizationMember[]> {
     return membersInFlight;
   }
 
-  membersInFlight = fetchAPI<OrganizationMember[]>(
-    "/organizations/me/members",
-    { method: "GET" },
-    TIMEOUTS.DEFAULT,
-  )
+  membersInFlight = apiGet<OrganizationMember[]>("/organizations/me/members", { timeout: TIMEOUTS.DEFAULT })
     .then((members) => {
       const normalizedMembers = members.map(normalizeMember);
       membersCache = createCacheEntry(normalizedMembers);
@@ -55,17 +51,12 @@ export async function getOrganizationMembers(): Promise<OrganizationMember[]> {
 }
 
 export async function createOrganizationMember(
-  payload: OrganizationMemberCreateRequest,
+  payload: OrganizationMemberCreateRequest
 ): Promise<OrganizationMember> {
   const member = normalizeMember(
-    await fetchAPI<OrganizationMember>(
-      "/organizations/me/members",
-      {
-        method: "POST",
-        body: JSON.stringify(payload),
-      },
-      TIMEOUTS.AUTH,
-    ),
+    await apiPost<OrganizationMember>("/organizations/me/members", payload, {
+      timeout: TIMEOUTS.AUTH,
+    })
   );
 
   resetOrganizationsApiState();
@@ -74,17 +65,12 @@ export async function createOrganizationMember(
 
 export async function updateOrganizationMemberNotifications(
   memberId: number,
-  payload: OrganizationMemberNotificationsUpdateRequest,
+  payload: OrganizationMemberNotificationsUpdateRequest
 ): Promise<OrganizationMember> {
   const member = normalizeMember(
-    await fetchAPI<OrganizationMember>(
-      `/organizations/me/members/${memberId}/notifications`,
-      {
-        method: "PATCH",
-        body: JSON.stringify(payload),
-      },
-      TIMEOUTS.AUTH,
-    ),
+    await apiPatch<OrganizationMember>(`/organizations/me/members/${memberId}/notifications`, payload, {
+      timeout: TIMEOUTS.AUTH,
+    })
   );
 
   resetOrganizationsApiState();

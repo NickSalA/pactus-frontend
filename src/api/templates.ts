@@ -13,7 +13,7 @@ import type {
   TemplateUpdateRequest,
 } from "@/types/api.types";
 import { TIMEOUTS } from "./constants";
-import { fetchAPI, fetchWithFormData } from "./fetch-client";
+import { apiGet, apiPost, apiPatch } from "./axiosInstance";
 
 export interface TemplateListFilters {
   documentType?: DocumentType;
@@ -71,7 +71,7 @@ const normalizeDraftRequest = (request: GenerateTemplateDraftRequest): GenerateT
       }
 
       return typeof value !== "string" || value.trim() !== "";
-    }),
+    })
   ) as GenerateTemplateDraftRequest;
 };
 
@@ -82,53 +82,62 @@ export async function getTemplates(filters: TemplateListFilters = {}): Promise<T
     state: filters.state,
   });
 
-  return fetchAPI<Template[]>(`/templates/${query}`, { method: "GET", cache: "no-store" }, TIMEOUTS.DEFAULT);
+  return apiGet<Template[]>(`/templates/${query}`, {
+    timeout: TIMEOUTS.DEFAULT,
+    headers: { "Cache-Control": "no-store" },
+  });
 }
 
 export async function getTemplateFormats(documentType?: DocumentType): Promise<TemplateFormatResponse[]> {
   const query = buildQueryString({ document_type: documentType });
-  return fetchAPI<TemplateFormatResponse[]>(`/templates/formats${query}`, { method: "GET", cache: "no-store" }, TIMEOUTS.DEFAULT);
+  return apiGet<TemplateFormatResponse[]>(`/templates/formats${query}`, {
+    timeout: TIMEOUTS.DEFAULT,
+    headers: { "Cache-Control": "no-store" },
+  });
 }
 
 export async function getTemplateById(templateId: number): Promise<Template> {
-  return fetchAPI<Template>(`/templates/${templateId}`, { method: "GET" }, TIMEOUTS.DEFAULT);
+  return apiGet<Template>(`/templates/${templateId}`, {
+    timeout: TIMEOUTS.DEFAULT,
+  });
 }
 
 export async function createTemplate(payload: TemplateCreateRequest): Promise<Template> {
-  return fetchAPI<Template>(
-    "/templates/",
-    { method: "POST", body: JSON.stringify(payload) },
-    TIMEOUTS.AUTH,
-  );
+  return apiPost<Template>("/templates/", payload, {
+    timeout: TIMEOUTS.AUTH,
+  });
 }
 
-export async function updateTemplate(templateId: number, payload: TemplateUpdateRequest): Promise<Template> {
-  return fetchAPI<Template>(
-    `/templates/${templateId}`,
-    { method: "PATCH", body: JSON.stringify(payload) },
-    TIMEOUTS.AUTH,
-  );
+export async function updateTemplate(
+  templateId: number,
+  payload: TemplateUpdateRequest
+): Promise<Template> {
+  return apiPatch<Template>(`/templates/${templateId}`, payload, {
+    timeout: TIMEOUTS.AUTH,
+  });
 }
 
 export async function publishTemplate(templateId: number): Promise<Template> {
-  return fetchAPI<Template>(`/templates/${templateId}/publish`, { method: "POST" }, TIMEOUTS.AUTH);
+  return apiPost<Template>(`/templates/${templateId}/publish`, undefined, {
+    timeout: TIMEOUTS.AUTH,
+  });
 }
 
 export async function archiveTemplate(templateId: number): Promise<Template> {
-  return fetchAPI<Template>(`/templates/${templateId}/archive`, { method: "POST" }, TIMEOUTS.AUTH);
+  return apiPost<Template>(`/templates/${templateId}/archive`, undefined, {
+    timeout: TIMEOUTS.AUTH,
+  });
 }
 
 export async function previewTemplate(payload: TemplatePreviewRequest): Promise<TemplatePreviewResponse> {
-  return fetchAPI<TemplatePreviewResponse>(
-    "/templates/preview",
-    { method: "POST", body: JSON.stringify(payload) },
-    TIMEOUTS.AUTH,
-  );
+  return apiPost<TemplatePreviewResponse>("/templates/preview", payload, {
+    timeout: TIMEOUTS.AUTH,
+  });
 }
 
 export async function generateTemplateDraft(
   request: GenerateTemplateDraftRequest,
-  file?: File | null,
+  file?: File | null
 ): Promise<PersistedTemplateDraftResponse> {
   const normalizedRequest = normalizeDraftRequest(request);
 
@@ -143,24 +152,17 @@ export async function generateTemplateDraft(
     formData.append("file", file);
   }
 
-  return fetchWithFormData<PersistedTemplateDraftResponse>(
-    "/templates/drafts",
-    "POST",
-    formData,
-    TIMEOUTS.UPLOAD,
-  );
+  return apiPost<PersistedTemplateDraftResponse>("/templates/drafts", formData, {
+    timeout: TIMEOUTS.UPLOAD,
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 }
 
 export async function generateContractFromTemplate(
   templateId: number,
-  data: TemplateGenerateContractRequest,
+  data: TemplateGenerateContractRequest
 ): Promise<Document> {
-  return fetchAPI<Document>(
-    `/templates/${templateId}/generate`,
-    {
-      method: "POST",
-      body: JSON.stringify(data),
-    },
-    TIMEOUTS.UPLOAD,
-  );
+  return apiPost<Document>(`/templates/${templateId}/generate`, data, {
+    timeout: TIMEOUTS.UPLOAD,
+  });
 }

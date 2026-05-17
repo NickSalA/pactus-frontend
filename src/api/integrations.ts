@@ -3,7 +3,7 @@ import { GOOGLE_DRIVE_SCOPE } from "@/lib/googlePicker";
 import { isDriveFolder } from "@/features/contracts/lib/contracts-utils";
 import type { DocumentUpdateRequest } from "@/types/api.types";
 import { TIMEOUTS } from "./constants";
-import { fetchAPI } from "./fetch-client";
+import { apiPost } from "./axiosInstance";
 
 type DriveImportDocumentPayload = Omit<DocumentUpdateRequest, "file">;
 
@@ -32,7 +32,7 @@ export type GoogleDriveImportResponse = DriveImportApiResponse & {
 
 export async function importGoogleDriveFiles(
   accessToken: string,
-  files: GooglePickerFile[],
+  files: GooglePickerFile[]
 ): Promise<GoogleDriveImportResponse> {
   const importableFiles = files.filter((file) => !isDriveFolder(file));
   const skippedFiles = files.length - importableFiles.length;
@@ -45,22 +45,19 @@ export async function importGoogleDriveFiles(
     throw new Error("Selecciona al menos un archivo de Google Drive. Las carpetas no se pueden importar.");
   }
 
-  const response = await fetchAPI<DriveImportApiResponse>(
+  const response = await apiPost<DriveImportApiResponse>(
     "/integrations/drive/import",
     {
-      method: "POST",
-      body: JSON.stringify({
-        token: {
-          token: accessToken,
-          scopes: [GOOGLE_DRIVE_SCOPE],
-        },
-        files: importableFiles.map((file) => ({
-          file_id: file.id,
-          document: {} satisfies DriveImportDocumentPayload,
-        })),
-      } satisfies DriveImportRequest),
-    },
-    TIMEOUTS.UPLOAD,
+      token: {
+        token: accessToken,
+        scopes: [GOOGLE_DRIVE_SCOPE],
+      },
+      files: importableFiles.map((file) => ({
+        file_id: file.id,
+        document: {} satisfies DriveImportDocumentPayload,
+      })),
+    } satisfies DriveImportRequest,
+    { timeout: TIMEOUTS.UPLOAD }
   );
 
   return {

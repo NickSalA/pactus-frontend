@@ -5,35 +5,16 @@ import type {
   ConversationWithContent,
 } from "@/types/api.types";
 import { TIMEOUTS } from "./constants";
-import { fetchAPI } from "./fetch-client";
+import { apiPost, apiGet } from "./axiosInstance";
 
 export async function sendMessage(data: ChatRequest): Promise<ChatResponse> {
-  return fetchAPI<ChatResponse>(
-    "/chatbot/",
-    {
-      method: "POST",
-      body: JSON.stringify(data),
-    },
-    TIMEOUTS.AI,
-  );
+  return apiPost<ChatResponse>("/chatbot/", data, { timeout: TIMEOUTS.AI });
 }
 
 export async function getConversations(userId: number): Promise<Conversation[]> {
-  return fetchAPI<Conversation[]>(
-    `/conversations/user/${userId}`,
-    {
-      method: "GET",
-    },
-    TIMEOUTS.DEFAULT,
-  );
+  return apiGet<Conversation[]>(`/conversations/user/${userId}`, { timeout: TIMEOUTS.DEFAULT });
 }
 
 export async function getConversationById(id: number): Promise<ConversationWithContent> {
-  return fetchAPI<ConversationWithContent>(
-    `/conversations/${id}`,
-    {
-      method: "GET",
-    },
-    TIMEOUTS.DEFAULT,
-  );
+  return apiGet<ConversationWithContent>(`/conversations/${id}`, { timeout: TIMEOUTS.DEFAULT });
 }
