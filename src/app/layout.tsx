@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, Geist } from 'next/font/google';
 import AuthBootstrap from '@/components/providers/AuthBootstrap';
-import QueryProvider from '@/lib/queryClient/provider';
+import QueryProvider from '@/queries/provider';
 import './globals.css';
 import { cn } from '@/lib/utils';
 

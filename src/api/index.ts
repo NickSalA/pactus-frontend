@@ -42,6 +42,7 @@ export {
   previewTemplate,
   publishTemplate,
   updateTemplate,
+  type TemplateListFilters,
 } from "./templates";
 export { TIMEOUTS } from "./constants";
 export {
