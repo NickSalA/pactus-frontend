@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { AlertCircle, FileText, Layers3, X } from "lucide-react";
-import { updateTemplate } from "@/api/templates";
 import {
   extractTemplateFieldKeys,
   formatTemplateFieldLabel,
@@ -16,6 +15,7 @@ import type {
   Template,
   TemplateContent,
   TemplateField,
+  TemplateUpdateRequest,
 } from "@/types/api.types";
 import { TemplateSummaryAccordion } from "./TemplateSummaryAccordion";
 import { TemplateWizardProgress } from "./TemplateWizardProgress";
@@ -25,6 +25,10 @@ type TemplateEditModalProps = {
   open: boolean;
   onClose: () => void;
   onSaved: (template: Template, message: string, warnings?: string[]) => void;
+  updateTemplateMutation: (options: {
+    templateId: number;
+    payload: TemplateUpdateRequest;
+  }) => Promise<Template>;
 };
 
 type EditStep = 1 | 2 | 3;
@@ -45,7 +49,7 @@ const buildInitialState = (template: Template | null) => ({
 
 const FIELDS_PAGE_SIZE = 12;
 
-export function TemplateEditModal({ template, open, onClose, onSaved }: TemplateEditModalProps) {
+export function TemplateEditModal({ template, open, onClose, onSaved, updateTemplateMutation }: TemplateEditModalProps) {
   const [{ templateId, name, description, documentType, formatCode, formatLabel, content, state }, setEditorState] = useState(
     buildInitialState(template),
   );
@@ -131,15 +135,18 @@ export function TemplateEditModal({ template, open, onClose, onSaved }: Template
     setIsSaving(true);
     try {
       const visibleKeys = new Set(derivedFields.map((field) => field.key));
-      const saved = await updateTemplate(templateId, {
-        name: name.trim(),
-        description: description.trim() || null,
-        content: {
-          ...content,
-          body_md: content.body_md.trim(),
-          version: content.version ?? "1.0",
-          fields: derivedFields,
-          operational_fields: getTemplateOperationalFields(content).filter((field) => !visibleKeys.has(field.key)),
+      const saved = await updateTemplateMutation({
+        templateId,
+        payload: {
+          name: name.trim(),
+          description: description.trim() || null,
+          content: {
+            ...content,
+            body_md: content.body_md.trim(),
+            version: content.version ?? "1.0",
+            fields: derivedFields,
+            operational_fields: getTemplateOperationalFields(content).filter((field) => !visibleKeys.has(field.key)),
+          },
         },
       });
       onSaved(saved, "Plantilla actualizada correctamente.");

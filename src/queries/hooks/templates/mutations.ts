@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import {
   archiveTemplate,
   createTemplate,
@@ -19,6 +20,34 @@ const templateKeys = {
   all: TEMPLATES_KEY,
   list: (filters?: Record<string, unknown>) => [...TEMPLATES_KEY, "list", filters],
   detail: (id: number) => [...TEMPLATES_KEY, "detail", id] as const,
+};
+
+const updateTemplateInAllLists = (
+  queryClient: QueryClient,
+  updatedTemplate: Template,
+  templateId: number
+) => {
+  const listQueries = queryClient.getQueryCache().getAll().filter((query) => {
+    const key = query.queryKey;
+    return (
+      Array.isArray(key) &&
+      key[0] === "templates" &&
+      key.length > 1 &&
+      key[1] !== "detail" &&
+      Array.isArray(query.state.data)
+    );
+  });
+
+  for (const query of listQueries) {
+    queryClient.setQueryData(query.queryKey, (oldData: unknown) => {
+      if (Array.isArray(oldData)) {
+        return oldData.map((t: { id: number }) =>
+          t.id === templateId ? updatedTemplate : t
+        );
+      }
+      return oldData;
+    });
+  }
 };
 
 export const useCreateTemplate = () => {
@@ -43,9 +72,9 @@ export const useUpdateTemplate = () => {
       templateId: number;
       payload: TemplateUpdateRequest;
     }) => updateTemplate(templateId, payload),
-    onSuccess: (_data, { templateId }) => {
-      queryClient.invalidateQueries({ queryKey: TEMPLATES_KEY });
-      queryClient.invalidateQueries({ queryKey: templateKeys.detail(templateId) });
+    onSuccess: (updatedTemplate, { templateId }) => {
+      queryClient.setQueryData(templateKeys.detail(templateId), updatedTemplate);
+      updateTemplateInAllLists(queryClient, updatedTemplate, templateId);
     },
   });
 };
@@ -55,8 +84,9 @@ export const usePublishTemplate = () => {
 
   return useMutation({
     mutationFn: (templateId: number) => publishTemplate(templateId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TEMPLATES_KEY });
+    onSuccess: (updatedTemplate, templateId) => {
+      queryClient.setQueryData(templateKeys.detail(templateId), updatedTemplate);
+      updateTemplateInAllLists(queryClient, updatedTemplate, templateId);
     },
   });
 };
@@ -66,8 +96,9 @@ export const useArchiveTemplate = () => {
 
   return useMutation({
     mutationFn: (templateId: number) => archiveTemplate(templateId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TEMPLATES_KEY });
+    onSuccess: (updatedTemplate, templateId) => {
+      queryClient.setQueryData(templateKeys.detail(templateId), updatedTemplate);
+      updateTemplateInAllLists(queryClient, updatedTemplate, templateId);
     },
   });
 };

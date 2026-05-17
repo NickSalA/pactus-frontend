@@ -268,6 +268,7 @@ export function useAdminTemplates() {
     stateFilter,
     stats,
     supportsDocumentTypeSelection,
+    updateTemplateMutation,
     upsertTemplate,
     viewingTemplate,
     viewingTemplateWarnings,
