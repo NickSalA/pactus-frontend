@@ -34,7 +34,7 @@ function AlertCard({
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
-    router.push("/contracts");
+    router.push('/contracts');
   };
 
   return (
@@ -44,7 +44,7 @@ function AlertCard({
       onMouseLeave={() => setIsHovered(false)}
       className="flex w-full items-center justify-between gap-3 rounded-xl border bg-gray-50 p-4 text-left transition-colors"
       style={{
-        borderColor: isHovered ? `${accentColor}66` : "#e5e7eb",
+        borderColor: isHovered ? `${accentColor}66` : '#e5e7eb',
       }}
     >
       <div className="flex items-center gap-2 min-w-0">
@@ -115,9 +115,7 @@ export function DashboardAlertCenter({
             onMouseEnter={() => setHoveredTabIndex(index)}
             onMouseLeave={() => setHoveredTabIndex(null)}
             className={`flex flex-1 flex-col justify-center items-center gap-1 rounded-lg px-4 py-4 text-center transition-colors ${
-              selectedIndex === index
-                ? 'font-medium'
-                : 'text-gray-500'
+              selectedIndex === index ? 'font-medium' : 'text-gray-500'
             }`}
             style={
               selectedIndex === index || hoveredTabIndex === index

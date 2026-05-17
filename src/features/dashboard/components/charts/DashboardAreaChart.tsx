@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Area,
@@ -7,8 +7,8 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
-import type { AreaChartResponse, DocumentType } from "@/types/api.types";
+} from 'recharts';
+import type { AreaChartResponse, DocumentType } from '@/types/api.types';
 
 type DashboardAreaChartProps = {
   data: AreaChartResponse;
@@ -17,8 +17,8 @@ type DashboardAreaChartProps = {
 };
 
 const COLORS = {
-  COMPANY: "#10B981",
-  LABOR: "#EF4444",
+  COMPANY: '#10B981',
+  LABOR: '#EF4444',
 } as const;
 
 const LoadingSkeleton = () => (
@@ -27,7 +27,11 @@ const LoadingSkeleton = () => (
   </div>
 );
 
-export function DashboardAreaChart({ data, isLoading, documentType }: DashboardAreaChartProps) {
+export function DashboardAreaChart({
+  data,
+  isLoading,
+  documentType,
+}: DashboardAreaChartProps) {
   if (isLoading) {
     return <LoadingSkeleton />;
   }
@@ -46,10 +50,10 @@ export function DashboardAreaChart({ data, isLoading, documentType }: DashboardA
   const allNames = [...new Set(formattedData.map((d) => d.name as string))];
 
   const formattedTooltip = (value: unknown, name: unknown) => {
-    if (typeof value !== "number") return ["—", String(name)];
-    const formatted = new Intl.NumberFormat("es-PE", {
-      style: "currency",
-      currency: props.y_axis.format === "currency" ? "PEN" : "USD",
+    if (typeof value !== 'number') return ['—', String(name)];
+    const formatted = new Intl.NumberFormat('es-PE', {
+      style: 'currency',
+      currency: props.y_axis.format === 'currency' ? 'PEN' : 'USD',
     }).format(value);
     return [formatted, String(name)];
   };
@@ -67,45 +71,56 @@ export function DashboardAreaChart({ data, isLoading, documentType }: DashboardA
             data={formattedData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
-          <defs>
-            <linearGradient id={`gradient-${documentType}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={lineColor} stopOpacity={0.3} />
-              <stop offset="95%" stopColor={lineColor} stopOpacity={0} />
-            </linearGradient>
-          </defs>
+            <defs>
+              <linearGradient
+                id={`gradient-${documentType}`}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop offset="5%" stopColor={lineColor} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={lineColor} stopOpacity={0} />
+              </linearGradient>
+            </defs>
 
-          <XAxis
-            dataKey="name"
-            ticks={allNames}
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 12, fill: "#64748B" }}
-          />
-
-          <YAxis
-            ticks={props.y_axis.labels}
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 12, fill: "#64748B" }}
-            tickFormatter={(value) =>
-              value >= 1000 ? `${(value / 1000).toFixed(0)}k` : value
-            }
-          />
-
-          <Tooltip formatter={formattedTooltip} />
-
-          {props.series.map((series) => (
-            <Area
-              key={series.name}
-              type="monotone"
-              dataKey={series.name}
-              name={series.name}
-              stroke={lineColor}
-              strokeWidth={2}
-              fill={`url(#gradient-${documentType})`}
-              activeDot={{ r: 6, stroke: lineColor, strokeWidth: 2, fill: "#fff" }}
+            <XAxis
+              dataKey="name"
+              ticks={allNames}
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: '#64748B' }}
             />
-))}
+
+            <YAxis
+              ticks={props.y_axis.labels}
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: '#64748B' }}
+              tickFormatter={(value) =>
+                value >= 1000 ? `${(value / 1000).toFixed(0)}k` : value
+              }
+            />
+
+            <Tooltip formatter={formattedTooltip} />
+
+            {props.series.map((series) => (
+              <Area
+                key={series.name}
+                type="monotone"
+                dataKey={series.name}
+                name={series.name}
+                stroke={lineColor}
+                strokeWidth={2}
+                fill={`url(#gradient-${documentType})`}
+                activeDot={{
+                  r: 6,
+                  stroke: lineColor,
+                  strokeWidth: 2,
+                  fill: '#fff',
+                }}
+              />
+            ))}
           </AreaChart>
         </ResponsiveContainer>
       </div>
