@@ -1,12 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
-import { getConversationById, sendMessage } from "@/api";
-import { useConversations } from "@/queries/hooks/chat";
+import { useSendMessage } from "@/queries/hooks/chat/mutations";
+import { useConversation, useConversations } from "@/queries/hooks/chat/queries";
 import { useLiveNow } from "@/features/ai-agent/hooks/use-live-now";
 import { mapConversationToMessages } from "@/features/ai-agent/lib/chat-utils";
 import type { ChatMessage } from "@/features/ai-agent/lib/chat.types";
-import type { ConversationWithContent } from "@/types/api.types";
 import { useAuthStore } from "@/store";
 
 export function useAIAgentPage() {
@@ -15,43 +14,33 @@ export function useAIAgentPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [threadId, setThreadId] = useState<number | undefined>(undefined);
   const [showHistory, setShowHistory] = useState(true);
-  const [isConversationLoading, setIsConversationLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const conversationCache = useRef<Map<number, ConversationWithContent>>(new Map());
   const now = useLiveNow();
 
   const user = useAuthStore((state) => state.user);
   const userId = user ? parseInt(user.id, 10) : NaN;
 
   const { data: conversationsData, isLoading: isHistoryLoading, refetch: reloadConversations } = useConversations(userId);
+  const { data: conversationData, isLoading: isConversationLoading } = useConversation(threadId ?? 0);
+
   const conversations = conversationsData ?? [];
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const loadConversation = useCallback(async (conversationId: number) => {
+  useEffect(() => {
+    if (conversationData) {
+      setMessages(mapConversationToMessages(conversationData));
+    }
+  }, [conversationData]);
+
+  const loadConversation = useCallback((conversationId: number) => {
     setThreadId(conversationId);
-
-    const cached = conversationCache.current.get(conversationId);
-    if (cached) {
-      setMessages(mapConversationToMessages(cached));
-      return;
-    }
-
-    setMessages([]);
-    setIsConversationLoading(true);
-    try {
-      const conversation = await getConversationById(conversationId);
-      conversationCache.current.set(conversationId, conversation);
-      setMessages(mapConversationToMessages(conversation));
-    } catch (error) {
-      console.error("Error loading conversation:", error);
-    } finally {
-      setIsConversationLoading(false);
-    }
   }, []);
+
+  const { mutateAsync: sendMessageMutation } = useSendMessage();
 
   const submitCurrentMessage = useCallback(async () => {
     const trimmedValue = inputValue.trim();
@@ -76,7 +65,7 @@ export function useAIAgentPage() {
     }
 
     try {
-      const response = await sendMessage({
+      const response = await sendMessageMutation({
         message: userMessage.content,
         thread_id: threadId,
       });
@@ -90,7 +79,6 @@ export function useAIAgentPage() {
 
       setMessages((currentMessages) => [...currentMessages, botMessage]);
       setThreadId(response.thread_id);
-      conversationCache.current.delete(response.thread_id);
     } catch {
       const errorMessage: ChatMessage = {
         id: `error-${Date.now()}`,
@@ -103,7 +91,7 @@ export function useAIAgentPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [inputValue, isLoading, threadId]);
+  }, [inputValue, isLoading, sendMessageMutation, threadId]);
 
   const startNewConversation = useCallback(() => {
     setMessages([]);

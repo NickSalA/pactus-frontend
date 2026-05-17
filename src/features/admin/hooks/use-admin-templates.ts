@@ -7,7 +7,7 @@ import {
   publishTemplate,
   updateTemplate,
 } from "@/api";
-import { useTemplates, useTemplateFormats } from "@/queries/hooks/templates";
+import { useTemplates, useTemplateFormats } from "@/queries/hooks/templates/queries";
 import { canAuthorTemplates, getTemplateAuthoringDocumentTypes } from "@/lib/permissions";
 import { useAuthStore } from "@/store";
 import type {
