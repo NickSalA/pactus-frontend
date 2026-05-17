@@ -10,6 +10,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@supabase/supabase-js": "^2.100.0",
     "@tanstack/react-query": "^5.100.10",
     "axios": "^1.16.1",
@@ -17,7 +18,9 @@
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-hook-form": "^7.76.0",
     "recharts": "^3.8.1",
+    "zod": "^4.4.3",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
