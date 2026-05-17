@@ -21,12 +21,12 @@ import {
 import { ContractFormProgress } from "@/features/contracts/components/form/ContractFormProgress";
 import { Select } from "@/components/ui/Select";
 import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
-import { deleteDocument, getServices } from "@/lib/api";
-import { getDocumentFileUrl } from "@/lib/api/documents";
+import { deleteDocument, getServices } from "@/api";
+import { getDocumentFileUrl } from "@/api/documents";
 import {
   generateContractFromTemplate,
   getTemplates,
-} from "@/lib/api/templates";
+} from "@/api/templates";
 import { getDocumentTypeLabel } from "@/lib/document.utils";
 import { getDefaultWritableDocumentType, getWritableDocumentTypes } from "@/lib/permissions";
 import {

@@ -8,7 +8,7 @@ import {
   getNotificationRules,
   sendEmailAlerts,
   updateNotificationRule,
-} from "@/lib/api";
+} from "@/api";
 import { useAdminGuard } from "@/features/admin/hooks/use-admin-guard";
 import type {
   Document,

@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { openGooglePicker, type GooglePickerFile } from "@/lib/googlePicker";
-import { importGoogleDriveFiles } from "@/lib/api";
+import { importGoogleDriveFiles } from "@/api";
 import { mergeDriveSelections } from "@/features/contracts/lib/contracts-utils";
 import { useAuthStore } from "@/store";
 

@@ -1,4 +1,4 @@
-import { fetchAPI } from "./fetch-client";
+import { apiGet } from "./axiosInstance";
 import type {
   AlertCategory,
   AreaChartResponse,
@@ -11,48 +11,48 @@ import type {
 
 export async function getAreaChartCompany(currency?: CurrencyType): Promise<AreaChartResponse> {
   const query = currency ? `?currency=${currency}` : "";
-  return fetchAPI<AreaChartResponse>(`/dashboard/area_chart/company${query}`, { method: "GET" });
+  return apiGet<AreaChartResponse>(`/dashboard/area_chart/company${query}`);
 }
 
 export async function getAreaChartLabor(currency?: CurrencyType): Promise<AreaChartResponse> {
   const query = currency ? `?currency=${currency}` : "";
-  return fetchAPI<AreaChartResponse>(`/dashboard/area_chart/labor${query}`, { method: "GET" });
+  return apiGet<AreaChartResponse>(`/dashboard/area_chart/labor${query}`);
 }
 
 export async function getAlertCenterCompany(): Promise<AlertCategory[]> {
-  return fetchAPI<AlertCategory[]>("/dashboard/alert_center/company", { method: "GET" });
+  return apiGet<AlertCategory[]>("/dashboard/alert_center/company");
 }
 
 export async function getAlertCenterLabor(): Promise<AlertCategory[]> {
-  return fetchAPI<AlertCategory[]>("/dashboard/alert_center/labor", { method: "GET" });
+  return apiGet<AlertCategory[]>("/dashboard/alert_center/labor");
 }
 
 export async function getRecentContractsCompany(): Promise<RecentContractResponse[]> {
-  return fetchAPI<RecentContractResponse[]>("/dashboard/recent_contracts/company", { method: "GET" });
+  return apiGet<RecentContractResponse[]>("/dashboard/recent_contracts/company");
 }
 
 export async function getRecentContractsLabor(): Promise<RecentContractResponse[]> {
-  return fetchAPI<RecentContractResponse[]>("/dashboard/recent_contracts/labor", { method: "GET" });
+  return apiGet<RecentContractResponse[]>("/dashboard/recent_contracts/labor");
 }
 
 export async function getTopCompanies(
   currency?: CurrencyType,
-  sort_by?: TopRankingSortBy,
+  sort_by?: TopRankingSortBy
 ): Promise<TopCompanyResponse[]> {
   const params = new URLSearchParams();
   if (currency) params.set("currency", currency);
   if (sort_by) params.set("sort_by", sort_by);
   const query = params.size > 0 ? `?${params.toString()}` : "";
-  return fetchAPI<TopCompanyResponse[]>(`/dashboard/top_companies${query}`, { method: "GET" });
+  return apiGet<TopCompanyResponse[]>(`/dashboard/top_companies${query}`);
 }
 
 export async function getTopServices(
   currency?: CurrencyType,
-  sort_by?: TopRankingSortBy,
+  sort_by?: TopRankingSortBy
 ): Promise<TopServiceResponse[]> {
   const params = new URLSearchParams();
   if (currency) params.set("currency", currency);
   if (sort_by) params.set("sort_by", sort_by);
   const query = params.size > 0 ? `?${params.toString()}` : "";
-  return fetchAPI<TopServiceResponse[]>(`/dashboard/top_services${query}`, { method: "GET" });
+  return apiGet<TopServiceResponse[]>(`/dashboard/top_services${query}`);
 }

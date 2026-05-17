@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { createDocumentFolder, deleteDocumentFolder, getDocumentFolders, getDocuments, updateDocumentFolder } from "@/lib/api";
+import { createDocumentFolder, deleteDocumentFolder, getDocumentFolders, getDocuments, updateDocumentFolder } from "@/api";
 import { filterVisibleDocuments } from "@/lib/permissions";
 import { useAuthStore } from "@/store";
 import type { Document } from "@/types/api.types";

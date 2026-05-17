@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { hasContractPreviewFile, supportsInlineContractPreview } from "@/features/contracts/lib/contracts-preview.utils";
-import { getDocumentFileUrl } from "@/lib/api";
+import { getDocumentFileUrl } from "@/api";
 import type { Document } from "@/types/api.types";
 
 const PREVIEW_FILE_MISSING_MESSAGE = "Este contrato no tiene un archivo disponible para vista previa.";

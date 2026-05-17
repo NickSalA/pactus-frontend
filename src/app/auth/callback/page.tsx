@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { logout as clearApiSession, setApiAccessToken } from "@/lib/api";
+import { logout as clearApiSession, setApiAccessToken } from "@/api";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuthStore } from "@/store";
 import { resolveSessionUser } from "@/features/auth/lib/resolve-session-user";

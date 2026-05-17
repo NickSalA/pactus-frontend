@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { getDocuments } from "@/lib/api";
+import { getDocuments } from "@/api";
 import type { Document } from "@/types/api.types";
 
 export const useDashboardDocuments = () => {

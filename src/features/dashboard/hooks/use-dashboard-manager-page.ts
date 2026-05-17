@@ -7,7 +7,7 @@ import {
   getRecentContractsCompany,
   getTopCompanies,
   getTopServices,
-} from "@/lib/api";
+} from "@/api";
 import { buildRecentDocumentsFromAPI } from "@/features/dashboard/lib/dashboard-data";
 import type { RecentDashboardDocument } from "@/features/dashboard/lib/dashboard-data";
 import type {

@@ -277,6 +277,7 @@ export function AdminTemplatesSection() {
         open={section.isEditorOpen && !section.editingTemplate}
         onClose={section.closeEditor}
         onSaved={handleSaved}
+        generateTemplateDraftMutation={section.generateTemplateDraftMutation}
       />
 
       <TemplateEditModal
@@ -285,6 +286,7 @@ export function AdminTemplatesSection() {
         open={section.isEditorOpen && section.editingTemplate !== null}
         onClose={section.closeEditor}
         onSaved={handleSaved}
+        updateTemplateMutation={section.updateTemplateMutation}
       />
 
       <TemplateViewModal

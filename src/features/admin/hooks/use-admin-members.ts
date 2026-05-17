@@ -5,7 +5,7 @@ import {
   createOrganizationMember,
   getOrganizationMembers,
   updateOrganizationMemberNotifications,
-} from "@/lib/api";
+} from "@/api";
 import { useAdminGuard } from "@/features/admin/hooks/use-admin-guard";
 import type { OrganizationMember, OrganizationMemberCreateRequest } from "@/types/api.types";
 

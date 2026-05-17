@@ -1,16 +1,23 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
-  archiveTemplate,
-  createTemplate,
-  getTemplateFormats,
-  getTemplates,
-  publishTemplate,
-  updateTemplate,
-} from "@/lib/api";
-import { canAuthorTemplates, getTemplateAuthoringDocumentTypes } from "@/lib/permissions";
-import { useAuthStore } from "@/store";
+  useTemplates,
+  useTemplateFormats,
+} from '@/queries/hooks/templates/queries';
+import {
+  useCreateTemplate,
+  useGenerateTemplateDraft,
+  useUpdateTemplate,
+  usePublishTemplate,
+  useArchiveTemplate,
+} from '@/queries/hooks/templates/mutations';
+import {
+  canAuthorTemplates,
+  getTemplateAuthoringDocumentTypes,
+} from '@/lib/permissions';
+import { useAuthStore } from '@/store';
 import type {
   DocumentType,
   Template,
@@ -18,30 +25,46 @@ import type {
   TemplateFormatResponse,
   TemplateState,
   TemplateUpdateRequest,
-} from "@/types/api.types";
+} from '@/types/api.types';
 
-type StateFilterValue = "ACTIVE" | "ALL" | TemplateState;
-type DocumentTypeFilterValue = "ALL" | DocumentType;
+type StateFilterValue = 'ACTIVE' | 'ALL' | TemplateState;
+type DocumentTypeFilterValue = 'ALL' | DocumentType;
 
 export function useAdminTemplates() {
+  const queryClient = useQueryClient();
   const userRole = useAuthStore((state) => state.user?.role ?? null);
   const canManageTemplates = canAuthorTemplates(userRole);
   const allowedDocumentTypes = getTemplateAuthoringDocumentTypes(userRole);
-  const supportsDocumentTypeSelection = (allowedDocumentTypes?.length ?? 0) !== 1;
-  const defaultDocumentTypeFilter: DocumentTypeFilterValue = allowedDocumentTypes?.[0] ?? "ALL";
+  const supportsDocumentTypeSelection =
+    (allowedDocumentTypes?.length ?? 0) !== 1;
+  const defaultDocumentTypeFilter: DocumentTypeFilterValue =
+    allowedDocumentTypes?.[0] ?? 'ALL';
 
-  const [templates, setTemplates] = useState<Template[]>([]);
-  const [formats, setFormats] = useState<TemplateFormatResponse[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    data: templatesData,
+    isLoading: templatesLoading,
+    error: templatesError,
+  } = useTemplates();
+  const { data: formatsData, isLoading: formatsLoading } = useTemplateFormats();
+
+  const { mutateAsync: createTemplateMutation } = useCreateTemplate();
+  const { mutateAsync: updateTemplateMutation } = useUpdateTemplate();
+  const { mutateAsync: publishTemplateMutation } = usePublishTemplate();
+  const { mutateAsync: archiveTemplateMutation } = useArchiveTemplate();
+  const { mutateAsync: generateTemplateDraftMutation } =
+    useGenerateTemplateDraft();
+
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
-  const [stateFilter, setStateFilter] = useState<StateFilterValue>("ACTIVE");
-  const [formatFilter, setFormatFilter] = useState<string>("ALL");
-  const [documentTypeFilter, setDocumentTypeFilter] = useState<DocumentTypeFilterValue>(defaultDocumentTypeFilter);
+  const [search, setSearch] = useState('');
+  const [stateFilter, setStateFilter] = useState<StateFilterValue>('ACTIVE');
+  const [formatFilter, setFormatFilter] = useState<string>('ALL');
+  const [documentTypeFilter, setDocumentTypeFilter] =
+    useState<DocumentTypeFilterValue>(defaultDocumentTypeFilter);
   const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
   const [viewingTemplate, setViewingTemplate] = useState<Template | null>(null);
-  const [viewingTemplateWarnings, setViewingTemplateWarnings] = useState<string[]>([]);
+  const [viewingTemplateWarnings, setViewingTemplateWarnings] = useState<
+    string[]
+  >([]);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 
@@ -51,48 +74,35 @@ export function useAdminTemplates() {
     }
   }, [allowedDocumentTypes]);
 
-  const loadTemplates = useCallback(async () => {
-    if (!canManageTemplates) {
-      setTemplates([]);
-      setFormats([]);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-      const [nextTemplates, nextFormats] = await Promise.all([getTemplates(), getTemplateFormats()]);
-      setTemplates(nextTemplates);
-      setFormats(nextFormats);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudieron cargar las plantillas.");
-    } finally {
-      setLoading(false);
-    }
-  }, [canManageTemplates]);
-
-  useEffect(() => {
-    void loadTemplates();
-  }, [loadTemplates]);
+  const templates = templatesData ?? [];
+  const formats = formatsData ?? [];
+  const loading = templatesLoading || formatsLoading;
+  const error = templatesError?.message ?? null;
 
   const filteredTemplates = useMemo(() => {
-    const normalizedSearch = search.trim().toLocaleLowerCase("es");
+    const normalizedSearch = search.trim().toLocaleLowerCase('es');
 
     return templates.filter((template) => {
-      if (stateFilter === "ACTIVE" && template.state === "ARCHIVED") {
+      if (stateFilter === 'ACTIVE' && template.state === 'ARCHIVED') {
         return false;
       }
 
-      if (stateFilter !== "ACTIVE" && stateFilter !== "ALL" && template.state !== stateFilter) {
+      if (
+        stateFilter !== 'ACTIVE' &&
+        stateFilter !== 'ALL' &&
+        template.state !== stateFilter
+      ) {
         return false;
       }
 
-      if (documentTypeFilter !== "ALL" && template.document_type !== documentTypeFilter) {
+      if (
+        documentTypeFilter !== 'ALL' &&
+        template.document_type !== documentTypeFilter
+      ) {
         return false;
       }
 
-      if (formatFilter !== "ALL" && template.format_code !== formatFilter) {
+      if (formatFilter !== 'ALL' && template.format_code !== formatFilter) {
         return false;
       }
 
@@ -100,21 +110,30 @@ export function useAdminTemplates() {
         return true;
       }
 
-      const haystack = `${template.name} ${template.description ?? ""} ${template.format_label ?? ""} ${template.format_code ?? ""}`
-        .toLocaleLowerCase("es");
+      const haystack =
+        `${template.name} ${template.description ?? ''} ${template.format_label ?? ''} ${template.format_code ?? ''}`.toLocaleLowerCase(
+          'es',
+        );
 
       return haystack.includes(normalizedSearch);
     });
   }, [documentTypeFilter, formatFilter, search, stateFilter, templates]);
 
   const visibleFormats = useMemo(() => {
-    return formats.filter((format) => documentTypeFilter === "ALL" || format.document_type === documentTypeFilter);
+    return formats.filter(
+      (format) =>
+        documentTypeFilter === 'ALL' ||
+        format.document_type === documentTypeFilter,
+    );
   }, [documentTypeFilter, formats]);
 
   const stats = useMemo(
     () => ({
-      draftCount: templates.filter((template) => template.state === "DRAFT").length,
-      publishedCount: templates.filter((template) => template.state === "PUBLISHED").length,
+      draftCount: templates.filter((template) => template.state === 'DRAFT')
+        .length,
+      publishedCount: templates.filter(
+        (template) => template.state === 'PUBLISHED',
+      ).length,
       totalCount: templates.length,
     }),
     [templates],
@@ -139,11 +158,14 @@ export function useAdminTemplates() {
     setIsEditorOpen(false);
   }, [saving]);
 
-  const openViewer = useCallback((template: Template, warnings: string[] = []) => {
-    setViewingTemplate(template);
-    setViewingTemplateWarnings(warnings);
-    setIsViewerOpen(true);
-  }, []);
+  const openViewer = useCallback(
+    (template: Template, warnings: string[] = []) => {
+      setViewingTemplate(template);
+      setViewingTemplateWarnings(warnings);
+      setIsViewerOpen(true);
+    },
+    [],
+  );
 
   const closeViewer = useCallback(() => {
     setViewingTemplate(null);
@@ -155,74 +177,67 @@ export function useAdminTemplates() {
     async (payload: TemplateCreateRequest | TemplateUpdateRequest) => {
       try {
         setSaving(true);
-        setError(null);
 
         if (editingTemplate) {
-          const updatedTemplate = await updateTemplate(editingTemplate.id, payload as TemplateUpdateRequest);
-          setTemplates((previousTemplates) => previousTemplates.map((template) => (
-            template.id === updatedTemplate.id ? updatedTemplate : template
-          )));
+          const updatedTemplate = await updateTemplateMutation({
+            templateId: editingTemplate.id,
+            payload: payload as TemplateUpdateRequest,
+          });
           setViewingTemplate(updatedTemplate);
         } else {
-          const createdTemplate = await createTemplate(payload as TemplateCreateRequest);
-          setTemplates((previousTemplates) => [createdTemplate, ...previousTemplates]);
+          const createdTemplate = await createTemplateMutation(
+            payload as TemplateCreateRequest,
+          );
           setViewingTemplate(createdTemplate);
         }
 
         setIsEditorOpen(false);
         setEditingTemplate(null);
       } catch (err) {
-        const message = err instanceof Error ? err.message : "No se pudo guardar la plantilla.";
-        setError(message);
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'No se pudo guardar la plantilla.';
         throw new Error(message);
       } finally {
         setSaving(false);
       }
     },
-    [editingTemplate],
+    [editingTemplate, createTemplateMutation, updateTemplateMutation],
   );
 
-  const publishOneTemplate = useCallback(async (template: Template) => {
-    try {
-      setSaving(true);
-      setError(null);
-      const publishedTemplate = await publishTemplate(template.id);
-      await loadTemplates();
-      setViewingTemplate((currentTemplate) => (
-        currentTemplate?.id === publishedTemplate.id ? publishedTemplate : currentTemplate
-      ));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo publicar la plantilla.");
-    } finally {
-      setSaving(false);
-    }
-  }, [loadTemplates]);
+  const publishOneTemplate = useCallback(
+    async (template: Template) => {
+      try {
+        setSaving(true);
+        await publishTemplateMutation(template.id);
+      } catch (err) {
+        void err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [publishTemplateMutation],
+  );
 
-  const archiveOneTemplate = useCallback(async (template: Template) => {
-    try {
-      setSaving(true);
-      setError(null);
-      const archivedTemplate = await archiveTemplate(template.id);
-      setTemplates((previousTemplates) => previousTemplates.map((currentTemplate) => (
-        currentTemplate.id === archivedTemplate.id ? archivedTemplate : currentTemplate
-      )));
-      setViewingTemplate((currentTemplate) => (
-        currentTemplate?.id === archivedTemplate.id ? archivedTemplate : currentTemplate
-      ));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo archivar la plantilla.");
-    } finally {
-      setSaving(false);
-    }
-  }, []);
+  const archiveOneTemplate = useCallback(
+    async (template: Template) => {
+      try {
+        setSaving(true);
+        await archiveTemplateMutation(template.id);
+      } catch (err) {
+        void err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [archiveTemplateMutation],
+  );
 
   const upsertTemplate = useCallback((updated: Template) => {
-    setTemplates((previousTemplates) => {
-      const exists = previousTemplates.some((template) => template.id === updated.id);
-      return exists
-        ? previousTemplates.map((template) => (template.id === updated.id ? updated : template))
-        : [updated, ...previousTemplates];
-    });
+    // This method is no longer needed with TanStack Query's automatic cache updates
+    // Kept for backward compatibility
+    void updated;
   }, []);
 
   return {
@@ -237,6 +252,7 @@ export function useAdminTemplates() {
     filteredTemplates,
     formatFilter,
     formats,
+    generateTemplateDraftMutation,
     isEditorOpen,
     isViewerOpen,
     loading,
@@ -244,7 +260,9 @@ export function useAdminTemplates() {
     openEditEditor,
     openViewer,
     publishOneTemplate,
-    reload: loadTemplates,
+    reload: () => {
+      queryClient.invalidateQueries({ queryKey: ['templates'] });
+    },
     saving,
     search,
     setDocumentTypeFilter,
@@ -255,6 +273,7 @@ export function useAdminTemplates() {
     stateFilter,
     stats,
     supportsDocumentTypeSelection,
+    updateTemplateMutation,
     upsertTemplate,
     viewingTemplate,
     viewingTemplateWarnings,
