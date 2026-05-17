@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist } from "next/font/google";
 import AuthBootstrap from "@/components/providers/AuthBootstrap";
+import QueryProvider from "@/lib/query/provider";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +31,9 @@ export default function RootLayout({
   return (
     <html lang="es" className={cn("font-sans", geist.variable)}>
       <body className={`${inter.variable} font-sans antialiased`}>
-        <AuthBootstrap>{children}</AuthBootstrap>
+        <QueryProvider>
+          <AuthBootstrap>{children}</AuthBootstrap>
+        </QueryProvider>
       </body>
     </html>
   );
