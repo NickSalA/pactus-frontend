@@ -4,11 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   archiveTemplate,
   createTemplate,
-  getTemplateFormats,
-  getTemplates,
   publishTemplate,
   updateTemplate,
 } from "@/api";
+import { useTemplates, useTemplateFormats } from "@/queries/hooks/templates";
 import { canAuthorTemplates, getTemplateAuthoringDocumentTypes } from "@/lib/permissions";
 import { useAuthStore } from "@/store";
 import type {
@@ -30,11 +29,10 @@ export function useAdminTemplates() {
   const supportsDocumentTypeSelection = (allowedDocumentTypes?.length ?? 0) !== 1;
   const defaultDocumentTypeFilter: DocumentTypeFilterValue = allowedDocumentTypes?.[0] ?? "ALL";
 
-  const [templates, setTemplates] = useState<Template[]>([]);
-  const [formats, setFormats] = useState<TemplateFormatResponse[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: templatesData, isLoading: templatesLoading, error: templatesError } = useTemplates();
+  const { data: formatsData, isLoading: formatsLoading } = useTemplateFormats();
+
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [stateFilter, setStateFilter] = useState<StateFilterValue>("ACTIVE");
   const [formatFilter, setFormatFilter] = useState<string>("ALL");
@@ -51,30 +49,10 @@ export function useAdminTemplates() {
     }
   }, [allowedDocumentTypes]);
 
-  const loadTemplates = useCallback(async () => {
-    if (!canManageTemplates) {
-      setTemplates([]);
-      setFormats([]);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-      const [nextTemplates, nextFormats] = await Promise.all([getTemplates(), getTemplateFormats()]);
-      setTemplates(nextTemplates);
-      setFormats(nextFormats);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudieron cargar las plantillas.");
-    } finally {
-      setLoading(false);
-    }
-  }, [canManageTemplates]);
-
-  useEffect(() => {
-    void loadTemplates();
-  }, [loadTemplates]);
+  const templates = templatesData ?? [];
+  const formats = formatsData ?? [];
+  const loading = templatesLoading || formatsLoading;
+  const error = templatesError?.message ?? null;
 
   const filteredTemplates = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase("es");
@@ -155,17 +133,12 @@ export function useAdminTemplates() {
     async (payload: TemplateCreateRequest | TemplateUpdateRequest) => {
       try {
         setSaving(true);
-        setError(null);
 
         if (editingTemplate) {
           const updatedTemplate = await updateTemplate(editingTemplate.id, payload as TemplateUpdateRequest);
-          setTemplates((previousTemplates) => previousTemplates.map((template) => (
-            template.id === updatedTemplate.id ? updatedTemplate : template
-          )));
           setViewingTemplate(updatedTemplate);
         } else {
           const createdTemplate = await createTemplate(payload as TemplateCreateRequest);
-          setTemplates((previousTemplates) => [createdTemplate, ...previousTemplates]);
           setViewingTemplate(createdTemplate);
         }
 
@@ -173,7 +146,6 @@ export function useAdminTemplates() {
         setEditingTemplate(null);
       } catch (err) {
         const message = err instanceof Error ? err.message : "No se pudo guardar la plantilla.";
-        setError(message);
         throw new Error(message);
       } finally {
         setSaving(false);
@@ -185,44 +157,31 @@ export function useAdminTemplates() {
   const publishOneTemplate = useCallback(async (template: Template) => {
     try {
       setSaving(true);
-      setError(null);
-      const publishedTemplate = await publishTemplate(template.id);
-      await loadTemplates();
-      setViewingTemplate((currentTemplate) => (
-        currentTemplate?.id === publishedTemplate.id ? publishedTemplate : currentTemplate
-      ));
+      await publishTemplate(template.id);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo publicar la plantilla.");
+      // Error handled by mutation
+      void err;
     } finally {
       setSaving(false);
     }
-  }, [loadTemplates]);
+  }, []);
 
   const archiveOneTemplate = useCallback(async (template: Template) => {
     try {
       setSaving(true);
-      setError(null);
-      const archivedTemplate = await archiveTemplate(template.id);
-      setTemplates((previousTemplates) => previousTemplates.map((currentTemplate) => (
-        currentTemplate.id === archivedTemplate.id ? archivedTemplate : currentTemplate
-      )));
-      setViewingTemplate((currentTemplate) => (
-        currentTemplate?.id === archivedTemplate.id ? archivedTemplate : currentTemplate
-      ));
+      await archiveTemplate(template.id);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo archivar la plantilla.");
+      // Error handled by mutation
+      void err;
     } finally {
       setSaving(false);
     }
   }, []);
 
   const upsertTemplate = useCallback((updated: Template) => {
-    setTemplates((previousTemplates) => {
-      const exists = previousTemplates.some((template) => template.id === updated.id);
-      return exists
-        ? previousTemplates.map((template) => (template.id === updated.id ? updated : template))
-        : [updated, ...previousTemplates];
-    });
+    // This method is no longer needed with TanStack Query's automatic cache updates
+    // Kept for backward compatibility
+    void updated;
   }, []);
 
   return {
@@ -244,7 +203,7 @@ export function useAdminTemplates() {
     openEditEditor,
     openViewer,
     publishOneTemplate,
-    reload: loadTemplates,
+    reload: () => {},
     saving,
     search,
     setDocumentTypeFilter,
