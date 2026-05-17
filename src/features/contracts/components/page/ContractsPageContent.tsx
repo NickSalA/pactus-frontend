@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import { ContractsActionsBar } from "@/features/contracts/components/page/ContractsActionsBar";
-import { ContractsDriveSelection } from "@/features/contracts/components/page/ContractsDriveSelection";
-import { ContractsEmptyState } from "@/features/contracts/components/page/ContractsEmptyState";
-import { ContractsFolderTabs } from "@/features/contracts/components/page/ContractsFolderTabs";
-import { ContractsImportMenu } from "@/features/contracts/components/page/ContractsImportMenu";
-import { ContractsTable } from "@/features/contracts/components/page/ContractsTable";
-import { ContractDeleteModal } from "@/features/contracts/components/modals/ContractDeleteModal";
-import { ContractFormModal } from "@/features/contracts/components/modals/ContractFormModal";
-import { ContractPreviewModal } from "@/features/contracts/components/modals/ContractPreviewModal";
-import { NewContractModal } from "@/features/contracts/components/modals/NewContractModal";
-import { TableBulkActionBar } from "@/components/ui/TableBulkActionBar";
-import { useContractsPage } from "@/features/contracts/hooks/use-contracts-page";
-import type { Document, UserRole } from "@/types/api.types";
+import { useCallback, useEffect, useState } from 'react';
+import { ContractsActionsBar } from '@/features/contracts/components/page/ContractsActionsBar';
+import { ContractsDriveSelection } from '@/features/contracts/components/page/ContractsDriveSelection';
+import { ContractsEmptyState } from '@/features/contracts/components/page/ContractsEmptyState';
+import { ContractsFolderTabs } from '@/features/contracts/components/page/ContractsFolderTabs';
+import { ContractsImportMenu } from '@/features/contracts/components/page/ContractsImportMenu';
+import { ContractsTable } from '@/features/contracts/components/page/ContractsTable';
+import { ContractDeleteModal } from '@/features/contracts/components/modals/ContractDeleteModal';
+import { ContractFormModal } from '@/features/contracts/components/modals/ContractFormModal';
+import { ContractPreviewModal } from '@/features/contracts/components/modals/ContractPreviewModal';
+import { NewContractModal } from '@/features/contracts/components/modals/NewContractModal';
+import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
+import { useContractsPage } from '@/features/contracts/hooks/use-contracts-page';
+import type { Document, UserRole } from '@/types/api.types';
 
 type ContractsPageContentProps = {
   shouldOpenCreateModal?: boolean;
@@ -84,9 +84,12 @@ export function ContractsPageContent({
   return (
     <div className="flex h-full flex-col">
       <div className="mb-4 flex flex-shrink-0 flex-col gap-1">
-        <h1 className="text-2xl font-semibold text-slate-800">Gestion de Contratos</h1>
+        <h1 className="text-2xl font-semibold text-slate-800">
+          Gestion de Contratos
+        </h1>
         <p className="text-sm text-slate-500">
-          {page.filteredContracts.length} contrato{page.filteredContracts.length !== 1 ? "s" : ""} en{" "}
+          {page.filteredContracts.length} contrato
+          {page.filteredContracts.length !== 1 ? 's' : ''} en{' '}
           {page.activeFolder.name}
         </p>
       </div>
@@ -105,7 +108,9 @@ export function ContractsPageContent({
       {page.canCreateContract && (
         <NewContractModal
           availableFolders={page.availableFolders}
-          defaultFolderId={page.activeFolder.id === 0 ? null : page.activeFolder.id}
+          defaultFolderId={
+            page.activeFolder.id === 0 ? null : page.activeFolder.id
+          }
           onClose={page.closeCreateForm}
           onSubmit={page.addContract}
           open={page.showForm}
@@ -125,7 +130,7 @@ export function ContractsPageContent({
 
       {page.canDeleteContract && (
         <ContractDeleteModal
-          contractName={page.contractToDelete?.name ?? null}
+          contractName={page.contractToDelete?.client ?? null}
           deleting={page.deleting}
           onClose={page.closeDeleteModal}
           onConfirm={() => {
@@ -182,15 +187,19 @@ export function ContractsPageContent({
 
       {page.isEmpty ? (
         <ContractsEmptyState
-          importControl={page.canImportContract ? (
-            <ContractsImportMenu
-              align="left"
-              isImportingDriveFiles={page.isImportingDriveFiles}
-              isOpeningDrivePicker={page.isOpeningDrivePicker}
-              onOpenDrive={page.openDrivePicker}
-            />
-          ) : undefined}
-          onCreateContract={page.canCreateContract ? page.openCreateForm : undefined}
+          importControl={
+            page.canImportContract ? (
+              <ContractsImportMenu
+                align="left"
+                isImportingDriveFiles={page.isImportingDriveFiles}
+                isOpeningDrivePicker={page.isOpeningDrivePicker}
+                onOpenDrive={page.openDrivePicker}
+              />
+            ) : undefined
+          }
+          onCreateContract={
+            page.canCreateContract ? page.openCreateForm : undefined
+          }
         />
       ) : (
         <>
@@ -198,14 +207,18 @@ export function ContractsPageContent({
             contracts={page.activeContracts}
             dateRange={page.dateRange}
             filter={page.filter}
-            importControl={page.canImportContract ? (
-              <ContractsImportMenu
-                isImportingDriveFiles={page.isImportingDriveFiles}
-                isOpeningDrivePicker={page.isOpeningDrivePicker}
-                onOpenDrive={page.openDrivePicker}
-              />
-            ) : undefined}
-            onCreateContract={page.canCreateContract ? page.openCreateForm : undefined}
+            importControl={
+              page.canImportContract ? (
+                <ContractsImportMenu
+                  isImportingDriveFiles={page.isImportingDriveFiles}
+                  isOpeningDrivePicker={page.isOpeningDrivePicker}
+                  onOpenDrive={page.openDrivePicker}
+                />
+              ) : undefined
+            }
+            onCreateContract={
+              page.canCreateContract ? page.openCreateForm : undefined
+            }
             onDateRangeChange={page.changeDateRange}
             onFilterChange={page.changeFilter}
             onSearchChange={page.changeSearch}
@@ -240,7 +253,9 @@ export function ContractsPageContent({
             onEdit={page.openEditForm}
             onItemsPerPageChange={page.changeItemsPerPage}
             onPageChange={page.changePage}
-            onToggleSelect={page.canDeleteContract ? toggleSelectContract : undefined}
+            onToggleSelect={
+              page.canDeleteContract ? toggleSelectContract : undefined
+            }
             onView={(contract: Document) => {
               void page.viewContract(contract);
             }}

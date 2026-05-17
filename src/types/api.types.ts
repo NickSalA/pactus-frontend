@@ -108,6 +108,29 @@ export type DocumentState =
   | 'TERMINATED';
 export type CurrencyType = 'PEN' | 'USD' | 'EUR';
 
+export interface CompanyContractResponse {
+  id: number;
+  document_id: number;
+  ruc?: string | null;
+  client?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LaborContractResponse {
+  id: number;
+  document_id: number;
+  worker_name?: string | null;
+  worker_document_number?: string | null;
+  position?: string | null;
+  salary_value?: number | null;
+  salary_currency?: CurrencyType | null;
+  salary_periodicity?: string | null;
+  contract_modality?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface DocumentFormData {
   value?: number;
   currency?: CurrencyType;
@@ -169,9 +192,9 @@ export interface DocumentFolderUpdateRequest {
 
 export interface Document {
   id: number;
-  name: string;
+  type?: string | null;
+  contract_type: DocumentType;
   client: string;
-  type: DocumentType;
   start_date: string;
   end_date: string;
   form_data: DocumentFormData;
@@ -180,17 +203,28 @@ export interface Document {
   folder_id?: number | null;
   file_path?: string | null;
   file_name?: string | null;
+  company_contract?: CompanyContractResponse;
+  labor_contract?: LaborContractResponse;
   created_at: string;
   updated_at: string;
 }
 
 export interface DocumentCreateRequest {
   file: File;
-  name: string;
-  client: string;
-  type: DocumentType;
-  start_date: string;
-  end_date: string;
+  contract_type: DocumentType;
+  company_contract?: {
+    ruc?: string;
+    client?: string;
+  };
+  labor_contract?: {
+    worker_name?: string;
+    worker_document_number?: string;
+    position?: string;
+    salary_value?: number;
+    salary_currency?: CurrencyType;
+    salary_periodicity?: string;
+    contract_modality?: string;
+  };
   form_data: DocumentFormData;
   state?: DocumentState;
   folder_id?: number | null;
@@ -198,11 +232,20 @@ export interface DocumentCreateRequest {
 }
 
 export interface DocumentUpdateRequest {
-  name?: string;
-  client?: string;
-  type?: DocumentType;
-  start_date?: string;
-  end_date?: string;
+  contract_type?: DocumentType;
+  company_contract?: {
+    ruc?: string;
+    client?: string;
+  };
+  labor_contract?: {
+    worker_name?: string;
+    worker_document_number?: string;
+    position?: string;
+    salary_value?: number;
+    salary_currency?: CurrencyType;
+    salary_periodicity?: string;
+    contract_modality?: string;
+  };
   form_data?: DocumentFormData;
   state?: DocumentState;
   folder_id?: number | null;

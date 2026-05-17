@@ -63,9 +63,9 @@ export function useAdminDocumentTypes() {
         setError(null);
         const documents = await getDocuments();
         const nextCounts = {
-          COMPANY: documents.filter((document) => document.type === 'COMPANY')
+          COMPANY: documents.filter((document) => document.contract_type === 'COMPANY')
             .length,
-          LABOR: documents.filter((document) => document.type === 'LABOR')
+          LABOR: documents.filter((document) => document.contract_type === 'LABOR')
             .length,
         };
         setCounts(nextCounts);

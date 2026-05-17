@@ -116,5 +116,5 @@ export const canManageFolderRole = (role: RoleValue, ownerRole: UserRole | null 
 };
 
 export const filterVisibleDocuments = (documents: Document[], role: RoleValue): Document[] => {
-  return documents.filter((document) => canViewDocumentType(role, document.type));
+  return documents.filter((document) => canViewDocumentType(role, document.contract_type));
 };

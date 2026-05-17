@@ -58,7 +58,7 @@ export function ContractsTable({
   const showCheckboxes = canDelete && onToggleSelect !== undefined;
   const showServicesColumn = userRole === "WORKER" || userRole === "MANAGER";
   const clientColumnLabel = userRole === "HR" ? "Colaborador" : "Cliente";
-  const baseColumns = showServicesColumn ? 8 : 7;
+  const baseColumns = showServicesColumn ? 7 : 6;
   const totalColumns = showCheckboxes ? baseColumns + 1 : baseColumns;
 
   return (
@@ -69,23 +69,21 @@ export function ContractsTable({
             {showCheckboxes && <col className="w-10" />}
             {showServicesColumn ? (
               <>
-                <col className="w-[26%]" />
+                <col className="w-[30%]" />
                 <col className="w-[15%]" />
                 <col className="w-[13%]" />
                 <col className="w-[10%]" />
                 <col className="w-[10%]" />
                 <col className="w-[10%]" />
                 <col className="w-[8%]" />
-                <col className="w-[8%]" />
               </>
             ) : (
               <>
-                <col className="w-[30%]" />
+                <col className="w-[35%]" />
                 <col className="w-[18%]" />
+                <col className="w-[15%]" />
                 <col className="w-[12%]" />
                 <col className="w-[12%]" />
-                <col className="w-[12%]" />
-                <col className="w-[8%]" />
                 <col className="w-[8%]" />
               </>
             )}
@@ -93,7 +91,6 @@ export function ContractsTable({
           <thead>
             <tr className="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100/80">
               {showCheckboxes && <th className="w-10 px-4 py-4" />}
-              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Contrato</th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">{clientColumnLabel}</th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Tipo</th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Inicio</th>
@@ -129,17 +126,14 @@ export function ContractsTable({
                         className={`h-4 w-4 cursor-pointer rounded border-slate-300 accent-blue-600 transition-opacity duration-150 ${
                           selectedIds?.has(contract.id) ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                         }`}
-                        aria-label={`Seleccionar ${contract.name}`}
+                        aria-label={`Seleccionar ${contract.client}`}
                       />
                     </td>
                   )}
-                  <td className="px-4 py-3">
-                    <span className="block font-medium text-slate-800">{contract.name}</span>
-                  </td>
                   <td className="px-4 py-3 text-slate-600">{contract.client}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 text-slate-600">
                     <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
-                      {getDocumentTypeLabel(contract.type)}
+                      {getDocumentTypeLabel(contract.contract_type)}
                     </span>
                   </td>
                   <td className="px-4 py-3 tabular-nums text-slate-600">{contract.start_date}</td>
@@ -166,7 +160,7 @@ export function ContractsTable({
                         onClick={() => onView(contract)}
                         className="rounded-lg p-2 text-slate-400 transition-all hover:bg-blue-50 hover:text-blue-600"
                         title="Vista previa"
-                        aria-label={`Vista previa de ${contract.name}`}
+                        aria-label={`Vista previa de ${contract.client}`}
                       >
                         <Eye className="h-4 w-4" />
                       </button>

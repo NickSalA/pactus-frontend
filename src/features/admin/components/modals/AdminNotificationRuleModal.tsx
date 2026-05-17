@@ -47,7 +47,7 @@ export function AdminNotificationRuleModal({
   const [error, setError] = useState<string | null>(null);
 
   const sortedDocuments = useMemo(
-    () => [...documents].sort((left, right) => (left.name ?? "").localeCompare(right.name ?? "", "es")),
+    () => [...documents].sort((left, right) => (left.client ?? "").localeCompare(right.client ?? "", "es")),
     [documents],
   );
 
@@ -114,7 +114,7 @@ export function AdminNotificationRuleModal({
             <option value="">Toda la organización</option>
             {sortedDocuments.map((document) => (
               <option key={document.id} value={document.id}>
-                {document.name}
+                {document.client}
               </option>
             ))}
           </Select>

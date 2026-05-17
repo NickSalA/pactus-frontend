@@ -1,4 +1,5 @@
 import type {
+  CompanyContractResponse,
   Document,
   DocumentCreateRequest,
   DocumentFileUrlResponse,
@@ -8,6 +9,7 @@ import type {
   DocumentFormData,
   DocumentServiceItem,
   DocumentUpdateRequest,
+  LaborContractResponse,
   ServiceCatalogItem,
   ServiceCatalogItemCreateRequest,
   ServiceCatalogItemUpdateRequest,
@@ -15,22 +17,48 @@ import type {
 import { TIMEOUTS } from "./constants";
 import { apiGet, apiPost, apiPatch, apiDelete } from "./axiosInstance";
 
-const normalizeDocument = (document: Document): Document => ({
-  ...document,
-  form_data: (document.form_data ?? {}) as DocumentFormData,
-  service_items: Array.isArray(document.service_items)
-    ? document.service_items
-    : ([] as DocumentServiceItem[]),
-  file_path: document.file_path ?? null,
-  file_name: document.file_name ?? null,
-});
+const normalizeDocument = (doc: any): Document => {
+  const hasCompanyContract = Boolean(doc.company_contract);
+  const hasLaborContract = Boolean(doc.labor_contract);
+
+  const contract_type = hasLaborContract
+    ? "LABOR"
+    : hasCompanyContract
+      ? "COMPANY"
+      : undefined;
+
+  const client = hasLaborContract
+    ? doc.labor_contract?.worker_name
+    : hasCompanyContract
+      ? doc.company_contract?.client
+      : undefined;
+
+  return {
+    id: doc.id,
+    type: doc.type ?? null,
+    contract_type: contract_type ?? "COMPANY",
+    start_date: doc.start_date ?? "",
+    end_date: doc.end_date ?? "",
+    form_data: doc.form_data ?? {},
+    state: doc.state ?? "DRAFT",
+    service_items: Array.isArray(doc.service_items) ? doc.service_items : [],
+    folder_id: doc.folder_id ?? null,
+    file_path: doc.file_path ?? null,
+    file_name: doc.file_name ?? null,
+    company_contract: doc.company_contract as CompanyContractResponse | undefined,
+    labor_contract: doc.labor_contract as LaborContractResponse | undefined,
+    created_at: doc.created_at ?? "",
+    updated_at: doc.updated_at ?? "",
+    client: client ?? "",
+  };
+};
 
 const appendDocumentPayload = (
   formData: FormData,
   data: {
-    name?: string;
-    client?: string;
-    type?: Document["type"];
+    contract_type?: Document["contract_type"];
+    company_contract?: DocumentCreateRequest["company_contract"];
+    labor_contract?: DocumentCreateRequest["labor_contract"];
     start_date?: string;
     end_date?: string;
     form_data?: DocumentFormData;
@@ -47,11 +75,9 @@ export async function uploadDocument(data: DocumentCreateRequest): Promise<Docum
   formData.append("file", data.file);
 
   appendDocumentPayload(formData, {
-    name: data.name,
-    client: data.client,
-    type: data.type,
-    start_date: data.start_date,
-    end_date: data.end_date,
+    contract_type: data.contract_type,
+    company_contract: data.company_contract,
+    labor_contract: data.labor_contract,
     form_data: data.form_data,
     state: data.state,
     folder_id: data.folder_id,
@@ -159,11 +185,9 @@ export async function updateDocument(id: number, data: DocumentUpdateRequest): P
   }
 
   appendDocumentPayload(formData, {
-    ...(data.name !== undefined && { name: data.name }),
-    ...(data.client !== undefined && { client: data.client }),
-    ...(data.type !== undefined && { type: data.type }),
-    ...(data.start_date !== undefined && { start_date: data.start_date }),
-    ...(data.end_date !== undefined && { end_date: data.end_date }),
+    ...(data.contract_type !== undefined && { contract_type: data.contract_type }),
+    ...(data.company_contract !== undefined && { company_contract: data.company_contract }),
+    ...(data.labor_contract !== undefined && { labor_contract: data.labor_contract }),
     ...(data.form_data !== undefined && { form_data: data.form_data }),
     ...(data.state !== undefined && { state: data.state }),
     ...(data.folder_id !== undefined && { folder_id: data.folder_id }),

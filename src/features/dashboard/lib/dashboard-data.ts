@@ -157,8 +157,8 @@ export const buildRecentDocuments = (documents: Document[]): RecentDashboardDocu
     .sort((a, b) => b.id - a.id)
     .map((document) => ({
       id: document.id,
-      name: document.name,
-      subtitle: `${document.client} · ${getDocumentTypeLabel(document.type)} · ${getDocumentFileLabel(document)}`,
+      name: document.client || "Sin nombre",
+      subtitle: `${getDocumentTypeLabel(document.contract_type)} · ${getDocumentFileLabel(document)}`,
       status: document.state,
       modified: formatRelative(document.updated_at),
     }));
