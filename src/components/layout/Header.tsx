@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bell, User, LogOut } from "lucide-react";
-import { logout as clearApiSession, getNotifications } from "@/lib/api";
+import { logout as clearApiSession, getNotifications } from "@/api";
 import { useAuthStore } from "@/store";
 import { supabase } from "@/lib/supabaseClient";
 import { getUserRoleLabel, toNameAndLastName } from "@/lib/authUser";

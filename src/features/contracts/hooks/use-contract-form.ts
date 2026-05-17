@@ -9,7 +9,7 @@ import {
   useContractFormWizard,
   type ContractFormStep,
 } from "@/features/contracts/hooks/use-contract-form-wizard";
-import { updateDocument, uploadDocument } from "@/lib/api";
+import { updateDocument, uploadDocument } from "@/api";
 import { canManageDocumentType, getDefaultWritableDocumentType, getWritableDocumentTypes } from "@/lib/permissions";
 import { useAuthStore } from "@/store";
 import type { Document, DocumentState } from "@/types/api.types";

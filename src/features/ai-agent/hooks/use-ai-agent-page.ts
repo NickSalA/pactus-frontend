@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
-import { getConversationById, getConversations, sendMessage } from "@/lib/api";
+import { getConversationById, getConversations, sendMessage } from "@/api";
 import { useLiveNow } from "@/features/ai-agent/hooks/use-live-now";
 import { mapConversationToMessages } from "@/features/ai-agent/lib/chat-utils";
 import type { ChatMessage } from "@/features/ai-agent/lib/chat.types";

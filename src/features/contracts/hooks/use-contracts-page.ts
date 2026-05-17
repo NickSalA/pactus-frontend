@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { deleteDocument } from "@/lib/api";
+import { deleteDocument } from "@/api";
 import { canCreateContracts, canCreateFolders, canImportContracts, canManageDocumentType, canManageFolderRole } from "@/lib/permissions";
 import { useContractsCollection } from "@/features/contracts/hooks/use-contracts-collection";
 import { useContractPreview } from "@/features/contracts/hooks/use-contract-preview";

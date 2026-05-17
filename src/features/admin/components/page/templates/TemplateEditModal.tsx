@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { AlertCircle, FileText, Layers3, X } from "lucide-react";
-import { updateTemplate } from "@/lib/api/templates";
+import { updateTemplate } from "@/api/templates";
 import {
   extractTemplateFieldKeys,
   formatTemplateFieldLabel,

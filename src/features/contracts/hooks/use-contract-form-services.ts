@@ -9,7 +9,7 @@ import {
   type FormState,
   type ServiceItemDraft,
 } from "@/features/contracts/lib/contract-form.utils";
-import { getServices } from "@/lib/api";
+import { getServices } from "@/api";
 import type {
   Document,
   DocumentServiceItemPayload,

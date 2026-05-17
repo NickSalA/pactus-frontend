@@ -8,7 +8,7 @@ import {
   getTemplates,
   publishTemplate,
   updateTemplate,
-} from "@/lib/api";
+} from "@/api";
 import { canAuthorTemplates, getTemplateAuthoringDocumentTypes } from "@/lib/permissions";
 import { useAuthStore } from "@/store";
 import type {

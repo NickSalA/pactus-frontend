@@ -1,5 +1,5 @@
-export { login, logout, getCurrentUser } from "./api/auth";
-export { sendMessage, getConversations, getConversationById } from "./api/chat";
+export { login, logout, getCurrentUser } from "./auth";
+export { sendMessage, getConversations, getConversationById } from "./chat";
 export {
   createDocumentFolder,
   createServiceCatalogItem,
@@ -16,7 +16,7 @@ export {
   updateDocument,
   updateServiceCatalogItem,
   uploadDocument,
-} from "./api/documents";
+} from "./documents";
 export {
   createNotificationRule,
   deleteNotificationRule,
@@ -24,13 +24,13 @@ export {
   getNotifications,
   sendEmailAlerts,
   updateNotificationRule,
-} from "./api/notifications";
+} from "./notifications";
 export {
   createOrganizationMember,
   getOrganizationMembers,
   updateOrganizationMemberNotifications,
-} from "./api/organizations";
-export { importGoogleDriveFiles } from "./api/integrations";
+} from "./organizations";
+export { importGoogleDriveFiles } from "./integrations";
 export {
   archiveTemplate,
   createTemplate,
@@ -42,8 +42,8 @@ export {
   previewTemplate,
   publishTemplate,
   updateTemplate,
-} from "./api/templates";
-export { TIMEOUTS } from "./api/constants";
+} from "./templates";
+export { TIMEOUTS } from "./constants";
 export {
   getAreaChartCompany,
   getAreaChartLabor,
@@ -53,6 +53,8 @@ export {
   getRecentContractsLabor,
   getTopCompanies,
   getTopServices,
-} from "./api/dashboard";
-export { fetchAPI } from "./api/fetch-client";
-export { setApiAccessToken } from "./api/token-store";
+} from "./dashboard";
+export { fetchAPI } from "./fetch-client";
+export { setApiAccessToken } from "./token-store";
+export { createCacheEntry, hasFreshCache, type CacheEntry } from "./cache";
+export { onApiSessionChange } from "./token-store";

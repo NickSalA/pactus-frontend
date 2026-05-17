@@ -2,7 +2,7 @@
 
 import type { Session } from "@supabase/supabase-js";
 import { useEffect } from "react";
-import { logout as clearApiSession, setApiAccessToken } from "@/lib/api";
+import { logout as clearApiSession, setApiAccessToken } from "@/api";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuthStore } from "@/store";
 import { resolveSessionUser } from "@/features/auth/lib/resolve-session-user";

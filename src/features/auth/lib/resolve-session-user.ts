@@ -4,7 +4,7 @@ import {
   mapSupabaseUserToAuthUser,
   type AuthDisplayUser,
 } from "@/lib/authUser";
-import { getCurrentUser } from "@/lib/api";
+import { getCurrentUser } from "@/api";
 
 export const resolveSessionUser = async (session: Session): Promise<AuthDisplayUser> => {
   try {

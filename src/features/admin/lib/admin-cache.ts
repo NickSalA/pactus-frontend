@@ -1,5 +1,5 @@
-import { createCacheEntry, hasFreshCache, type CacheEntry } from "@/lib/api/cache";
-import { onApiSessionChange } from "@/lib/api/token-store";
+import { createCacheEntry, hasFreshCache, type CacheEntry } from "@/api/cache";
+import { onApiSessionChange } from "@/api/token-store";
 
 export const ADMIN_CACHE_TTL_MS = 90_000;
 

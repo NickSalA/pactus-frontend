@@ -8,7 +8,7 @@ import {
   getOrganizationMembers,
   getServicesAdmin,
   getTemplates,
-} from "@/lib/api";
+} from "@/api";
 import { ADMIN_CACHE_TTL_MS, peekAdminCache, readAdminCache, writeAdminCache } from "@/features/admin/lib/admin-cache";
 import { useAdminGuard } from "@/features/admin/hooks/use-admin-guard";
 

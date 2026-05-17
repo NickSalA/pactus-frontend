@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getDocuments } from "@/lib/api";
+import { getDocuments } from "@/api";
 import { ADMIN_CACHE_TTL_MS, peekAdminCache, readAdminCache, writeAdminCache } from "@/features/admin/lib/admin-cache";
 import { useAdminGuard } from "@/features/admin/hooks/use-admin-guard";
 import type { DocumentType } from "@/types/api.types";

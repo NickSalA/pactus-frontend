@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { deleteDocumentFolder, getDocumentFolders, updateDocumentFolder } from "@/lib/api";
+import { deleteDocumentFolder, getDocumentFolders, updateDocumentFolder } from "@/api";
 import { ADMIN_CACHE_TTL_MS, peekAdminCache, readAdminCache, writeAdminCache } from "@/features/admin/lib/admin-cache";
 import { useAdminGuard } from "@/features/admin/hooks/use-admin-guard";
 import type { DocumentFolder, DocumentFolderUpdateRequest } from "@/types/api.types";

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FileText, Upload, X } from "lucide-react";
-import { generateTemplateDraft } from "@/lib/api/templates";
+import { generateTemplateDraft } from "@/api/templates";
 import { getDocumentTypeLabel } from "@/lib/document.utils";
 import { Select } from "@/components/ui/Select";
 import type {
