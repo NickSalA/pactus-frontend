@@ -1,13 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  archiveTemplate,
-  createTemplate,
-  publishTemplate,
-  updateTemplate,
-} from "@/api";
 import { useTemplates, useTemplateFormats } from "@/queries/hooks/templates/queries";
+import { useCreateTemplate, useUpdateTemplate, usePublishTemplate, useArchiveTemplate } from "@/queries/hooks/templates/mutations";
 import { canAuthorTemplates, getTemplateAuthoringDocumentTypes } from "@/lib/permissions";
 import { useAuthStore } from "@/store";
 import type {
@@ -31,6 +26,11 @@ export function useAdminTemplates() {
 
   const { data: templatesData, isLoading: templatesLoading, error: templatesError } = useTemplates();
   const { data: formatsData, isLoading: formatsLoading } = useTemplateFormats();
+
+  const { mutateAsync: createTemplateMutation } = useCreateTemplate();
+  const { mutateAsync: updateTemplateMutation } = useUpdateTemplate();
+  const { mutateAsync: publishTemplateMutation } = usePublishTemplate();
+  const { mutateAsync: archiveTemplateMutation } = useArchiveTemplate();
 
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
@@ -135,10 +135,13 @@ export function useAdminTemplates() {
         setSaving(true);
 
         if (editingTemplate) {
-          const updatedTemplate = await updateTemplate(editingTemplate.id, payload as TemplateUpdateRequest);
+          const updatedTemplate = await updateTemplateMutation({
+            templateId: editingTemplate.id,
+            payload: payload as TemplateUpdateRequest,
+          });
           setViewingTemplate(updatedTemplate);
         } else {
-          const createdTemplate = await createTemplate(payload as TemplateCreateRequest);
+          const createdTemplate = await createTemplateMutation(payload as TemplateCreateRequest);
           setViewingTemplate(createdTemplate);
         }
 
@@ -151,32 +154,30 @@ export function useAdminTemplates() {
         setSaving(false);
       }
     },
-    [editingTemplate],
+    [editingTemplate, createTemplateMutation, updateTemplateMutation],
   );
 
   const publishOneTemplate = useCallback(async (template: Template) => {
     try {
       setSaving(true);
-      await publishTemplate(template.id);
+      await publishTemplateMutation(template.id);
     } catch (err) {
-      // Error handled by mutation
       void err;
     } finally {
       setSaving(false);
     }
-  }, []);
+  }, [publishTemplateMutation]);
 
   const archiveOneTemplate = useCallback(async (template: Template) => {
     try {
       setSaving(true);
-      await archiveTemplate(template.id);
+      await archiveTemplateMutation(template.id);
     } catch (err) {
-      // Error handled by mutation
       void err;
     } finally {
       setSaving(false);
     }
-  }, []);
+  }, [archiveTemplateMutation]);
 
   const upsertTemplate = useCallback((updated: Template) => {
     // This method is no longer needed with TanStack Query's automatic cache updates
