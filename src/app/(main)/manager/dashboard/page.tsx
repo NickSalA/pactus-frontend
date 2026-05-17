@@ -1,5 +1,5 @@
 import { DashboardManagerPageContent } from "@/features/dashboard/components/page/DashboardManagerPageContent";
 
-export default function DashboardManagerPage() {
+export default function ManagerDashboardPage() {
   return <DashboardManagerPageContent />;
 }

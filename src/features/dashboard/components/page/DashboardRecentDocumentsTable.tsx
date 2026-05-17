@@ -50,7 +50,7 @@ export function DashboardRecentDocumentsTable({
       <article className="flex flex-col h-full rounded-2xl bg-white shadow-md">
         <div className="border-b border-slate-100 px-6 py-5">
           <h2 className="text-lg font-semibold text-slate-800">Contratos recientes</h2>
-          <p className="mt-1 text-sm text-[var(--gray-medium)]">
+          <p className="mt-1 text-sm text-gray-medium">
             Ultimas actualizaciones registradas en tus contratos.
           </p>
         </div>
@@ -62,7 +62,7 @@ export function DashboardRecentDocumentsTable({
     <article className="flex flex-col h-full rounded-2xl bg-white shadow-md">
       <div className="border-b border-slate-100 px-6 py-5">
         <h2 className="text-lg font-semibold text-slate-800">Contratos recientes</h2>
-        <p className="mt-1 text-sm text-[var(--gray-medium)]">
+        <p className="mt-1 text-sm text-gray-medium">
           Ultimas actualizaciones registradas en tus contratos.
         </p>
       </div>
@@ -76,7 +76,7 @@ export function DashboardRecentDocumentsTable({
             <col className="w-[10%]" />
           </colgroup>
           <thead>
-            <tr className="text-left text-xs uppercase tracking-wider text-[var(--gray-medium)]">
+            <tr className="text-left text-xs uppercase tracking-wider text-gray-medium">
               <th className="px-6 py-4 font-medium">Nombre del documento</th>
               <th className="px-6 py-4 text-center font-medium">Estado</th>
               <th className="px-6 py-4 text-center font-medium">Ultima modificacion</th>
@@ -86,7 +86,7 @@ export function DashboardRecentDocumentsTable({
           <tbody>
             {documents.length === 0 && (
               <tr>
-                <td className="px-6 py-6 text-sm text-[var(--gray-medium)]" colSpan={4}>
+                <td className="px-6 py-6 text-sm text-gray-medium" colSpan={4}>
                   No hay documentos disponibles.
                 </td>
               </tr>
@@ -100,7 +100,7 @@ export function DashboardRecentDocumentsTable({
                       </span>
                       <div className="min-w-0">
                         <p className="truncate text-sm font-medium text-slate-800">{document.name}</p>
-                        <p className="mt-1 truncate text-xs text-[var(--gray-medium)]">
+                        <p className="mt-1 truncate text-xs text-gray-medium">
                           {document.subtitle}
                         </p>
                       </div>
@@ -115,7 +115,7 @@ export function DashboardRecentDocumentsTable({
                       {getDocumentStateLabel(document.status)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-center align-middle text-sm text-[var(--gray-medium)]">
+                  <td className="px-6 py-4 text-center align-middle text-sm text-gray-medium">
                     <span className="whitespace-nowrap">{document.modified}</span>
                   </td>
                   <td className="px-6 py-4 text-right align-middle">

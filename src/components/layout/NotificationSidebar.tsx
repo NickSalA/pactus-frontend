@@ -91,7 +91,7 @@ export default function NotificationSidebar({
               {notifications.some((n) => !n.read) && (
                 <button
                   onClick={onMarkAllAsRead}
-                  className="text-xs text-[var(--primary)] hover:underline"
+                  className="text-xs text-primary hover:underline"
                 >
                   Marcar todas leídas
                 </button>
@@ -114,7 +114,7 @@ export default function NotificationSidebar({
                 onClick={() => setActiveFilter(filter)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                   activeFilter === filter
-                    ? "bg-[var(--primary)] text-white"
+                    ? "bg-primary text-white"
                     : "bg-white/50 text-gray-600 hover:bg-white/80 border border-white/40"
                 }`}
               >
@@ -165,7 +165,7 @@ export default function NotificationSidebar({
                       <div className="flex gap-2 mt-3">
                         <button
                           onClick={() => { onClose(); router.push("/contracts"); }}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)] transition-colors"
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-white hover:bg-primary-dark transition-colors"
                         >
                           Ver contrato
                         </button>

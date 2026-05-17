@@ -10,7 +10,7 @@ export function DashboardQuickActions({ canCreateContract }: DashboardQuickActio
     <div className="space-y-6 xl:col-span-4">
       <article className="rounded-2xl bg-white p-6 shadow-md">
         <h2 className="text-lg font-semibold text-slate-800">Acciones rapidas</h2>
-        <p className="mt-1 text-sm text-[var(--gray-medium)]">
+        <p className="mt-1 text-sm text-gray-medium">
           Gestiona procesos comunes con un clic.
         </p>
 

@@ -164,7 +164,7 @@ export default function Header() {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="flex items-center gap-3 hover:bg-gray-50 rounded-lg p-2 transition-colors"
           >
-            <div className="w-10 h-10 bg-[var(--primary)] rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
               <span className="text-white font-medium">{userInitials}</span>
             </div>
             <div className="text-left">

@@ -51,11 +51,15 @@ export default function AuthCallbackPage() {
           }
 
           if (authUser.role === "ADMIN" || authUser.role === "Administrador") {
-            router.replace("/admin");
+            router.replace("/admin/dashboard");
           } else if (authUser.role === "MANAGER") {
-            router.replace("/dashboard/manager");
+            router.replace("/manager/dashboard");
+          } else if (authUser.role === "HR") {
+            router.replace("/hr/dashboard");
+          } else if (authUser.role === "WORKER") {
+            router.replace("/worker/dashboard");
           } else {
-            router.replace("/dashboard/hr");
+            router.replace("/hr/dashboard");
           }
           return;
         }

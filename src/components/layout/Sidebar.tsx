@@ -18,6 +18,7 @@ import {
 import { type ComponentType, useState } from "react";
 import { canAccessAdminConsole, canAuthorTemplates } from "@/lib/permissions";
 import { useAuthStore, useSidebarStore } from "@/store";
+import { UserRole } from "@/types/api.types";
 
 type MenuItem = {
   href: string;
@@ -26,28 +27,29 @@ type MenuItem = {
   name: string;
 };
 
-const buildMainMenuItems = (hasTemplateAuthoringAccess: boolean): MenuItem[] => {
+const buildMainMenuItems = (role: UserRole): MenuItem[] => {
+  const prefix = role.toLowerCase();
   const items: MenuItem[] = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Contratos", href: "/contracts", icon: FileText },
+    { name: "Dashboard", href: `/${prefix}/dashboard`, icon: LayoutDashboard },
+    { name: "Contratos", href: `/${prefix}/contracts`, icon: FileText },
   ];
 
-  if (hasTemplateAuthoringAccess) {
-    items.push({ name: "Plantillas", href: "/templates", icon: FileStack, match: "prefix" });
+  if (role === "HR" || role === "MANAGER") {
+    items.push({ name: "Plantillas", href: `/${prefix}/templates`, icon: FileStack, match: "prefix" });
   }
 
-  items.push({ name: "Agente IA", href: "/ai-agent", icon: Bot });
+  items.push({ name: "Agente IA", href: `/${prefix}/ai-agent`, icon: Bot });
   return items;
 };
 
 const adminMenuItems: MenuItem[] = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard, match: "exact" },
+  { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard, match: "exact" },
   { name: "Gestión de Accesos", href: "/admin/access", icon: Users, match: "prefix" },
   { name: "Configuración de Alertas", href: "/admin/alerts", icon: Bell, match: "prefix" },
   { name: "Gestión Documental", href: "/admin/document-management", icon: Settings2, match: "prefix" },
 ];
 
-const adminEntryItem: MenuItem = { name: "Administración", href: "/admin", icon: ShieldCheck };
+const adminEntryItem: MenuItem = { name: "Administración", href: "/admin/dashboard", icon: ShieldCheck };
 
 const isItemActive = (pathname: string, item: MenuItem): boolean => {
   if (item.match === "never") {
@@ -68,10 +70,9 @@ export default function Sidebar() {
   const [isHoveringLogo, setIsHoveringLogo] = useState(false);
 
   const hasAdminAccess = canAccessAdminConsole(userRole);
-  const hasTemplateAuthoringAccess = canAuthorTemplates(userRole);
   const isAdminConsole = hasAdminAccess && pathname.startsWith("/admin");
   const expandedSidebarWidth = isAdminConsole ? "w-72" : "w-64";
-  const mainMenuItems = buildMainMenuItems(hasTemplateAuthoringAccess);
+  const mainMenuItems = userRole ? buildMainMenuItems(userRole as UserRole) : [];
   const menuItems = isAdminConsole
     ? adminMenuItems
     : hasAdminAccess

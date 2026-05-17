@@ -41,7 +41,7 @@ export function DashboardMetricsGrid({ isLoading, metrics }: DashboardMetricsGri
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs font-medium tracking-wide text-[var(--gray-medium)]">
+                <p className="text-xs font-medium tracking-wide text-gray-medium">
                   {metric.title}
                 </p>
                 <p className="mt-3 text-3xl font-semibold text-slate-800">
