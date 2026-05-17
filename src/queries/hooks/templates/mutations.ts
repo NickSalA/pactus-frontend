@@ -2,10 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   archiveTemplate,
   createTemplate,
+  generateTemplateDraft,
   publishTemplate,
   updateTemplate,
 } from "@/api";
 import type {
+  GenerateTemplateDraftRequest,
   Template,
   TemplateCreateRequest,
   TemplateUpdateRequest,
@@ -64,6 +66,23 @@ export const useArchiveTemplate = () => {
 
   return useMutation({
     mutationFn: (templateId: number) => archiveTemplate(templateId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: TEMPLATES_KEY });
+    },
+  });
+};
+
+export const useGenerateTemplateDraft = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      request,
+      file,
+    }: {
+      request: GenerateTemplateDraftRequest;
+      file?: File | null;
+    }) => generateTemplateDraft(request, file),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TEMPLATES_KEY });
     },

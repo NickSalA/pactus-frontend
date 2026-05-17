@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FileText, Upload, X } from "lucide-react";
-import { generateTemplateDraft } from "@/api/templates";
 import { getDocumentTypeLabel } from "@/lib/document.utils";
 import { Select } from "@/components/ui/Select";
 import type {
@@ -10,6 +9,7 @@ import type {
   TemplateGenerationMode,
   Template,
   TemplateFormatResponse,
+  PersistedTemplateDraftResponse,
 } from "@/types/api.types";
 import { TemplateSummaryAccordion } from "./TemplateSummaryAccordion";
 import { TemplateWizardProgress } from "./TemplateWizardProgress";
@@ -24,13 +24,25 @@ type TemplateFormModalProps = {
   open: boolean;
   onClose: () => void;
   onSaved: (template: Template, message: string, warnings?: string[]) => void;
+  generateTemplateDraftMutation: (options: {
+    request: {
+      name: string | null;
+      description: string | null;
+      format_code: string;
+      document_type: DocumentType | null;
+      instructions: string | null;
+      jurisdiction: string | null;
+      generation_mode: TemplateGenerationMode;
+    };
+    file?: File | null;
+  }) => Promise<PersistedTemplateDraftResponse>;
 };
 
 const isPdfFile = (file: File): boolean => {
   return file.type === "application/pdf" || /\.pdf$/i.test(file.name);
 };
 
-export function TemplateFormModal({ allowedDocumentTypes, formats, open, onClose, onSaved }: TemplateFormModalProps) {
+export function TemplateFormModal({ allowedDocumentTypes, formats, open, onClose, onSaved, generateTemplateDraftMutation }: TemplateFormModalProps) {
   // Step 1 state
   const [selectedDocumentType, setSelectedDocumentType] = useState<DocumentType | null>(null);
   const [selectedFormatCode, setSelectedFormatCode] = useState("");
@@ -183,8 +195,8 @@ export function TemplateFormModal({ allowedDocumentTypes, formats, open, onClose
       const normalizedDescription = description.trim() || null;
       const requestDocumentType = (allowedDocumentTypes?.length ?? 0) !== 1 ? selectedFormat.document_type : null;
 
-      const response = await generateTemplateDraft(
-        {
+      const response = await generateTemplateDraftMutation({
+        request: {
           description: normalizedDescription,
           document_type: requestDocumentType,
           format_code: selectedFormat.format_code,
@@ -193,8 +205,8 @@ export function TemplateFormModal({ allowedDocumentTypes, formats, open, onClose
           jurisdiction: jurisdiction.trim() || null,
           name: normalizedName,
         },
-        referenceFile,
-      );
+        file: referenceFile,
+      });
 
       const message = response.warnings.length > 0
         ? `Borrador generado con ${response.warnings.length} advertencia(s).`

@@ -1,10 +1,22 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useTemplates, useTemplateFormats } from "@/queries/hooks/templates/queries";
-import { useCreateTemplate, useUpdateTemplate, usePublishTemplate, useArchiveTemplate } from "@/queries/hooks/templates/mutations";
-import { canAuthorTemplates, getTemplateAuthoringDocumentTypes } from "@/lib/permissions";
-import { useAuthStore } from "@/store";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  useTemplates,
+  useTemplateFormats,
+} from '@/queries/hooks/templates/queries';
+import {
+  useCreateTemplate,
+  useGenerateTemplateDraft,
+  useUpdateTemplate,
+  usePublishTemplate,
+  useArchiveTemplate,
+} from '@/queries/hooks/templates/mutations';
+import {
+  canAuthorTemplates,
+  getTemplateAuthoringDocumentTypes,
+} from '@/lib/permissions';
+import { useAuthStore } from '@/store';
 import type {
   DocumentType,
   Template,
@@ -12,34 +24,44 @@ import type {
   TemplateFormatResponse,
   TemplateState,
   TemplateUpdateRequest,
-} from "@/types/api.types";
+} from '@/types/api.types';
 
-type StateFilterValue = "ACTIVE" | "ALL" | TemplateState;
-type DocumentTypeFilterValue = "ALL" | DocumentType;
+type StateFilterValue = 'ACTIVE' | 'ALL' | TemplateState;
+type DocumentTypeFilterValue = 'ALL' | DocumentType;
 
 export function useAdminTemplates() {
   const userRole = useAuthStore((state) => state.user?.role ?? null);
   const canManageTemplates = canAuthorTemplates(userRole);
   const allowedDocumentTypes = getTemplateAuthoringDocumentTypes(userRole);
-  const supportsDocumentTypeSelection = (allowedDocumentTypes?.length ?? 0) !== 1;
-  const defaultDocumentTypeFilter: DocumentTypeFilterValue = allowedDocumentTypes?.[0] ?? "ALL";
+  const supportsDocumentTypeSelection =
+    (allowedDocumentTypes?.length ?? 0) !== 1;
+  const defaultDocumentTypeFilter: DocumentTypeFilterValue =
+    allowedDocumentTypes?.[0] ?? 'ALL';
 
-  const { data: templatesData, isLoading: templatesLoading, error: templatesError } = useTemplates();
+  const {
+    data: templatesData,
+    isLoading: templatesLoading,
+    error: templatesError,
+  } = useTemplates();
   const { data: formatsData, isLoading: formatsLoading } = useTemplateFormats();
 
   const { mutateAsync: createTemplateMutation } = useCreateTemplate();
   const { mutateAsync: updateTemplateMutation } = useUpdateTemplate();
   const { mutateAsync: publishTemplateMutation } = usePublishTemplate();
   const { mutateAsync: archiveTemplateMutation } = useArchiveTemplate();
+  const { mutateAsync: generateTemplateDraftMutation } = useGenerateTemplateDraft();
 
   const [saving, setSaving] = useState(false);
-  const [search, setSearch] = useState("");
-  const [stateFilter, setStateFilter] = useState<StateFilterValue>("ACTIVE");
-  const [formatFilter, setFormatFilter] = useState<string>("ALL");
-  const [documentTypeFilter, setDocumentTypeFilter] = useState<DocumentTypeFilterValue>(defaultDocumentTypeFilter);
+  const [search, setSearch] = useState('');
+  const [stateFilter, setStateFilter] = useState<StateFilterValue>('ACTIVE');
+  const [formatFilter, setFormatFilter] = useState<string>('ALL');
+  const [documentTypeFilter, setDocumentTypeFilter] =
+    useState<DocumentTypeFilterValue>(defaultDocumentTypeFilter);
   const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
   const [viewingTemplate, setViewingTemplate] = useState<Template | null>(null);
-  const [viewingTemplateWarnings, setViewingTemplateWarnings] = useState<string[]>([]);
+  const [viewingTemplateWarnings, setViewingTemplateWarnings] = useState<
+    string[]
+  >([]);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 
@@ -55,22 +77,29 @@ export function useAdminTemplates() {
   const error = templatesError?.message ?? null;
 
   const filteredTemplates = useMemo(() => {
-    const normalizedSearch = search.trim().toLocaleLowerCase("es");
+    const normalizedSearch = search.trim().toLocaleLowerCase('es');
 
     return templates.filter((template) => {
-      if (stateFilter === "ACTIVE" && template.state === "ARCHIVED") {
+      if (stateFilter === 'ACTIVE' && template.state === 'ARCHIVED') {
         return false;
       }
 
-      if (stateFilter !== "ACTIVE" && stateFilter !== "ALL" && template.state !== stateFilter) {
+      if (
+        stateFilter !== 'ACTIVE' &&
+        stateFilter !== 'ALL' &&
+        template.state !== stateFilter
+      ) {
         return false;
       }
 
-      if (documentTypeFilter !== "ALL" && template.document_type !== documentTypeFilter) {
+      if (
+        documentTypeFilter !== 'ALL' &&
+        template.document_type !== documentTypeFilter
+      ) {
         return false;
       }
 
-      if (formatFilter !== "ALL" && template.format_code !== formatFilter) {
+      if (formatFilter !== 'ALL' && template.format_code !== formatFilter) {
         return false;
       }
 
@@ -78,21 +107,30 @@ export function useAdminTemplates() {
         return true;
       }
 
-      const haystack = `${template.name} ${template.description ?? ""} ${template.format_label ?? ""} ${template.format_code ?? ""}`
-        .toLocaleLowerCase("es");
+      const haystack =
+        `${template.name} ${template.description ?? ''} ${template.format_label ?? ''} ${template.format_code ?? ''}`.toLocaleLowerCase(
+          'es',
+        );
 
       return haystack.includes(normalizedSearch);
     });
   }, [documentTypeFilter, formatFilter, search, stateFilter, templates]);
 
   const visibleFormats = useMemo(() => {
-    return formats.filter((format) => documentTypeFilter === "ALL" || format.document_type === documentTypeFilter);
+    return formats.filter(
+      (format) =>
+        documentTypeFilter === 'ALL' ||
+        format.document_type === documentTypeFilter,
+    );
   }, [documentTypeFilter, formats]);
 
   const stats = useMemo(
     () => ({
-      draftCount: templates.filter((template) => template.state === "DRAFT").length,
-      publishedCount: templates.filter((template) => template.state === "PUBLISHED").length,
+      draftCount: templates.filter((template) => template.state === 'DRAFT')
+        .length,
+      publishedCount: templates.filter(
+        (template) => template.state === 'PUBLISHED',
+      ).length,
       totalCount: templates.length,
     }),
     [templates],
@@ -117,11 +155,14 @@ export function useAdminTemplates() {
     setIsEditorOpen(false);
   }, [saving]);
 
-  const openViewer = useCallback((template: Template, warnings: string[] = []) => {
-    setViewingTemplate(template);
-    setViewingTemplateWarnings(warnings);
-    setIsViewerOpen(true);
-  }, []);
+  const openViewer = useCallback(
+    (template: Template, warnings: string[] = []) => {
+      setViewingTemplate(template);
+      setViewingTemplateWarnings(warnings);
+      setIsViewerOpen(true);
+    },
+    [],
+  );
 
   const closeViewer = useCallback(() => {
     setViewingTemplate(null);
@@ -141,14 +182,19 @@ export function useAdminTemplates() {
           });
           setViewingTemplate(updatedTemplate);
         } else {
-          const createdTemplate = await createTemplateMutation(payload as TemplateCreateRequest);
+          const createdTemplate = await createTemplateMutation(
+            payload as TemplateCreateRequest,
+          );
           setViewingTemplate(createdTemplate);
         }
 
         setIsEditorOpen(false);
         setEditingTemplate(null);
       } catch (err) {
-        const message = err instanceof Error ? err.message : "No se pudo guardar la plantilla.";
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'No se pudo guardar la plantilla.';
         throw new Error(message);
       } finally {
         setSaving(false);
@@ -157,27 +203,33 @@ export function useAdminTemplates() {
     [editingTemplate, createTemplateMutation, updateTemplateMutation],
   );
 
-  const publishOneTemplate = useCallback(async (template: Template) => {
-    try {
-      setSaving(true);
-      await publishTemplateMutation(template.id);
-    } catch (err) {
-      void err;
-    } finally {
-      setSaving(false);
-    }
-  }, [publishTemplateMutation]);
+  const publishOneTemplate = useCallback(
+    async (template: Template) => {
+      try {
+        setSaving(true);
+        await publishTemplateMutation(template.id);
+      } catch (err) {
+        void err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [publishTemplateMutation],
+  );
 
-  const archiveOneTemplate = useCallback(async (template: Template) => {
-    try {
-      setSaving(true);
-      await archiveTemplateMutation(template.id);
-    } catch (err) {
-      void err;
-    } finally {
-      setSaving(false);
-    }
-  }, [archiveTemplateMutation]);
+  const archiveOneTemplate = useCallback(
+    async (template: Template) => {
+      try {
+        setSaving(true);
+        await archiveTemplateMutation(template.id);
+      } catch (err) {
+        void err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [archiveTemplateMutation],
+  );
 
   const upsertTemplate = useCallback((updated: Template) => {
     // This method is no longer needed with TanStack Query's automatic cache updates
@@ -197,6 +249,7 @@ export function useAdminTemplates() {
     filteredTemplates,
     formatFilter,
     formats,
+    generateTemplateDraftMutation,
     isEditorOpen,
     isViewerOpen,
     loading,
