@@ -1,54 +1,53 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
-  getAlertCenterLabor,
-  getAreaChartLabor,
-  getRecentContractsLabor,
-} from "@/api";
+  useAlertCenterLabor,
+  useAreaChartLabor,
+  useRecentContractsLabor,
+} from "@/queries/hooks/dashboard/queries";
 import { buildRecentDocumentsFromAPI } from "@/features/dashboard/lib/dashboard-data";
 import type { RecentDashboardDocument } from "@/features/dashboard/lib/dashboard-data";
-import type {
-  AlertCategory,
-  AreaChartResponse,
-} from "@/types/api.types";
 
 export function useDashboardHRPage() {
-  const [areaChart, setAreaChart] = useState<AreaChartResponse | null>(null);
-  const [alerts, setAlerts] = useState<AlertCategory[]>([]);
-  const [recentContracts, setRecentContracts] = useState<RecentDashboardDocument[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const load = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const [areaChartData, alertData, recentData] = await Promise.all([
-        getAreaChartLabor(),
-        getAlertCenterLabor(),
-        getRecentContractsLabor(),
-      ]);
-      setAreaChart(areaChartData);
-      setAlerts(alertData);
-      setRecentContracts(buildRecentDocumentsFromAPI(recentData));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al cargar el dashboard");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const {
+    data: areaChart,
+    isLoading: areaChartLoading,
+    error: areaChartError,
+  } = useAreaChartLabor();
 
-  useEffect(() => {
-    void load();
-  }, [load]);
+  const {
+    data: alerts,
+    isLoading: alertsLoading,
+    error: alertsError,
+  } = useAlertCenterLabor();
+
+  const {
+    data: recentContractsRaw,
+    isLoading: recentContractsLoading,
+    error: recentContractsError,
+  } = useRecentContractsLabor();
+
+  const recentContracts = useMemo<RecentDashboardDocument[]>(
+    () => (recentContractsRaw ? buildRecentDocumentsFromAPI(recentContractsRaw) : []),
+    [recentContractsRaw]
+  );
+
+  const isLoading = areaChartLoading || alertsLoading || recentContractsLoading;
+
+  const error = areaChartError || alertsError || recentContractsError;
 
   return {
-    areaChart,
-    alerts,
+    areaChart: areaChart ?? null,
+    alerts: alerts ?? [],
     recentContracts,
     isLoading,
     error,
-    reload: load,
+    reload: () => {
+      void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
   };
 }

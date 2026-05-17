@@ -1,66 +1,69 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
-  getAlertCenterCompany,
-  getAreaChartCompany,
-  getRecentContractsCompany,
-  getTopCompanies,
-  getTopServices,
-} from "@/api";
+  useAlertCenterCompany,
+  useAreaChartCompany,
+  useRecentContractsCompany,
+  useTopCompanies,
+  useTopServices,
+} from "@/queries/hooks/dashboard/queries";
 import { buildRecentDocumentsFromAPI } from "@/features/dashboard/lib/dashboard-data";
 import type { RecentDashboardDocument } from "@/features/dashboard/lib/dashboard-data";
-import type {
-  AlertCategory,
-  AreaChartResponse,
-  TopCompanyResponse,
-  TopServiceResponse,
-} from "@/types/api.types";
 
 export function useDashboardManagerPage() {
-  const [areaChart, setAreaChart] = useState<AreaChartResponse | null>(null);
-  const [alerts, setAlerts] = useState<AlertCategory[]>([]);
-  const [recentContracts, setRecentContracts] = useState<RecentDashboardDocument[]>([]);
-  const [topCompanies, setTopCompanies] = useState<TopCompanyResponse[]>([]);
-  const [topServices, setTopServices] = useState<TopServiceResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const load = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const [areaChartData, alertData, recentData, topCompaniesData, topServicesData] = await Promise.all([
-        getAreaChartCompany(),
-        getAlertCenterCompany(),
-        getRecentContractsCompany(),
-        getTopCompanies(),
-        getTopServices(),
-      ]);
-      setAreaChart(areaChartData);
-      setAlerts(alertData);
-      setRecentContracts(buildRecentDocumentsFromAPI(recentData));
-      setTopCompanies(topCompaniesData);
-      setTopServices(topServicesData);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al cargar el dashboard");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const {
+    data: areaChart,
+    isLoading: areaChartLoading,
+    error: areaChartError,
+  } = useAreaChartCompany();
 
-  useEffect(() => {
-    void load();
-  }, [load]);
+  const {
+    data: alerts,
+    isLoading: alertsLoading,
+    error: alertsError,
+  } = useAlertCenterCompany();
+
+  const {
+    data: recentContractsRaw,
+    isLoading: recentContractsLoading,
+    error: recentContractsError,
+  } = useRecentContractsCompany();
+
+  const {
+    data: topCompanies,
+    isLoading: topCompaniesLoading,
+    error: topCompaniesError,
+  } = useTopCompanies();
+
+  const {
+    data: topServices,
+    isLoading: topServicesLoading,
+    error: topServicesError,
+  } = useTopServices();
+
+  const recentContracts = useMemo<RecentDashboardDocument[]>(
+    () => (recentContractsRaw ? buildRecentDocumentsFromAPI(recentContractsRaw) : []),
+    [recentContractsRaw]
+  );
+
+  const isLoading = areaChartLoading || alertsLoading || recentContractsLoading || topCompaniesLoading || topServicesLoading;
+
+  const error = areaChartError || alertsError || recentContractsError || topCompaniesError || topServicesError;
 
   return {
-    areaChart,
-    alerts,
+    areaChart: areaChart ?? null,
+    alerts: alerts ?? [],
     recentContracts,
-    topCompanies,
-    topServices,
+    topCompanies: topCompanies ?? [],
+    topServices: topServices ?? [],
     isLoading,
     error,
-    reload: load,
+    reload: () => {
+      void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
   };
 }

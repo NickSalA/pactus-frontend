@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   createEmptyServiceItem,
   getInitialContractTotal,
@@ -9,11 +9,10 @@ import {
   type FormState,
   type ServiceItemDraft,
 } from "@/features/contracts/lib/contract-form.utils";
-import { getServices } from "@/api";
+import { useServices } from "@/queries/hooks/contracts/queries";
 import type {
   Document,
   DocumentServiceItemPayload,
-  ServiceCatalogItem,
 } from "@/types/api.types";
 
 type UseContractFormServicesOptions = {
@@ -29,33 +28,13 @@ export function useContractFormServices({
   initialData,
   setForm,
 }: UseContractFormServicesOptions) {
-  const [services, setServices] = useState<ServiceCatalogItem[]>([]);
-  const [servicesLoading, setServicesLoading] = useState(true);
-  const [servicesLoadError, setServicesLoadError] = useState<string | null>(null);
+  const { data: services = [], isLoading: servicesLoading, error: servicesLoadError } = useServices();
   const [serviceItemsTouched, setServiceItemsTouched] = useState(false);
   const [addingService, setAddingService] = useState(false);
   const [newServiceDraft, setNewServiceDraft] = useState<ServiceItemDraft>(() =>
     createEmptyServiceItem("", ""),
   );
   const [editingServiceKey, setEditingServiceKey] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadServices = async () => {
-      try {
-        setServicesLoading(true);
-        setServicesLoadError(null);
-        setServices(await getServices());
-      } catch (err) {
-        setServicesLoadError(
-          err instanceof Error ? err.message : "No se pudo cargar el catalogo de servicios.",
-        );
-      } finally {
-        setServicesLoading(false);
-      }
-    };
-
-    void loadServices();
-  }, []);
 
   const initialTotalFallback = useMemo(
     () => getInitialContractTotal(initialData),

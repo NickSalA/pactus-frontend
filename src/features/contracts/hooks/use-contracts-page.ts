@@ -1,21 +1,29 @@
-"use client";
+'use client';
 
-import { useCallback } from "react";
-import { deleteDocument } from "@/api";
-import { canCreateContracts, canCreateFolders, canImportContracts, canManageDocumentType, canManageFolderRole } from "@/lib/permissions";
-import { useContractsCollection } from "@/features/contracts/hooks/use-contracts-collection";
-import { useContractPreview } from "@/features/contracts/hooks/use-contract-preview";
-import { useContractsDrivePicker } from "@/features/contracts/hooks/use-contracts-drive-picker";
-import { useContractsFilters } from "@/features/contracts/hooks/use-contracts-filters";
-import { useContractsModalState } from "@/features/contracts/hooks/use-contracts-modal-state";
-import { useAuthStore } from "@/store";
-import type { Document } from "@/types/api.types";
+import { useCallback } from 'react';
+import { deleteDocument } from '@/api';
+import {
+  canCreateContracts,
+  canCreateFolders,
+  canImportContracts,
+  canManageDocumentType,
+  canManageFolderRole,
+} from '@/lib/permissions';
+import { useContractsCollection } from '@/features/contracts/hooks/use-contracts-collection';
+import { useContractPreview } from '@/features/contracts/hooks/use-contract-preview';
+import { useContractsDrivePicker } from '@/features/contracts/hooks/use-contracts-drive-picker';
+import { useContractsFilters } from '@/features/contracts/hooks/use-contracts-filters';
+import { useContractsModalState } from '@/features/contracts/hooks/use-contracts-modal-state';
+import { useAuthStore } from '@/store';
+import type { Document } from '@/types/api.types';
 
 type UseContractsPageOptions = {
   shouldOpenCreateModal?: boolean;
 };
 
-export function useContractsPage({ shouldOpenCreateModal = false }: UseContractsPageOptions) {
+export function useContractsPage({
+  shouldOpenCreateModal = false,
+}: UseContractsPageOptions) {
   const userRole = useAuthStore((state) => state.user?.role ?? null);
   const canCreateContract = canCreateContracts(userRole);
   const canCreateFolder = canCreateFolders(userRole);
@@ -29,7 +37,7 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
     deleteFolder: deleteCollectionFolder,
     error,
     folders,
-    loading,
+    isLoading,
     reloadContracts,
     removeContract,
     renameFolder: renameCollectionFolder,
@@ -38,7 +46,9 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
   } = useContractsCollection();
 
   const editableFolders = folders.filter((folder) => !folder.isSystem);
-  const canManageActiveFolder = !activeFolder.isSystem && canManageFolderRole(userRole, activeFolder.owner_role);
+  const canManageActiveFolder =
+    !activeFolder.isSystem &&
+    canManageFolderRole(userRole, activeFolder.owner_role);
 
   const {
     changeFilter,
@@ -88,7 +98,9 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
     showDeleteModal,
     showEditForm,
     showForm,
-  } = useContractsModalState({ shouldOpenCreateModal: shouldOpenCreateModal && canCreateContract });
+  } = useContractsModalState({
+    shouldOpenCreateModal: shouldOpenCreateModal && canCreateContract,
+  });
 
   const {
     closePreview,
@@ -120,22 +132,31 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
       removeContract(contractToDelete.id);
       closeDeleteModal();
     } catch (err) {
-      console.error("Error al eliminar:", err);
-      window.alert(err instanceof Error ? err.message : "Error al eliminar el contrato");
+      console.error('Error al eliminar:', err);
+      window.alert(
+        err instanceof Error ? err.message : 'Error al eliminar el contrato',
+      );
     } finally {
       setDeleting(false);
     }
   }, [closeDeleteModal, contractToDelete, removeContract, setDeleting]);
 
-  const bulkDeleteContracts = useCallback(async (ids: number[]): Promise<void> => {
-    try {
-      await Promise.all(ids.map((id) => deleteDocument(id)));
-      ids.forEach((id) => removeContract(id));
-    } catch (err) {
-      console.error("Error en eliminación masiva:", err);
-      window.alert(err instanceof Error ? err.message : "Error al eliminar los contratos");
-    }
-  }, [removeContract]);
+  const bulkDeleteContracts = useCallback(
+    async (ids: number[]): Promise<void> => {
+      try {
+        await Promise.all(ids.map((id) => deleteDocument(id)));
+        ids.forEach((id) => removeContract(id));
+      } catch (err) {
+        console.error('Error en eliminación masiva:', err);
+        window.alert(
+          err instanceof Error
+            ? err.message
+            : 'Error al eliminar los contratos',
+        );
+      }
+    },
+    [removeContract],
+  );
 
   const createFolder = useCallback(
     async (name: string) => {
@@ -169,7 +190,12 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
       await deleteCollectionFolder(folderId);
       resetPagination();
     },
-    [activeFolder.owner_role, deleteCollectionFolder, resetPagination, userRole],
+    [
+      activeFolder.owner_role,
+      deleteCollectionFolder,
+      resetPagination,
+      userRole,
+    ],
   );
 
   const handleOpenCreateForm = useCallback(() => {
@@ -182,7 +208,7 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
 
   const handleOpenEditForm = useCallback(
     (contract: Document) => {
-      if (!canManageDocumentType(userRole, contract.type)) {
+      if (!canManageDocumentType(userRole, contract.contract_type)) {
         return;
       }
 
@@ -193,7 +219,7 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
 
   const handleOpenDeleteModal = useCallback(
     (contract: Document) => {
-      if (!canManageDocumentType(userRole, contract.type)) {
+      if (!canManageDocumentType(userRole, contract.contract_type)) {
         return;
       }
 
@@ -269,7 +295,7 @@ export function useContractsPage({ shouldOpenCreateModal = false }: UseContracts
     isImportingDriveFiles,
     isOpeningDrivePicker,
     itemsPerPage,
-    loading,
+    isLoading,
     openPreviewInNewTab,
     paginatedContracts,
     previewContract,

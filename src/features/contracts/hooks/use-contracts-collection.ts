@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { createDocumentFolder, deleteDocumentFolder, getDocumentFolders, getDocuments, updateDocumentFolder } from "@/api";
+import { createDocumentFolder, deleteDocumentFolder, updateDocumentFolder } from "@/api";
+import { useDocumentFolders, useDocuments } from "@/queries/hooks/contracts/queries";
 import { filterVisibleDocuments } from "@/lib/permissions";
 import { useAuthStore } from "@/store";
 import type { Document } from "@/types/api.types";
@@ -26,8 +27,15 @@ export function useContractsCollection() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [folderState, setFolderState] = useState<ContractFolder[]>([UNASSIGNED_FOLDER]);
   const [activeFolderId, setActiveFolderId] = useState<number>(UNASSIGNED_FOLDER_ID);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  const { data: documentsData, isLoading, error, refetch } = useDocuments();
+  const { data: foldersData } = useDocumentFolders();
+
+  useEffect(() => {
+    if (documentsData) {
+      setDocuments(filterVisibleDocuments(documentsData, userRole));
+    }
+  }, [documentsData, userRole]);
 
   const folders = useMemo(() => {
     const counts = documents.reduce<Map<number, number>>((nextCounts, document) => {
@@ -45,6 +53,19 @@ export function useContractsCollection() {
       documents_count: counts.get(folder.id) ?? 0,
     }));
   }, [documents, folderState]);
+
+  useEffect(() => {
+    if (foldersData) {
+      const apiFolders: ContractFolder[] = foldersData.map((folder) => ({
+        documents_count: folder.documents_count,
+        id: folder.id,
+        isEditable: true,
+        name: folder.name,
+        owner_role: folder.owner_role,
+      }));
+      setFolderState([UNASSIGNED_FOLDER, ...sortFoldersByName(apiFolders)]);
+    }
+  }, [foldersData]);
 
   useEffect(() => {
     if (!folders.some((folder) => folder.id === activeFolderId)) {
@@ -65,33 +86,9 @@ export function useContractsCollection() {
     return documents.filter((document) => document.folder_id === activeFolderId);
   }, [activeFolderId, documents]);
 
-  const reloadContracts = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const [documentsResponse, foldersResponse] = await Promise.all([getDocuments(), getDocumentFolders()]);
-      const visibleDocuments = filterVisibleDocuments(documentsResponse, userRole);
-      const apiFolders: ContractFolder[] = foldersResponse.map((folder) => ({
-        documents_count: folder.documents_count,
-        id: folder.id,
-        isEditable: true,
-        name: folder.name,
-        owner_role: folder.owner_role,
-      }));
-
-      setDocuments(visibleDocuments);
-      setFolderState([UNASSIGNED_FOLDER, ...sortFoldersByName(apiFolders)]);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al cargar contratos y carpetas");
-    } finally {
-      setLoading(false);
-    }
-  }, [userRole]);
-
-  useEffect(() => {
-    void reloadContracts();
-  }, [reloadContracts]);
+  const reloadContracts = useCallback(() => {
+    void refetch();
+  }, [refetch]);
 
   const addContract = useCallback((newContract: Document) => {
     setDocuments((previousDocuments) => [...previousDocuments, newContract]);
@@ -202,7 +199,7 @@ export function useContractsCollection() {
     deleteFolder,
     error,
     folders,
-    loading,
+    isLoading,
     reloadContracts,
     removeContract,
     renameFolder,

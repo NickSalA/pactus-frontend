@@ -56,7 +56,7 @@ export function ContractsPageContent({
     }
   }, [page, selectedIds]);
 
-  if (page.loading) {
+  if (page.isLoading) {
     return (
       <div className="flex h-full flex-col items-center justify-center">
         <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
@@ -68,7 +68,7 @@ export function ContractsPageContent({
   if (page.error) {
     return (
       <div className="flex h-full flex-col items-center justify-center">
-        <p className="mb-4 text-red-500">{page.error}</p>
+        <p className="mb-4 text-red-500">{page.error.message}</p>
         <button
           onClick={() => {
             void page.reloadContracts();
