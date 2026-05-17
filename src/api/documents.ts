@@ -12,48 +12,8 @@ import type {
   ServiceCatalogItemCreateRequest,
   ServiceCatalogItemUpdateRequest,
 } from "@/types/api.types";
-import { createCacheEntry, hasFreshCache, type CacheEntry } from "./cache";
-import { DOCUMENTS_CACHE_TTL_MS, TIMEOUTS } from "./constants";
+import { TIMEOUTS } from "./constants";
 import { apiGet, apiPost, apiPatch, apiDelete } from "./axiosInstance";
-import { onApiSessionChange } from "./token-store";
-
-let documentsCache: CacheEntry<Document[]> | null = null;
-let documentsInFlight: Promise<Document[]> | null = null;
-let servicesCache: CacheEntry<ServiceCatalogItem[]> | null = null;
-let servicesInFlight: Promise<ServiceCatalogItem[]> | null = null;
-let foldersCache: CacheEntry<DocumentFolder[]> | null = null;
-let foldersInFlight: Promise<DocumentFolder[]> | null = null;
-
-const resetDocumentsCache = () => {
-  documentsCache = null;
-  documentsInFlight = null;
-};
-
-const resetServicesCache = () => {
-  servicesCache = null;
-  servicesInFlight = null;
-};
-
-const resetFoldersCache = () => {
-  foldersCache = null;
-  foldersInFlight = null;
-};
-
-const resetDocumentApiState = () => {
-  resetDocumentsCache();
-  resetServicesCache();
-  resetFoldersCache();
-};
-
-const updateFoldersCache = (updater: (folders: DocumentFolder[]) => DocumentFolder[]) => {
-  if (!foldersCache) {
-    return;
-  }
-
-  foldersCache = createCacheEntry(updater(foldersCache.data));
-};
-
-onApiSessionChange(resetDocumentApiState);
 
 const normalizeDocument = (document: Document): Document => ({
   ...document,
@@ -105,53 +65,16 @@ export async function uploadDocument(data: DocumentCreateRequest): Promise<Docum
     })
   );
 
-  resetDocumentsCache();
-  resetFoldersCache();
-  resetServicesCache();
   return createdDocument;
 }
 
 export async function getDocuments(): Promise<Document[]> {
-  if (hasFreshCache(documentsCache, DOCUMENTS_CACHE_TTL_MS)) {
-    return documentsCache.data;
-  }
-
-  if (documentsInFlight) {
-    return documentsInFlight;
-  }
-
-  documentsInFlight = apiGet<Document[]>("/documents/", { timeout: TIMEOUTS.DEFAULT })
-    .then((documents) => {
-      const normalizedDocuments = documents.map(normalizeDocument);
-      documentsCache = createCacheEntry(normalizedDocuments);
-      return normalizedDocuments;
-    })
-    .finally(() => {
-      documentsInFlight = null;
-    });
-
-  return documentsInFlight;
+  const documents = await apiGet<Document[]>("/documents/", { timeout: TIMEOUTS.DEFAULT });
+  return documents.map(normalizeDocument);
 }
 
 export async function getServices(): Promise<ServiceCatalogItem[]> {
-  if (hasFreshCache(servicesCache, DOCUMENTS_CACHE_TTL_MS)) {
-    return servicesCache.data;
-  }
-
-  if (servicesInFlight) {
-    return servicesInFlight;
-  }
-
-  servicesInFlight = apiGet<ServiceCatalogItem[]>("/services", { timeout: TIMEOUTS.DEFAULT })
-    .then((services) => {
-      servicesCache = createCacheEntry(services);
-      return services;
-    })
-    .finally(() => {
-      servicesInFlight = null;
-    });
-
-  return servicesInFlight;
+  return apiGet<ServiceCatalogItem[]>("/services", { timeout: TIMEOUTS.DEFAULT });
 }
 
 export async function getServicesAdmin(includeInactive: boolean = true): Promise<ServiceCatalogItem[]> {
@@ -164,97 +87,52 @@ export async function getServicesAdmin(includeInactive: boolean = true): Promise
 export async function createServiceCatalogItem(
   payload: ServiceCatalogItemCreateRequest
 ): Promise<ServiceCatalogItem> {
-  const service = await apiPost<ServiceCatalogItem>("/services", payload, {
+  return apiPost<ServiceCatalogItem>("/services", payload, {
     timeout: TIMEOUTS.AUTH,
   });
-
-  resetServicesCache();
-  return service;
 }
 
 export async function updateServiceCatalogItem(
   serviceId: number,
   payload: ServiceCatalogItemUpdateRequest
 ): Promise<ServiceCatalogItem> {
-  const service = await apiPatch<ServiceCatalogItem>(`/services/${serviceId}`, payload, {
+  return apiPatch<ServiceCatalogItem>(`/services/${serviceId}`, payload, {
     timeout: TIMEOUTS.AUTH,
   });
-
-  resetServicesCache();
-  return service;
 }
 
 export async function deleteServiceCatalogItem(serviceId: number): Promise<void> {
-  await apiDelete(`/services/${serviceId}`, { timeout: TIMEOUTS.AUTH });
-  resetServicesCache();
+  return apiDelete(`/services/${serviceId}`, { timeout: TIMEOUTS.AUTH });
 }
 
 export async function getDocumentFolders(): Promise<DocumentFolder[]> {
-  if (hasFreshCache(foldersCache, DOCUMENTS_CACHE_TTL_MS)) {
-    return foldersCache.data;
-  }
-
-  if (foldersInFlight) {
-    return foldersInFlight;
-  }
-
-  foldersInFlight = apiGet<DocumentFolder[]>("/folders", {
+  return apiGet<DocumentFolder[]>("/folders", {
     timeout: TIMEOUTS.DEFAULT,
     headers: { "Cache-Control": "no-store" },
-  })
-    .then((folders) => {
-      foldersCache = createCacheEntry(folders);
-      return folders;
-    })
-    .finally(() => {
-      foldersInFlight = null;
-    });
-
-  return foldersInFlight;
+  });
 }
 
-export async function createDocumentFolder(
-  payload: DocumentFolderCreateRequest
-): Promise<DocumentFolder> {
-  const folder = await apiPost<DocumentFolder>("/folders", payload, {
+export async function createDocumentFolder(payload: DocumentFolderCreateRequest): Promise<DocumentFolder> {
+  return apiPost<DocumentFolder>("/folders", payload, {
     timeout: TIMEOUTS.AUTH,
   });
-
-  if (foldersCache) {
-    updateFoldersCache((previousFolders) =>
-      [...previousFolders, folder].sort((left, right) => left.name.localeCompare(right.name, "es"))
-    );
-  }
-
-  return folder;
 }
 
 export async function updateDocumentFolder(
   folderId: number,
   payload: DocumentFolderUpdateRequest
 ): Promise<DocumentFolder> {
-  const folder = await apiPatch<DocumentFolder>(`/folders/${folderId}`, payload, {
+  return apiPatch<DocumentFolder>(`/folders/${folderId}`, payload, {
     timeout: TIMEOUTS.AUTH,
   });
-
-  updateFoldersCache((previousFolders) =>
-    previousFolders
-      .map((currentFolder) => (currentFolder.id === folder.id ? folder : currentFolder))
-      .sort((left, right) => left.name.localeCompare(right.name, "es"))
-  );
-  return folder;
 }
 
 export async function deleteDocumentFolder(folderId: number): Promise<void> {
-  await apiDelete(`/folders/${folderId}`, { timeout: TIMEOUTS.AUTH });
-  updateFoldersCache((previousFolders) =>
-    previousFolders.filter((folder) => folder.id !== folderId)
-  );
+  return apiDelete(`/folders/${folderId}`, { timeout: TIMEOUTS.AUTH });
 }
 
 export async function deleteDocument(id: number): Promise<void> {
-  await apiDelete(`/documents/${id}`, { timeout: TIMEOUTS.AUTH });
-  resetDocumentApiState();
+  return apiDelete(`/documents/${id}`, { timeout: TIMEOUTS.AUTH });
 }
 
 export async function getDocumentById(id: number): Promise<Document> {
@@ -299,8 +177,5 @@ export async function updateDocument(id: number, data: DocumentUpdateRequest): P
     })
   );
 
-  resetDocumentsCache();
-  resetFoldersCache();
-  resetServicesCache();
   return updatedDocument;
 }

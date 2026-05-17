@@ -3,22 +3,8 @@ import type {
   OrganizationMemberCreateRequest,
   OrganizationMemberNotificationsUpdateRequest,
 } from "@/types/api.types";
-import { createCacheEntry, hasFreshCache, type CacheEntry } from "./cache";
 import { TIMEOUTS } from "./constants";
 import { apiGet, apiPost, apiPatch } from "./axiosInstance";
-import { onApiSessionChange } from "./token-store";
-
-let membersCache: CacheEntry<OrganizationMember[]> | null = null;
-let membersInFlight: Promise<OrganizationMember[]> | null = null;
-
-const MEMBERS_CACHE_TTL_MS = 60_000;
-
-const resetOrganizationsApiState = () => {
-  membersCache = null;
-  membersInFlight = null;
-};
-
-onApiSessionChange(resetOrganizationsApiState);
 
 const normalizeMember = (member: OrganizationMember): OrganizationMember => ({
   ...member,
@@ -29,25 +15,8 @@ const normalizeMember = (member: OrganizationMember): OrganizationMember => ({
 });
 
 export async function getOrganizationMembers(): Promise<OrganizationMember[]> {
-  if (hasFreshCache(membersCache, MEMBERS_CACHE_TTL_MS)) {
-    return membersCache.data;
-  }
-
-  if (membersInFlight) {
-    return membersInFlight;
-  }
-
-  membersInFlight = apiGet<OrganizationMember[]>("/organizations/me/members", { timeout: TIMEOUTS.DEFAULT })
-    .then((members) => {
-      const normalizedMembers = members.map(normalizeMember);
-      membersCache = createCacheEntry(normalizedMembers);
-      return normalizedMembers;
-    })
-    .finally(() => {
-      membersInFlight = null;
-    });
-
-  return membersInFlight;
+  const members = await apiGet<OrganizationMember[]>("/organizations/me/members", { timeout: TIMEOUTS.DEFAULT });
+  return members.map(normalizeMember);
 }
 
 export async function createOrganizationMember(
@@ -58,8 +27,6 @@ export async function createOrganizationMember(
       timeout: TIMEOUTS.AUTH,
     })
   );
-
-  resetOrganizationsApiState();
   return member;
 }
 
@@ -72,7 +39,5 @@ export async function updateOrganizationMemberNotifications(
       timeout: TIMEOUTS.AUTH,
     })
   );
-
-  resetOrganizationsApiState();
   return member;
 }
