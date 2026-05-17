@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   useTemplates,
   useTemplateFormats,
@@ -30,6 +31,7 @@ type StateFilterValue = 'ACTIVE' | 'ALL' | TemplateState;
 type DocumentTypeFilterValue = 'ALL' | DocumentType;
 
 export function useAdminTemplates() {
+  const queryClient = useQueryClient();
   const userRole = useAuthStore((state) => state.user?.role ?? null);
   const canManageTemplates = canAuthorTemplates(userRole);
   const allowedDocumentTypes = getTemplateAuthoringDocumentTypes(userRole);
@@ -49,7 +51,8 @@ export function useAdminTemplates() {
   const { mutateAsync: updateTemplateMutation } = useUpdateTemplate();
   const { mutateAsync: publishTemplateMutation } = usePublishTemplate();
   const { mutateAsync: archiveTemplateMutation } = useArchiveTemplate();
-  const { mutateAsync: generateTemplateDraftMutation } = useGenerateTemplateDraft();
+  const { mutateAsync: generateTemplateDraftMutation } =
+    useGenerateTemplateDraft();
 
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState('');
@@ -257,7 +260,9 @@ export function useAdminTemplates() {
     openEditEditor,
     openViewer,
     publishOneTemplate,
-    reload: () => {},
+    reload: () => {
+      queryClient.invalidateQueries({ queryKey: ['templates'] });
+    },
     saving,
     search,
     setDocumentTypeFilter,
