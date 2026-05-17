@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
-import { getConversationById, getConversations, sendMessage } from "@/api";
+import { getConversationById, sendMessage } from "@/api";
+import { useConversations } from "@/queries/hooks/chat";
 import { useLiveNow } from "@/features/ai-agent/hooks/use-live-now";
 import { mapConversationToMessages } from "@/features/ai-agent/lib/chat-utils";
 import type { ChatMessage } from "@/features/ai-agent/lib/chat.types";
-import type { Conversation, ConversationWithContent } from "@/types/api.types";
+import type { ConversationWithContent } from "@/types/api.types";
 import { useAuthStore } from "@/store";
 
 export function useAIAgentPage() {
@@ -13,40 +14,24 @@ export function useAIAgentPage() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [threadId, setThreadId] = useState<number | undefined>(undefined);
-  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [showHistory, setShowHistory] = useState(true);
-  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
   const [isConversationLoading, setIsConversationLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const conversationCache = useRef<Map<number, ConversationWithContent>>(new Map());
   const now = useLiveNow();
 
+  const user = useAuthStore((state) => state.user);
+  const userId = user ? parseInt(user.id, 10) : NaN;
+
+  const { data: conversationsData, isLoading: isHistoryLoading, refetch: reloadConversations } = useConversations(userId);
+  const conversations = conversationsData ?? [];
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const loadConversations = useCallback(async () => {
-    const user = useAuthStore.getState().user;
-    if (!user) return;
-    const userId = parseInt(user.id, 10);
-    if (isNaN(userId)) return;
-    try {
-      setIsHistoryLoading(true);
-      setConversations(await getConversations(userId));
-    } catch (error) {
-      console.error("Error loading conversations:", error);
-    } finally {
-      setIsHistoryLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void loadConversations();
-  }, [loadConversations]);
-
   const loadConversation = useCallback(async (conversationId: number) => {
-    // Optimistic update: highlight the item and clear stale messages immediately
     setThreadId(conversationId);
 
     const cached = conversationCache.current.get(conversationId);
@@ -132,12 +117,12 @@ export function useAIAgentPage() {
       const nextValue = !currentValue;
 
       if (nextValue) {
-        void loadConversations();
+        void reloadConversations?.();
       }
 
       return nextValue;
     });
-  }, [loadConversations]);
+  }, [reloadConversations]);
 
   const handleSuggestionSelect = useCallback((text: string) => {
     setInputValue(text);
