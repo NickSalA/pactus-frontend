@@ -1,0 +1,1 @@
+export type ApiConversationMessage = Record<string, unknown>;

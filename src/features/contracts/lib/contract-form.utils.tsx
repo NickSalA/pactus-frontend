@@ -1,12 +1,15 @@
-import { HelpCircle } from "lucide-react";
-import { getDocumentPrimaryCurrency, getDocumentTotalValue } from "@/lib/document.utils";
+import { HelpCircle } from 'lucide-react';
+import {
+  getDocumentPrimaryCurrency,
+  getDocumentTotalValue,
+} from '@/lib/document.utils';
 import type {
   CurrencyType,
   Document,
   DocumentState,
   DocumentType,
   ServiceCatalogItem,
-} from "@/types/api.types";
+} from '@/types/api.types';
 
 export type ServiceItemDraft = {
   key: string;
@@ -17,7 +20,7 @@ export type ServiceItemDraft = {
   end_date: string;
 };
 
-export type ServiceItemDraftField = keyof Omit<ServiceItemDraft, "key">;
+export type ServiceItemDraftField = keyof Omit<ServiceItemDraft, 'key'>;
 
 export type FormState = {
   name: string;
@@ -33,41 +36,54 @@ export type FormState = {
 
 export type Step1Draft = Pick<
   FormState,
-  "name" | "client" | "folder_id" | "type" | "state" | "start_date" | "end_date" | "contract_currency"
+  | 'name'
+  | 'client'
+  | 'folder_id'
+  | 'type'
+  | 'state'
+  | 'start_date'
+  | 'end_date'
+  | 'contract_currency'
 >;
 
-const ALLOWED_EXTENSIONS = new Set(["pdf", "xlsx", "xls", "doc", "docx"]);
+const ALLOWED_EXTENSIONS = new Set(['pdf', 'xlsx', 'xls', 'doc', 'docx']);
 
 const createDraftKey = (): string =>
-  typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
     ? crypto.randomUUID()
     : Math.random().toString(36).slice(2, 10);
 
-const getFileExt = (filename: string): string => filename.split(".").pop()?.toLowerCase() ?? "";
+const getFileExt = (filename: string): string =>
+  filename.split('.').pop()?.toLowerCase() ?? '';
 
-export const createEmptyServiceItem = (start: string, end: string): ServiceItemDraft => ({
+export const createEmptyServiceItem = (
+  start: string,
+  end: string,
+): ServiceItemDraft => ({
   key: createDraftKey(),
-  service_id: "",
-  description: "",
-  value: "",
+  service_id: '',
+  description: '',
+  value: '',
   start_date: start,
   end_date: end,
 });
 
 export const buildFormState = (document?: Document): FormState => ({
-  name: document?.name ?? "",
-  client: document?.client ?? "",
+  name: document?.client ?? '',
+  client: document?.client ?? '',
   folder_id: document?.folder_id ?? null,
-  type: document?.type ?? "COMPANY",
-  start_date: document?.start_date ?? "",
-  end_date: document?.end_date ?? "",
-  state: document?.state ?? "ACTIVE",
-  contract_currency: document ? (getDocumentPrimaryCurrency(document) ?? "USD") : "USD",
+  type: document?.contract_type ?? 'COMPANY',
+  start_date: document?.start_date ?? '',
+  end_date: document?.end_date ?? '',
+  state: document?.state ?? 'ACTIVE',
+  contract_currency: document
+    ? (getDocumentPrimaryCurrency(document) ?? 'USD')
+    : 'USD',
   service_items:
     document?.service_items.map((item) => ({
       key: createDraftKey(),
       service_id: String(item.service_id),
-      description: item.description ?? "",
+      description: item.description ?? '',
       value: String(item.value),
       start_date: item.start_date,
       end_date: item.end_date,
@@ -79,7 +95,7 @@ export const buildFormStateWithDefaultType = (
   defaultType: DocumentType,
 ): FormState => ({
   ...buildFormState(document),
-  type: document?.type ?? defaultType,
+  type: document?.contract_type ?? defaultType,
 });
 
 export const parseOptionalNumber = (value: string): number | undefined => {
@@ -94,7 +110,7 @@ export const parseOptionalNumber = (value: string): number | undefined => {
 };
 
 export const formatCurrencyValue = (value: number): string => {
-  return value.toLocaleString("en-US", {
+  return value.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -102,33 +118,34 @@ export const formatCurrencyValue = (value: number): string => {
 
 export const formatFormDate = (date: string): string => {
   if (!date) {
-    return "-";
+    return '-';
   }
 
-  const [year, month, day] = date.split("-");
+  const [year, month, day] = date.split('-');
   return `${day}/${month}/${year}`;
 };
 
-export const isAllowedFile = (filename: string): boolean => ALLOWED_EXTENSIONS.has(getFileExt(filename));
+export const isAllowedFile = (filename: string): boolean =>
+  ALLOWED_EXTENSIONS.has(getFileExt(filename));
 
 export const getFileTypeBadge = (
   filename: string,
 ): { label: string; bg: string; text: string } => {
   const extension = getFileExt(filename);
 
-  if (extension === "pdf") {
-    return { label: "PDF", bg: "bg-red-100", text: "text-red-600" };
+  if (extension === 'pdf') {
+    return { label: 'PDF', bg: 'bg-red-100', text: 'text-red-600' };
   }
 
-  if (extension === "xlsx" || extension === "xls") {
-    return { label: "XLS", bg: "bg-green-100", text: "text-green-600" };
+  if (extension === 'xlsx' || extension === 'xls') {
+    return { label: 'XLS', bg: 'bg-green-100', text: 'text-green-600' };
   }
 
-  if (extension === "doc" || extension === "docx") {
-    return { label: "DOC", bg: "bg-blue-100", text: "text-blue-600" };
+  if (extension === 'doc' || extension === 'docx') {
+    return { label: 'DOC', bg: 'bg-blue-100', text: 'text-blue-600' };
   }
 
-  return { label: "FILE", bg: "bg-slate-100", text: "text-slate-600" };
+  return { label: 'FILE', bg: 'bg-slate-100', text: 'text-slate-600' };
 };
 
 export const getServiceOptions = (
@@ -154,7 +171,9 @@ export const getServiceOptions = (
     }
   });
 
-  return Array.from(servicesById.values()).sort((a, b) => a.name.localeCompare(b.name, "es"));
+  return Array.from(servicesById.values()).sort((a, b) =>
+    a.name.localeCompare(b.name, 'es'),
+  );
 };
 
 export const getInitialContractTotal = (document?: Document): number => {

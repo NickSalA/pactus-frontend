@@ -1,0 +1,1 @@
+export type ApiCurrencyType = 'PEN' | 'USD' | 'EUR';

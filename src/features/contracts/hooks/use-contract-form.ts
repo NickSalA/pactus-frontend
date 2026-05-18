@@ -1,19 +1,26 @@
-"use client";
+'use client';
 
-import { useCallback, useState } from "react";
-import { buildFormStateWithDefaultType, type FormState } from "@/features/contracts/lib/contract-form.utils";
-import { buildContractFormDataPayload } from "@/features/contracts/lib/contract-form-payloads";
-import { useContractFormFile } from "@/features/contracts/hooks/use-contract-form-file";
-import { useContractFormServices } from "@/features/contracts/hooks/use-contract-form-services";
+import { useCallback, useState } from 'react';
+import {
+  buildFormStateWithDefaultType,
+  type FormState,
+} from '@/features/contracts/lib/contract-form.utils';
+import { buildContractFormDataPayload } from '@/features/contracts/lib/contract-form-payloads';
+import { useContractFormFile } from '@/features/contracts/hooks/use-contract-form-file';
+import { useContractFormServices } from '@/features/contracts/hooks/use-contract-form-services';
 import {
   useContractFormWizard,
   type ContractFormStep,
-} from "@/features/contracts/hooks/use-contract-form-wizard";
-import { updateDocument, uploadDocument } from "@/api";
-import { canManageDocumentType, getDefaultWritableDocumentType, getWritableDocumentTypes } from "@/lib/permissions";
-import { useAuthStore } from "@/store";
-import type { Document, DocumentState } from "@/types/api.types";
-import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
+} from '@/features/contracts/hooks/use-contract-form-wizard';
+import { updateDocument, uploadDocument } from '@/api';
+import {
+  canManageDocumentType,
+  getDefaultWritableDocumentType,
+  getWritableDocumentTypes,
+} from '@/lib/permissions';
+import { useAuthStore } from '@/store';
+import type { Document, DocumentState } from '@/types/api.types';
+import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
 
 type ContractFormProps = {
   readonly availableFolders?: readonly ContractFolder[];
@@ -36,10 +43,13 @@ export function useContractForm({
 }: ContractFormProps) {
   const userRole = useAuthStore((state) => state.user?.role ?? null);
   const allowedDocumentTypes = getWritableDocumentTypes(userRole);
-  const defaultDocumentType = getDefaultWritableDocumentType(userRole) ?? "COMPANY";
+  const defaultDocumentType =
+    getDefaultWritableDocumentType(userRole) ?? 'COMPANY';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [form, setForm] = useState<FormState>(() => buildFormStateWithDefaultType(initialData, defaultDocumentType));
+  const [form, setForm] = useState<FormState>(() =>
+    buildFormStateWithDefaultType(initialData, defaultDocumentType),
+  );
 
   const fileState = useContractFormFile({
     editMode,
@@ -73,14 +83,14 @@ export function useContractForm({
 
   const validateStep2 = useCallback((): string | null => {
     if (addingService) {
-      return "Guarda o cancela el servicio actual antes de continuar.";
+      return 'Guarda o cancela el servicio actual antes de continuar.';
     }
 
     try {
       buildServiceItemsPayload();
       return null;
     } catch (err) {
-      return err instanceof Error ? err.message : "Error en los servicios.";
+      return err instanceof Error ? err.message : 'Error en los servicios.';
     }
   }, [addingService, buildServiceItemsPayload]);
 
@@ -131,12 +141,19 @@ export function useContractForm({
     (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = event.target;
 
-      if (name === "folder_id") {
-        setForm((previous) => ({ ...previous, folder_id: value ? Number(value) : null }));
+      if (name === 'folder_id') {
+        setForm((previous) => ({
+          ...previous,
+          folder_id: value ? Number(value) : null,
+        }));
         return;
       }
 
-      if (name === "type" && allowedDocumentTypes && !allowedDocumentTypes.includes(value as FormState["type"])) {
+      if (
+        name === 'type' &&
+        allowedDocumentTypes &&
+        !allowedDocumentTypes.includes(value as FormState['type'])
+      ) {
         return;
       }
 
@@ -162,18 +179,18 @@ export function useContractForm({
   const handleSubmit = useCallback(async () => {
     if (!hasValidFile) {
       setFileError(true);
-      setError("Adjuntar un archivo asociado al contrato.");
+      setError('Adjuntar un archivo asociado al contrato.');
       return;
     }
 
     if (!editMode && !file) {
       setFileError(true);
-      setError("Debes seleccionar un archivo.");
+      setError('Debes seleccionar un archivo.');
       return;
     }
 
     if (!canManageDocumentType(userRole, form.type)) {
-      setError("No tienes permisos para gestionar este tipo de contrato.");
+      setError('No tienes permisos para gestionar este tipo de contrato.');
       return;
     }
 
@@ -190,37 +207,31 @@ export function useContractForm({
       });
       const serviceItemsPayload = buildServiceItemsPayload();
 
-      const result = editMode && initialData
-        ? await updateDocument(initialData.id, {
-            client: form.client.trim(),
-            end_date: form.end_date,
-            file: file || undefined,
-            folder_id: form.folder_id,
-            form_data: formDataPayload,
-            name: form.name.trim(),
-            service_items: serviceItemsPayload,
-            start_date: form.start_date,
-            state: form.state,
-            type: form.type,
-          })
-        : await uploadDocument({
-            client: form.client.trim(),
-            end_date: form.end_date,
-            file: file!,
-            folder_id: defaultFolderId,
-            form_data: formDataPayload,
-            name: form.name.trim(),
-            service_items: serviceItemsPayload,
-            start_date: form.start_date,
-            state: form.state,
-            type: form.type,
-          });
+      const result =
+        editMode && initialData
+          ? await updateDocument(initialData.id, {
+              folder_id: form.folder_id,
+              form_data: formDataPayload,
+              service_items: serviceItemsPayload,
+              state: form.state,
+              contract_type: form.type as 'COMPANY' | 'LABOR',
+            })
+          : await uploadDocument({
+              file: file!,
+              folder_id: defaultFolderId,
+              form_data: formDataPayload,
+              service_items: serviceItemsPayload,
+              state: form.state,
+              contract_type: form.type as 'COMPANY' | 'LABOR',
+            });
 
       onAdd(result);
       onClose();
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : `Error al ${editMode ? "actualizar" : "crear"} contrato`,
+        err instanceof Error
+          ? err.message
+          : `Error al ${editMode ? 'actualizar' : 'crear'} contrato`,
       );
     } finally {
       setLoading(false);

@@ -71,8 +71,12 @@ export const getReadableDocumentTypes = (role: RoleValue): readonly DocumentType
 };
 
 export const canManageDocumentType = (role: RoleValue, documentType: DocumentType): boolean => {
+  console.log("[DEBUG] canManageDocumentType - Role:", role, "DocumentType:", documentType);
   const allowedTypes = getAllowedDocumentTypes(role, WRITABLE_DOCUMENT_TYPES_BY_ROLE);
-  return allowedTypes === null || allowedTypes.includes(documentType);
+  console.log("[DEBUG] canManageDocumentType - allowedTypes:", allowedTypes);
+  const result = allowedTypes === null || allowedTypes.includes(documentType);
+  console.log("[DEBUG] canManageDocumentType - result:", result);
+  return result;
 };
 
 export const getWritableDocumentTypes = (role: RoleValue): readonly DocumentType[] | null => {

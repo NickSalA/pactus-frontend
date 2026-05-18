@@ -15,7 +15,7 @@ import { useContractsDrivePicker } from '@/features/contracts/hooks/use-contract
 import { useContractsFilters } from '@/features/contracts/hooks/use-contracts-filters';
 import { useContractsModalState } from '@/features/contracts/hooks/use-contracts-modal-state';
 import { useAuthStore } from '@/store';
-import type { Document } from '@/types/api.types';
+import type { Document, DocumentType } from '@/types/api.types';
 
 type UseContractsPageOptions = {
   shouldOpenCreateModal?: boolean;
@@ -208,7 +208,19 @@ export function useContractsPage({
 
   const handleOpenEditForm = useCallback(
     (contract: Document) => {
-      if (!canManageDocumentType(userRole, contract.contract_type)) {
+      console.log(
+        '[DEBUG] handleOpenEditForm - Role:',
+        userRole,
+        'Contract type:',
+        contract.contract_type,
+      );
+      console.log(
+        '[DEBUG] canManageDocumentType result:',
+        canManageDocumentType(userRole, contract.type as DocumentType),
+      );
+      if (
+        !canManageDocumentType(userRole, contract.contract_type as DocumentType)
+      ) {
         return;
       }
 
@@ -219,7 +231,19 @@ export function useContractsPage({
 
   const handleOpenDeleteModal = useCallback(
     (contract: Document) => {
-      if (!canManageDocumentType(userRole, contract.contract_type)) {
+      console.log(
+        '[DEBUG] handleOpenDeleteModal - Role:',
+        userRole,
+        'Contract type:',
+        contract.contract_type,
+      );
+      console.log(
+        '[DEBUG] canManageDocumentType result:',
+        canManageDocumentType(userRole, contract.contract_type as DocumentType),
+      );
+      if (
+        !canManageDocumentType(userRole, contract.contract_type as DocumentType)
+      ) {
         return;
       }
 
