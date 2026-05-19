@@ -1,28 +1,39 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import { BookType, BriefcaseBusiness, Pencil, Plus, Trash2 } from "lucide-react";
-import { AdminServiceModal } from "@/features/admin/components/modals/AdminServiceModal";
-import { LoadingState } from "@/components/LoadingState";
-import { AdminSegmentedTabs } from "@/features/admin/components/shared/AdminSegmentedTabs";
-import { TableBulkActionBar } from "@/components/ui/TableBulkActionBar";
-import { type DocumentManagementCatalog } from "@/features/admin/hooks/useAdminDocumentManagementPage";
-import { useAdminDocumentTypes } from "@/features/admin/hooks/useAdminDocumentTypes";
-import { useAdminServices } from "@/features/admin/hooks/useAdminServices";
-import { useTablePagination } from "@/hooks/useTablePagination";
-import { TablePagination } from "@/components/templates/TablePagination";
-import { formatDate } from "@/lib/utils";
+import { useCallback, useEffect, useState } from 'react';
+import {
+  BookType,
+  BriefcaseBusiness,
+  Pencil,
+  Plus,
+  Trash2,
+} from 'lucide-react';
+import { AdminServiceModal } from '@/features/admin/components/modals/AdminServiceModal';
+import { LoadingState } from '@/components/LoadingState';
+import { AdminSegmentedTabs } from '@/features/admin/components/shared/AdminSegmentedTabs';
+import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
+import { type DocumentManagementCatalog } from '@/features/admin/hooks/useAdminDocumentManagementPage';
+import { useAdminDocumentTypes } from '@/features/admin/hooks/useAdminDocumentTypes';
+import { useAdminServices } from '@/features/admin/hooks/useAdminServices';
+import { useTablePagination } from '@/hooks/useTablePagination';
+import { TablePagination } from '@/components/templates/TablePagination';
+import { formatDate } from '@/lib/utils';
 
 type AdminMastersSectionProps = {
   activeCatalog: DocumentManagementCatalog;
   onCatalogChange: (catalog: DocumentManagementCatalog) => void;
 };
 
-export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMastersSectionProps) {
+export function AdminMastersSection({
+  activeCatalog,
+  onCatalogChange,
+}: AdminMastersSectionProps) {
   const servicesSection = useAdminServices();
   const documentTypesSection = useAdminDocumentTypes();
   const servicesPagination = useTablePagination(servicesSection.services);
-  const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set());
+  const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(
+    new Set(),
+  );
   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 
   useEffect(() => {
@@ -32,12 +43,15 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
   const toggleSelectService = useCallback((id: number) => {
     setSelectedServiceIds((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   }, []);
 
-  const deletableServices = servicesSection.services.filter((s) => s.documents_count === 0);
+  const deletableServices = servicesSection.services.filter(
+    (s) => s.documents_count === 0,
+  );
 
   const selectAllDeletableServices = useCallback(() => {
     setSelectedServiceIds(new Set(deletableServices.map((s) => s.id)));
@@ -55,7 +69,10 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
     }
   }, [selectedServiceIds, servicesSection]);
 
-  if ((activeCatalog === "services" && servicesSection.loading) || (activeCatalog === "document-types" && documentTypesSection.loading)) {
+  if (
+    (activeCatalog === 'services' && servicesSection.loading) ||
+    (activeCatalog === 'document-types' && documentTypesSection.loading)
+  ) {
     return <LoadingState />;
   }
 
@@ -68,16 +85,21 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
               <BriefcaseBusiness className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="text-3xl font-semibold tracking-tight text-slate-900">Gestión de servicios</h2>
-              <p className="mt-1 text-sm text-slate-500">Catálogos editables de servicios y referencia de los tipos de documento.</p>
+              <h2 className="text-3xl font-semibold tracking-tight text-slate-900">
+                Gestión de servicios
+              </h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Catálogos editables de servicios y referencia de los tipos de
+                documento.
+              </p>
             </div>
           </div>
 
-          {activeCatalog === "services" && (
+          {activeCatalog === 'services' && (
             <button
               type="button"
               onClick={servicesSection.openCreateEditor}
-              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
+              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
             >
               <Plus className="h-4 w-4" />
               Nuevo servicio
@@ -90,30 +112,52 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
         activeTab={activeCatalog}
         onChange={onCatalogChange}
         tabs={[
-          { id: "services", label: "Servicios", badge: servicesSection.stats.totalCount },
-          { id: "document-types", label: "Tipos de Documento", badge: documentTypesSection.items.length },
+          {
+            id: 'services',
+            label: 'Servicios',
+            badge: servicesSection.stats.totalCount,
+          },
+          {
+            id: 'document-types',
+            label: 'Tipos de Documento',
+            badge: documentTypesSection.items.length,
+          },
         ]}
       />
 
-      {activeCatalog === "services" ? (
+      {activeCatalog === 'services' ? (
         <>
           <section className="grid gap-4 lg:grid-cols-3">
             <article className="rounded-[28px] border border-slate-200/80 bg-white px-6 py-5 shadow-sm shadow-slate-200/70">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Total</p>
-              <p className="mt-3 text-4xl font-semibold text-slate-900">{servicesSection.stats.totalCount}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+                Total
+              </p>
+              <p className="mt-3 text-4xl font-semibold text-slate-900">
+                {servicesSection.stats.totalCount}
+              </p>
             </article>
             <article className="rounded-[28px] border border-slate-200/80 bg-white px-6 py-5 shadow-sm shadow-slate-200/70">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Activos</p>
-              <p className="mt-3 text-4xl font-semibold text-slate-900">{servicesSection.stats.activeCount}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+                Activos
+              </p>
+              <p className="mt-3 text-4xl font-semibold text-slate-900">
+                {servicesSection.stats.activeCount}
+              </p>
             </article>
             <article className="rounded-[28px] border border-slate-200/80 bg-white px-6 py-5 shadow-sm shadow-slate-200/70">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">En uso</p>
-              <p className="mt-3 text-4xl font-semibold text-slate-900">{servicesSection.stats.inUseCount}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+                En uso
+              </p>
+              <p className="mt-3 text-4xl font-semibold text-slate-900">
+                {servicesSection.stats.inUseCount}
+              </p>
             </article>
           </section>
 
           {servicesSection.error && (
-            <div className="rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">{servicesSection.error}</div>
+            <div className="rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+              {servicesSection.error}
+            </div>
           )}
 
           <section className="overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-sm shadow-slate-200/70">
@@ -147,62 +191,85 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
                     const canDelete = service.documents_count === 0;
                     const isSelected = selectedServiceIds.has(service.id);
                     return (
-                    <tr key={service.id} className={`group ${isSelected ? "bg-blue-50/50" : ""}`}>
-                      <td className="px-6 py-4">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => toggleSelectService(service.id)}
-                          disabled={!canDelete}
-                          className={`h-4 w-4 cursor-pointer rounded border-slate-300 accent-blue-600 transition-opacity duration-150 disabled:cursor-not-allowed ${
-                            isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 disabled:opacity-0"
-                          }`}
-                          aria-label={`Seleccionar ${service.name}`}
-                        />
-                      </td>
-                      <td className="px-6 py-4 font-medium text-slate-900">{service.name}</td>
-                      <td className="px-6 py-4">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            void servicesSection.toggleService(service);
-                          }}
-                          className={`inline-flex min-w-[112px] items-center gap-2 rounded-full px-3 py-1 text-sm font-medium transition-colors ${service.is_active ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}
-                        >
-                          <span className={`h-5 w-9 rounded-full ${service.is_active ? "bg-emerald-500" : "bg-slate-300"}`}>
-                            <span className={`mt-0.5 block h-4 w-4 rounded-full bg-white transition-transform ${service.is_active ? "translate-x-4" : "translate-x-0.5"}`} />
-                          </span>
-                          {service.is_active ? "Activo" : "Inactivo"}
-                        </button>
-                      </td>
-                      <td className="px-6 py-4 text-blue-600">{service.documents_count}</td>
-                      <td className="px-6 py-4 text-slate-500">{formatDate(service.created_at)}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={() => servicesSection.openEditEditor(service)}
-                            className="rounded-xl p-2 text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                            title="Editar servicio"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </button>
+                      <tr
+                        key={service.id}
+                        className={`group ${isSelected ? 'bg-blue-50/50' : ''}`}
+                      >
+                        <td className="px-6 py-4">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectService(service.id)}
+                            disabled={!canDelete}
+                            className={`h-4 w-4 cursor-pointer rounded border-slate-300 accent-blue-600 transition-opacity duration-150 disabled:cursor-not-allowed ${
+                              isSelected
+                                ? 'opacity-100'
+                                : 'opacity-0 group-hover:opacity-100 disabled:opacity-0'
+                            }`}
+                            aria-label={`Seleccionar ${service.name}`}
+                          />
+                        </td>
+                        <td className="px-6 py-4 font-medium text-slate-900">
+                          {service.name}
+                        </td>
+                        <td className="px-6 py-4">
                           <button
                             type="button"
                             onClick={() => {
-                              if (window.confirm("¿Eliminar este servicio del catálogo?")) {
-                                void servicesSection.removeService(service.id);
-                              }
+                              void servicesSection.toggleService(service);
                             }}
-                            disabled={!canDelete}
-                            className="rounded-xl p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
-                            title="Eliminar servicio"
+                            className={`inline-flex min-w-28 items-center gap-2 rounded-full px-3 py-1 text-sm font-medium transition-colors ${service.is_active ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <span
+                              className={`h-5 w-9 rounded-full ${service.is_active ? 'bg-emerald-500' : 'bg-slate-300'}`}
+                            >
+                              <span
+                                className={`mt-0.5 block h-4 w-4 rounded-full bg-white transition-transform ${service.is_active ? 'translate-x-4' : 'translate-x-0.5'}`}
+                              />
+                            </span>
+                            {service.is_active ? 'Activo' : 'Inactivo'}
                           </button>
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                        <td className="px-6 py-4 text-blue-600">
+                          {service.documents_count}
+                        </td>
+                        <td className="px-6 py-4 text-slate-500">
+                          {formatDate(service.created_at)}
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                servicesSection.openEditEditor(service)
+                              }
+                              className="rounded-xl p-2 text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                              title="Editar servicio"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (
+                                  window.confirm(
+                                    '¿Eliminar este servicio del catálogo?',
+                                  )
+                                ) {
+                                  void servicesSection.removeService(
+                                    service.id,
+                                  );
+                                }
+                              }}
+                              disabled={!canDelete}
+                              className="rounded-xl p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
+                              title="Eliminar servicio"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
                     );
                   })}
                 </tbody>
@@ -210,7 +277,9 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
             </div>
 
             {servicesSection.services.length === 0 ? (
-              <div className="px-6 py-8 text-center text-sm text-slate-500">Aún no hay servicios configurados para esta organización.</div>
+              <div className="px-6 py-8 text-center text-sm text-slate-500">
+                Aún no hay servicios configurados para esta organización.
+              </div>
             ) : (
               <TablePagination
                 currentPage={servicesPagination.currentPage}
@@ -225,7 +294,11 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
           </section>
 
           <AdminServiceModal
-            key={servicesSection.editingService ? `service-${servicesSection.editingService.id}` : "service-new"}
+            key={
+              servicesSection.editingService
+                ? `service-${servicesSection.editingService.id}`
+                : 'service-new'
+            }
             isSubmitting={servicesSection.saving}
             onClose={servicesSection.closeEditor}
             onSubmit={servicesSection.saveService}
@@ -236,25 +309,40 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
       ) : (
         <>
           {documentTypesSection.error && (
-            <div className="rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">{documentTypesSection.error}</div>
+            <div className="rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+              {documentTypesSection.error}
+            </div>
           )}
           <section className="grid gap-4 lg:grid-cols-2">
             {documentTypesSection.items.map((item) => (
-              <article key={item.code} className="rounded-[28px] border border-slate-200/80 bg-white p-6 shadow-sm shadow-slate-200/70">
+              <article
+                key={item.code}
+                className="rounded-[28px] border border-slate-200/80 bg-white p-6 shadow-sm shadow-slate-200/70"
+              >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="text-2xl font-semibold text-slate-900">{item.label}</h3>
+                    <h3 className="text-2xl font-semibold text-slate-900">
+                      {item.label}
+                    </h3>
                   </div>
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 text-slate-500">
                     <BookType className="h-5 w-5" />
                   </div>
                 </div>
-                <p className="mt-4 text-sm leading-6 text-slate-500">{item.description}</p>
+                <p className="mt-4 text-sm leading-6 text-slate-500">
+                  {item.description}
+                </p>
                 <div className="mt-5 flex items-center justify-between rounded-2xl border border-slate-200/80 bg-slate-50 px-4 py-3">
-                  <span className="text-sm font-medium text-slate-600">Contratos actuales</span>
-                  <span className="text-lg font-semibold text-blue-600">{item.count}</span>
+                  <span className="text-sm font-medium text-slate-600">
+                    Contratos actuales
+                  </span>
+                  <span className="text-lg font-semibold text-blue-600">
+                    {item.count}
+                  </span>
                 </div>
-                <p className="mt-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-400">Catálogo fijo del sistema</p>
+                <p className="mt-3 text-xs font-medium uppercase tracking-[0.14em] text-slate-400">
+                  Catálogo fijo del sistema
+                </p>
               </article>
             ))}
           </section>
