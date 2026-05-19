@@ -43,7 +43,7 @@ export function ChatComposer({
             disabled={!inputValue.trim() || isLoading}
             className={`shrink-0 rounded-xl p-3 transition-all duration-200 ${
               inputValue.trim() && !isLoading
-                ? 'bg-linear-r from-blue-600 to-indigo-600 text-white hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95'
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95'
                 : 'cursor-not-allowed bg-slate-200 text-slate-400'
             }`}
           >

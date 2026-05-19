@@ -11,7 +11,7 @@ export function AIAgentPageContent() {
   const page = useAIAgentPage();
 
   return (
-    <div className="-m-8 flex h-[calc(100vh-95px)] overflow-hidden bg-linear-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
+    <div className="-m-8 flex h-[calc(100vh-95px)] overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
       <ChatHistorySidebar
         activeConversationId={page.threadId}
         conversations={page.conversations}
@@ -27,7 +27,7 @@ export function AIAgentPageContent() {
         <div className="flex shrink-0 items-center justify-between border-b border-slate-200/60 bg-white/70 px-8 py-4 shadow-sm backdrop-blur-xl">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-linear-to-br from-blue-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30">
                 <RobotIcon size="md" />
               </div>
               <div>
@@ -44,7 +44,7 @@ export function AIAgentPageContent() {
 
           <button
             onClick={page.startNewConversation}
-            className="flex items-center gap-2 rounded-xl bg-linear-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
+            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

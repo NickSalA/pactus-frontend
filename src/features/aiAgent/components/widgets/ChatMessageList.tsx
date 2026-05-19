@@ -26,11 +26,11 @@ export function ChatMessageList({
             className={`flex max-w-[85%] items-end gap-3 sm:max-w-[75%] ${message.sender === 'user' ? 'flex-row-reverse' : ''}`}
           >
             {message.sender === 'bot' ? (
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full  bg-linear-r bg-linear-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
                 <RobotIcon size="sm" />
               </div>
             ) : (
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center  border border-slate-200/50 bg-linear-br from-slate-100 to-slate-200 shadow-md">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-slate-200/50 bg-gradient-to-br from-slate-100 to-slate-200 shadow-md">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 text-slate-500"
@@ -52,7 +52,7 @@ export function ChatMessageList({
               <div
                 className={`px-5 py-3.5 ${
                   message.sender === 'user'
-                    ? 'rounded-2xl rounded-br-md bg-linear-br bg-linear-to-r from-blue-600 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20'
+                    ? 'rounded-2xl rounded-br-md bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20'
                     : 'rounded-2xl rounded-bl-md border border-slate-100 bg-white text-slate-700 shadow-lg shadow-slate-200/50'
                 }`}
               >
@@ -94,7 +94,7 @@ export function ChatMessageList({
       {isLoading && (
         <div className="flex justify-start">
           <div className="flex items-end gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-linear-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
               <RobotIcon size="sm" />
             </div>
             <div className="rounded-2xl rounded-bl-md border border-slate-100 bg-white px-5 py-4 shadow-lg shadow-slate-200/50">

@@ -8,7 +8,7 @@ type ChatEmptyStateProps = {
 export function ChatEmptyState({ onSuggestionSelect }: ChatEmptyStateProps) {
   return (
     <div className="flex h-full flex-col items-center justify-center px-4 text-center">
-      <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-linear-br from-blue-500 via-blue-600 to-indigo-600 text-white shadow-2xl shadow-blue-500/30">
+      <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 text-white shadow-2xl shadow-blue-500/30">
         <RobotIcon size="lg" />
       </div>
       <h3 className="mb-3 text-2xl font-bold tracking-tight text-slate-800">
