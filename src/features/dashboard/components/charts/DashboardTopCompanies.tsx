@@ -10,13 +10,13 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import type { DocumentType } from '@/types/api.types';
+import { ApiDocumentType } from '@/types/api';
 import { ApiDashboardTopCompanyResponse } from '@/types/api';
 
 type DashboardTopCompaniesProps = {
   data: ApiDashboardTopCompanyResponse[];
   isLoading: boolean;
-  documentType: DocumentType;
+  documentType: ApiDocumentType;
 };
 
 type MetricKey = 'contracts' | 'amount';
