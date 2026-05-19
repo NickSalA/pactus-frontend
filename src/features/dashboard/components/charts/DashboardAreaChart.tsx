@@ -28,11 +28,7 @@ const COLORS = {
   LABOR: '#EF4444',
 } as const;
 
-const LoadingSkeleton = () => (
-  <div className="flex flex-1 animate-pulse items-center justify-center rounded-xl bg-gray-50">
-    <span className="text-sm text-gray-400">Cargando gráfico...</span>
-  </div>
-);
+import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 
 export function DashboardAreaChart({
   data,

@@ -11,11 +11,7 @@ type DashboardAlertCenterProps = {
   isLoading: boolean;
 };
 
-const LoadingSkeleton = () => (
-  <div className="flex flex-1 animate-pulse items-center justify-center rounded-xl bg-gray-50">
-    <span className="text-sm text-gray-400">Cargando alertas...</span>
-  </div>
-);
+import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 
 type Tab = {
   label: string;

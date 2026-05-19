@@ -22,3 +22,12 @@ export const buildRecentDocumentsFromAPI = (
     modified: contract.dates,
   }));
 };
+
+export function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('es-PE', {
+    style: 'currency',
+    currency: 'PEN',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
+}
