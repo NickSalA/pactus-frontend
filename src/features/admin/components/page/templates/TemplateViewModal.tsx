@@ -1,17 +1,24 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import { AlertTriangle, CalendarClock, FileText, Layers3, Tag, X } from "lucide-react";
+import { useMemo, useState } from 'react';
+import {
+  AlertTriangle,
+  CalendarClock,
+  FileText,
+  Layers3,
+  Tag,
+  X,
+} from 'lucide-react';
 import {
   getAllTemplateFields,
   getTemplateFieldCount,
   getTemplateOperationalFields,
   normalizeTemplateFieldType,
   TEMPLATE_FIELD_TYPE_LABELS,
-} from "@/lib/template-fields";
-import { getDocumentTypeLabel } from "@/lib/document.utils";
-import type { ApiTemplateResponse, ApiTemplateField } from "@/types/api";
-import { TemplateWizardProgress } from "./TemplateWizardProgress";
+} from '@/lib/templateFields';
+import { getDocumentTypeLabel } from '@/lib/document.utils';
+import type { ApiTemplateResponse, ApiTemplateField } from '@/types/api';
+import { TemplateWizardProgress } from './TemplateWizardProgress';
 
 type TemplateViewModalProps = {
   template: ApiTemplateResponse | null;
@@ -20,31 +27,44 @@ type TemplateViewModalProps = {
 };
 
 type ViewStep = 1 | 2 | 3;
-const STEPS = ["Resumen", "Contenido", "Campos"];
+const STEPS = ['Resumen', 'Contenido', 'Campos'];
 
-const STATE_STYLES: Record<ApiTemplateResponse["state"], string> = {
-  DRAFT: "bg-amber-100 text-amber-700",
-  PUBLISHED: "bg-emerald-100 text-emerald-700",
-  ARCHIVED: "bg-slate-200 text-slate-700",
+const STATE_STYLES: Record<ApiTemplateResponse['state'], string> = {
+  DRAFT: 'bg-amber-100 text-amber-700',
+  PUBLISHED: 'bg-emerald-100 text-emerald-700',
+  ARCHIVED: 'bg-slate-200 text-slate-700',
 };
 
-export function TemplateViewModal({ template, warnings = [], onClose }: TemplateViewModalProps) {
+export function TemplateViewModal({
+  template,
+  warnings = [],
+  onClose,
+}: TemplateViewModalProps) {
   const [currentStep, setCurrentStep] = useState<ViewStep>(1);
   const contractFields = template?.content.fields ?? [];
-  const operationalFields = useMemo(() => getTemplateOperationalFields(template?.content), [template?.content]);
+  const operationalFields = useMemo(
+    () => getTemplateOperationalFields(template?.content),
+    [template?.content],
+  );
 
   const markdownLines = useMemo(
-    () => template?.content.body_md.split(/\r?\n/).filter((l) => l.trim()).length ?? 0,
+    () =>
+      template?.content.body_md.split(/\r?\n/).filter((l) => l.trim()).length ??
+      0,
     [template?.content.body_md],
   );
   const requiredFieldsCount = useMemo(
-    () => getAllTemplateFields(template?.content).filter((f) => f.required).length,
+    () =>
+      getAllTemplateFields(template?.content).filter((f) => f.required).length,
     [template?.content],
   );
 
   if (!template) return null;
 
-  const renderFieldTable = (fields: ApiTemplateField[], emptyMessage: string) => {
+  const renderFieldTable = (
+    fields: ApiTemplateField[],
+    emptyMessage: string,
+  ) => {
     if (fields.length === 0) {
       return (
         <div className="mt-4 rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
@@ -58,25 +78,37 @@ export function TemplateViewModal({ template, warnings = [], onClose }: Template
         <table className="min-w-full text-sm">
           <thead>
             <tr className="bg-slate-50">
-              {["Clave", "Etiqueta", "Tipo", "Placeholder", "Requerido"].map((header) => (
-                <th
-                  key={header}
-                  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
-                >
-                  {header}
-                </th>
-              ))}
+              {['Clave', 'Etiqueta', 'Tipo', 'Placeholder', 'Requerido'].map(
+                (header) => (
+                  <th
+                    key={header}
+                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
+                  >
+                    {header}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white">
             {fields.map((field) => (
               <tr key={field.key} className="hover:bg-slate-50">
-                <td className="px-4 py-3 font-mono text-xs text-slate-700">{field.key}</td>
-                <td className="px-4 py-3 font-medium text-slate-800">{field.label}</td>
-                <td className="px-4 py-3 text-slate-600">
-                  {TEMPLATE_FIELD_TYPE_LABELS[normalizeTemplateFieldType(field.type)]}
+                <td className="px-4 py-3 font-mono text-xs text-slate-700">
+                  {field.key}
                 </td>
-                <td className="px-4 py-3 text-slate-500">{field.placeholder?.trim() || "-"}</td>
+                <td className="px-4 py-3 font-medium text-slate-800">
+                  {field.label}
+                </td>
+                <td className="px-4 py-3 text-slate-600">
+                  {
+                    TEMPLATE_FIELD_TYPE_LABELS[
+                      normalizeTemplateFieldType(field.type)
+                    ]
+                  }
+                </td>
+                <td className="px-4 py-3 text-slate-500">
+                  {field.placeholder?.trim() || '-'}
+                </td>
                 <td className="px-4 py-3">
                   {field.required ? (
                     <span className="text-red-600">Sí</span>
@@ -108,7 +140,9 @@ export function TemplateViewModal({ template, warnings = [], onClose }: Template
               <FileText className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-slate-900">{template.name}</h3>
+              <h3 className="text-xl font-semibold text-slate-900">
+                {template.name}
+              </h3>
               <p className="mt-1 text-sm text-slate-500">
                 Revisión guiada de la plantilla sin perder el contexto clave.
               </p>
@@ -141,7 +175,9 @@ export function TemplateViewModal({ template, warnings = [], onClose }: Template
                     <div className="flex items-start gap-3">
                       <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
                       <div>
-                        <p className="text-sm font-semibold text-amber-900">Advertencias del borrador</p>
+                        <p className="text-sm font-semibold text-amber-900">
+                          Advertencias del borrador
+                        </p>
                         <ul className="mt-2 space-y-2 text-sm text-amber-800">
                           {warnings.map((warning, index) => (
                             <li key={`${warning}-${index}`}>{warning}</li>
@@ -155,12 +191,17 @@ export function TemplateViewModal({ template, warnings = [], onClose }: Template
                 <section className="rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-blue-50 p-6 shadow-sm">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
-                      <p className="text-sm font-semibold text-slate-900">{template.name}</p>
+                      <p className="text-sm font-semibold text-slate-900">
+                        {template.name}
+                      </p>
                       <p className="mt-2 text-sm leading-6 text-slate-600">
-                        {template.description ?? "Esta plantilla no tiene una descripción adicional."}
+                        {template.description ??
+                          'Esta plantilla no tiene una descripción adicional.'}
                       </p>
                     </div>
-                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${STATE_STYLES[template.state]}`}>
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${STATE_STYLES[template.state]}`}
+                    >
                       {template.state}
                     </span>
                   </div>
@@ -170,30 +211,42 @@ export function TemplateViewModal({ template, warnings = [], onClose }: Template
                   <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
                     <div className="flex items-center gap-2">
                       <Tag className="h-4 w-4 text-slate-500" />
-                      <p className="text-sm font-semibold text-slate-800">Metadatos</p>
+                      <p className="text-sm font-semibold text-slate-800">
+                        Metadatos
+                      </p>
                     </div>
                     <dl className="mt-4 space-y-3 text-sm text-slate-600">
                       <div className="flex items-center justify-between gap-4">
                         <dt>Organización</dt>
-                        <dd className="font-medium text-slate-800">{template.organization_id}</dd>
+                        <dd className="font-medium text-slate-800">
+                          {template.organization_id}
+                        </dd>
                       </div>
                       <div className="flex items-center justify-between gap-4">
                         <dt>Versión</dt>
-                        <dd className="font-medium text-slate-800">{template.content.version ?? "1.0"}</dd>
+                        <dd className="font-medium text-slate-800">
+                          {template.content.version ?? '1.0'}
+                        </dd>
                       </div>
                       <div className="flex items-center justify-between gap-4">
                         <dt>Tipo documental</dt>
-                        <dd className="font-medium text-slate-800">{getDocumentTypeLabel(template.document_type)}</dd>
+                        <dd className="font-medium text-slate-800">
+                          {getDocumentTypeLabel(template.document_type)}
+                        </dd>
                       </div>
                       <div className="flex items-center justify-between gap-4">
                         <dt>Formato</dt>
                         <dd className="text-right font-medium text-slate-800">
-                          <span className="block">{template.format_label ?? "Sin formato"}</span>
+                          <span className="block">
+                            {template.format_label ?? 'Sin formato'}
+                          </span>
                         </dd>
                       </div>
                       <div className="flex items-center justify-between gap-4">
                         <dt>Campos</dt>
-                        <dd className="font-medium text-slate-800">{getTemplateFieldCount(template.content)}</dd>
+                        <dd className="font-medium text-slate-800">
+                          {getTemplateFieldCount(template.content)}
+                        </dd>
                       </div>
                     </dl>
                   </div>
@@ -201,24 +254,32 @@ export function TemplateViewModal({ template, warnings = [], onClose }: Template
                   <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
                     <div className="flex items-center gap-2">
                       <CalendarClock className="h-4 w-4 text-slate-500" />
-                      <p className="text-sm font-semibold text-slate-800">Trazabilidad</p>
+                      <p className="text-sm font-semibold text-slate-800">
+                        Trazabilidad
+                      </p>
                     </div>
                     <dl className="mt-4 space-y-3 text-sm text-slate-600">
                       <div className="flex items-center justify-between gap-4">
                         <dt>Creada</dt>
                         <dd className="font-medium text-slate-800">
                           {template.created_at
-                            ? new Date(template.created_at).toLocaleString("es-PE")
-                            : "Sin fecha"}
+                            ? new Date(template.created_at).toLocaleString(
+                                'es-PE',
+                              )
+                            : 'Sin fecha'}
                         </dd>
                       </div>
                       <div className="flex items-center justify-between gap-4">
                         <dt>Campos requeridos</dt>
-                        <dd className="font-medium text-slate-800">{requiredFieldsCount}</dd>
+                        <dd className="font-medium text-slate-800">
+                          {requiredFieldsCount}
+                        </dd>
                       </div>
                       <div className="flex items-center justify-between gap-4">
                         <dt>Líneas markdown</dt>
-                        <dd className="font-medium text-slate-800">{markdownLines}</dd>
+                        <dd className="font-medium text-slate-800">
+                          {markdownLines}
+                        </dd>
                       </div>
                     </dl>
                   </div>
@@ -244,17 +305,27 @@ export function TemplateViewModal({ template, warnings = [], onClose }: Template
                 <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
                   <div className="flex items-center gap-2">
                     <Layers3 className="h-4 w-4 text-slate-500" />
-                    <p className="text-sm font-semibold text-slate-800">Campos del contrato</p>
+                    <p className="text-sm font-semibold text-slate-800">
+                      Campos del contrato
+                    </p>
                   </div>
-                  {renderFieldTable(contractFields, "Esta plantilla no define campos visibles dentro del contrato.")}
+                  {renderFieldTable(
+                    contractFields,
+                    'Esta plantilla no define campos visibles dentro del contrato.',
+                  )}
                 </section>
 
                 <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
                   <div className="flex items-center gap-2">
                     <Layers3 className="h-4 w-4 text-slate-500" />
-                    <p className="text-sm font-semibold text-slate-800">Campos operativos</p>
+                    <p className="text-sm font-semibold text-slate-800">
+                      Campos operativos
+                    </p>
                   </div>
-                  {renderFieldTable(operationalFields, "Esta plantilla no define campos operativos adicionales.")}
+                  {renderFieldTable(
+                    operationalFields,
+                    'Esta plantilla no define campos operativos adicionales.',
+                  )}
                 </section>
               </div>
             )}
@@ -265,10 +336,14 @@ export function TemplateViewModal({ template, warnings = [], onClose }: Template
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-6 py-4">
           <button
             type="button"
-            onClick={currentStep === 1 ? onClose : () => setCurrentStep((currentStep - 1) as ViewStep)}
+            onClick={
+              currentStep === 1
+                ? onClose
+                : () => setCurrentStep((currentStep - 1) as ViewStep)
+            }
             className="rounded-2xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
           >
-            {currentStep === 1 ? "Cerrar" : "← Anterior"}
+            {currentStep === 1 ? 'Cerrar' : '← Anterior'}
           </button>
 
           {currentStep < 3 ? (

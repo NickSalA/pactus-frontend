@@ -19,7 +19,7 @@ import { useAdminTablePagination } from '@/features/admin/hooks/use-admin-table-
 import { AdminTablePagination } from '@/features/admin/components/shared/AdminTablePagination';
 import { formatAdminDate } from '@/features/admin/lib/admin-formatters';
 import { getDocumentTypeLabel } from '@/lib/document.utils';
-import { getTemplateFieldCount } from '@/lib/template-fields';
+import { getTemplateFieldCount } from '@/lib/templateFields';
 import type { ApiTemplateResponse } from '@/types/api';
 
 const getTemplateStateClasses = (state: string): string => {

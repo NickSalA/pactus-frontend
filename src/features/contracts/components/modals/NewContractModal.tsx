@@ -35,7 +35,7 @@ import {
   getTemplateOperationalFields,
   normalizeTemplateFieldType,
   TEMPLATE_FIELD_TYPE_LABELS,
-} from '@/lib/template-fields';
+} from '@/lib/templateFields';
 import { useAuthStore } from '@/store';
 import type {
   ApiCurrencyType,

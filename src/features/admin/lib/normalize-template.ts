@@ -3,7 +3,7 @@ import type {
   ApiTemplateField,
   ApiTemplateUsage,
 } from '@/types/api';
-import { normalizeTemplateFieldType } from '@/lib/template-fields';
+import { normalizeTemplateFieldType } from '@/lib/templateFields';
 
 export const normalizeTemplateField = (
   field: ApiTemplateField,
