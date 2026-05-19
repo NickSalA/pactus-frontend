@@ -46,7 +46,7 @@ import type {
   ApiServiceResponse,
 } from '@/types/api';
 import type { DocumentFlatten } from '@/types/ui.types';
-import { normalizeDocument } from '../../lib/normalize-document';
+import { normalizeDocument } from '@/api/documents';
 
 const ContractForm = dynamic(
   () => import('@/features/contracts/components/form/ContractForm'),

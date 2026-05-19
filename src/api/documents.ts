@@ -21,7 +21,7 @@ import type { DocumentFlatten, DocumentFolder } from '@/types/ui.types';
 import { TIMEOUTS } from './constants';
 import { apiGet, apiPost, apiPatch, apiDelete } from './axiosInstance';
 
-const normalizeDocument = (doc: ApiDocumentResponse): DocumentFlatten => {
+export const normalizeDocument = (doc: ApiDocumentResponse): DocumentFlatten => {
   const hasCompanyContract = Boolean(doc.company_contract);
   const hasLaborContract = Boolean(doc.labor_contract);
 
