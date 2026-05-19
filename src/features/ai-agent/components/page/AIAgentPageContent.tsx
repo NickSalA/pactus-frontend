@@ -44,7 +44,7 @@ export function AIAgentPageContent() {
 
           <button
             onClick={page.startNewConversation}
-            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
+            className="flex items-center gap-2 rounded-xl bg-linear-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
