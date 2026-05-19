@@ -134,8 +134,8 @@ export async function getServicesAdmin(
 
 export async function createServiceCatalogItem(
   payload: ApiServiceCreateRequest,
-): Promise<ApiServiceListResponse> {
-  return apiPost<ApiServiceListResponse>('/services', payload, {
+): Promise<ApiServiceResponse> {
+  return apiPost<ApiServiceResponse>('/services', payload, {
     timeout: TIMEOUTS.AUTH,
   });
 }
@@ -143,8 +143,8 @@ export async function createServiceCatalogItem(
 export async function updateServiceCatalogItem(
   serviceId: number,
   payload: ApiServiceUpdateRequest,
-): Promise<ApiServiceListResponse> {
-  return apiPatch<ApiServiceListResponse>(`/services/${serviceId}`, payload, {
+): Promise<ApiServiceResponse> {
+  return apiPatch<ApiServiceResponse>(`/services/${serviceId}`, payload, {
     timeout: TIMEOUTS.AUTH,
   });
 }
