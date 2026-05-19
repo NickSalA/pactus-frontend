@@ -2,10 +2,10 @@
 
 import { DashboardAlertCenter } from '@/features/dashboard/components/charts/DashboardAlertCenter';
 import { DashboardAreaChart } from '@/features/dashboard/components/charts/DashboardAreaChart';
-import { DashboardRecentDocumentsTable } from '@/features/dashboard/components/page/DashboardRecentDocumentsTable';
+import { DashboardRecentDocumentsTable } from '@/features/dashboard/components/DashboardRecentDocumentsTable';
 import { DashboardTopCompanies } from '@/features/dashboard/components/charts/DashboardTopCompanies';
 import { DashboardTopServices } from '@/features/dashboard/components/charts/DashboardTopServices';
-import { DashboardWelcome } from '@/features/dashboard/components/page/DashboardWelcome';
+import { DashboardWelcome } from '@/features/dashboard/components/DashboardWelcome';
 import { toFirstName } from '@/lib/authUser';
 import { useAuthStore } from '@/store';
 import { useDashboardManagerPage } from '@/features/dashboard/hooks/use-dashboard-manager-page';

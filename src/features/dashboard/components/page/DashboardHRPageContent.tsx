@@ -2,8 +2,8 @@
 
 import { DashboardAlertCenter } from '@/features/dashboard/components/charts/DashboardAlertCenter';
 import { DashboardAreaChart } from '@/features/dashboard/components/charts/DashboardAreaChart';
-import { DashboardRecentDocumentsTable } from '@/features/dashboard/components/page/DashboardRecentDocumentsTable';
-import { DashboardWelcome } from '@/features/dashboard/components/page/DashboardWelcome';
+import { DashboardRecentDocumentsTable } from '@/features/dashboard/components/DashboardRecentDocumentsTable';
+import { DashboardWelcome } from '@/features/dashboard/components/DashboardWelcome';
 import { toFirstName } from '@/lib/authUser';
 import { useAuthStore } from '@/store';
 import { useDashboardHRPage } from '@/features/dashboard/hooks/use-dashboard-hr-page';

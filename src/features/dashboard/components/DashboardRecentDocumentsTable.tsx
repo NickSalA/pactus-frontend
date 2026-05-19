@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Ellipsis, FileText } from "lucide-react";
 import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
+import {
   getDashboardDocumentStateClasses,
   getDocumentStateLabel,
 } from "@/lib/document.utils";
@@ -47,27 +55,34 @@ export function DashboardRecentDocumentsTable({
 }: DashboardRecentDocumentsTableProps) {
   if (isLoading) {
     return (
-      <article className="flex flex-col h-full rounded-2xl bg-white shadow-md">
-        <div className="border-b border-slate-100 px-6 py-5">
-          <h2 className="text-lg font-semibold text-slate-800">Contratos recientes</h2>
-          <p className="mt-1 text-sm text-gray-medium">
+      <Card className="flex flex-col h-full rounded-2xl bg-white shadow-md">
+        <CardHeader className="border-b border-slate-100 px-6 py-5">
+          <CardTitle className="text-lg font-semibold text-slate-800">
+            Contratos recientes
+          </CardTitle>
+          <CardDescription className="text-sm text-gray-medium">
             Ultimas actualizaciones registradas en tus contratos.
-          </p>
-        </div>
-        <LoadingSkeleton />
-      </article>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1 p-0">
+          <LoadingSkeleton />
+        </CardContent>
+      </Card>
     );
   }
-  return (
-    <article className="flex flex-col h-full rounded-2xl bg-white shadow-md">
-      <div className="border-b border-slate-100 px-6 py-5">
-        <h2 className="text-lg font-semibold text-slate-800">Contratos recientes</h2>
-        <p className="mt-1 text-sm text-gray-medium">
-          Ultimas actualizaciones registradas en tus contratos.
-        </p>
-      </div>
 
-      <div className="flex-1 overflow-x-auto">
+  return (
+    <Card className="flex flex-col h-full rounded-2xl bg-white shadow-md">
+      <CardHeader className="border-b border-slate-100 px-6 py-5">
+        <CardTitle className="text-lg font-semibold text-slate-800">
+          Contratos recientes
+        </CardTitle>
+        <CardDescription className="text-sm text-gray-medium">
+          Ultimas actualizaciones registradas en tus contratos.
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex-1 overflow-x-auto p-0">
         <table className="min-w-full table-fixed">
           <colgroup>
             <col className="w-[52%]" />
@@ -92,48 +107,48 @@ export function DashboardRecentDocumentsTable({
               </tr>
             )}
             {documents.map((document) => (
-                <tr key={document.id} className="border-t border-slate-100 hover:bg-slate-50/70">
-                  <td className="px-6 py-4 align-middle">
-                    <div className="flex items-start gap-3">
-                      <span className="mt-0.5 rounded-lg bg-blue-50 p-2 text-blue-600">
-                        <FileText className="h-4 w-4" />
-                      </span>
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-slate-800">{document.name}</p>
-                        <p className="mt-1 truncate text-xs text-gray-medium">
-                          {document.subtitle}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center align-middle">
-                    <span
-                      className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${getDashboardDocumentStateClasses(
-                        document.status,
-                      )}`}
-                    >
-                      {getDocumentStateLabel(document.status)}
+              <tr key={document.id} className="border-t border-slate-100 hover:bg-slate-50/70">
+                <td className="px-6 py-4 align-middle">
+                  <div className="flex items-start gap-3">
+                    <span className="mt-0.5 rounded-lg bg-blue-50 p-2 text-blue-600">
+                      <FileText className="h-4 w-4" />
                     </span>
-                  </td>
-                  <td className="px-6 py-4 text-center align-middle text-sm text-gray-medium">
-                    <span className="whitespace-nowrap">{document.modified}</span>
-                  </td>
-                  <td className="px-6 py-4 text-right align-middle">
-                    <Link
-                      href="/contracts"
-                      className="inline-flex rounded-lg p-2 text-slate-500 transition-colors duration-200 hover:bg-slate-100 hover:text-slate-700"
-                    >
-                      <Ellipsis className="h-5 w-5" />
-                    </Link>
-                  </td>
-                </tr>
-              ))}
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-slate-800">{document.name}</p>
+                      <p className="mt-1 truncate text-xs text-gray-medium">
+                        {document.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-center align-middle">
+                  <span
+                    className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${getDashboardDocumentStateClasses(
+                      document.status,
+                    )}`}
+                  >
+                    {getDocumentStateLabel(document.status)}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-center align-middle text-sm text-gray-medium">
+                  <span className="whitespace-nowrap">{document.modified}</span>
+                </td>
+                <td className="px-6 py-4 text-right align-middle">
+                  <Link
+                    href="/contracts"
+                    className="inline-flex rounded-lg p-2 text-slate-500 transition-colors duration-200 hover:bg-slate-100 hover:text-slate-700"
+                  >
+                    <Ellipsis className="h-5 w-5" />
+                  </Link>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
-      </div>
+      </CardContent>
 
       {!isLoading && totalRecords > 0 && (
-        <div className="flex items-center justify-between border-t border-slate-100 px-6 py-3">
+        <CardFooter className="!rounded-none !bg-transparent !p-0 border-t border-slate-100 px-6 py-3 flex items-center justify-between gap-4">
           <span className="text-sm text-slate-500">
             Mostrando <span className="font-medium text-slate-700">{startIndex + 1}</span>
             {" - "}
@@ -172,8 +187,8 @@ export function DashboardRecentDocumentsTable({
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
-        </div>
+        </CardFooter>
       )}
-    </article>
+    </Card>
   );
 }
