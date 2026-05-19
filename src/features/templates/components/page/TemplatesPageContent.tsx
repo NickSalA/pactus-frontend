@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminLoadingState } from '@/features/admin/components/shared/AdminLoadingState';
-import { AdminTemplatesSection } from '@/features/admin/components/sections/AdminTemplatesSection';
+import { TemplatesSection } from '@/components/sections/TemplatesSection';
 import { canAuthorTemplates } from '@/lib/permissions';
 import { useAuthStore } from '@/store';
 import { useTemplates } from '@/features/templates/hooks/useTemplates';
@@ -34,5 +34,5 @@ export function TemplatesPageContent() {
     return <AdminLoadingState />;
   }
 
-  return <AdminTemplatesSection section={section} pagination={pagination} />;
+  return <TemplatesSection section={section} pagination={pagination} />;
 }

@@ -18,7 +18,7 @@ import {
 } from '@/lib/templateFields';
 import { getDocumentTypeLabel } from '@/lib/document.utils';
 import type { ApiTemplateResponse, ApiTemplateField } from '@/types/api';
-import { TemplateWizardProgress } from './TemplateWizardProgress';
+import { TemplateWizardProgress } from '@/components/modals/TemplateWizardProgress';
 
 type TemplateViewModalProps = {
   template: ApiTemplateResponse | null;
@@ -133,7 +133,6 @@ export function TemplateViewModal({
         className="relative flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="rounded-2xl bg-indigo-50 p-3 text-indigo-600">
@@ -158,7 +157,6 @@ export function TemplateViewModal({
           </button>
         </div>
 
-        {/* Body */}
         <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6">
           <div className="space-y-6">
             <TemplateWizardProgress
@@ -167,7 +165,6 @@ export function TemplateViewModal({
               steps={STEPS}
             />
 
-            {/* Step 1 — Resumen */}
             {currentStep === 1 && (
               <div className="space-y-5">
                 {warnings.length > 0 && (
@@ -287,7 +284,6 @@ export function TemplateViewModal({
               </div>
             )}
 
-            {/* Step 2 — Contenido */}
             {currentStep === 2 && (
               <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -299,7 +295,6 @@ export function TemplateViewModal({
               </section>
             )}
 
-            {/* Step 3 — Campos (tabla) */}
             {currentStep === 3 && (
               <div className="space-y-5">
                 <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -332,7 +327,6 @@ export function TemplateViewModal({
           </div>
         </div>
 
-        {/* Footer */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-6 py-4">
           <button
             type="button"

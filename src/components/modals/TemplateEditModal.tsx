@@ -17,9 +17,8 @@ import type {
   ApiTemplateField,
 } from '@/types/api';
 import type { ApiTemplateUpdateRequest } from '@/types/api';
-import { TemplateSummaryAccordion } from './TemplateSummaryAccordion';
-import { TemplateWizardProgress } from './TemplateWizardProgress';
-import { useMutation } from '@tanstack/react-query';
+import { TemplateSummaryAccordion } from '@/components/modals/TemplateSummaryAccordion';
+import { TemplateWizardProgress } from '@/components/modals/TemplateWizardProgress';
 
 type TemplateEditModalProps = {
   template: ApiTemplateResponse | null;
@@ -221,7 +220,6 @@ export function TemplateEditModal({
     }
   };
 
-  // Summary previews
   const basePreview = (
     <p className="mt-0.5 truncate text-sm text-slate-700">
       <span className="font-medium">{name.trim() || 'Sin nombre'}</span>
@@ -323,7 +321,6 @@ export function TemplateEditModal({
         className="relative flex max-h-[94vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="rounded-2xl bg-indigo-50 p-3 text-indigo-600">
@@ -349,7 +346,6 @@ export function TemplateEditModal({
           </button>
         </div>
 
-        {/* Body */}
         <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6">
           <div className="space-y-6">
             <TemplateWizardProgress
@@ -381,7 +377,6 @@ export function TemplateEditModal({
               </div>
             )}
 
-            {/* Summary accordions */}
             {currentStep >= 2 && (
               <TemplateSummaryAccordion
                 expanded={baseSummaryExpanded}
@@ -431,7 +426,6 @@ export function TemplateEditModal({
               </TemplateSummaryAccordion>
             )}
 
-            {/* Step 1 — Datos base */}
             {currentStep === 1 && (
               <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="mb-5 flex items-center gap-3">
@@ -508,7 +502,6 @@ export function TemplateEditModal({
               </section>
             )}
 
-            {/* Step 2 — Contenido */}
             {currentStep === 2 && (
               <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="mb-5 flex items-center gap-3">
@@ -543,7 +536,6 @@ export function TemplateEditModal({
               </section>
             )}
 
-            {/* Step 3 — Campos */}
             {currentStep === 3 && (
               <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="mb-5 flex items-center justify-between gap-3">
@@ -648,7 +640,6 @@ export function TemplateEditModal({
           </div>
         </div>
 
-        {/* Footer */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-6 py-4">
           <button
             type="button"

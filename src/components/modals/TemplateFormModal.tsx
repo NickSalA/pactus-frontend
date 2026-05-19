@@ -11,8 +11,8 @@ import type {
   ApiTemplateGenerationMode,
   ApiTemplateResponse,
 } from '@/types/api';
-import { TemplateSummaryAccordion } from './TemplateSummaryAccordion';
-import { TemplateWizardProgress } from './TemplateWizardProgress';
+import { TemplateSummaryAccordion } from '@/components/modals/TemplateSummaryAccordion';
+import { TemplateWizardProgress } from '@/components/modals/TemplateWizardProgress';
 
 type TemplateFormStep = 1 | 2 | 3;
 
@@ -55,16 +55,13 @@ export function TemplateFormModal({
   onSaved,
   generateTemplateDraftMutation,
 }: TemplateFormModalProps) {
-  // Step 1 state
   const [selectedDocumentType, setSelectedDocumentType] =
     useState<ApiDocumentType | null>(null);
   const [selectedFormatCode, setSelectedFormatCode] = useState('');
 
-  // Step 2 state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
-  // Step 3 state
   const [instructions, setInstructions] = useState('');
   const [jurisdiction, setJurisdiction] = useState('');
   const [generationMode, setGenerationMode] =
@@ -72,14 +69,12 @@ export function TemplateFormModal({
   const [referenceFile, setReferenceFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
 
-  // Wizard state
   const [currentStep, setCurrentStep] = useState<TemplateFormStep>(1);
   const [maxStepReached, setMaxStepReached] = useState<TemplateFormStep>(1);
   const [visible, setVisible] = useState(true);
   const [stepError, setStepError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Summary accordion state
   const [summary1Expanded, setSummary1Expanded] = useState(false);
   const [summary2Expanded, setSummary2Expanded] = useState(false);
 
@@ -262,7 +257,6 @@ export function TemplateFormModal({
     }
   };
 
-  // Summary previews
   const step1Preview = selectedFormat ? (
     <p className="mt-0.5 truncate text-sm text-slate-700">
       <span className="font-medium">{selectedFormat.label}</span>
@@ -293,7 +287,6 @@ export function TemplateFormModal({
         className="relative flex max-h-[94vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="rounded-2xl bg-indigo-50 p-3 text-indigo-600">
@@ -320,7 +313,6 @@ export function TemplateFormModal({
           </button>
         </div>
 
-        {/* Wizard progress */}
         <div className="border-b border-slate-100 px-6 pt-5 pb-4">
           <TemplateWizardProgress
             currentStep={currentStep}
@@ -330,7 +322,6 @@ export function TemplateFormModal({
           />
         </div>
 
-        {/* Body */}
         <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6">
           <div
             className={`space-y-5 transition-opacity duration-150 ${visible ? 'opacity-100' : 'opacity-0'}`}
@@ -347,7 +338,6 @@ export function TemplateFormModal({
               </div>
             ) : (
               <>
-                {/* ── STEP 1: Formato ── */}
                 {currentStep === 1 && (
                   <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -425,10 +415,8 @@ export function TemplateFormModal({
                   </section>
                 )}
 
-                {/* ── STEP 2: Detalles ── */}
                 {currentStep === 2 && (
                   <>
-                    {/* Summary of Step 1 */}
                     <TemplateSummaryAccordion
                       expanded={summary1Expanded}
                       onToggle={() =>
@@ -460,7 +448,6 @@ export function TemplateFormModal({
                       </div>
                     </TemplateSummaryAccordion>
 
-                    {/* Step 2 fields */}
                     <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                       <div className="mb-5">
                         <h4 className="text-base font-semibold text-slate-900">
@@ -511,10 +498,8 @@ export function TemplateFormModal({
                   </>
                 )}
 
-                {/* ── STEP 3: Generar borrador ── */}
                 {currentStep === 3 && (
                   <>
-                    {/* Summary of Step 1 */}
                     <TemplateSummaryAccordion
                       expanded={summary1Expanded}
                       onToggle={() =>
@@ -546,7 +531,6 @@ export function TemplateFormModal({
                       </div>
                     </TemplateSummaryAccordion>
 
-                    {/* Summary of Step 2 */}
                     <TemplateSummaryAccordion
                       expanded={summary2Expanded}
                       onToggle={() =>
@@ -579,7 +563,6 @@ export function TemplateFormModal({
                       </div>
                     </TemplateSummaryAccordion>
 
-                    {/* Step 3 fields */}
                     <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                       <div className="mb-5">
                         <h4 className="text-base font-semibold text-slate-900">
@@ -748,7 +731,6 @@ export function TemplateFormModal({
           </div>
         </div>
 
-        {/* Footer navigation */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-6 py-4">
           <button
             type="button"

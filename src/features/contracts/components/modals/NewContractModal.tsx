@@ -2404,7 +2404,7 @@ export function NewContractModal({
                   <button
                     type="button"
                     onClick={handleSaveGeneratedContract}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:shadow-lg hover:shadow-blue-500/25"
+                    className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:shadow-lg hover:shadow-blue-500/25"
                   >
                     <CheckCircle2 className="h-4 w-4" />
                     Guardar contrato
@@ -2414,7 +2414,7 @@ export function NewContractModal({
                     type="button"
                     onClick={handleSaveCurrentSection}
                     disabled={submitState === 'loading'}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:shadow-lg hover:shadow-blue-500/25 disabled:opacity-50"
+                    className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:shadow-lg hover:shadow-blue-500/25 disabled:opacity-50"
                   >
                     <CheckCircle2 className="h-4 w-4" />
                     Guardar
@@ -2427,7 +2427,7 @@ export function NewContractModal({
                     void handlePrimaryAction();
                   }}
                   disabled={primaryButtonDisabled}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <ArrowRight className="h-4 w-4" />
                   {primaryButtonLabel}

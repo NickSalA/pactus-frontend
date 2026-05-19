@@ -11,9 +11,9 @@ import {
 } from 'lucide-react';
 import { Select } from '@/components/ui/Select';
 import { AdminTablePagination } from '@/features/admin/components/shared/AdminTablePagination';
-import { TemplateEditModal } from '@/features/admin/components/page/templates/TemplateEditModal';
-import { TemplateFormModal } from '@/features/admin/components/page/templates/TemplateFormModal';
-import { TemplateViewModal } from '@/features/admin/components/page/templates/TemplateViewModal';
+import { TemplateEditModal } from '@/components/modals/TemplateEditModal';
+import { TemplateFormModal } from '@/components/modals/TemplateFormModal';
+import { TemplateViewModal } from '@/components/modals/TemplateViewModal';
 import { formatAdminDate } from '@/features/admin/lib/admin-formatters';
 import { getDocumentTypeLabel } from '@/lib/document.utils';
 import { getTemplateFieldCount } from '@/lib/templateFields';
@@ -21,7 +21,7 @@ import type { ApiTemplateResponse } from '@/types/api';
 import type { useAdminTemplates } from '@/features/admin/hooks/use-admin-templates';
 import type { useAdminTablePagination } from '@/features/admin/hooks/use-admin-table-pagination';
 
-type AdminTemplatesSectionProps = {
+type TemplatesSectionProps = {
   section: ReturnType<typeof useAdminTemplates>;
   pagination: ReturnType<typeof useAdminTablePagination<ApiTemplateResponse>>;
 };
@@ -40,10 +40,10 @@ const STATE_LABELS: Record<string, string> = {
 
 type Template = ApiTemplateResponse;
 
-export function AdminTemplatesSection({
+export function TemplatesSection({
   section,
   pagination,
-}: AdminTemplatesSectionProps) {
+}: TemplatesSectionProps) {
   if (!section.canManageTemplates) {
     return (
       <div className="rounded-[28px] border border-amber-200 bg-amber-50 px-6 py-5 text-sm text-amber-800">
