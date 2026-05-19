@@ -4,16 +4,14 @@ import { useState } from 'react';
 import { Save } from 'lucide-react';
 import { AdminModalShell } from '@/features/admin/components/shared/AdminModalShell';
 import { getFolderVisibilityLabel } from '@/features/admin/lib/admin-formatters';
-import type {
-  DocumentFolder,
-  DocumentFolderUpdateRequest,
-} from '@/types/api.types';
+import type { DocumentFolder } from '@/types/api.types';
+import { ApiFolderUpdateRequest } from '@/types/api';
 
 type AdminFolderModalProps = {
   folder: DocumentFolder | null;
   isSubmitting: boolean;
   onClose: () => void;
-  onSubmit: (payload: DocumentFolderUpdateRequest) => Promise<void>;
+  onSubmit: (payload: ApiFolderUpdateRequest) => Promise<void>;
   open: boolean;
 };
 

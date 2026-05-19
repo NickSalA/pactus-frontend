@@ -14,7 +14,7 @@ import {
 } from '@/features/admin/lib/admin-cache';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
 import type { DocumentFolder } from '@/types/api.types';
-import { ApiFolderCreateRequest } from '@/types/api';
+import { ApiFolderUpdateRequest } from '@/types/api';
 
 export function useAdminFolders() {
   const access = useAdminGuard();
@@ -101,7 +101,7 @@ export function useAdminFolders() {
   }, [saving]);
 
   const saveFolder = useCallback(
-    async (payload: ApiFolderCreateRequest) => {
+    async (payload: ApiFolderUpdateRequest) => {
       if (!editingFolder) {
         return;
       }
@@ -110,7 +110,7 @@ export function useAdminFolders() {
         setSaving(true);
         setError(null);
         const previousFolders = folders;
-        const optimisticFolders = previousFolders.map((folder) =>
+        const optimisticFolders = previousFolders.filter((folder) =>
           folder.id === editingFolder.id
             ? { ...folder, ...payload, updated_at: new Date().toISOString() }
             : folder,
