@@ -1,11 +1,11 @@
 'use client';
 
-import { DashboardAlertCenter } from '@/features/dashboard/components/charts/DashboardAlertCenter';
-import { DashboardAreaChart } from '@/features/dashboard/components/charts/DashboardAreaChart';
-import { DashboardRecentDocumentsTable } from '@/features/dashboard/components/DashboardRecentDocumentsTable';
-import { DashboardTopCompanies } from '@/features/dashboard/components/charts/DashboardTopCompanies';
-import { DashboardTopServices } from '@/features/dashboard/components/charts/DashboardTopServices';
-import { DashboardWelcome } from '@/features/dashboard/components/DashboardWelcome';
+import { DashboardAlertCenter } from '@/features/dashboard/components/widgets/DashboardAlertCenter';
+import { DashboardAreaChart } from '@/features/dashboard/components/widgets/DashboardAreaChart';
+import { DashboardRecentDocumentsTable } from '@/features/dashboard/components/widgets/DashboardRecentDocumentsTable';
+import { DashboardTopCompanies } from '@/features/dashboard/components/widgets/DashboardTopCompanies';
+import { DashboardTopServices } from '@/features/dashboard/components/widgets/DashboardTopServices';
+import { DashboardWelcome } from '@/features/dashboard/components/ui/DashboardWelcome';
 import { toFirstName } from '@/lib/authUser';
 import { useAuthStore } from '@/store';
 import { useDashboardManagerPage } from '@/features/dashboard/hooks/useDashboardManagerPage';
