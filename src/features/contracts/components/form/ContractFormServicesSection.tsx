@@ -1,12 +1,12 @@
 import { CalendarDays, Check, FileText, Pencil, Trash2 } from 'lucide-react';
 import {
-  HelpTip,
   formatCurrencyValue,
   formatFormDate,
   parseOptionalNumber,
   type FormState,
   type ServiceItemDraft,
 } from '@/features/contracts/lib/contract-form.utils';
+import { HelpTip } from '@/features/contracts/components/form/HelpTip';
 import { ApiServiceResponse } from '@/types/api';
 import { Select } from '@/components/ui/Select';
 import { contractFormStyles } from './contract-form.styles';

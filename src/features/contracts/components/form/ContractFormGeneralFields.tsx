@@ -5,9 +5,9 @@ import {
   DOCUMENT_TYPE_OPTIONS,
 } from '@/lib/document.utils';
 import {
-  HelpTip,
   type Step1Draft,
 } from '@/features/contracts/lib/contract-form.utils';
+import { HelpTip } from '@/features/contracts/components/form/HelpTip';
 import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
 import { ApiDocumentType } from '@/types/api';
 import { Select } from '@/components/ui/Select';
