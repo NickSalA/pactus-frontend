@@ -1,4 +1,5 @@
 export { sendMessage, getConversations, getConversationById } from './chat';
+export { getCurrentUser } from './auth';
 export {
   createDocumentFolder,
   createServiceCatalogItem,
