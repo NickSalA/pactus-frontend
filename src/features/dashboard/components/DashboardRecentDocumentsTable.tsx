@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { ChevronLeft, ChevronRight, Ellipsis, FileText } from "lucide-react";
+import Link from 'next/link';
+import { ChevronLeft, ChevronRight, Ellipsis, FileText } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -7,12 +7,12 @@ import {
   CardTitle,
   CardDescription,
   CardFooter,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   getDashboardDocumentStateClasses,
   getDocumentStateLabel,
-} from "@/lib/document.utils";
-import type { RecentDashboardDocument } from "@/features/dashboard/lib/dashboard-data";
+} from '@/lib/document.utils';
+import type { RecentDashboardDocument } from '@/features/dashboard/lib/dashboard-data';
 
 type DashboardRecentDocumentsTableProps = {
   currentPage: number;
@@ -28,7 +28,10 @@ type DashboardRecentDocumentsTableProps = {
 const LoadingSkeleton = () => (
   <div className="flex flex-1 flex-col px-6 py-4">
     {[1, 2, 3].map((i) => (
-      <div key={i} className="flex items-center gap-4 py-3 border-b border-slate-100 last:border-0">
+      <div
+        key={i}
+        className="flex items-center gap-4 py-3 border-b border-slate-100 last:border-0"
+      >
         <div className="flex items-center gap-3 flex-1">
           <div className="h-10 w-10 rounded-lg bg-gray-200 animate-pulse" />
           <div className="flex-1 space-y-2">
@@ -94,7 +97,9 @@ export function DashboardRecentDocumentsTable({
             <tr className="text-left text-xs uppercase tracking-wider text-gray-medium">
               <th className="px-6 py-4 font-medium">Nombre del documento</th>
               <th className="px-6 py-4 text-center font-medium">Estado</th>
-              <th className="px-6 py-4 text-center font-medium">Ultima modificacion</th>
+              <th className="px-6 py-4 text-center font-medium">
+                Ultima modificacion
+              </th>
               <th className="px-6 py-4 text-right font-medium">Acciones</th>
             </tr>
           </thead>
@@ -107,14 +112,19 @@ export function DashboardRecentDocumentsTable({
               </tr>
             )}
             {documents.map((document) => (
-              <tr key={document.id} className="border-t border-slate-100 hover:bg-slate-50/70">
+              <tr
+                key={document.id}
+                className="border-t border-slate-100 hover:bg-slate-50/70"
+              >
                 <td className="px-6 py-4 align-middle">
                   <div className="flex items-start gap-3">
                     <span className="mt-0.5 rounded-lg bg-blue-50 p-2 text-blue-600">
                       <FileText className="h-4 w-4" />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-slate-800">{document.name}</p>
+                      <p className="truncate text-sm font-medium text-slate-800">
+                        {document.name}
+                      </p>
                       <p className="mt-1 truncate text-xs text-gray-medium">
                         {document.subtitle}
                       </p>
@@ -148,11 +158,15 @@ export function DashboardRecentDocumentsTable({
       </CardContent>
 
       {!isLoading && totalRecords > 0 && (
-        <CardFooter className="!rounded-none !bg-transparent !p-0 border-t border-slate-100 px-6 py-3 flex items-center justify-between gap-4">
+        <CardFooter className="rounded-none bg-transparent p-0 border-t border-slate-100 px-6 py-3 flex items-center justify-between gap-4">
           <span className="text-sm text-slate-500">
-            Mostrando <span className="font-medium text-slate-700">{startIndex + 1}</span>
-            {" - "}
-            <span className="font-medium text-slate-700">{Math.min(endIndex, totalRecords)}</span> de{" "}
+            Mostrando{' '}
+            <span className="font-medium text-slate-700">{startIndex + 1}</span>
+            {' - '}
+            <span className="font-medium text-slate-700">
+              {Math.min(endIndex, totalRecords)}
+            </span>{' '}
+            de{' '}
             <span className="font-medium text-slate-700">{totalRecords}</span>
           </span>
 
@@ -165,19 +179,21 @@ export function DashboardRecentDocumentsTable({
               <ChevronLeft className="h-4 w-4" />
             </button>
 
-            {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => onPageChange(page)}
-                className={`h-8 min-w-[2rem] rounded-lg text-sm font-medium transition-all ${
-                  currentPage === page
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+              (page) => (
+                <button
+                  key={page}
+                  onClick={() => onPageChange(page)}
+                  className={`h-8 min-w-8 rounded-lg text-sm font-medium transition-all ${
+                    currentPage === page
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  {page}
+                </button>
+              ),
+            )}
 
             <button
               onClick={() => onPageChange(currentPage + 1)}
