@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Bell, User, LogOut } from "lucide-react";
-import { logout as clearApiSession, getNotifications } from "@/api";
-import { useAuthStore } from "@/store";
-import { supabase } from "@/lib/supabaseClient";
-import { getUserRoleLabel, toNameAndLastName } from "@/lib/authUser";
-import NotificationDropdown from "./NotificationDropdown";
-import NotificationSidebar from "./NotificationSidebar";
-import type { Notification } from "@/types/api.types";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Bell, User, LogOut } from 'lucide-react';
+import { logout as clearApiSession, getNotifications } from '@/api';
+import { useAuthStore } from '@/store';
+import { supabase } from '@/lib/supabaseClient';
+import { getUserRoleLabel, toNameAndLastName } from '@/lib/authUser';
+import NotificationDropdown from './NotificationDropdown';
+import NotificationSidebar from './NotificationSidebar';
+import { ApiNotificationResponse } from '@/types/api';
 
-const LS_READ = "notifications_read";
-const LS_DISMISSED = "notifications_dismissed";
+const LS_READ = 'notifications_read';
+const LS_DISMISSED = 'notifications_dismissed';
 
 function loadSet(key: string): Set<string> {
   try {
@@ -27,7 +27,7 @@ function saveSet(key: string, set: Set<string>): void {
   localStorage.setItem(key, JSON.stringify([...set]));
 }
 
-export interface DisplayNotification extends Notification {
+export interface DisplayNotification extends ApiNotificationResponse {
   read: boolean;
 }
 
@@ -35,21 +35,29 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [raw, setRaw] = useState<Notification[]>([]);
+  const [raw, setRaw] = useState<ApiNotificationResponse[]>([]);
   const [readIds, setReadIds] = useState<Set<string>>(() => loadSet(LS_READ));
-  const [dismissedIds, setDismissedIds] = useState<Set<string>>(() => loadSet(LS_DISMISSED));
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(() =>
+    loadSet(LS_DISMISSED),
+  );
   const router = useRouter();
   const { isHydrating, user, logout } = useAuthStore();
 
-  const userName = toNameAndLastName(user?.name || (isHydrating ? "Cargando usuario" : "Usuario"));
-  const userRole = user?.role ? getUserRoleLabel(user.role) : (isHydrating ? "..." : "Sin rol");
+  const userName = toNameAndLastName(
+    user?.name || (isHydrating ? 'Cargando usuario' : 'Usuario'),
+  );
+  const userRole = user?.role
+    ? getUserRoleLabel(user.role)
+    : isHydrating
+      ? '...'
+      : 'Sin rol';
   const userInitials =
     userName
-      .split(" ")
+      .split(' ')
       .filter(Boolean)
       .map((part) => part[0])
-      .join("")
-      .slice(0, 2) || "U";
+      .join('')
+      .slice(0, 2) || 'U';
 
   const notifications: DisplayNotification[] = raw
     .filter((n) => !dismissedIds.has(n.id))
@@ -85,10 +93,11 @@ export default function Header() {
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
-    if (error) console.error("Error cerrando sesión en Supabase:", error.message);
+    if (error)
+      console.error('Error cerrando sesión en Supabase:', error.message);
     clearApiSession();
     logout();
-    router.push("/");
+    router.push('/');
   };
 
   const handleMarkAsRead = (id: string) => {
@@ -175,10 +184,16 @@ export default function Header() {
 
           {isMenuOpen && (
             <>
-              <div className="fixed inset-0 z-10" onClick={() => setIsMenuOpen(false)} />
+              <div
+                className="fixed inset-0 z-10"
+                onClick={() => setIsMenuOpen(false)}
+              />
               <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20">
                 <button
-                  onClick={() => { setIsMenuOpen(false); router.push("/profile"); }}
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    router.push('/profile');
+                  }}
                   className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   <User size={18} />

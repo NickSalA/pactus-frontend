@@ -14,7 +14,8 @@ import {
   updateNotificationRule,
 } from '@/api';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
-import type { DocumentFlatten, NotificationRule } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/api.types';
+import { ApiNotificationRuleResponse } from '@/types/api';
 
 type RuleDraft = {
   days_before_due: number;
@@ -31,12 +32,13 @@ const EMPTY_DRAFT: RuleDraft = {
 export function useAdminAlertRules() {
   const access = useAdminGuard();
   const [documents, setDocuments] = useState<DocumentFlatten[]>([]);
-  const [rules, setRules] = useState<NotificationRule[]>([]);
+  const [rules, setRules] = useState<ApiNotificationRuleResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingRule, setEditingRule] = useState<NotificationRule | null>(null);
+  const [editingRule, setEditingRule] =
+    useState<ApiNotificationRuleResponse | null>(null);
   const [sendingAlerts, setSendingAlerts] = useState(false);
   const [sendAlertsMessage, setSendAlertsMessage] = useState<string | null>(
     null,
@@ -78,7 +80,7 @@ export function useAdminAlertRules() {
     setIsModalOpen(true);
   }, []);
 
-  const openEditModal = useCallback((rule: NotificationRule) => {
+  const openEditModal = useCallback((rule: ApiNotificationRuleResponse) => {
     setEditingRule(rule);
     setIsModalOpen(true);
   }, []);

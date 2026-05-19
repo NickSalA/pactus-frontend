@@ -65,27 +65,3 @@ export interface DocumentFlatten {
 // ============================================
 // NOTIFICATION TYPES
 // ============================================
-export type NotificationType = 'critical' | 'warning' | 'info';
-
-export interface Notification {
-  id: string; // "contract-{doc_id}-{days}" — stable for localStorage
-  document_id: number;
-  type: NotificationType;
-  title: string;
-  description: string;
-  days_remaining: number;
-}
-
-export interface NotificationRule {
-  id: number;
-  organization_id: number;
-  document_id?: number | null;
-  days_before_due: number;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export type TemplateState = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
-export type TemplateFieldType = 'text' | 'number' | 'date' | 'time' | 'boolean';
-export type TemplateGenerationMode = 'adaptive' | 'strict';
