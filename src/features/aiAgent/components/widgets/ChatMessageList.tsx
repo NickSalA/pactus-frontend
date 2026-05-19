@@ -1,8 +1,11 @@
-import type { RefObject } from "react";
-import { formatMessageTime, isRecentTimestamp } from "@/features/aiAgent/lib/utils";
-import type { ChatMessage } from "@/features/aiAgent/lib/utils";
-import { MarkdownRenderer } from "./MarkdownRenderer";
-import { RobotIcon } from "@/features/aiAgent/components/ui/RobotIcon";
+import type { RefObject } from 'react';
+import {
+  formatMessageTime,
+  isRecentTimestamp,
+} from '@/features/aiAgent/lib/utils';
+import type { ChatMessage } from '@/features/aiAgent/lib/utils';
+import { MarkdownRenderer } from './MarkdownRenderer';
+import { RobotIcon } from '@/features/aiAgent/components/ui/RobotIcon';
 
 type ChatMessageListProps = {
   bottomRef: RefObject<HTMLDivElement | null>;
@@ -11,18 +14,28 @@ type ChatMessageListProps = {
   now: Date;
 };
 
-export function ChatMessageList({ bottomRef, isLoading, messages, now }: ChatMessageListProps) {
+export function ChatMessageList({
+  bottomRef,
+  isLoading,
+  messages,
+  now,
+}: ChatMessageListProps) {
   return (
     <div className="mx-auto max-w-3xl space-y-5 pb-4">
       {messages.map((message) => (
-        <div key={message.id} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
-          <div className={`flex max-w-[85%] items-end gap-3 sm:max-w-[75%] ${message.sender === "user" ? "flex-row-reverse" : ""}`}>
-            {message.sender === "bot" ? (
-              <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
+        <div
+          key={message.id}
+          className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+        >
+          <div
+            className={`flex max-w-[85%] items-end gap-3 sm:max-w-[75%] ${message.sender === 'user' ? 'flex-row-reverse' : ''}`}
+          >
+            {message.sender === 'bot' ? (
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-linear-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
                 <RobotIcon size="sm" />
               </div>
             ) : (
-              <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-slate-200/50 bg-gradient-to-br from-slate-100 to-slate-200 shadow-md">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200/50 bg-linear-br from-slate-100 to-slate-200 shadow-md">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 text-slate-500"
@@ -43,27 +56,35 @@ export function ChatMessageList({ bottomRef, isLoading, messages, now }: ChatMes
             <div className="flex min-w-0 flex-col">
               <div
                 className={`px-5 py-3.5 ${
-                  message.sender === "user"
-                    ? "rounded-2xl rounded-br-md bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
-                    : "rounded-2xl rounded-bl-md border border-slate-100 bg-white text-slate-700 shadow-lg shadow-slate-200/50"
+                  message.sender === 'user'
+                    ? 'rounded-2xl rounded-br-md bg-linear-br from-blue-600 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20'
+                    : 'rounded-2xl rounded-bl-md border border-slate-100 bg-white text-slate-700 shadow-lg shadow-slate-200/50'
                 }`}
               >
                 <div className="text-[15px] leading-relaxed">
-                  {message.sender === "bot" ? (
+                  {message.sender === 'bot' ? (
                     <MarkdownRenderer content={message.content} />
                   ) : (
-                    <span className="whitespace-pre-wrap">{message.content}</span>
+                    <span className="whitespace-pre-wrap">
+                      {message.content}
+                    </span>
                   )}
                 </div>
               </div>
               <div
-                className={`mt-2 text-[11px] text-slate-400 ${message.sender === "user" ? "pr-1 text-right" : "pl-1 text-left"}`}
+                className={`mt-2 text-[11px] text-slate-400 ${message.sender === 'user' ? 'pr-1 text-right' : 'pl-1 text-left'}`}
               >
                 <span className="flex items-center gap-1.5">
                   {formatMessageTime(message.timestamp)}
                   <span className="text-slate-300">•</span>
-                  <span className={message.sender === "user" ? "text-emerald-500" : "text-blue-500"}>
-                    {message.sender === "user" ? "Enviado" : "ContractAI"}
+                  <span
+                    className={
+                      message.sender === 'user'
+                        ? 'text-emerald-500'
+                        : 'text-blue-500'
+                    }
+                  >
+                    {message.sender === 'user' ? 'Enviado' : 'ContractAI'}
                   </span>
                   {isRecentTimestamp(message.timestamp, now) && (
                     <span className="ml-1 h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
