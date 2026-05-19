@@ -10,17 +10,21 @@ import {
   Send,
 } from 'lucide-react';
 import { Select } from '@/components/ui/Select';
-import { AdminLoadingState } from '@/features/admin/components/shared/AdminLoadingState';
+import { AdminTablePagination } from '@/features/admin/components/shared/AdminTablePagination';
 import { TemplateEditModal } from '@/features/admin/components/page/templates/TemplateEditModal';
 import { TemplateFormModal } from '@/features/admin/components/page/templates/TemplateFormModal';
 import { TemplateViewModal } from '@/features/admin/components/page/templates/TemplateViewModal';
-import { useAdminTemplates } from '@/features/admin/hooks/use-admin-templates';
-import { useAdminTablePagination } from '@/features/admin/hooks/use-admin-table-pagination';
-import { AdminTablePagination } from '@/features/admin/components/shared/AdminTablePagination';
 import { formatAdminDate } from '@/features/admin/lib/admin-formatters';
 import { getDocumentTypeLabel } from '@/lib/document.utils';
 import { getTemplateFieldCount } from '@/lib/templateFields';
 import type { ApiTemplateResponse } from '@/types/api';
+import type { useAdminTemplates } from '@/features/admin/hooks/use-admin-templates';
+import type { useAdminTablePagination } from '@/features/admin/hooks/use-admin-table-pagination';
+
+type AdminTemplatesSectionProps = {
+  section: ReturnType<typeof useAdminTemplates>;
+  pagination: ReturnType<typeof useAdminTablePagination<ApiTemplateResponse>>;
+};
 
 const getTemplateStateClasses = (state: string): string => {
   if (state === 'PUBLISHED') return 'bg-emerald-50 text-emerald-700';
@@ -36,10 +40,10 @@ const STATE_LABELS: Record<string, string> = {
 
 type Template = ApiTemplateResponse;
 
-export function AdminTemplatesSection() {
-  const section = useAdminTemplates();
-  const pagination = useAdminTablePagination(section.filteredTemplates);
-
+export function AdminTemplatesSection({
+  section,
+  pagination,
+}: AdminTemplatesSectionProps) {
   if (!section.canManageTemplates) {
     return (
       <div className="rounded-[28px] border border-amber-200 bg-amber-50 px-6 py-5 text-sm text-amber-800">
@@ -92,7 +96,7 @@ export function AdminTemplatesSection() {
             <button
               type="button"
               onClick={section.openCreateEditor}
-              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
+              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
             >
               <Plus className="h-4 w-4" />
               Nueva plantilla

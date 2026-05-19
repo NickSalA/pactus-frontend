@@ -6,6 +6,8 @@ import { AdminFoldersSection } from "@/features/admin/components/sections/AdminF
 import { AdminMastersSection } from "@/features/admin/components/sections/AdminMastersSection";
 import { AdminTemplatesSection } from "@/features/admin/components/sections/AdminTemplatesSection";
 import { useAdminDocumentManagementPage } from "@/features/admin/hooks/use-admin-document-management-page";
+import { useAdminTemplates } from "@/features/admin/hooks/use-admin-templates";
+import { useAdminTablePagination } from "@/features/admin/hooks/use-admin-table-pagination";
 
 export function AdminDocumentManagementPageContent() {
   const page = useAdminDocumentManagementPage();
@@ -13,6 +15,9 @@ export function AdminDocumentManagementPageContent() {
   if (page.shouldBlockContent) {
     return <AdminLoadingState />;
   }
+
+  const templatesSection = useAdminTemplates();
+  const templatesPagination = useAdminTablePagination(templatesSection.filteredTemplates);
 
   return (
     <div className="space-y-6">
@@ -28,7 +33,9 @@ export function AdminDocumentManagementPageContent() {
         />
       </div>
 
-      {page.activeSection === "templates" && <AdminTemplatesSection />}
+      {page.activeSection === "templates" && (
+        <AdminTemplatesSection section={templatesSection} pagination={templatesPagination} />
+      )}
       {page.activeSection === "folders" && <AdminFoldersSection />}
       {page.activeSection === "masters" && (
         <AdminMastersSection activeCatalog={page.activeCatalog} onCatalogChange={page.setActiveCatalog} />
