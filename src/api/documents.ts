@@ -122,8 +122,8 @@ export async function getServices(): Promise<ApiServiceResponse[]> {
 
 export async function getServicesAdmin(
   includeInactive: boolean = true,
-): Promise<ApiServiceListResponse[]> {
-  return apiGet<ApiServiceListResponse[]>(
+): Promise<ApiServiceListResponse> {
+  return apiGet<ApiServiceListResponse>(
     `/services?include_inactive=${includeInactive ? 'true' : 'false'}`,
     {
       timeout: TIMEOUTS.DEFAULT,

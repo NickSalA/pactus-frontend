@@ -1,16 +1,12 @@
-import type { Session } from "@supabase/supabase-js";
+import type { Session } from '@supabase/supabase-js';
 import {
   mapBackendUserToAuthUser,
   mapSupabaseUserToAuthUser,
   type AuthDisplayUser,
-} from "@/lib/authUser";
-import { getCurrentUser } from "@/api";
+} from '@/lib/authUser';
 
-export const resolveSessionUser = async (session: Session): Promise<AuthDisplayUser> => {
-  try {
-    const backendUser = await getCurrentUser();
-    return mapBackendUserToAuthUser(backendUser);
-  } catch {
-    return mapSupabaseUserToAuthUser(session.user);
-  }
+export const resolveSessionUser = async (
+  session: Session,
+): Promise<AuthDisplayUser> => {
+  return mapSupabaseUserToAuthUser(session.user);
 };

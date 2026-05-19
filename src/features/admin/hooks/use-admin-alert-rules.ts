@@ -1,6 +1,10 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  ApiNotificationRuleCreateRequest,
+  ApiNotificationRuleUpdateRequest,
+} from '@/types/api';
 import {
   createNotificationRule,
   deleteNotificationRule,
@@ -8,14 +12,9 @@ import {
   getNotificationRules,
   sendEmailAlerts,
   updateNotificationRule,
-} from "@/api";
-import { useAdminGuard } from "@/features/admin/hooks/use-admin-guard";
-import type {
-  Document,
-  NotificationRule,
-  NotificationRuleCreateRequest,
-  NotificationRuleUpdateRequest,
-} from "@/types/api.types";
+} from '@/api';
+import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
+import type { Document, NotificationRule } from '@/types/api.types';
 
 type RuleDraft = {
   days_before_due: number;
@@ -39,7 +38,9 @@ export function useAdminAlertRules() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRule, setEditingRule] = useState<NotificationRule | null>(null);
   const [sendingAlerts, setSendingAlerts] = useState(false);
-  const [sendAlertsMessage, setSendAlertsMessage] = useState<string | null>(null);
+  const [sendAlertsMessage, setSendAlertsMessage] = useState<string | null>(
+    null,
+  );
 
   const loadData = useCallback(async () => {
     if (!access.isAdmin) {
@@ -51,11 +52,18 @@ export function useAdminAlertRules() {
       setLoading(true);
       setError(null);
       setSendAlertsMessage(null);
-      const [nextRules, nextDocuments] = await Promise.all([getNotificationRules(), getDocuments()]);
+      const [nextRules, nextDocuments] = await Promise.all([
+        getNotificationRules(),
+        getDocuments(),
+      ]);
       setRules(nextRules);
       setDocuments(nextDocuments);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudieron cargar las reglas de alerta.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudieron cargar las reglas de alerta.',
+      );
     } finally {
       setLoading(false);
     }
@@ -94,15 +102,22 @@ export function useAdminAlertRules() {
           document_id: draft.document_id,
           days_before_due: draft.days_before_due,
           is_active: draft.is_active,
-        } satisfies NotificationRuleCreateRequest;
+        } satisfies ApiNotificationRuleCreateRequest;
 
         if (editingRule) {
-          const updatedPayload: NotificationRuleUpdateRequest = {
+          const updatedPayload: ApiNotificationRuleUpdateRequest = {
             days_before_due: draft.days_before_due,
             is_active: draft.is_active,
           };
-          const updatedRule = await updateNotificationRule(editingRule.id, updatedPayload);
-          setRules((previousRules) => previousRules.map((rule) => (rule.id === updatedRule.id ? updatedRule : rule)));
+          const updatedRule = await updateNotificationRule(
+            editingRule.id,
+            updatedPayload,
+          );
+          setRules((previousRules) =>
+            previousRules.map((rule) =>
+              rule.id === updatedRule.id ? updatedRule : rule,
+            ),
+          );
         } else {
           const createdRule = await createNotificationRule(payload);
           setRules((previousRules) => [...previousRules, createdRule]);
@@ -111,7 +126,8 @@ export function useAdminAlertRules() {
         setIsModalOpen(false);
         setEditingRule(null);
       } catch (err) {
-        const message = err instanceof Error ? err.message : "No se pudo guardar la regla.";
+        const message =
+          err instanceof Error ? err.message : 'No se pudo guardar la regla.';
         setError(message);
         throw new Error(message);
       } finally {
@@ -129,11 +145,15 @@ export function useAdminAlertRules() {
       const result = await sendEmailAlerts();
       setSendAlertsMessage(
         result.emails_sent === 0
-          ? "No se enviaron correos porque no hay alertas pendientes o usuarios suscritos."
-          : `Se enviaron ${result.emails_sent} correo${result.emails_sent === 1 ? "" : "s"} de alerta.`,
+          ? 'No se enviaron correos porque no hay alertas pendientes o usuarios suscritos.'
+          : `Se enviaron ${result.emails_sent} correo${result.emails_sent === 1 ? '' : 's'} de alerta.`,
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudieron enviar las alertas por correo.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudieron enviar las alertas por correo.',
+      );
     } finally {
       setSendingAlerts(false);
     }
@@ -144,9 +164,13 @@ export function useAdminAlertRules() {
       setSaving(true);
       setError(null);
       await deleteNotificationRule(ruleId);
-      setRules((previousRules) => previousRules.filter((rule) => rule.id !== ruleId));
+      setRules((previousRules) =>
+        previousRules.filter((rule) => rule.id !== ruleId),
+      );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo eliminar la regla.");
+      setError(
+        err instanceof Error ? err.message : 'No se pudo eliminar la regla.',
+      );
     } finally {
       setSaving(false);
     }
@@ -155,14 +179,18 @@ export function useAdminAlertRules() {
   const stats = useMemo(
     () => ({
       activeRules: rules.filter((rule) => rule.is_active).length,
-      documentScopedRules: rules.filter((rule) => rule.document_id != null).length,
+      documentScopedRules: rules.filter((rule) => rule.document_id != null)
+        .length,
       generalRules: rules.filter((rule) => rule.document_id == null).length,
       totalRules: rules.length,
     }),
     [rules],
   );
 
-  const documentById = useMemo(() => new Map(documents.map((document) => [document.id, document])), [documents]);
+  const documentById = useMemo(
+    () => new Map(documents.map((document) => [document.id, document])),
+    [documents],
+  );
 
   return {
     ...access,
