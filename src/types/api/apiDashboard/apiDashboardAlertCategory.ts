@@ -4,7 +4,7 @@ import type { ApiDashboardAlertItem } from './apiDashboardAlertItem';
 export interface ApiDashboardAlertCategory {
   label: string;
   color: ApiDashboardAlertColor;
-  due_to?: number | null;
+  due_to: number | null;
   count: number;
   items: ApiDashboardAlertItem[];
 }

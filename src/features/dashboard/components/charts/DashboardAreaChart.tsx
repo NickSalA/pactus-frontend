@@ -8,12 +8,12 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import type { AreaChartResponse, DocumentType } from '@/types/api.types';
+import { ApiDashboardAreaChartResponse, ApiDocumentType } from '@/types/api';
 
 type DashboardAreaChartProps = {
-  data: AreaChartResponse;
+  data: ApiDashboardAreaChartResponse;
   isLoading: boolean;
-  documentType: DocumentType;
+  documentType: ApiDocumentType;
 };
 
 const COLORS = {

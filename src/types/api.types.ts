@@ -1,7 +1,11 @@
 // src/types/api.types.ts
 // Tipos TypeScript para la API de ContractIA
 
-import { ApiDocumentType } from './api/shared';
+import {
+  ApiDocumentFormData,
+  ApiDocumentState,
+  ApiDocumentType,
+} from './api/shared';
 
 // ============================================
 // AUTH TYPES
@@ -200,8 +204,8 @@ export interface Document {
   client: string;
   start_date: string;
   end_date: string;
-  form_data: DocumentFormData;
-  state: DocumentState;
+  form_data: ApiDocumentFormData;
+  state: ApiDocumentState;
   service_items: DocumentServiceItem[];
   folder_id?: number | null;
   file_path?: string | null;
@@ -369,111 +373,4 @@ export interface GenerateTemplateDraftRequest {
   document_type?: DocumentType | null;
   format_code: string;
   generation_mode?: TemplateGenerationMode;
-}
-
-export interface TemplateUsage {
-  input_tokens: number;
-  output_tokens: number;
-  total_tokens: number;
-}
-
-export interface TemplateFormatResponse {
-  id: number;
-  document_type: DocumentType;
-  format_code: string;
-  label: string;
-  default_name: string;
-  default_description?: string | null;
-}
-
-export interface PersistedTemplateDraftResponse {
-  template: Template;
-  warnings: string[];
-  source: Record<string, unknown>;
-  usage?: TemplateUsage | null;
-}
-
-// ============================================
-// DASHBOARD TYPES
-// ============================================
-export type TopRankingSortBy = 'volume' | 'value';
-
-export interface AreaChartPoint {
-  x: string;
-  y: number;
-  is_forecast: boolean;
-}
-
-export interface AreaChartSeries {
-  currency: string;
-  name: string;
-  data: AreaChartPoint[];
-}
-
-export interface AreaChartYAxis {
-  format: string;
-  labels: number[];
-}
-
-export interface AreaChartProps {
-  title: string;
-  subtitle: string;
-  y_axis: AreaChartYAxis;
-  threshold_date: string;
-  series: AreaChartSeries[];
-}
-
-export interface AreaChartResponse {
-  props: AreaChartProps;
-}
-
-export interface AlertColor {
-  accent: string;
-  bg: string;
-}
-
-export interface AlertItem {
-  id: number;
-  name: string;
-  detail: string | null;
-  status: string;
-}
-
-export interface AlertCategory {
-  label: string;
-  color: AlertColor;
-  due_to: number | null;
-  count: number;
-  items: AlertItem[];
-}
-
-export interface RecentContractResponse {
-  id: number;
-  title: string;
-  services: string[];
-  name: string;
-  dates: string;
-}
-
-export interface TopCompanyResponse {
-  name: string;
-  contracts: number;
-  amount: number;
-}
-
-export interface TopServiceResponse {
-  name: string;
-  quantity: number;
-  amount: number;
-}
-
-// ============================================
-// API RESPONSE TYPES
-// ============================================
-export type ApiStatus = 'idle' | 'loading' | 'success' | 'error';
-
-export interface ApiState<T> {
-  data: T | null;
-  status: ApiStatus;
-  error: string | null;
 }

@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
-import type { AlertCategory, AlertItem } from '@/types/api.types';
+import { ApiDashboardAlertCategory, ApiDashboardAlertItem } from '@/types/api';
 
 type DashboardAlertCenterProps = {
-  alerts: AlertCategory[];
+  alerts: ApiDashboardAlertCategory[];
   isLoading: boolean;
 };
 
@@ -27,7 +27,7 @@ function AlertCard({
   item,
   accentColor,
 }: {
-  item: AlertItem;
+  item: ApiDashboardAlertItem;
   accentColor: string;
 }) {
   const router = useRouter();
@@ -149,7 +149,7 @@ export function DashboardAlertCenter({
 
       <div className="flex-1 overflow-y-auto">
         <div className="flex flex-col gap-3">
-          {items.map((item: AlertItem) => (
+          {items.map((item: ApiDashboardAlertItem) => (
             <AlertCard key={item.id} item={item} accentColor={accentColor} />
           ))}
           {items.length === 0 && (

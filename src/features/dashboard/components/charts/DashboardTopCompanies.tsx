@@ -10,10 +10,11 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import type { DocumentType, TopCompanyResponse } from '@/types/api.types';
+import type { DocumentType } from '@/types/api.types';
+import { ApiDashboardTopCompanyResponse } from '@/types/api';
 
 type DashboardTopCompaniesProps = {
-  data: TopCompanyResponse[];
+  data: ApiDashboardTopCompanyResponse[];
   isLoading: boolean;
   documentType: DocumentType;
 };
@@ -69,23 +70,23 @@ export function DashboardTopCompanies({
     <section className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
       <header className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-slate-800">Top Empresas</h3>
-<div className="flex rounded-lg bg-gray-100 p-0.5">
+        <div className="flex rounded-lg bg-gray-100 p-0.5">
           <button
-            onClick={() => setActiveMetric("contracts")}
+            onClick={() => setActiveMetric('contracts')}
             className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
-              activeMetric === "contracts"
-                ? "bg-white text-blue-600 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
+              activeMetric === 'contracts'
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             VOL
           </button>
           <button
-            onClick={() => setActiveMetric("amount")}
+            onClick={() => setActiveMetric('amount')}
             className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
-              activeMetric === "amount"
-                ? "bg-white text-blue-600 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
+              activeMetric === 'amount'
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             VALOR
