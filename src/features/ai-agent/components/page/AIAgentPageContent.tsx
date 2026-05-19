@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { ChatComposer } from "@/features/ai-agent/components/page/ChatComposer";
-import { ChatEmptyState } from "@/features/ai-agent/components/page/ChatEmptyState";
-import { ChatHistorySidebar } from "@/features/ai-agent/components/page/ChatHistorySidebar";
-import { ChatMessageList } from "@/features/ai-agent/components/page/ChatMessageList";
-import { RobotIcon } from "@/features/ai-agent/components/page/RobotIcon";
-import { useAIAgentPage } from "@/features/ai-agent/hooks/use-ai-agent-page";
+import { ChatComposer } from '@/features/ai-agent/components/page/ChatComposer';
+import { ChatEmptyState } from '@/features/ai-agent/components/page/ChatEmptyState';
+import { ChatHistorySidebar } from '@/features/ai-agent/components/page/ChatHistorySidebar';
+import { ChatMessageList } from '@/features/ai-agent/components/page/ChatMessageList';
+import { RobotIcon } from '@/features/ai-agent/components/page/RobotIcon';
+import { useAIAgentPage } from '@/features/ai-agent/hooks/use-ai-agent-page';
 
 export function AIAgentPageContent() {
   const page = useAIAgentPage();
 
   return (
-    <div className="-m-8 flex h-[calc(100vh-95px)] overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
+    <div className="-m-8 flex h-[calc(100vh-95px)] overflow-hidden bg-linear-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
       <ChatHistorySidebar
         activeConversationId={page.threadId}
         conversations={page.conversations}
@@ -24,14 +24,16 @@ export function AIAgentPageContent() {
       />
 
       <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden">
-        <div className="flex flex-shrink-0 items-center justify-between border-b border-slate-200/60 bg-white/70 px-8 py-4 shadow-sm backdrop-blur-xl">
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-200/60 bg-white/70 px-8 py-4 shadow-sm backdrop-blur-xl">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-linear-to-br from-blue-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30">
                 <RobotIcon size="md" />
               </div>
               <div>
-                <h2 className="font-semibold tracking-tight text-slate-800">ContractAI Bot</h2>
+                <h2 className="font-semibold tracking-tight text-slate-800">
+                  ContractAI Bot
+                </h2>
                 <p className="flex items-center gap-1.5 text-xs font-medium text-emerald-600">
                   <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" />
                   En linea
@@ -51,7 +53,12 @@ export function AIAgentPageContent() {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             Nueva conversacion
           </button>
