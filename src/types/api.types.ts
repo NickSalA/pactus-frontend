@@ -24,23 +24,6 @@ export interface User {
 
 export type OrganizationMember = User;
 
-export interface OrganizationMemberNotificationsUpdateRequest {
-  receives_notifications: boolean;
-}
-
-// ============================================
-// CHATBOT TYPES
-// ============================================
-export interface ChatRequest {
-  message: string;
-  thread_id?: number;
-}
-
-export interface ChatResponse {
-  response: string;
-  thread_id: number;
-}
-
 // ============================================
 // CONVERSATION TYPES
 // ============================================
@@ -129,11 +112,6 @@ export interface ServiceCatalogItemCreateRequest {
   is_active?: boolean;
 }
 
-export interface ServiceCatalogItemUpdateRequest {
-  name?: string;
-  is_active?: boolean;
-}
-
 export interface DocumentFolder {
   id: number;
   organization_id: number;
@@ -145,14 +123,6 @@ export interface DocumentFolder {
   documents_count: number;
   created_at: string;
   updated_at: string;
-}
-
-export interface DocumentFolderCreateRequest {
-  name: string;
-}
-
-export interface DocumentFolderUpdateRequest {
-  name?: string;
 }
 
 export interface Document {

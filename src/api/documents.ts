@@ -4,19 +4,23 @@ import type {
   DocumentCreateRequest,
   DocumentFileUrlResponse,
   DocumentFolder,
-  DocumentFolderCreateRequest,
-  DocumentFolderUpdateRequest,
   DocumentFormData,
   DocumentServiceItem,
   DocumentUpdateRequest,
   LaborContractResponse,
   ServiceCatalogItem,
   ServiceCatalogItemCreateRequest,
-  ServiceCatalogItemUpdateRequest,
 } from '@/types/api.types';
 import { TIMEOUTS } from './constants';
 import { apiGet, apiPost, apiPatch, apiDelete } from './axiosInstance';
-import { ApiDocumentResponse, ApiDocumentType } from '@/types/api';
+import {
+  ApiServiceCreateRequest,
+  ApiServiceUpdateRequest,
+  ApiFolderUpdateRequest,
+  ApiDocumentResponse,
+  ApiDocumentType,
+  ApiFolderCreateRequest,
+} from '@/types/api';
 
 const normalizeDocument = (doc: ApiDocumentResponse): Document => {
   const hasCompanyContract = Boolean(doc.company_contract);
@@ -135,7 +139,7 @@ export async function createServiceCatalogItem(
 
 export async function updateServiceCatalogItem(
   serviceId: number,
-  payload: ServiceCatalogItemUpdateRequest,
+  payload: ApiServiceUpdateRequest,
 ): Promise<ServiceCatalogItem> {
   return apiPatch<ServiceCatalogItem>(`/services/${serviceId}`, payload, {
     timeout: TIMEOUTS.AUTH,
@@ -156,7 +160,7 @@ export async function getDocumentFolders(): Promise<DocumentFolder[]> {
 }
 
 export async function createDocumentFolder(
-  payload: DocumentFolderCreateRequest,
+  payload: ApiFolderCreateRequest,
 ): Promise<DocumentFolder> {
   return apiPost<DocumentFolder>('/folders', payload, {
     timeout: TIMEOUTS.AUTH,
@@ -165,7 +169,7 @@ export async function createDocumentFolder(
 
 export async function updateDocumentFolder(
   folderId: number,
-  payload: DocumentFolderUpdateRequest,
+  payload: ApiFolderUpdateRequest,
 ): Promise<DocumentFolder> {
   return apiPatch<DocumentFolder>(`/folders/${folderId}`, payload, {
     timeout: TIMEOUTS.AUTH,

@@ -1,8 +1,8 @@
-import type {
-  OrganizationMember,
-  OrganizationMemberNotificationsUpdateRequest,
-} from '@/types/api.types';
-import { ApiOrganizationMemberCreateRequest } from '@/types/api';
+import type { OrganizationMember } from '@/types/api.types';
+import {
+  ApiOrganizationMemberNotificationsUpdateRequest,
+  ApiOrganizationMemberCreateRequest,
+} from '@/types/api';
 import { TIMEOUTS } from './constants';
 import { apiGet, apiPost, apiPatch } from './axiosInstance';
 
@@ -35,7 +35,7 @@ export async function createOrganizationMember(
 
 export async function updateOrganizationMemberNotifications(
   memberId: number,
-  payload: OrganizationMemberNotificationsUpdateRequest,
+  payload: ApiOrganizationMemberNotificationsUpdateRequest,
 ): Promise<OrganizationMember> {
   const member = normalizeMember(
     await apiPatch<OrganizationMember>(
