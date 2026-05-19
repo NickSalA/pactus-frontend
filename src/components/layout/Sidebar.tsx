@@ -112,7 +112,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`${isCollapsed ? 'w-20' : expandedSidebarWidth} flex min-h-screen flex-col transition-all duration-300`}
+      className={`${isCollapsed ? 'w-20' : expandedSidebarWidth} flex max-h-screen flex-col transition-all duration-300`}
       style={{
         background:
           'linear-gradient(180deg, #3b82f6 0%, #4f46e5 50%, #1e40af 100%)',
