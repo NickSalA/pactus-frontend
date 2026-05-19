@@ -10,13 +10,13 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import type { DocumentType } from '@/types/api.types';
+import { ApiDocumentType } from '@/types/api';
 import { ApiDashboardTopServiceResponse } from '@/types/api';
 
 type DashboardTopServicesProps = {
   data: ApiDashboardTopServiceResponse[];
   isLoading: boolean;
-  documentType: DocumentType;
+  documentType: ApiDocumentType;
 };
 
 type MetricKey = 'quantity' | 'amount';
