@@ -1,5 +1,5 @@
-import type { DocumentFlatten, DocumentType } from '@/types/api.types';
-import { ApiUserRole } from '@/types/api';
+import type { DocumentFlatten } from '@/types/api.types';
+import { ApiUserRole, ApiDocumentType } from '@/types/api';
 
 type RoleValue = ApiUserRole | string | null | undefined;
 
@@ -11,7 +11,7 @@ const KNOWN_USER_ROLES = new Set<ApiUserRole>([
 ]);
 
 const READABLE_DOCUMENT_TYPES_BY_ROLE: Partial<
-  Record<ApiUserRole, readonly DocumentType[]>
+  Record<ApiUserRole, readonly ApiDocumentType[]>
 > = {
   HR: ['LABOR'],
   MANAGER: ['COMPANY'],
@@ -19,7 +19,7 @@ const READABLE_DOCUMENT_TYPES_BY_ROLE: Partial<
 };
 
 const WRITABLE_DOCUMENT_TYPES_BY_ROLE: Partial<
-  Record<ApiUserRole, readonly DocumentType[]>
+  Record<ApiUserRole, readonly ApiDocumentType[]>
 > = {
   HR: ['LABOR'],
   MANAGER: ['COMPANY'],
@@ -45,8 +45,8 @@ const normalizeRole = (role: RoleValue): ApiUserRole | null => {
 
 const getAllowedDocumentTypes = (
   role: RoleValue,
-  policy: Partial<Record<ApiUserRole, readonly DocumentType[]>>,
-): readonly DocumentType[] | null => {
+  policy: Partial<Record<ApiUserRole, readonly ApiDocumentType[]>>,
+): readonly ApiDocumentType[] | null => {
   const normalizedRole = normalizeRole(role);
 
   if (!normalizedRole) {
@@ -74,13 +74,13 @@ export const canAuthorTemplates = (role: RoleValue): boolean => {
 
 export const getTemplateAuthoringDocumentTypes = (
   role: RoleValue,
-): readonly DocumentType[] | null => {
+): readonly ApiDocumentType[] | null => {
   return getWritableDocumentTypes(role);
 };
 
 export const canViewDocumentType = (
   role: RoleValue,
-  documentType: DocumentType,
+  documentType: ApiDocumentType,
 ): boolean => {
   const allowedTypes = getAllowedDocumentTypes(
     role,
@@ -91,13 +91,13 @@ export const canViewDocumentType = (
 
 export const getReadableDocumentTypes = (
   role: RoleValue,
-): readonly DocumentType[] | null => {
+): readonly ApiDocumentType[] | null => {
   return getAllowedDocumentTypes(role, READABLE_DOCUMENT_TYPES_BY_ROLE);
 };
 
 export const canManageDocumentType = (
   role: RoleValue,
-  documentType: DocumentType,
+  documentType: ApiDocumentType,
 ): boolean => {
   console.log(
     '[DEBUG] canManageDocumentType - Role:',
@@ -117,13 +117,13 @@ export const canManageDocumentType = (
 
 export const getWritableDocumentTypes = (
   role: RoleValue,
-): readonly DocumentType[] | null => {
+): readonly ApiDocumentType[] | null => {
   return getAllowedDocumentTypes(role, WRITABLE_DOCUMENT_TYPES_BY_ROLE);
 };
 
 export const getDefaultWritableDocumentType = (
   role: RoleValue,
-): DocumentType | null => {
+): ApiDocumentType | null => {
   const allowedTypes = getWritableDocumentTypes(role);
   return allowedTypes?.[0] ?? null;
 };

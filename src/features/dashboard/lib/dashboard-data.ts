@@ -2,8 +2,11 @@ import {
   getDocumentFileLabel,
   getDocumentTypeLabel,
 } from '@/lib/document.utils';
-import type { DocumentFlatten, DocumentState } from '@/types/api.types';
-import { ApiDashboardRecentContractResponse } from '@/types/api';
+import type { DocumentFlatten } from '@/types/api.types';
+import {
+  ApiDashboardRecentContractResponse,
+  ApiDocumentState,
+} from '@/types/api';
 
 export type DashboardMetricTone = 'primary' | 'warning' | 'danger';
 
@@ -20,7 +23,7 @@ export type RecentDashboardDocument = {
   id: number;
   name: string;
   subtitle: string;
-  status: DocumentState;
+  status: ApiDocumentState;
   modified: string;
 };
 
@@ -193,7 +196,7 @@ export const buildRecentDocumentsFromAPI = (
     id: contract.id,
     name: contract.title,
     subtitle: 'Sin detalles',
-    status: 'ACTIVE' as DocumentState,
+    status: 'ACTIVE' as ApiDocumentState,
     modified: contract.dates,
   }));
 };

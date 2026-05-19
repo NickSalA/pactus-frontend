@@ -19,7 +19,8 @@ import {
   getWritableDocumentTypes,
 } from '@/lib/permissions';
 import { useAuthStore } from '@/store';
-import type { DocumentFlatten, DocumentState } from '@/types/api.types';
+import { ApiDocumentState } from '@/types/api';
+import type { DocumentFlatten } from '@/types/api.types';
 import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
 
 type ContractFormProps = {
@@ -133,7 +134,7 @@ export function useContractForm({
     setStepError(serviceError);
   }, [commitNewService, setStepError]);
 
-  const setContractState = useCallback((nextState: DocumentState) => {
+  const setContractState = useCallback((nextState: ApiDocumentState) => {
     setForm((previous) => ({ ...previous, state: nextState }));
   }, []);
 

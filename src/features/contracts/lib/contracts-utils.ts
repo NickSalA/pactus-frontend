@@ -1,9 +1,9 @@
-import { ApiUserRole } from '@/types/api';
+import { ApiDocumentState, ApiUserRole } from '@/types/api';
 import type { GooglePickerFile } from '@/lib/googlePicker';
 import { DOCUMENT_STATE_OPTIONS } from '@/lib/document.utils';
-import type { DocumentFlatten, DocumentState } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/api.types';
 
-export type DocumentFilterValue = 'all' | DocumentState;
+export type DocumentFilterValue = 'all' | ApiDocumentState;
 export type ContractFolder = {
   documents_count: number;
   id: number;

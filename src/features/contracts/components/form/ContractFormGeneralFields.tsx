@@ -1,22 +1,37 @@
-import type { ChangeEvent } from "react";
-import { CURRENCY_OPTIONS, DOCUMENT_STATE_OPTIONS, DOCUMENT_TYPE_OPTIONS } from "@/lib/document.utils";
-import { HelpTip, type Step1Draft } from "@/features/contracts/lib/contract-form.utils";
-import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
-import type { DocumentType } from "@/types/api.types";
-import { Select } from "@/components/ui/Select";
-import { contractFormStyles } from "./contract-form.styles";
+import type { ChangeEvent } from 'react';
+import {
+  CURRENCY_OPTIONS,
+  DOCUMENT_STATE_OPTIONS,
+  DOCUMENT_TYPE_OPTIONS,
+} from '@/lib/document.utils';
+import {
+  HelpTip,
+  type Step1Draft,
+} from '@/features/contracts/lib/contract-form.utils';
+import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
+import { ApiDocumentType } from '@/types/api';
+import { Select } from '@/components/ui/Select';
+import { contractFormStyles } from './contract-form.styles';
 
 type ContractFormGeneralFieldsProps = {
-  allowedDocumentTypes?: readonly DocumentType[] | null;
+  allowedDocumentTypes?: readonly ApiDocumentType[] | null;
   data: Step1Draft;
   folderOptions?: readonly ContractFolder[];
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   showFolderField?: boolean;
 };
 
-export function ContractFormGeneralFields({ allowedDocumentTypes, data, folderOptions = [], onChange, showFolderField = false }: ContractFormGeneralFieldsProps) {
+export function ContractFormGeneralFields({
+  allowedDocumentTypes,
+  data,
+  folderOptions = [],
+  onChange,
+  showFolderField = false,
+}: ContractFormGeneralFieldsProps) {
   const documentTypeOptions = allowedDocumentTypes
-    ? DOCUMENT_TYPE_OPTIONS.filter((option) => allowedDocumentTypes.includes(option.value))
+    ? DOCUMENT_TYPE_OPTIONS.filter((option) =>
+        allowedDocumentTypes.includes(option.value),
+      )
     : DOCUMENT_TYPE_OPTIONS;
 
   return (
@@ -51,7 +66,7 @@ export function ContractFormGeneralFields({ allowedDocumentTypes, data, folderOp
             variant="md"
             className="w-full"
             name="folder_id"
-            value={data.folder_id ?? ""}
+            value={data.folder_id ?? ''}
             onChange={onChange}
           >
             <option value="">Sin carpeta</option>

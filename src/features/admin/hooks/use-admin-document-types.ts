@@ -9,10 +9,10 @@ import {
   writeAdminCache,
 } from '@/features/admin/lib/admin-cache';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
-import type { DocumentType } from '@/types/api.types';
+import { ApiDocumentType } from '@/types/api';
 
 type DocumentTypeCatalogItem = {
-  code: DocumentType;
+  code: ApiDocumentType;
   count: number;
   description: string;
   editable: boolean;
@@ -21,16 +21,17 @@ type DocumentTypeCatalogItem = {
 
 export function useAdminDocumentTypes() {
   const access = useAdminGuard();
-  const [counts, setCounts] = useState<Record<DocumentType, number>>(
+  const [counts, setCounts] = useState<Record<ApiDocumentType, number>>(
     () =>
-      peekAdminCache<Record<DocumentType, number>>('document-types') ?? {
+      peekAdminCache<Record<ApiDocumentType, number>>('document-types') ?? {
         COMPANY: 0,
         LABOR: 0,
       },
   );
   const [loading, setLoading] = useState(
     () =>
-      peekAdminCache<Record<DocumentType, number>>('document-types') === null,
+      peekAdminCache<Record<ApiDocumentType, number>>('document-types') ===
+      null,
   );
   const [error, setError] = useState<string | null>(null);
 
@@ -42,7 +43,7 @@ export function useAdminDocumentTypes() {
       }
 
       const cachedCounts = !options.force
-        ? readAdminCache<Record<DocumentType, number>>(
+        ? readAdminCache<Record<ApiDocumentType, number>>(
             'document-types',
             ADMIN_CACHE_TTL_MS,
           )
@@ -55,7 +56,7 @@ export function useAdminDocumentTypes() {
 
       try {
         if (
-          peekAdminCache<Record<DocumentType, number>>('document-types') ===
+          peekAdminCache<Record<ApiDocumentType, number>>('document-types') ===
           null
         ) {
           setLoading(true);
@@ -63,10 +64,12 @@ export function useAdminDocumentTypes() {
         setError(null);
         const documents = await getDocuments();
         const nextCounts = {
-          COMPANY: documents.filter((document) => document.contract_type === 'COMPANY')
-            .length,
-          LABOR: documents.filter((document) => document.contract_type === 'LABOR')
-            .length,
+          COMPANY: documents.filter(
+            (document) => document.contract_type === 'COMPANY',
+          ).length,
+          LABOR: documents.filter(
+            (document) => document.contract_type === 'LABOR',
+          ).length,
         };
         setCounts(nextCounts);
         writeAdminCache('document-types', nextCounts);

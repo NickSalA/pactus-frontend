@@ -15,12 +15,9 @@ import type {
   ApiDocumentCompanyContractResponse,
   ApiServiceListResponse,
   ApiServiceResponse,
+  ApiDocumentLaborContractResponse,
 } from '@/types/api';
-import type {
-  DocumentFlatten,
-  DocumentFolder,
-  LaborContractResponse,
-} from '@/types/api.types';
+import type { DocumentFlatten, DocumentFolder } from '@/types/api.types';
 import { TIMEOUTS } from './constants';
 import { apiGet, apiPost, apiPatch, apiDelete } from './axiosInstance';
 
@@ -56,7 +53,9 @@ const normalizeDocument = (doc: ApiDocumentResponse): DocumentFlatten => {
     company_contract: doc.company_contract as
       | ApiDocumentCompanyContractResponse
       | undefined,
-    labor_contract: doc.labor_contract as LaborContractResponse | undefined,
+    labor_contract: doc.labor_contract as
+      | ApiDocumentLaborContractResponse
+      | undefined,
     created_at: doc.created_at ?? '',
     updated_at: doc.updated_at ?? '',
     client: client ?? '',

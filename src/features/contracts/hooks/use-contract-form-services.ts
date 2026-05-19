@@ -10,10 +10,8 @@ import {
   type ServiceItemDraft,
 } from '@/features/contracts/lib/contract-form.utils';
 import { useServices } from '@/queries/hooks/contracts/queries';
-import type {
-  DocumentFlatten,
-  DocumentServiceItemPayload,
-} from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/api.types';
+import { ApiDocumentServiceItemRequest } from '@/types/api';
 
 type UseContractFormServicesOptions = {
   form: FormState;
@@ -158,7 +156,7 @@ export function useContractFormServices({
     return null;
   };
 
-  const buildServiceItemsPayload = (): DocumentServiceItemPayload[] => {
+  const buildServiceItemsPayload = (): ApiDocumentServiceItemRequest[] => {
     const nonEmptyItems = form.service_items.filter((item) =>
       [
         item.service_id,
@@ -204,7 +202,7 @@ export function useContractFormServices({
         service_id: serviceId,
         start_date: item.start_date,
         value,
-      } satisfies DocumentServiceItemPayload;
+      } satisfies ApiDocumentServiceItemRequest;
     });
 
     const ids = new Set(parsedItems.map((item) => item.service_id));

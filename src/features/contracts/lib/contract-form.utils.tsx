@@ -3,13 +3,14 @@ import {
   getDocumentPrimaryCurrency,
   getDocumentTotalValue,
 } from '@/lib/document.utils';
-import { ApiServiceResponse } from '@/types/api';
-import type {
+import {
   ApiCurrencyType,
-  DocumentFlatten,
-  DocumentState,
-  DocumentType,
-} from '@/types/api.types';
+  ApiServiceResponse,
+  ApiDocumentState,
+  ApiDocumentType,
+} from '@/types/api';
+
+import type { DocumentFlatten } from '@/types/api.types';
 
 export type ServiceItemDraft = {
   key: string;
@@ -26,10 +27,10 @@ export type FormState = {
   name: string;
   client: string;
   folder_id: number | null;
-  type: DocumentType;
+  type: ApiDocumentType;
   start_date: string;
   end_date: string;
-  state: DocumentState;
+  state: ApiDocumentState;
   contract_currency: ApiCurrencyType;
   service_items: ServiceItemDraft[];
 };
@@ -92,7 +93,7 @@ export const buildFormState = (document?: DocumentFlatten): FormState => ({
 
 export const buildFormStateWithDefaultType = (
   document: DocumentFlatten | undefined,
-  defaultType: DocumentType,
+  defaultType: ApiDocumentType,
 ): FormState => ({
   ...buildFormState(document),
   type: document?.contract_type ?? defaultType,

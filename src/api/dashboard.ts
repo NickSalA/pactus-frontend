@@ -1,5 +1,4 @@
 import { apiGet } from './axiosInstance';
-import type { ApiCurrencyType } from '@/types/api.types';
 
 import {
   ApiDashboardAlertCategory,
@@ -8,6 +7,7 @@ import {
   ApiDashboardTopCompanyResponse,
   ApiDashboardTopServiceResponse,
   ApiTopRankingSortBy,
+  ApiCurrencyType,
 } from '@/types/api';
 
 export async function getAreaChartCompany(
