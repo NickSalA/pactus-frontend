@@ -61,7 +61,3 @@ export interface DocumentFlatten {
   created_at: string;
   updated_at: string;
 }
-
-// ============================================
-// NOTIFICATION TYPES
-// ============================================

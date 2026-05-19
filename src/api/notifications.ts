@@ -1,4 +1,7 @@
-import type { Notification, NotificationRule } from '@/types/api.types';
+import type {
+  ApiNotificationResponse,
+  ApiNotificationRuleResponse,
+} from '@/types/api';
 import {
   ApiNotificationRuleCreateRequest,
   ApiNotificationRuleUpdateRequest,
@@ -6,14 +9,16 @@ import {
 import { apiGet, apiPost, apiPatch, apiDelete } from './axiosInstance';
 import { TIMEOUTS } from './constants';
 
-export async function getNotifications(): Promise<Notification[]> {
-  return apiGet<Notification[]>('/notifications/', {
+export async function getNotifications(): Promise<ApiNotificationResponse[]> {
+  return apiGet<ApiNotificationResponse[]>('/notifications/', {
     headers: { 'Cache-Control': 'no-store' },
   });
 }
 
-export async function getNotificationRules(): Promise<NotificationRule[]> {
-  return apiGet<NotificationRule[]>('/notifications/rules', {
+export async function getNotificationRules(): Promise<
+  ApiNotificationRuleResponse[]
+> {
+  return apiGet<ApiNotificationRuleResponse[]>('/notifications/rules', {
     timeout: TIMEOUTS.DEFAULT,
     headers: { 'Cache-Control': 'no-store' },
   });
@@ -31,8 +36,8 @@ export async function sendEmailAlerts(): Promise<{ emails_sent: number }> {
 
 export async function createNotificationRule(
   payload: ApiNotificationRuleCreateRequest,
-): Promise<NotificationRule> {
-  return apiPost<NotificationRule>('/notifications/rules', payload, {
+): Promise<ApiNotificationRuleResponse> {
+  return apiPost<ApiNotificationRuleResponse>('/notifications/rules', payload, {
     timeout: TIMEOUTS.AUTH,
   });
 }
@@ -40,10 +45,14 @@ export async function createNotificationRule(
 export async function updateNotificationRule(
   ruleId: number,
   payload: ApiNotificationRuleUpdateRequest,
-): Promise<NotificationRule> {
-  return apiPatch<NotificationRule>(`/notifications/rules/${ruleId}`, payload, {
-    timeout: TIMEOUTS.AUTH,
-  });
+): Promise<ApiNotificationRuleResponse> {
+  return apiPatch<ApiNotificationRuleResponse>(
+    `/notifications/rules/${ruleId}`,
+    payload,
+    {
+      timeout: TIMEOUTS.AUTH,
+    },
+  );
 }
 
 export async function deleteNotificationRule(ruleId: number): Promise<void> {

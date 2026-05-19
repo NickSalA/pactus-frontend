@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { X, AlertCircle, AlertTriangle, Info, Trash2 } from "lucide-react";
-import { getDaysLabel, type NotificationType } from "@/lib/mockNotifications";
+import { getDaysLabel, type ApiNotificationType } from "@/lib/mockNotifications";
 import type { DisplayNotification } from "./Header";
 
-type Filter = "all" | NotificationType;
+type Filter = "all" | ApiNotificationType;
 
 const filterLabels: Record<Filter, string> = {
   all: "Todos",
@@ -16,7 +16,7 @@ const filterLabels: Record<Filter, string> = {
 };
 
 const typeConfig: Record<
-  NotificationType,
+  ApiNotificationType,
   { icon: React.ReactNode; cardStyle: React.CSSProperties; border: string; badge: string }
 > = {
   critical: {

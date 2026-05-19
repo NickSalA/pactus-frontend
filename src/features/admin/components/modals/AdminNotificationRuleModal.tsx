@@ -4,7 +4,8 @@ import { useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { AdminModalShell } from '@/features/admin/components/shared/AdminModalShell';
 import { Select } from '@/components/ui/Select';
-import type { DocumentFlatten, NotificationRule } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/api.types';
+import type { ApiNotificationRuleResponse } from '@/types/api';
 
 type RuleDraft = {
   days_before_due: number;
@@ -19,11 +20,11 @@ type AdminNotificationRuleModalProps = {
   onClose: () => void;
   onSubmit: (draft: RuleDraft) => Promise<void>;
   open: boolean;
-  rule: NotificationRule | null;
+  rule: ApiNotificationRuleResponse | null;
 };
 
 const buildDraftFromRule = (
-  rule: NotificationRule | null,
+  rule: ApiNotificationRuleResponse | null,
   fallbackDraft: RuleDraft,
 ): RuleDraft => {
   if (!rule) {

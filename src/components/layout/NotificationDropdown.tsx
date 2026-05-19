@@ -1,12 +1,12 @@
 "use client";
 
 import { AlertCircle, AlertTriangle, Info } from "lucide-react";
-import { getDaysLabel, type NotificationType } from "@/lib/mockNotifications";
+import { getDaysLabel, type ApiNotificationType } from "@/lib/mockNotifications";
 import type { DisplayNotification } from "./Header";
 
 const PREVIEW_COUNT = 4;
 
-const typeConfig: Record<NotificationType, { icon: React.ReactNode; dot: string }> = {
+const typeConfig: Record<ApiNotificationType, { icon: React.ReactNode; dot: string }> = {
   critical: {
     icon: <AlertCircle size={16} className="text-red-500" />,
     dot: "bg-red-500",
