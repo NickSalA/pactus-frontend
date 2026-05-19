@@ -7,12 +7,6 @@ import {
   getServicesAdmin,
   updateServiceCatalogItem,
 } from '@/api';
-import {
-  ADMIN_CACHE_TTL_MS,
-  peekAdminCache,
-  readAdminCache,
-  writeAdminCache,
-} from '@/features/admin/lib/admin-cache';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
 
 import {
@@ -23,12 +17,8 @@ import {
 
 export function useAdminServices() {
   const access = useAdminGuard();
-  const [services, setServices] = useState<ApiServiceResponse[]>(
-    () => peekAdminCache<ApiServiceResponse[]>('services') ?? [],
-  );
-  const [loading, setLoading] = useState(
-    () => peekAdminCache<ApiServiceResponse[]>('services') === null,
-  );
+  const [services, setServices] = useState<ApiServiceResponse[]>([]);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingService, setEditingService] =
@@ -42,23 +32,11 @@ export function useAdminServices() {
         return;
       }
 
-      const cachedServices = !options.force
-        ? readAdminCache<ApiServiceResponse[]>('services', ADMIN_CACHE_TTL_MS)
-        : null;
-      if (cachedServices) {
-        setServices(cachedServices);
-        setLoading(false);
-        return;
-      }
-
       try {
-        if (peekAdminCache<ApiServiceResponse[]>('services') === null) {
-          setLoading(true);
-        }
+        setLoading(true);
         setError(null);
         const nextServices = await getServicesAdmin(true);
         setServices(nextServices);
-        writeAdminCache('services', nextServices);
       } catch (err) {
         setError(
           err instanceof Error
@@ -116,22 +94,19 @@ export function useAdminServices() {
             editingService.id,
             payload as ApiServiceUpdateRequest,
           );
-          setServices((previousServices) => {
-            const nextServices = previousServices.map((service) =>
+          setServices((previousServices) =>
+            previousServices.map((service) =>
               service.id === updatedService.id ? updatedService : service,
-            );
-            writeAdminCache('services', nextServices);
-            return nextServices;
-          });
+            ),
+          );
         } else {
           const createdService = await createServiceCatalogItem(
             payload as ApiServiceCreateRequest,
           );
-          setServices((previousServices) => {
-            const nextServices = [...previousServices, createdService];
-            writeAdminCache('services', nextServices);
-            return nextServices;
-          });
+          setServices((previousServices) => [
+            ...previousServices,
+            createdService,
+          ]);
         }
 
         setEditingService(null);
@@ -157,15 +132,13 @@ export function useAdminServices() {
       const updatedService = await updateServiceCatalogItem(service.id, {
         is_active: !service.is_active,
       });
-      setServices((previousServices) => {
-        const nextServices = previousServices.map((currentService) =>
+      setServices((previousServices) =>
+        previousServices.map((currentService) =>
           currentService.id === updatedService.id
             ? updatedService
             : currentService,
-        );
-        writeAdminCache('services', nextServices);
-        return nextServices;
-      });
+        ),
+      );
     } catch (err) {
       setError(
         err instanceof Error
@@ -182,13 +155,9 @@ export function useAdminServices() {
       setSaving(true);
       setError(null);
       await deleteServiceCatalogItem(serviceId);
-      setServices((previousServices) => {
-        const nextServices = previousServices.filter(
-          (service) => service.id !== serviceId,
-        );
-        writeAdminCache('services', nextServices);
-        return nextServices;
-      });
+      setServices((previousServices) =>
+        previousServices.filter((service) => service.id !== serviceId),
+      );
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'No se pudo eliminar el servicio.',

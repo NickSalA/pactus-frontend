@@ -6,24 +6,14 @@ import {
   getDocumentFolders,
   updateDocumentFolder,
 } from '@/api';
-import {
-  ADMIN_CACHE_TTL_MS,
-  peekAdminCache,
-  readAdminCache,
-  writeAdminCache,
-} from '@/features/admin/lib/admin-cache';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
 import type { DocumentFolder } from '@/types/ui.types';
 import { ApiFolderUpdateRequest } from '@/types/api';
 
 export function useAdminFolders() {
   const access = useAdminGuard();
-  const [folders, setFolders] = useState<DocumentFolder[]>(
-    () => peekAdminCache<DocumentFolder[]>('folders') ?? [],
-  );
-  const [loading, setLoading] = useState(
-    () => peekAdminCache<DocumentFolder[]>('folders') === null,
-  );
+  const [folders, setFolders] = useState<DocumentFolder[]>([]);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingFolder, setEditingFolder] = useState<DocumentFolder | null>(
@@ -38,23 +28,11 @@ export function useAdminFolders() {
         return;
       }
 
-      const cachedFolders = !options.force
-        ? readAdminCache<DocumentFolder[]>('folders', ADMIN_CACHE_TTL_MS)
-        : null;
-      if (cachedFolders) {
-        setFolders(cachedFolders);
-        setLoading(false);
-        return;
-      }
-
       try {
-        if (peekAdminCache<DocumentFolder[]>('folders') === null) {
-          setLoading(true);
-        }
+        setLoading(true);
         setError(null);
         const nextFolders = await getDocumentFolders();
         setFolders(nextFolders);
-        writeAdminCache('folders', nextFolders);
       } catch (err) {
         setError(
           err instanceof Error
@@ -109,27 +87,15 @@ export function useAdminFolders() {
       try {
         setSaving(true);
         setError(null);
-        const previousFolders = folders;
-        const optimisticFolders = previousFolders.filter((folder) =>
-          folder.id === editingFolder.id
-            ? { ...folder, ...payload, updated_at: new Date().toISOString() }
-            : folder,
-        );
-
-        setFolders(optimisticFolders);
-        writeAdminCache('folders', optimisticFolders);
-
         const updatedFolder = await updateDocumentFolder(
           editingFolder.id,
           payload,
         );
-        setFolders((currentFolders) => {
-          const nextFolders = currentFolders.map((folder) =>
+        setFolders((currentFolders) =>
+          currentFolders.map((folder) =>
             folder.id === updatedFolder.id ? updatedFolder : folder,
-          );
-          writeAdminCache('folders', nextFolders);
-          return nextFolders;
-        });
+          ),
+        );
         setEditingFolder(updatedFolder);
         setIsEditorOpen(false);
       } catch (err) {
@@ -144,7 +110,7 @@ export function useAdminFolders() {
         setSaving(false);
       }
     },
-    [editingFolder, folders, loadFolders],
+    [editingFolder, loadFolders],
   );
 
   const removeFolder = useCallback(
@@ -152,12 +118,9 @@ export function useAdminFolders() {
       try {
         setSaving(true);
         setError(null);
-        const previousFolders = folders;
-        const nextFolders = previousFolders.filter(
-          (folder) => folder.id !== folderId,
+        setFolders((previousFolders) =>
+          previousFolders.filter((folder) => folder.id !== folderId),
         );
-        setFolders(nextFolders);
-        writeAdminCache('folders', nextFolders);
         await deleteDocumentFolder(folderId);
       } catch (err) {
         void loadFolders({ force: true });
@@ -170,7 +133,7 @@ export function useAdminFolders() {
         setSaving(false);
       }
     },
-    [folders, loadFolders],
+    [loadFolders],
   );
 
   return {

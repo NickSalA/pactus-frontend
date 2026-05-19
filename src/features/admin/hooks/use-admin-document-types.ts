@@ -2,12 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getDocuments } from '@/api';
-import {
-  ADMIN_CACHE_TTL_MS,
-  peekAdminCache,
-  readAdminCache,
-  writeAdminCache,
-} from '@/features/admin/lib/admin-cache';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
 import { ApiDocumentType } from '@/types/api';
 
@@ -21,18 +15,11 @@ type DocumentTypeCatalogItem = {
 
 export function useAdminDocumentTypes() {
   const access = useAdminGuard();
-  const [counts, setCounts] = useState<Record<ApiDocumentType, number>>(
-    () =>
-      peekAdminCache<Record<ApiDocumentType, number>>('document-types') ?? {
-        COMPANY: 0,
-        LABOR: 0,
-      },
-  );
-  const [loading, setLoading] = useState(
-    () =>
-      peekAdminCache<Record<ApiDocumentType, number>>('document-types') ===
-      null,
-  );
+  const [counts, setCounts] = useState<Record<ApiDocumentType, number>>({
+    COMPANY: 0,
+    LABOR: 0,
+  });
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const loadCatalog = useCallback(
@@ -42,25 +29,8 @@ export function useAdminDocumentTypes() {
         return;
       }
 
-      const cachedCounts = !options.force
-        ? readAdminCache<Record<ApiDocumentType, number>>(
-            'document-types',
-            ADMIN_CACHE_TTL_MS,
-          )
-        : null;
-      if (cachedCounts) {
-        setCounts(cachedCounts);
-        setLoading(false);
-        return;
-      }
-
       try {
-        if (
-          peekAdminCache<Record<ApiDocumentType, number>>('document-types') ===
-          null
-        ) {
-          setLoading(true);
-        }
+        setLoading(true);
         setError(null);
         const documents = await getDocuments();
         const nextCounts = {
@@ -72,7 +42,6 @@ export function useAdminDocumentTypes() {
           ).length,
         };
         setCounts(nextCounts);
-        writeAdminCache('document-types', nextCounts);
       } catch (err) {
         setError(
           err instanceof Error

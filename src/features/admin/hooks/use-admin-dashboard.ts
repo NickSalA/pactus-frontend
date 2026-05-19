@@ -9,12 +9,6 @@ import {
   getServicesAdmin,
   getTemplates,
 } from '@/api';
-import {
-  ADMIN_CACHE_TTL_MS,
-  peekAdminCache,
-  readAdminCache,
-  writeAdminCache,
-} from '@/features/admin/lib/admin-cache';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
 
 export type AdminMetricId =
@@ -62,12 +56,8 @@ const EMPTY_SUMMARY: AdminSummary = {
 
 export function useAdminDashboard() {
   const access = useAdminGuard();
-  const [summary, setSummary] = useState<AdminSummary>(
-    () => peekAdminCache<AdminSummary>('dashboard-summary') ?? EMPTY_SUMMARY,
-  );
-  const [loading, setLoading] = useState(
-    () => peekAdminCache<AdminSummary>('dashboard-summary') === null,
-  );
+  const [summary, setSummary] = useState<AdminSummary>(EMPTY_SUMMARY);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const loadSummary = useCallback(
@@ -77,19 +67,8 @@ export function useAdminDashboard() {
         return;
       }
 
-      const cachedSummary = !options.force
-        ? readAdminCache<AdminSummary>('dashboard-summary', ADMIN_CACHE_TTL_MS)
-        : null;
-      if (cachedSummary) {
-        setSummary(cachedSummary);
-        setLoading(false);
-        return;
-      }
-
       try {
-        if (peekAdminCache<AdminSummary>('dashboard-summary') === null) {
-          setLoading(true);
-        }
+        setLoading(true);
         setError(null);
 
         const [members, rules, templates, services, documents, folders] =
@@ -114,7 +93,6 @@ export function useAdminDashboard() {
           totalUsers: members.length,
         };
         setSummary(nextSummary);
-        writeAdminCache('dashboard-summary', nextSummary);
       } catch (err) {
         setError(
           err instanceof Error
