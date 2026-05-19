@@ -154,11 +154,3 @@ export interface NotificationRule {
 export type TemplateState = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 export type TemplateFieldType = 'text' | 'number' | 'date' | 'time' | 'boolean';
 export type TemplateGenerationMode = 'adaptive' | 'strict';
-
-export interface TemplateField {
-  key: string;
-  label: string;
-  type: TemplateFieldType | (string & {});
-  required: boolean;
-  placeholder?: string | null;
-}
