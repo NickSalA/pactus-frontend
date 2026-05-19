@@ -2,21 +2,19 @@
 
 import { FolderKanban } from 'lucide-react';
 import { AdminFolderModal } from '@/features/admin/components/modals/AdminFolderModal';
-import { AdminLoadingState } from '@/features/admin/components/shared/AdminLoadingState';
-import { AdminTablePagination } from '@/features/admin/components/shared/AdminTablePagination';
+import { LoadingState } from '@/components/LoadingState';
+import { TablePagination } from '@/components/templates/TablePagination';
 import { useAdminFolders } from '@/features/admin/hooks/use-admin-folders';
 import { useTablePagination } from '@/hooks/useTablePagination';
-import {
-  formatAdminDate,
-  getFolderVisibilityLabel,
-} from '@/features/admin/lib/admin-formatters';
+import { formatDate } from '@/lib/utils';
+import { getFolderVisibilityLabel } from '@/features/admin/lib/admin-formatters';
 
 export function AdminFoldersSection() {
   const section = useAdminFolders();
   const pagination = useTablePagination(section.folders);
 
   if (section.loading) {
-    return <AdminLoadingState />;
+    return <LoadingState />;
   }
 
   return (
@@ -118,7 +116,7 @@ export function AdminFoldersSection() {
                     {folder.documents_count}
                   </td>
                   <td className="px-6 py-4 text-slate-500">
-                    {formatAdminDate(folder.created_at)}
+                    {formatDate(folder.created_at)}
                   </td>
                 </tr>
               ))}
@@ -131,7 +129,7 @@ export function AdminFoldersSection() {
             Aún no existen carpetas registradas en la organización.
           </div>
         ) : (
-          <AdminTablePagination
+          <TablePagination
             currentPage={pagination.currentPage}
             itemsPerPage={pagination.itemsPerPage}
             onItemsPerPageChange={pagination.changeItemsPerPage}

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { BookType, BriefcaseBusiness, Pencil, Plus, Trash2 } from "lucide-react";
 import { AdminServiceModal } from "@/features/admin/components/modals/AdminServiceModal";
-import { AdminLoadingState } from "@/features/admin/components/shared/AdminLoadingState";
+import { LoadingState } from "@/components/LoadingState";
 import { AdminSegmentedTabs } from "@/features/admin/components/shared/AdminSegmentedTabs";
 import { TableBulkActionBar } from "@/components/ui/TableBulkActionBar";
 import {
@@ -12,8 +12,8 @@ import {
 import { useAdminDocumentTypes } from "@/features/admin/hooks/use-admin-document-types";
 import { useAdminServices } from "@/features/admin/hooks/use-admin-services";
 import { useTablePagination } from "@/hooks/useTablePagination";
-import { AdminTablePagination } from "@/features/admin/components/shared/AdminTablePagination";
-import { formatAdminDate } from "@/features/admin/lib/admin-formatters";
+import { TablePagination } from "@/components/templates/TablePagination";
+import { formatDate } from "@/lib/utils";
 
 type AdminMastersSectionProps = {
   activeCatalog: DocumentManagementCatalog;
@@ -58,7 +58,7 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
   }, [selectedServiceIds, servicesSection]);
 
   if ((activeCatalog === "services" && servicesSection.loading) || (activeCatalog === "document-types" && documentTypesSection.loading)) {
-    return <AdminLoadingState />;
+    return <LoadingState />;
   }
 
   return (
@@ -178,7 +178,7 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
                         </button>
                       </td>
                       <td className="px-6 py-4 text-blue-600">{service.documents_count}</td>
-                      <td className="px-6 py-4 text-slate-500">{formatAdminDate(service.created_at)}</td>
+                      <td className="px-6 py-4 text-slate-500">{formatDate(service.created_at)}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
                           <button
@@ -214,7 +214,7 @@ export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMas
             {servicesSection.services.length === 0 ? (
               <div className="px-6 py-8 text-center text-sm text-slate-500">Aún no hay servicios configurados para esta organización.</div>
             ) : (
-              <AdminTablePagination
+              <TablePagination
                 currentPage={servicesPagination.currentPage}
                 itemsPerPage={servicesPagination.itemsPerPage}
                 onItemsPerPageChange={servicesPagination.changeItemsPerPage}

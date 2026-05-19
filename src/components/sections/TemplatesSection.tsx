@@ -10,11 +10,11 @@ import {
   Send,
 } from 'lucide-react';
 import { Select } from '@/components/ui/Select';
-import { AdminTablePagination } from '@/features/admin/components/shared/AdminTablePagination';
+import { TablePagination } from '@/components/templates/TablePagination';
 import { TemplateEditModal } from '@/components/modals/TemplateEditModal';
 import { TemplateFormModal } from '@/components/modals/TemplateFormModal';
 import { TemplateViewModal } from '@/components/modals/TemplateViewModal';
-import { formatAdminDate } from '@/features/admin/lib/admin-formatters';
+import { formatDate } from '@/lib/utils';
 import { getDocumentTypeLabel } from '@/lib/document.utils';
 import { getTemplateFieldCount } from '@/lib/templateFields';
 import type { ApiTemplateResponse } from '@/types/api';
@@ -259,7 +259,7 @@ export function TemplatesSection({
                     {getTemplateFieldCount(template.content)}
                   </td>
                   <td className="px-6 py-4 text-center text-slate-500">
-                    {formatAdminDate(template.created_at)}
+                    {formatDate(template.created_at)}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-2">
@@ -323,7 +323,7 @@ export function TemplatesSection({
               : "Todavía no hay plantillas. Crea la primera con '+ Nueva plantilla'."}
           </div>
         ) : (
-          <AdminTablePagination
+          <TablePagination
             currentPage={pagination.currentPage}
             itemsPerPage={pagination.itemsPerPage}
             onItemsPerPageChange={pagination.changeItemsPerPage}

@@ -3,7 +3,7 @@ import { Select } from "@/components/ui/Select";
 import { getVisiblePageNumbers } from "@/features/contracts/lib/contracts-utils";
 import { TABLE_PAGINATION_PAGE_SIZE_OPTIONS } from "@/hooks/useTablePagination";
 
-type AdminTablePaginationProps = {
+type TablePaginationProps = {
   currentPage: number;
   itemsPerPage: number;
   onItemsPerPageChange: (value: number) => void;
@@ -13,7 +13,7 @@ type AdminTablePaginationProps = {
   totalPages: number;
 };
 
-export function AdminTablePagination({
+export function TablePagination({
   currentPage,
   itemsPerPage,
   onItemsPerPageChange,
@@ -21,7 +21,7 @@ export function AdminTablePagination({
   startIndex,
   totalCount,
   totalPages,
-}: AdminTablePaginationProps) {
+}: TablePaginationProps) {
   if (totalCount === 0) return null;
 
   const visiblePageNumbers = getVisiblePageNumbers(currentPage, totalPages);

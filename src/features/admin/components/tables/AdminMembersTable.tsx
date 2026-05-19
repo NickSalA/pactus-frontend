@@ -2,7 +2,7 @@
 
 import { Bell, Mail, ShieldCheck } from "lucide-react";
 import { getUserRoleLabel } from "@/lib/authUser";
-import { AdminTablePagination } from "@/features/admin/components/shared/AdminTablePagination";
+import { TablePagination } from "@/components/templates/TablePagination";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import type { OrganizationMember } from "@/types/ui.types";
 
@@ -123,7 +123,7 @@ export function AdminMembersTable({ isSaving, members, onToggleNotifications }: 
         </table>
       </div>
 
-      <AdminTablePagination
+      <TablePagination
         currentPage={pagination.currentPage}
         itemsPerPage={pagination.itemsPerPage}
         onItemsPerPageChange={pagination.changeItemsPerPage}

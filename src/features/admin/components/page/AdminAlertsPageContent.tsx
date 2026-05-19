@@ -5,10 +5,10 @@ import { Bell, CalendarClock, Pencil, Plus, Trash2 } from 'lucide-react';
 import { AdminNotificationRuleModal } from '@/features/admin/components/modals/AdminNotificationRuleModal';
 import { AdminSummaryCard } from '@/features/admin/components/cards/AdminSummaryCard';
 import { AdminErrorState } from '@/features/admin/components/shared/AdminErrorState';
-import { AdminLoadingState } from '@/features/admin/components/shared/AdminLoadingState';
-import { AdminTablePagination } from '@/features/admin/components/shared/AdminTablePagination';
+import { LoadingState } from '@/components/LoadingState';
+import { TablePagination } from '@/components/templates/TablePagination';
 import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
-import { formatAdminDate } from '@/features/admin/lib/admin-formatters';
+import { formatDate } from '@/lib/utils';
 import { useAdminAlertRules } from '@/features/admin/hooks/use-admin-alert-rules';
 import { useTablePagination } from '@/hooks/useTablePagination';
 
@@ -50,7 +50,7 @@ export function AdminAlertsPageContent() {
   }, [page, selectedRuleIds]);
 
   if (page.shouldBlockContent || page.loading) {
-    return <AdminLoadingState />;
+    return <LoadingState />;
   }
 
   if (page.error && page.rules.length === 0) {
@@ -232,7 +232,7 @@ export function AdminAlertsPageContent() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-center text-slate-500">
-                      {formatAdminDate(rule.updated_at)}
+                      {formatDate(rule.updated_at)}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
@@ -274,7 +274,7 @@ export function AdminAlertsPageContent() {
             Aún no hay reglas de alerta configuradas.
           </div>
         ) : (
-          <AdminTablePagination
+          <TablePagination
             currentPage={pagination.currentPage}
             itemsPerPage={pagination.itemsPerPage}
             onItemsPerPageChange={pagination.changeItemsPerPage}

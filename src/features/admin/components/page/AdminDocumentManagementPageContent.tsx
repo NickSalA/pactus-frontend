@@ -1,7 +1,7 @@
 'use client';
 
 import { AdminSegmentedTabs } from '@/features/admin/components/shared/AdminSegmentedTabs';
-import { AdminLoadingState } from '@/features/admin/components/shared/AdminLoadingState';
+import { LoadingState } from '@/components/LoadingState';
 import { AdminFoldersSection } from '@/features/admin/components/sections/AdminFoldersSection';
 import { AdminMastersSection } from '@/features/admin/components/sections/AdminMastersSection';
 import { TemplatesSection } from '@/components/sections/TemplatesSection';
@@ -11,15 +11,14 @@ import { useTablePagination } from '@/hooks/useTablePagination';
 
 export function AdminDocumentManagementPageContent() {
   const page = useAdminDocumentManagementPage();
-
-  if (page.shouldBlockContent) {
-    return <AdminLoadingState />;
-  }
-
   const templatesSection = useTemplates();
   const templatesPagination = useTablePagination(
     templatesSection.filteredTemplates,
   );
+
+  if (page.shouldBlockContent) {
+    return <LoadingState />;
+  }
 
   return (
     <div className="space-y-6">
