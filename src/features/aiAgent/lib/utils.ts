@@ -7,44 +7,11 @@ export type ChatMessage = {
   timestamp: Date;
 };
 
-export type ConversationGroup = {
-  label: string;
-  items: ApiConversationList[];
-};
-
 export const CHAT_SUGGESTIONS = [
   '¿Que puedes hacer?',
   'Analizar un contrato',
   'Explicar una clausula',
 ] as const;
-
-export function groupConversationsByDate(
-  conversations: ApiConversationList[],
-): ConversationGroup[] {
-  const now = new Date();
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const yesterdayStart = new Date(todayStart);
-  yesterdayStart.setDate(todayStart.getDate() - 1);
-  const weekStart = new Date(todayStart);
-  weekStart.setDate(todayStart.getDate() - 7);
-
-  const groups: ConversationGroup[] = [
-    { label: 'Hoy', items: [] },
-    { label: 'Ayer', items: [] },
-    { label: 'Esta semana', items: [] },
-    { label: 'Anteriores', items: [] },
-  ];
-
-  for (const conv of conversations) {
-    const date = new Date(conv.created_at);
-    if (date >= todayStart) groups[0].items.push(conv);
-    else if (date >= yesterdayStart) groups[1].items.push(conv);
-    else if (date >= weekStart) groups[2].items.push(conv);
-    else groups[3].items.push(conv);
-  }
-
-  return groups.filter((g) => g.items.length > 0);
-}
 
 export const formatConversationDate = (dateString: string): string => {
   return new Date(dateString).toLocaleDateString(undefined, {
@@ -60,10 +27,6 @@ export const formatMessageTime = (date: Date): string => {
     minute: '2-digit',
     hour12: true,
   });
-};
-
-export const isRecentTimestamp = (timestamp: Date, now: Date): boolean => {
-  return now.getTime() - timestamp.getTime() < 60_000;
 };
 
 export const mapConversationToMessages = (
