@@ -1,14 +1,14 @@
 'use client';
 
-import { DashboardAlertCenter } from '@/features/admin/dashboard/components/charts/DashboardAlertCenter';
-import { DashboardAreaChart } from '@/features/admin/dashboard/components/charts/DashboardAreaChart';
-import { DashboardRecentDocumentsTable } from '@/features/admin/dashboard/components/DashboardRecentDocumentsTable';
-import { DashboardTopCompanies } from '@/features/admin/dashboard/components/charts/DashboardTopCompanies';
-import { DashboardTopServices } from '@/features/admin/dashboard/components/charts/DashboardTopServices';
-import { DashboardWelcome } from '@/features/admin/dashboard/components/DashboardWelcome';
+import { DashboardAlertCenter } from '@/features/dashboard/components/charts/DashboardAlertCenter';
+import { DashboardAreaChart } from '@/features/dashboard/components/charts/DashboardAreaChart';
+import { DashboardRecentDocumentsTable } from '@/features/dashboard/components/DashboardRecentDocumentsTable';
+import { DashboardTopCompanies } from '@/features/dashboard/components/charts/DashboardTopCompanies';
+import { DashboardTopServices } from '@/features/dashboard/components/charts/DashboardTopServices';
+import { DashboardWelcome } from '@/features/dashboard/components/DashboardWelcome';
 import { toFirstName } from '@/lib/authUser';
 import { useAuthStore } from '@/store';
-import { useDashboardManagerPage } from '@/features/admin/dashboard/hooks/use-dashboard-manager-page';
+import { useDashboardManagerPage } from '@/features/dashboard/hooks/use-dashboard-manager-page';
 
 const PlaceholderCell = ({ label }: { label: string }) => (
   <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50">

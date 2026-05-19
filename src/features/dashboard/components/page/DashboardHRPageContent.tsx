@@ -1,12 +1,12 @@
 'use client';
 
-import { DashboardAlertCenter } from '@/features/admin/dashboard/components/charts/DashboardAlertCenter';
-import { DashboardAreaChart } from '@/features/admin/dashboard/components/charts/DashboardAreaChart';
-import { DashboardRecentDocumentsTable } from '@/features/admin/dashboard/components/DashboardRecentDocumentsTable';
-import { DashboardWelcome } from '@/features/admin/dashboard/components/DashboardWelcome';
+import { DashboardAlertCenter } from '@/features/dashboard/components/charts/DashboardAlertCenter';
+import { DashboardAreaChart } from '@/features/dashboard/components/charts/DashboardAreaChart';
+import { DashboardRecentDocumentsTable } from '@/features/dashboard/components/DashboardRecentDocumentsTable';
+import { DashboardWelcome } from '@/features/dashboard/components/DashboardWelcome';
 import { toFirstName } from '@/lib/authUser';
 import { useAuthStore } from '@/store';
-import { useDashboardHRPage } from '@/features/admin/dashboard/hooks/use-dashboard-hr-page';
+import { useDashboardHRPage } from '@/features/dashboard/hooks/use-dashboard-hr-page';
 
 export function DashboardHRPageContent() {
   const { user } = useAuthStore();

@@ -9,8 +9,8 @@ import {
   useTopCompanies,
   useTopServices,
 } from '@/queries/hooks/dashboard/queries';
-import { buildRecentDocumentsFromAPI } from '@/features/admin/dashboard/lib/dashboard-data';
-import type { RecentDashboardDocument } from '@/features/admin/dashboard/lib/dashboard-data';
+import { buildRecentDocumentsFromAPI } from '@/features/dashboard/lib/dashboard-data';
+import type { RecentDashboardDocument } from '@/features/dashboard/lib/dashboard-data';
 
 export function useDashboardManagerPage() {
   const queryClient = useQueryClient();
