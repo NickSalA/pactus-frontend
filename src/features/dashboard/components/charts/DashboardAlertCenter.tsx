@@ -82,7 +82,7 @@ export function DashboardAlertCenter({
 }: DashboardAlertCenterProps) {
   if (isLoading) {
     return (
-      <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
+      <Card className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
         <CardContent className="flex flex-1 items-center justify-center">
           <LoadingSkeleton />
         </CardContent>
@@ -105,21 +105,21 @@ export function DashboardAlertCenter({
   const accentColor = selectedAlert?.color.accent ?? '#64748B';
 
   return (
-    <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
+    <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md gap-0">
       <CardHeader className="mb-4 p-0">
         <CardTitle className="text-lg font-semibold text-slate-800">
           Centro de Alertas
         </CardTitle>
       </CardHeader>
 
-      <div className="mb-4 flex flex-1 items-stretch justify-center gap-2">
+      <div className="mb-4 flex items-stretch justify-center gap-2">
         {tabs.map((tab, index) => (
           <button
             key={tab.label}
             onClick={() => setSelectedIndex(index)}
             onMouseEnter={() => setHoveredTabIndex(index)}
             onMouseLeave={() => setHoveredTabIndex(null)}
-            className={`flex flex-1 flex-col justify-center items-center gap-1 rounded-lg px-4 py-4 text-center transition-colors ${
+            className={`flex flex-1 flex-col justify-center items-center gap-px rounded-lg p-3 text-center transition-colors ${
               selectedIndex === index ? 'font-medium' : 'text-gray-500'
             }`}
             style={
@@ -137,14 +137,14 @@ export function DashboardAlertCenter({
                   }
             }
           >
-            <span className="text-4xl font-extrabold leading-none">
+            <span className="text-xl font-extrabold leading-none">
               {tab.count}
             </span>
-            <span className="text-lg font-extrabold leading-tight">
+            <span className="text-sm font-extrabold leading-tight">
               {tab.label}
             </span>
             {tab.dueTo && (
-              <span className="text-lg font-extrabold leading-tight">
+              <span className="text-sm font-extrabold leading-tight">
                 {tab.dueTo} dias
               </span>
             )}

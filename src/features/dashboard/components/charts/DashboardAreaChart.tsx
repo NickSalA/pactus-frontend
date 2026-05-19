@@ -9,7 +9,13 @@ import {
   YAxis,
 } from 'recharts';
 import { ApiDashboardAreaChartResponse, ApiDocumentType } from '@/types/api';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 
 type DashboardAreaChartProps = {
   data: ApiDashboardAreaChartResponse;
@@ -34,7 +40,13 @@ export function DashboardAreaChart({
   documentType,
 }: DashboardAreaChartProps) {
   if (isLoading) {
-    return <LoadingSkeleton />;
+    return (
+      <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
+        <CardContent className="flex flex-1 items-center justify-center">
+          <LoadingSkeleton />
+        </CardContent>
+      </Card>
+    );
   }
 
   const lineColor = COLORS[documentType];
@@ -60,14 +72,18 @@ export function DashboardAreaChart({
   };
 
   return (
-    <Card className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
+    <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
       <CardHeader className="mb-4 p-0">
-        <CardTitle className="text-lg font-semibold text-slate-800">{props.title}</CardTitle>
-        <CardDescription className="text-sm text-slate-500">{props.subtitle}</CardDescription>
+        <CardTitle className="text-lg font-semibold text-slate-800">
+          {props.title}
+        </CardTitle>
+        <CardDescription className="text-sm text-slate-500">
+          {props.subtitle}
+        </CardDescription>
       </CardHeader>
 
-      <div className="flex-1 relative min-h-64 w-full">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="flex flex-1 justify-center items-center relative w-full">
+        <ResponsiveContainer width="90%" height="100%">
           <AreaChart
             data={formattedData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}

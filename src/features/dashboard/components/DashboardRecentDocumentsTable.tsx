@@ -58,7 +58,7 @@ export function DashboardRecentDocumentsTable({
 }: DashboardRecentDocumentsTableProps) {
   if (isLoading) {
     return (
-      <Card className="flex flex-col h-full rounded-2xl bg-white shadow-md">
+      <Card className="flex flex-col rounded-2xl bg-white shadow-md">
         <CardHeader className="border-b border-slate-100 px-6 py-5">
           <CardTitle className="text-lg font-semibold text-slate-800">
             Contratos recientes
@@ -75,8 +75,8 @@ export function DashboardRecentDocumentsTable({
   }
 
   return (
-    <Card className="flex flex-col h-full rounded-2xl bg-white shadow-md">
-      <CardHeader className="border-b border-slate-100 px-6 py-5">
+    <Card className="flex flex-col min-h-0 rounded-2xl bg-white shadow-md">
+      <CardHeader className="border-b border-slate-100 px-6">
         <CardTitle className="text-lg font-semibold text-slate-800">
           Contratos recientes
         </CardTitle>
@@ -85,7 +85,7 @@ export function DashboardRecentDocumentsTable({
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="flex-1 overflow-x-auto p-0">
+      <CardContent className="flex-1 overflow-y-auto overflow-x-auto max-h-48 p-0">
         <table className="min-w-full table-fixed">
           <colgroup>
             <col className="w-[52%]" />

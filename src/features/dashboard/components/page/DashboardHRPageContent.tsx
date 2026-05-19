@@ -15,8 +15,10 @@ export function DashboardHRPageContent() {
   const firstName = toFirstName(user?.name || 'Usuario');
 
   return (
-    <div className="space-y-6">
-      <DashboardWelcome firstName={firstName} />
+    <div className="flex flex-col gap-6 h-full overflow-visible">
+      <div className="flex-none overflow-visible">
+        <DashboardWelcome firstName={firstName} />
+      </div>
 
       {error && (
         <section className="rounded-2xl border border-red-200 bg-red-50 px-6 py-4 text-sm text-red-700 shadow-sm">
@@ -24,17 +26,16 @@ export function DashboardHRPageContent() {
         </section>
       )}
 
-      <section
-        className="grid gap-4 md:grid-cols-2"
-        style={{ gridTemplateRows: '1fr 1fr' }}
-      >
-        <DashboardAreaChart
-          data={areaChart!}
-          isLoading={isLoading}
-          documentType="LABOR"
-        />
-        <DashboardAlertCenter alerts={alerts} isLoading={isLoading} />
+      <section className="grid grid-rows-[1fr_1fr] gap-4 grid-cols-[1fr_1fr_1fr] flex-1 min-h-0 overflow-visible">
         <div className="col-span-2">
+          <DashboardAreaChart
+            data={areaChart!}
+            isLoading={isLoading}
+            documentType="LABOR"
+          />
+        </div>
+        <DashboardAlertCenter alerts={alerts} isLoading={isLoading} />
+        <div className="col-span-3">
           <DashboardRecentDocumentsTable
             documents={recentContracts}
             isLoading={isLoading}
