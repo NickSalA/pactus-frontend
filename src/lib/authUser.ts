@@ -1,6 +1,9 @@
+import type { Session } from '@supabase/supabase-js';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import type { User as BackendUser } from '@/types/ui.types';
 import { ApiUserRole } from '@/types/api';
+import { apiGet } from '@/api/axiosInstance';
+import { TIMEOUTS } from '@/api';
 
 type AuthMetadata = {
   full_name?: string;
@@ -92,3 +95,18 @@ export const mapBackendUserToAuthUser = (
   role: user.role,
   avatarUrl: user.avatar_url || null,
 });
+
+export async function getCurrentUser(): Promise<BackendUser> {
+  return apiGet<BackendUser>('/user/me', { timeout: TIMEOUTS.DEFAULT });
+}
+
+export const resolveSessionUser = async (
+  session: Session,
+): Promise<AuthDisplayUser> => {
+  try {
+    const backendUser = await getCurrentUser();
+    return mapBackendUserToAuthUser(backendUser);
+  } catch {
+    return mapSupabaseUserToAuthUser(session.user);
+  }
+};

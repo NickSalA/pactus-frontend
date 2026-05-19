@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { logout as clearApiSession, setApiAccessToken } from '@/api';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuthStore } from '@/store';
-import { resolveSessionUser } from '@/features/auth/lib/resolve-session-user';
+import { resolveSessionUser } from '@/lib/authUser';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
