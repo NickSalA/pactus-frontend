@@ -13,7 +13,8 @@ import { ContractPreviewModal } from '@/features/contracts/components/modals/Con
 import { NewContractModal } from '@/features/contracts/components/modals/NewContractModal';
 import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
 import { useContractsPage } from '@/features/contracts/hooks/use-contracts-page';
-import type { Document, UserRole } from '@/types/api.types';
+import type { Document } from '@/types/api.types';
+import { ApiUserRole } from '@/types/api';
 
 type ContractsPageContentProps = {
   shouldOpenCreateModal?: boolean;
@@ -245,7 +246,7 @@ export function ContractsPageContent({
             canDelete={page.canDeleteContract}
             canEdit={page.canEditContract}
             contracts={page.paginatedContracts}
-            userRole={page.userRole as UserRole | null}
+            userRole={page.userRole as ApiUserRole | null}
             currentPage={page.safeCurrentPage}
             filteredCount={page.filteredContracts.length}
             itemsPerPage={page.itemsPerPage}

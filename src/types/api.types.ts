@@ -5,33 +5,15 @@ import {
   ApiDocumentFormData,
   ApiDocumentState,
   ApiDocumentType,
+  ApiUserRole,
 } from './api/shared';
-
-// ============================================
-// AUTH TYPES
-// ============================================
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  access_token: string;
-  token_type: string;
-  user: User;
-}
-
-// ============================================
-// USER TYPES
-// ============================================
-export type UserRole = 'ADMIN' | 'HR' | 'MANAGER' | 'WORKER';
 
 export interface User {
   id: number;
   organization_id: number;
   supabase_user_id?: string | null;
   email: string;
-  role: UserRole;
+  role: ApiUserRole;
   full_name?: string | null;
   avatar_url?: string | null;
   receives_notifications?: boolean;
@@ -40,30 +22,7 @@ export interface User {
   updated_at?: string;
 }
 
-export interface UserCreateRequest {
-  email: string;
-  full_name?: string | null;
-  avatar_url?: string | null;
-  role: UserRole;
-  receives_notifications?: boolean;
-  is_active?: boolean;
-}
-
-export interface UserUpdateRequest {
-  email?: string;
-  full_name?: string | null;
-  avatar_url?: string | null;
-  role?: UserRole;
-  receives_notifications?: boolean;
-  is_active?: boolean;
-}
-
 export type OrganizationMember = User;
-
-export interface OrganizationMemberCreateRequest {
-  email: string;
-  role: UserRole;
-}
 
 export interface OrganizationMemberNotificationsUpdateRequest {
   receives_notifications: boolean;
@@ -179,7 +138,7 @@ export interface DocumentFolder {
   id: number;
   organization_id: number;
   name: string;
-  owner_role: UserRole;
+  owner_role: ApiUserRole;
   created_by: number;
   created_by_name?: string | null;
   created_by_email?: string | null;
@@ -350,17 +309,4 @@ export interface TemplateUpdateRequest {
   name?: string;
   description?: string | null;
   content?: TemplateContent;
-}
-
-export interface TemplatePreviewRequest {
-  document_type?: DocumentType | null;
-  format_code: string;
-  content: TemplateContent;
-  sample_data?: Record<string, unknown>;
-}
-
-export interface TemplatePreviewResponse {
-  markdown: string;
-  resolved_payload: Record<string, unknown>;
-  warnings: string[];
 }

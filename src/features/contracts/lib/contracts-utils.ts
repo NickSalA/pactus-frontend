@@ -1,4 +1,4 @@
-import type { UserRole } from '@/types/api.types';
+import { ApiUserRole } from '@/types/api';
 import type { GooglePickerFile } from '@/lib/googlePicker';
 import { DOCUMENT_STATE_OPTIONS } from '@/lib/document.utils';
 import type { Document, DocumentState } from '@/types/api.types';
@@ -9,7 +9,7 @@ export type ContractFolder = {
   id: number;
   isEditable?: boolean;
   name: string;
-  owner_role?: UserRole;
+  owner_role?: ApiUserRole;
   isSystem?: boolean;
 };
 

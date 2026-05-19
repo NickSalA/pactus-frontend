@@ -1,5 +1,5 @@
-import { useAuthStore } from "@/store";
-import { ACCESS_TOKEN_STORAGE_KEY } from "./constants";
+import { useAuthStore } from '@/store';
+import { ACCESS_TOKEN_STORAGE_KEY } from './constants';
 
 let accessTokenMemory: string | null = null;
 
@@ -10,7 +10,7 @@ const notifySessionChange = () => {
 };
 
 const getStoredAccessToken = (): string | null => {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return null;
   }
 
@@ -29,7 +29,10 @@ type SetApiAccessTokenOptions = {
   notify?: boolean;
 };
 
-export function setApiAccessToken(token: string | null, options: SetApiAccessTokenOptions = {}): void {
+export function setApiAccessToken(
+  token: string | null,
+  options: SetApiAccessTokenOptions = {},
+): void {
   const { notify = true } = options;
   const normalizedToken = token || null;
 
@@ -40,7 +43,7 @@ export function setApiAccessToken(token: string | null, options: SetApiAccessTok
     }
   }
 
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return;
   }
 
@@ -71,4 +74,8 @@ export async function getAccessToken(): Promise<string | null> {
   }
 
   return storedToken;
+}
+
+export function logout(): void {
+  setApiAccessToken(null);
 }

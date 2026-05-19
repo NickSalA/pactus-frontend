@@ -1,18 +1,22 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   createOrganizationMember,
   getOrganizationMembers,
   updateOrganizationMemberNotifications,
-} from "@/api";
-import { useAdminGuard } from "@/features/admin/hooks/use-admin-guard";
-import type { OrganizationMember, OrganizationMemberCreateRequest } from "@/types/api.types";
+} from '@/api';
+import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
+import type { OrganizationMember } from '@/types/api.types';
+import { ApiOrganizationMemberCreateRequest } from '@/types/api';
 
-const compareMembers = (left: OrganizationMember, right: OrganizationMember): number => {
-  const leftLabel = (left.full_name ?? left.email).toLocaleLowerCase("es");
-  const rightLabel = (right.full_name ?? right.email).toLocaleLowerCase("es");
-  return leftLabel.localeCompare(rightLabel, "es");
+const compareMembers = (
+  left: OrganizationMember,
+  right: OrganizationMember,
+): number => {
+  const leftLabel = (left.full_name ?? left.email).toLocaleLowerCase('es');
+  const rightLabel = (right.full_name ?? right.email).toLocaleLowerCase('es');
+  return leftLabel.localeCompare(rightLabel, 'es');
 };
 
 export function useAdminMembers() {
@@ -35,7 +39,11 @@ export function useAdminMembers() {
       const nextMembers = await getOrganizationMembers();
       setMembers(nextMembers.sort(compareMembers));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo cargar la lista de usuarios.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudo cargar la lista de usuarios.',
+      );
     } finally {
       setLoading(false);
     }
@@ -57,45 +65,62 @@ export function useAdminMembers() {
     setIsAddModalOpen(false);
   }, [saving]);
 
-  const addMember = useCallback(async (payload: OrganizationMemberCreateRequest) => {
-    try {
-      setSaving(true);
-      setError(null);
+  const addMember = useCallback(
+    async (payload: ApiOrganizationMemberCreateRequest) => {
+      try {
+        setSaving(true);
+        setError(null);
 
-      const createdMember = await createOrganizationMember(payload);
-      setMembers((previousMembers) => [...previousMembers, createdMember].sort(compareMembers));
-      setIsAddModalOpen(false);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "No se pudo agregar el usuario.";
-      setError(message);
-      throw new Error(message);
-    } finally {
-      setSaving(false);
-    }
-  }, []);
+        const createdMember = await createOrganizationMember(payload);
+        setMembers((previousMembers) =>
+          [...previousMembers, createdMember].sort(compareMembers),
+        );
+        setIsAddModalOpen(false);
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : 'No se pudo agregar el usuario.';
+        setError(message);
+        throw new Error(message);
+      } finally {
+        setSaving(false);
+      }
+    },
+    [],
+  );
 
-  const updateMemberNotifications = useCallback(async (memberId: number, receivesNotifications: boolean) => {
-    try {
-      setSaving(true);
-      setError(null);
+  const updateMemberNotifications = useCallback(
+    async (memberId: number, receivesNotifications: boolean) => {
+      try {
+        setSaving(true);
+        setError(null);
 
-      const updatedMember = await updateOrganizationMemberNotifications(memberId, {
-        receives_notifications: receivesNotifications,
-      });
+        const updatedMember = await updateOrganizationMemberNotifications(
+          memberId,
+          {
+            receives_notifications: receivesNotifications,
+          },
+        );
 
-      setMembers((previousMembers) =>
-        previousMembers
-          .map((member) => (member.id === updatedMember.id ? updatedMember : member))
-          .sort(compareMembers),
-      );
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "No se pudo actualizar la suscripcion de alertas.";
-      setError(message);
-      throw new Error(message);
-    } finally {
-      setSaving(false);
-    }
-  }, []);
+        setMembers((previousMembers) =>
+          previousMembers
+            .map((member) =>
+              member.id === updatedMember.id ? updatedMember : member,
+            )
+            .sort(compareMembers),
+        );
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'No se pudo actualizar la suscripcion de alertas.';
+        setError(message);
+        throw new Error(message);
+      } finally {
+        setSaving(false);
+      }
+    },
+    [],
+  );
 
   const stats = useMemo(
     () => ({
