@@ -364,13 +364,3 @@ export interface TemplatePreviewResponse {
   resolved_payload: Record<string, unknown>;
   warnings: string[];
 }
-
-export interface GenerateTemplateDraftRequest {
-  name?: string | null;
-  description?: string | null;
-  instructions?: string | null;
-  jurisdiction?: string | null;
-  document_type?: DocumentType | null;
-  format_code: string;
-  generation_mode?: TemplateGenerationMode;
-}

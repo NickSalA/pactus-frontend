@@ -1,13 +1,15 @@
-import type { GenerateTemplateDraftRequest } from "@/types/api.types";
+import { ApiTemplateGenerateRequest } from '@/types/api';
 
-export const normalizeDraftRequest = (request: GenerateTemplateDraftRequest): GenerateTemplateDraftRequest => {
+export const normalizeDraftRequest = (
+  request: ApiTemplateGenerateRequest,
+): ApiTemplateGenerateRequest => {
   return Object.fromEntries(
     Object.entries(request).filter(([, value]) => {
       if (value == null) {
         return false;
       }
 
-      return typeof value !== "string" || value.trim() !== "";
-    })
-  ) as GenerateTemplateDraftRequest;
+      return typeof value !== 'string' || value.trim() !== '';
+    }),
+  ) as ApiTemplateGenerateRequest;
 };
