@@ -1,5 +1,5 @@
-import { CHAT_SUGGESTIONS } from "@/features/aiAgent/lib/chat-utils";
-import { RobotIcon } from "./RobotIcon";
+import { CHAT_SUGGESTIONS } from "@/features/aiAgent/lib/utils";
+import { RobotIcon } from "@/features/aiAgent/components/ui/RobotIcon";
 
 type ChatEmptyStateProps = {
   onSuggestionSelect: (text: string) => void;

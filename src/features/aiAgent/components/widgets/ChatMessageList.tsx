@@ -1,8 +1,8 @@
 import type { RefObject } from "react";
-import { formatMessageTime, isRecentTimestamp } from "@/features/aiAgent/lib/chat-utils";
-import type { ChatMessage } from "@/features/aiAgent/lib/chat.types";
+import { formatMessageTime, isRecentTimestamp } from "@/features/aiAgent/lib/utils";
+import type { ChatMessage } from "@/features/aiAgent/lib/utils";
 import { MarkdownRenderer } from "./MarkdownRenderer";
-import { RobotIcon } from "./RobotIcon";
+import { RobotIcon } from "@/features/aiAgent/components/ui/RobotIcon";
 
 type ChatMessageListProps = {
   bottomRef: RefObject<HTMLDivElement | null>;

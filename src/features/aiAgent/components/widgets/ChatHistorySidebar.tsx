@@ -1,6 +1,6 @@
 import { ApiConversationList } from '@/types/api';
 
-import { formatConversationDate } from '@/features/aiAgent/lib/chat-utils';
+import { formatConversationDate } from '@/features/aiAgent/lib/utils';
 
 type ChatHistorySidebarProps = {
   activeConversationId?: number;

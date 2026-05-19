@@ -1,11 +1,11 @@
 'use client';
 
-import { ChatComposer } from '@/features/aiAgent/components/page/ChatComposer';
-import { ChatEmptyState } from '@/features/aiAgent/components/page/ChatEmptyState';
-import { ChatHistorySidebar } from '@/features/aiAgent/components/page/ChatHistorySidebar';
-import { ChatMessageList } from '@/features/aiAgent/components/page/ChatMessageList';
-import { RobotIcon } from '@/features/aiAgent/components/page/RobotIcon';
-import { useAIAgentPage } from '@/features/aiAgent/hooks/use-ai-agent-page';
+import { ChatComposer } from '@/features/aiAgent/components/widgets/ChatComposer';
+import { ChatEmptyState } from '@/features/aiAgent/components/widgets/ChatEmptyState';
+import { ChatHistorySidebar } from '@/features/aiAgent/components/widgets/ChatHistorySidebar';
+import { ChatMessageList } from '@/features/aiAgent/components/widgets/ChatMessageList';
+import { RobotIcon } from '@/features/aiAgent/components/ui/RobotIcon';
+import { useAIAgentPage } from '@/features/aiAgent/hooks/useAiAgentPage';
 
 export function AIAgentPageContent() {
   const page = useAIAgentPage();

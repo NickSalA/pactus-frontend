@@ -1,8 +1,25 @@
-import type { ChatMessage } from '@/features/aiAgent/lib/chat.types';
+import type {
+  ApiConversationList,
+  ApiConversationRead,
+} from '@/types/api';
 
-import { ApiConversationList, ApiConversationRead } from '@/types/api';
+export type ChatMessage = {
+  id: string;
+  sender: 'user' | 'bot';
+  content: string;
+  timestamp: Date;
+};
 
-export type ConversationGroup = { label: string; items: ApiConversationList[] };
+export type ConversationGroup = {
+  label: string;
+  items: ApiConversationList[];
+};
+
+export const CHAT_SUGGESTIONS = [
+  '¿Que puedes hacer?',
+  'Analizar un contrato',
+  'Explicar una clausula',
+] as const;
 
 export function groupConversationsByDate(
   conversations: ApiConversationList[],
@@ -31,12 +48,6 @@ export function groupConversationsByDate(
 
   return groups.filter((g) => g.items.length > 0);
 }
-
-export const CHAT_SUGGESTIONS = [
-  '¿Que puedes hacer?',
-  'Analizar un contrato',
-  'Explicar una clausula',
-] as const;
 
 export const formatConversationDate = (dateString: string): string => {
   return new Date(dateString).toLocaleDateString(undefined, {
