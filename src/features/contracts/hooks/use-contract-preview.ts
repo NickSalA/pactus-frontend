@@ -6,7 +6,7 @@ import {
   supportsInlineContractPreview,
 } from '@/features/contracts/lib/contracts-preview.utils';
 import { getDocumentFileUrl } from '@/api';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 const PREVIEW_FILE_MISSING_MESSAGE =
   'Este contrato no tiene un archivo disponible para vista previa.';

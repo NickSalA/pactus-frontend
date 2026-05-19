@@ -10,7 +10,7 @@ import {
   ApiDocumentType,
 } from '@/types/api';
 
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 export type ServiceItemDraft = {
   key: string;

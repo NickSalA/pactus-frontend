@@ -1,4 +1,4 @@
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import type { ApiDocumentResponse, ApiDocumentType } from '@/types/api';
 import type {
   ApiDocumentCompanyContractResponse,

@@ -14,7 +14,7 @@ import {
 } from '@/lib/document.utils';
 import { getVisiblePageNumbers } from '@/features/contracts/lib/contracts-utils';
 import { Select } from '@/components/ui/Select';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiUserRole } from '@/types/api';
 
 type ContractsTableProps = {

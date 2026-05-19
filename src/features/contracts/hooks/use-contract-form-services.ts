@@ -10,7 +10,7 @@ import {
   type ServiceItemDraft,
 } from '@/features/contracts/lib/contract-form.utils';
 import { useServices } from '@/queries/hooks/contracts/queries';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiDocumentServiceItemRequest } from '@/types/api';
 
 type UseContractFormServicesOptions = {

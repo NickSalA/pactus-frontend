@@ -7,7 +7,7 @@ import {
   updateOrganizationMemberNotifications,
 } from '@/api';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
-import type { OrganizationMember } from '@/types/api.types';
+import type { OrganizationMember } from '@/types/ui.types';
 import { ApiOrganizationMemberCreateRequest } from '@/types/api';
 
 const compareMembers = (

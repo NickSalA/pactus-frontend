@@ -1,4 +1,4 @@
-import type { OrganizationMember } from "@/types/api.types";
+import type { OrganizationMember } from "@/types/ui.types";
 
 export const normalizeMember = (member: OrganizationMember): OrganizationMember => ({
   ...member,

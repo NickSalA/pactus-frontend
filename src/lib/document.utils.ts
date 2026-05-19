@@ -1,4 +1,4 @@
-import { DocumentFlatten } from '@/types/api.types';
+import { DocumentFlatten } from '@/types/ui.types';
 import {
   ApiDocumentFormData,
   ApiDocumentState,

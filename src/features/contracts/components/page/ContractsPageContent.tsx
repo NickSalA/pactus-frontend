@@ -13,7 +13,7 @@ import { ContractPreviewModal } from '@/features/contracts/components/modals/Con
 import { NewContractModal } from '@/features/contracts/components/modals/NewContractModal';
 import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
 import { useContractsPage } from '@/features/contracts/hooks/use-contracts-page';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiUserRole } from '@/types/api';
 
 type ContractsPageContentProps = {

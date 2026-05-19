@@ -17,7 +17,7 @@ import type {
   ApiServiceResponse,
   ApiDocumentLaborContractResponse,
 } from '@/types/api';
-import type { DocumentFlatten, DocumentFolder } from '@/types/api.types';
+import type { DocumentFlatten, DocumentFolder } from '@/types/ui.types';
 import { TIMEOUTS } from './constants';
 import { apiGet, apiPost, apiPatch, apiDelete } from './axiosInstance';
 

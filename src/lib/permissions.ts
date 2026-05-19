@@ -1,4 +1,4 @@
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiUserRole, ApiDocumentType } from '@/types/api';
 
 type RoleValue = ApiUserRole | string | null | undefined;

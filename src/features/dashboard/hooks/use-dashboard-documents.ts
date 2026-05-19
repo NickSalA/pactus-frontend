@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { getDocuments } from '@/api';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 export const useDashboardDocuments = () => {
   const [documents, setDocuments] = useState<DocumentFlatten[]>([]);

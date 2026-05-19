@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { AdminModalShell } from '@/features/admin/components/shared/AdminModalShell';
 import { Select } from '@/components/ui/Select';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import type { ApiNotificationRuleResponse } from '@/types/api';
 
 type RuleDraft = {

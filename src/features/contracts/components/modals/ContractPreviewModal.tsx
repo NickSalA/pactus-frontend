@@ -6,7 +6,7 @@ import {
   getDocumentFileLabel,
   getDocumentTypeLabel,
 } from '@/lib/document.utils';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 type ContractPreviewModalProps = {
   contract: DocumentFlatten;

@@ -14,7 +14,7 @@ import {
   updateNotificationRule,
 } from '@/api';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiNotificationRuleResponse } from '@/types/api';
 
 type RuleDraft = {

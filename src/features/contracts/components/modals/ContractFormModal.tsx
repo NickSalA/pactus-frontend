@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { X } from 'lucide-react';
 import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 type ContractFormModalProps = {
   availableFolders?: readonly ContractFolder[];

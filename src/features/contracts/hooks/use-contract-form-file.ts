@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { isAllowedFile } from '@/features/contracts/lib/contract-form.utils';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 type UseContractFormFileOptions = {
   editMode?: boolean;

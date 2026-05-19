@@ -11,7 +11,7 @@ import type {
   SortOrder,
 } from '@/features/contracts/hooks/use-contracts-filters';
 import { Select } from '@/components/ui/Select';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 type ContractsActionsBarProps = {
   contracts: DocumentFlatten[];

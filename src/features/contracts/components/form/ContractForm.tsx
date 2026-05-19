@@ -11,7 +11,7 @@ import {
   getDocumentStateLabel,
   getDocumentTypeLabel,
 } from '@/lib/document.utils';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import { ContractFormDocumentSection } from './ContractFormDocumentSection';
 import { ContractFormGeneralFields } from './ContractFormGeneralFields';
 import { ContractFormProgress } from './ContractFormProgress';

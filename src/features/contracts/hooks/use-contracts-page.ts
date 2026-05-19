@@ -15,7 +15,7 @@ import { useContractsDrivePicker } from '@/features/contracts/hooks/use-contract
 import { useContractsFilters } from '@/features/contracts/hooks/use-contracts-filters';
 import { useContractsModalState } from '@/features/contracts/hooks/use-contracts-modal-state';
 import { useAuthStore } from '@/store';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiDocumentType } from '@/types/api';
 
 type UseContractsPageOptions = {

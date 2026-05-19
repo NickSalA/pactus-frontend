@@ -1,4 +1,4 @@
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 const PDF_EXTENSION = 'pdf';
 

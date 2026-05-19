@@ -1,4 +1,4 @@
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiCurrencyType, ApiDocumentFormData } from '@/types/api';
 
 type BuildContractFormDataPayloadOptions = {

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Save } from 'lucide-react';
 import { AdminModalShell } from '@/features/admin/components/shared/AdminModalShell';
 import { getFolderVisibilityLabel } from '@/features/admin/lib/admin-formatters';
-import type { DocumentFolder } from '@/types/api.types';
+import type { DocumentFolder } from '@/types/ui.types';
 import { ApiFolderUpdateRequest } from '@/types/api';
 
 type AdminFolderModalProps = {

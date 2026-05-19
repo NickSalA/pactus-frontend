@@ -13,7 +13,7 @@ import {
   writeAdminCache,
 } from '@/features/admin/lib/admin-cache';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
-import type { DocumentFolder } from '@/types/api.types';
+import type { DocumentFolder } from '@/types/ui.types';
 import { ApiFolderUpdateRequest } from '@/types/api';
 
 export function useAdminFolders() {

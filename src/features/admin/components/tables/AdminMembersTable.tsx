@@ -4,7 +4,7 @@ import { Bell, Mail, ShieldCheck } from "lucide-react";
 import { getUserRoleLabel } from "@/lib/authUser";
 import { AdminTablePagination } from "@/features/admin/components/shared/AdminTablePagination";
 import { useAdminTablePagination } from "@/features/admin/hooks/use-admin-table-pagination";
-import type { OrganizationMember } from "@/types/api.types";
+import type { OrganizationMember } from "@/types/ui.types";
 
 type AdminMembersTableProps = {
   isSaving: boolean;

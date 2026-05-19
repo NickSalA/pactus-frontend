@@ -5,7 +5,7 @@ import {
   filterContracts,
   type DocumentFilterValue,
 } from '@/features/contracts/lib/contracts-utils';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 export type SortOrder = 'newest' | 'oldest';
 export type DateRange = { end: string | null; start: string | null };

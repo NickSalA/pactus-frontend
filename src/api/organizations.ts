@@ -1,4 +1,4 @@
-import type { OrganizationMember } from '@/types/api.types';
+import type { OrganizationMember } from '@/types/ui.types';
 import {
   ApiOrganizationMemberNotificationsUpdateRequest,
   ApiOrganizationMemberCreateRequest,

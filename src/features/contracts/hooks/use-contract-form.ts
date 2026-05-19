@@ -20,7 +20,7 @@ import {
 } from '@/lib/permissions';
 import { useAuthStore } from '@/store';
 import { ApiDocumentState } from '@/types/api';
-import type { DocumentFlatten } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/ui.types';
 import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
 
 type ContractFormProps = {

@@ -1,5 +1,5 @@
 import type { User as SupabaseUser } from '@supabase/supabase-js';
-import type { User as BackendUser } from '@/types/api.types';
+import type { User as BackendUser } from '@/types/ui.types';
 import { ApiUserRole } from '@/types/api';
 
 type AuthMetadata = {
