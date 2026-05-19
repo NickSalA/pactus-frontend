@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getDocuments } from '@/api';
-import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
+import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 import { ApiDocumentType } from '@/types/api';
 
 type DocumentTypeCatalogItem = {

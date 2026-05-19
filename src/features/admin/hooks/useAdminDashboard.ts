@@ -9,7 +9,7 @@ import {
   getServicesAdmin,
   getTemplates,
 } from '@/api';
-import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
+import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 
 export type AdminMetricId =
   | 'alerts'

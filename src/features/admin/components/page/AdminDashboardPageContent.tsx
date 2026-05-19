@@ -3,7 +3,7 @@
 import { Bell, FileStack, FolderKanban, Shield, ShieldCheck, Users, Wrench } from "lucide-react";
 import { AdminModuleCard } from "@/features/admin/components/cards/AdminModuleCard";
 import { AdminSummaryCard } from "@/features/admin/components/cards/AdminSummaryCard";
-import { useAdminDashboard } from "@/features/admin/hooks/use-admin-dashboard";
+import { useAdminDashboard } from "@/features/admin/hooks/useAdminDashboard";
 
 export function AdminDashboardPageContent() {
   const page = useAdminDashboard();

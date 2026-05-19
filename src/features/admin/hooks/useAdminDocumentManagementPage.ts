@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useAdminGuard } from "@/features/admin/hooks/use-admin-guard";
+import { useAdminGuard } from "@/features/admin/hooks/useAdminGuard";
 
 export type DocumentManagementSection = "folders" | "masters" | "templates";
 export type DocumentManagementCatalog = "document-types" | "services";

@@ -3,7 +3,7 @@
 import { Plus, ShieldCheck, Users } from "lucide-react";
 import { AddMemberModal } from "@/features/admin/components/modals/AddMemberModal";
 import { AdminMembersTable } from "@/features/admin/components/tables/AdminMembersTable";
-import { useAdminMembers } from "@/features/admin/hooks/use-admin-members";
+import { useAdminMembers } from "@/features/admin/hooks/useAdminMembers";
 
 export function AdminAccessPageContent() {
   const page = useAdminMembers();

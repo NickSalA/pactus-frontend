@@ -13,7 +13,7 @@ import {
   sendEmailAlerts,
   updateNotificationRule,
 } from '@/api';
-import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
+import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiNotificationRuleResponse } from '@/types/api';
 

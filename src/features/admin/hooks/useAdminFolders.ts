@@ -6,7 +6,7 @@ import {
   getDocumentFolders,
   updateDocumentFolder,
 } from '@/api';
-import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
+import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 import type { DocumentFolder } from '@/types/ui.types';
 import { ApiFolderUpdateRequest } from '@/types/api';
 

@@ -9,7 +9,7 @@ import { LoadingState } from '@/components/LoadingState';
 import { TablePagination } from '@/components/templates/TablePagination';
 import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
 import { formatDate } from '@/lib/utils';
-import { useAdminAlertRules } from '@/features/admin/hooks/use-admin-alert-rules';
+import { useAdminAlertRules } from '@/features/admin/hooks/useAdminAlertRules';
 import { useTablePagination } from '@/hooks/useTablePagination';
 
 export function AdminAlertsPageContent() {

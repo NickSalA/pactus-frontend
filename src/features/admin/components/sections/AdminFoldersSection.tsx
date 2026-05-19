@@ -4,7 +4,7 @@ import { FolderKanban } from 'lucide-react';
 import { AdminFolderModal } from '@/features/admin/components/modals/AdminFolderModal';
 import { LoadingState } from '@/components/LoadingState';
 import { TablePagination } from '@/components/templates/TablePagination';
-import { useAdminFolders } from '@/features/admin/hooks/use-admin-folders';
+import { useAdminFolders } from '@/features/admin/hooks/useAdminFolders';
 import { useTablePagination } from '@/hooks/useTablePagination';
 import { formatDate } from '@/lib/utils';
 import { getFolderVisibilityLabel } from '@/features/admin/lib/adminFormatters';

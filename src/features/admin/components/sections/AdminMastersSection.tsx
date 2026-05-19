@@ -6,11 +6,9 @@ import { AdminServiceModal } from "@/features/admin/components/modals/AdminServi
 import { LoadingState } from "@/components/LoadingState";
 import { AdminSegmentedTabs } from "@/features/admin/components/shared/AdminSegmentedTabs";
 import { TableBulkActionBar } from "@/components/ui/TableBulkActionBar";
-import {
-  type DocumentManagementCatalog,
-} from "@/features/admin/hooks/use-admin-document-management-page";
-import { useAdminDocumentTypes } from "@/features/admin/hooks/use-admin-document-types";
-import { useAdminServices } from "@/features/admin/hooks/use-admin-services";
+import { type DocumentManagementCatalog } from "@/features/admin/hooks/useAdminDocumentManagementPage";
+import { useAdminDocumentTypes } from "@/features/admin/hooks/useAdminDocumentTypes";
+import { useAdminServices } from "@/features/admin/hooks/useAdminServices";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import { TablePagination } from "@/components/templates/TablePagination";
 import { formatDate } from "@/lib/utils";

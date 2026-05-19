@@ -7,7 +7,7 @@ import {
   getServicesAdmin,
   updateServiceCatalogItem,
 } from '@/api';
-import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
+import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 
 import {
   ApiServiceResponse,

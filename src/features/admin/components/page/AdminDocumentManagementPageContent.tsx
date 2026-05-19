@@ -5,7 +5,7 @@ import { LoadingState } from '@/components/LoadingState';
 import { AdminFoldersSection } from '@/features/admin/components/sections/AdminFoldersSection';
 import { AdminMastersSection } from '@/features/admin/components/sections/AdminMastersSection';
 import { TemplatesSection } from '@/components/sections/TemplatesSection';
-import { useAdminDocumentManagementPage } from '@/features/admin/hooks/use-admin-document-management-page';
+import { useAdminDocumentManagementPage } from '@/features/admin/hooks/useAdminDocumentManagementPage';
 import { useTemplates } from '@/hooks/useTemplates';
 import { useTablePagination } from '@/hooks/useTablePagination';
 
