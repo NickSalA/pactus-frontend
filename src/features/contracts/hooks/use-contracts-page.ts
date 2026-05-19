@@ -15,7 +15,8 @@ import { useContractsDrivePicker } from '@/features/contracts/hooks/use-contract
 import { useContractsFilters } from '@/features/contracts/hooks/use-contracts-filters';
 import { useContractsModalState } from '@/features/contracts/hooks/use-contracts-modal-state';
 import { useAuthStore } from '@/store';
-import type { DocumentFlatten, DocumentType } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/api.types';
+import { ApiDocumentType } from '@/types/api';
 
 type UseContractsPageOptions = {
   shouldOpenCreateModal?: boolean;
@@ -216,10 +217,13 @@ export function useContractsPage({
       );
       console.log(
         '[DEBUG] canManageDocumentType result:',
-        canManageDocumentType(userRole, contract.type as DocumentType),
+        canManageDocumentType(userRole, contract.type as ApiDocumentType),
       );
       if (
-        !canManageDocumentType(userRole, contract.contract_type as DocumentType)
+        !canManageDocumentType(
+          userRole,
+          contract.contract_type as ApiDocumentType,
+        )
       ) {
         return;
       }
@@ -239,10 +243,16 @@ export function useContractsPage({
       );
       console.log(
         '[DEBUG] canManageDocumentType result:',
-        canManageDocumentType(userRole, contract.contract_type as DocumentType),
+        canManageDocumentType(
+          userRole,
+          contract.contract_type as ApiDocumentType,
+        ),
       );
       if (
-        !canManageDocumentType(userRole, contract.contract_type as DocumentType)
+        !canManageDocumentType(
+          userRole,
+          contract.contract_type as ApiDocumentType,
+        )
       ) {
         return;
       }

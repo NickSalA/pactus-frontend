@@ -45,7 +45,7 @@ import type {
   ApiTemplateResponse,
   ApiServiceResponse,
 } from '@/types/api';
-import type { DocumentFlatten, DocumentType } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/api.types';
 import { normalizeDocument } from '../../lib/normalize-document';
 
 const ContractForm = dynamic(
@@ -87,7 +87,7 @@ type DynamicFieldValues = Record<string, string | boolean>;
 type FieldSectionDefinition = {
   id: string;
   keywords: readonly string[];
-  title: (documentType: DocumentType) => string;
+  title: (documentType: ApiDocumentType) => string;
 };
 
 type FieldSection = {
@@ -228,18 +228,20 @@ const normalizeSearchText = (value: string): string => {
 };
 
 const getOperationalNameKey = (
-  documentType: DocumentType,
+  documentType: ApiDocumentType,
 ): 'cliente_nombre' | 'trabajador_nombre' => {
   return documentType === 'COMPANY' ? 'cliente_nombre' : 'trabajador_nombre';
 };
 
-const getOperationalNameLabel = (documentType: DocumentType): string => {
+const getOperationalNameLabel = (documentType: ApiDocumentType): string => {
   return documentType === 'COMPANY'
     ? 'Nombre del cliente'
     : 'Nombre del trabajador';
 };
 
-const getOperationalNamePlaceholder = (documentType: DocumentType): string => {
+const getOperationalNamePlaceholder = (
+  documentType: ApiDocumentType,
+): string => {
   return documentType === 'COMPANY'
     ? 'Ej: Holiday Inn Management'
     : 'Ej: Juan Pérez';
@@ -657,7 +659,7 @@ export function NewContractModal({
   const [templatesState, setTemplatesState] = useState<RequestState>('idle');
   const [templatesError, setTemplatesError] = useState<string | null>(null);
   const [selectedDocumentType, setSelectedDocumentType] =
-    useState<DocumentType>(defaultDocumentType);
+    useState<ApiDocumentType>(defaultDocumentType);
   const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(
     null,
   );
@@ -878,21 +880,24 @@ export function NewContractModal({
     setGeneratedDocument(null);
   }, [generatedDocument]);
 
-  const handleDocumentTypeChange = useCallback((documentType: DocumentType) => {
-    setSelectedDocumentType(documentType);
-    setSelectedTemplateId(null);
-    setFieldValues({});
-    setPartyName('');
-    setServiceItems([]);
-    setSubmitState('idle');
-    setFlowError(null);
-    setPreviewUrl(null);
-    setGeneratedDocument(null);
-    setOpenFieldSections({});
-    setSavedFieldSections({});
-    setIsOperationalFieldSaved(true);
-    setCurrentSectionIndex(0);
-  }, []);
+  const handleDocumentTypeChange = useCallback(
+    (documentType: ApiDocumentType) => {
+      setSelectedDocumentType(documentType);
+      setSelectedTemplateId(null);
+      setFieldValues({});
+      setPartyName('');
+      setServiceItems([]);
+      setSubmitState('idle');
+      setFlowError(null);
+      setPreviewUrl(null);
+      setGeneratedDocument(null);
+      setOpenFieldSections({});
+      setSavedFieldSections({});
+      setIsOperationalFieldSaved(true);
+      setCurrentSectionIndex(0);
+    },
+    [],
+  );
 
   const handleSelectTemplate = useCallback((template: ApiTemplateResponse) => {
     const initialSections = buildTemplateFieldSections(template);
@@ -1624,7 +1629,7 @@ export function NewContractModal({
                           value={selectedDocumentType}
                           onChange={(event) =>
                             handleDocumentTypeChange(
-                              event.target.value as DocumentType,
+                              event.target.value as ApiDocumentType,
                             )
                           }
                         >
