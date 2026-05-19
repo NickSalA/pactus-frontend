@@ -1,6 +1,6 @@
 import type { RefObject } from "react";
-import { formatMessageTime, isRecentTimestamp } from "@/features/ai-agent/lib/chat-utils";
-import type { ChatMessage } from "@/features/ai-agent/lib/chat.types";
+import { formatMessageTime, isRecentTimestamp } from "@/features/aiAgent/lib/chat-utils";
+import type { ChatMessage } from "@/features/aiAgent/lib/chat.types";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { RobotIcon } from "./RobotIcon";
 

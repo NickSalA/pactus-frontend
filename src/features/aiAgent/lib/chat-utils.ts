@@ -1,4 +1,4 @@
-import type { ChatMessage } from '@/features/ai-agent/lib/chat.types';
+import type { ChatMessage } from '@/features/aiAgent/lib/chat.types';
 
 import { ApiConversationList, ApiConversationRead } from '@/types/api';
 

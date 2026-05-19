@@ -1,11 +1,11 @@
 'use client';
 
-import { ChatComposer } from '@/features/ai-agent/components/page/ChatComposer';
-import { ChatEmptyState } from '@/features/ai-agent/components/page/ChatEmptyState';
-import { ChatHistorySidebar } from '@/features/ai-agent/components/page/ChatHistorySidebar';
-import { ChatMessageList } from '@/features/ai-agent/components/page/ChatMessageList';
-import { RobotIcon } from '@/features/ai-agent/components/page/RobotIcon';
-import { useAIAgentPage } from '@/features/ai-agent/hooks/use-ai-agent-page';
+import { ChatComposer } from '@/features/aiAgent/components/page/ChatComposer';
+import { ChatEmptyState } from '@/features/aiAgent/components/page/ChatEmptyState';
+import { ChatHistorySidebar } from '@/features/aiAgent/components/page/ChatHistorySidebar';
+import { ChatMessageList } from '@/features/aiAgent/components/page/ChatMessageList';
+import { RobotIcon } from '@/features/aiAgent/components/page/RobotIcon';
+import { useAIAgentPage } from '@/features/aiAgent/hooks/use-ai-agent-page';
 
 export function AIAgentPageContent() {
   const page = useAIAgentPage();
@@ -41,7 +41,7 @@ export function AIAgentPageContent() {
               </div>
             </div>
           </div>
-          l-r from-bl
+
           <button
             onClick={page.startNewConversation}
             className="flex items-center gap-2 rounded-xl bg-linear-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"

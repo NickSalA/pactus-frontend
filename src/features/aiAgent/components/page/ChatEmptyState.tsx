@@ -1,4 +1,4 @@
-import { CHAT_SUGGESTIONS } from "@/features/ai-agent/lib/chat-utils";
+import { CHAT_SUGGESTIONS } from "@/features/aiAgent/lib/chat-utils";
 import { RobotIcon } from "./RobotIcon";
 
 type ChatEmptyStateProps = {

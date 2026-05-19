@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { useSendMessage } from "@/queries/hooks/chat/mutations";
 import { useConversation, useConversations } from "@/queries/hooks/chat/queries";
-import { useLiveNow } from "@/features/ai-agent/hooks/use-live-now";
-import { mapConversationToMessages } from "@/features/ai-agent/lib/chat-utils";
-import type { ChatMessage } from "@/features/ai-agent/lib/chat.types";
+import { useLiveNow } from "@/features/aiAgent/hooks/use-live-now";
+import { mapConversationToMessages } from "@/features/aiAgent/lib/chat-utils";
+import type { ChatMessage } from "@/features/aiAgent/lib/chat.types";
 import { useAuthStore } from "@/store";
 
 export function useAIAgentPage() {
