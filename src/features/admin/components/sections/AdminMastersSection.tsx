@@ -11,7 +11,7 @@ import {
 } from "@/features/admin/hooks/use-admin-document-management-page";
 import { useAdminDocumentTypes } from "@/features/admin/hooks/use-admin-document-types";
 import { useAdminServices } from "@/features/admin/hooks/use-admin-services";
-import { useAdminTablePagination } from "@/features/admin/hooks/use-admin-table-pagination";
+import { useTablePagination } from "@/hooks/useTablePagination";
 import { AdminTablePagination } from "@/features/admin/components/shared/AdminTablePagination";
 import { formatAdminDate } from "@/features/admin/lib/admin-formatters";
 
@@ -23,7 +23,7 @@ type AdminMastersSectionProps = {
 export function AdminMastersSection({ activeCatalog, onCatalogChange }: AdminMastersSectionProps) {
   const servicesSection = useAdminServices();
   const documentTypesSection = useAdminDocumentTypes();
-  const servicesPagination = useAdminTablePagination(servicesSection.services);
+  const servicesPagination = useTablePagination(servicesSection.services);
   const [selectedServiceIds, setSelectedServiceIds] = useState<Set<number>>(new Set());
   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 

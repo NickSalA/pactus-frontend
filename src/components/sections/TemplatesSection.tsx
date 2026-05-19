@@ -18,12 +18,12 @@ import { formatAdminDate } from '@/features/admin/lib/admin-formatters';
 import { getDocumentTypeLabel } from '@/lib/document.utils';
 import { getTemplateFieldCount } from '@/lib/templateFields';
 import type { ApiTemplateResponse } from '@/types/api';
-import type { useAdminTemplates } from '@/features/admin/hooks/use-admin-templates';
-import type { useAdminTablePagination } from '@/features/admin/hooks/use-admin-table-pagination';
+import type { useTemplates } from '@/hooks/useTemplates';
+import type { useTablePagination } from '@/hooks/useTablePagination';
 
 type TemplatesSectionProps = {
-  section: ReturnType<typeof useAdminTemplates>;
-  pagination: ReturnType<typeof useAdminTablePagination<ApiTemplateResponse>>;
+  section: ReturnType<typeof useTemplates>;
+  pagination: ReturnType<typeof useTablePagination<ApiTemplateResponse>>;
 };
 
 const getTemplateStateClasses = (state: string): string => {

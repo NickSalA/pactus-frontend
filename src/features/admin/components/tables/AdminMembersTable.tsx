@@ -3,7 +3,7 @@
 import { Bell, Mail, ShieldCheck } from "lucide-react";
 import { getUserRoleLabel } from "@/lib/authUser";
 import { AdminTablePagination } from "@/features/admin/components/shared/AdminTablePagination";
-import { useAdminTablePagination } from "@/features/admin/hooks/use-admin-table-pagination";
+import { useTablePagination } from "@/hooks/useTablePagination";
 import type { OrganizationMember } from "@/types/ui.types";
 
 type AdminMembersTableProps = {
@@ -28,7 +28,7 @@ const getMemberDisplayName = (member: OrganizationMember): string => {
 };
 
 export function AdminMembersTable({ isSaving, members, onToggleNotifications }: AdminMembersTableProps) {
-  const pagination = useAdminTablePagination(members);
+  const pagination = useTablePagination(members);
 
   return (
     <div className="overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-sm shadow-slate-200/70">

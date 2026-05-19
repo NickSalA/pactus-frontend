@@ -6,8 +6,8 @@ import { AdminFoldersSection } from '@/features/admin/components/sections/AdminF
 import { AdminMastersSection } from '@/features/admin/components/sections/AdminMastersSection';
 import { TemplatesSection } from '@/components/sections/TemplatesSection';
 import { useAdminDocumentManagementPage } from '@/features/admin/hooks/use-admin-document-management-page';
-import { useAdminTemplates } from '@/features/admin/hooks/use-admin-templates';
-import { useAdminTablePagination } from '@/features/admin/hooks/use-admin-table-pagination';
+import { useTemplates } from '@/hooks/useTemplates';
+import { useTablePagination } from '@/hooks/useTablePagination';
 
 export function AdminDocumentManagementPageContent() {
   const page = useAdminDocumentManagementPage();
@@ -16,8 +16,8 @@ export function AdminDocumentManagementPageContent() {
     return <AdminLoadingState />;
   }
 
-  const templatesSection = useAdminTemplates();
-  const templatesPagination = useAdminTablePagination(
+  const templatesSection = useTemplates();
+  const templatesPagination = useTablePagination(
     templatesSection.filteredTemplates,
   );
 

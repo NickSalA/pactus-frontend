@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { Select } from "@/components/ui/Select";
 import { getVisiblePageNumbers } from "@/features/contracts/lib/contracts-utils";
-import { ADMIN_PAGE_SIZE_OPTIONS } from "@/features/admin/hooks/use-admin-table-pagination";
+import { TABLE_PAGINATION_PAGE_SIZE_OPTIONS } from "@/hooks/useTablePagination";
 
 type AdminTablePaginationProps = {
   currentPage: number;
@@ -42,7 +42,7 @@ export function AdminTablePagination({
             value={itemsPerPage}
             onChange={(event) => onItemsPerPageChange(Number(event.target.value))}
           >
-            {ADMIN_PAGE_SIZE_OPTIONS.map((rows) => (
+            {TABLE_PAGINATION_PAGE_SIZE_OPTIONS.map((rows) => (
               <option key={rows} value={rows}>
                 {rows}
               </option>

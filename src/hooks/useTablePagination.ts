@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react";
 
-export const ADMIN_PAGE_SIZE_OPTIONS = [5, 10, 15, 20] as const;
-export const ADMIN_DEFAULT_PAGE_SIZE = 10;
+export const TABLE_PAGINATION_PAGE_SIZE_OPTIONS = [5, 10, 15, 20] as const;
+export const TABLE_PAGINATION_DEFAULT_PAGE_SIZE = 10;
 
-export function useAdminTablePagination<T>(items: T[], defaultPageSize = ADMIN_DEFAULT_PAGE_SIZE) {
+export function useTablePagination<T>(items: T[], defaultPageSize = TABLE_PAGINATION_DEFAULT_PAGE_SIZE) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(defaultPageSize);
 

@@ -5,7 +5,7 @@ import { AdminFolderModal } from '@/features/admin/components/modals/AdminFolder
 import { AdminLoadingState } from '@/features/admin/components/shared/AdminLoadingState';
 import { AdminTablePagination } from '@/features/admin/components/shared/AdminTablePagination';
 import { useAdminFolders } from '@/features/admin/hooks/use-admin-folders';
-import { useAdminTablePagination } from '@/features/admin/hooks/use-admin-table-pagination';
+import { useTablePagination } from '@/hooks/useTablePagination';
 import {
   formatAdminDate,
   getFolderVisibilityLabel,
@@ -13,7 +13,7 @@ import {
 
 export function AdminFoldersSection() {
   const section = useAdminFolders();
-  const pagination = useAdminTablePagination(section.folders);
+  const pagination = useTablePagination(section.folders);
 
   if (section.loading) {
     return <AdminLoadingState />;

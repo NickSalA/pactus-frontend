@@ -10,11 +10,11 @@ import { AdminTablePagination } from '@/features/admin/components/shared/AdminTa
 import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
 import { formatAdminDate } from '@/features/admin/lib/admin-formatters';
 import { useAdminAlertRules } from '@/features/admin/hooks/use-admin-alert-rules';
-import { useAdminTablePagination } from '@/features/admin/hooks/use-admin-table-pagination';
+import { useTablePagination } from '@/hooks/useTablePagination';
 
 export function AdminAlertsPageContent() {
   const page = useAdminAlertRules();
-  const pagination = useAdminTablePagination(page.rules);
+  const pagination = useTablePagination(page.rules);
   const [selectedRuleIds, setSelectedRuleIds] = useState<Set<number>>(
     new Set(),
   );
