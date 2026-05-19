@@ -22,20 +22,8 @@ type DashboardTopServicesProps = {
 
 type MetricKey = 'quantity' | 'amount';
 
-const COLORS = {
-  COMPANY: '#3B82F6',
-  LABOR: '#EF4444',
-} as const;
-
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
-
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('es-PE', {
-    style: 'currency',
-    currency: 'PEN',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
+import { COLORS, formatCurrency } from '@/features/dashboard/lib/utils';
 
 export function DashboardTopServices({
   data,

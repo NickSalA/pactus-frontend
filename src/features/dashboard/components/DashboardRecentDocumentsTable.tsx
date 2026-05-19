@@ -12,7 +12,7 @@ import {
   getDashboardDocumentStateClasses,
   getDocumentStateLabel,
 } from '@/lib/document.utils';
-import type { RecentDashboardDocument } from '@/features/dashboard/lib/dashboard-data';
+import type { RecentDashboardDocument } from '@/features/dashboard/lib/utils';
 
 type DashboardRecentDocumentsTableProps = {
   currentPage: number;

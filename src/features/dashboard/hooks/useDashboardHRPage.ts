@@ -7,8 +7,8 @@ import {
   useAreaChartLabor,
   useRecentContractsLabor,
 } from '@/queries/hooks/dashboard/queries';
-import { buildRecentDocumentsFromAPI } from '@/features/dashboard/lib/dashboard-data';
-import type { RecentDashboardDocument } from '@/features/dashboard/lib/dashboard-data';
+import { buildRecentDocumentsFromAPI } from '@/features/dashboard/lib/utils';
+import type { RecentDashboardDocument } from '@/features/dashboard/lib/utils';
 
 export function useDashboardHRPage() {
   const queryClient = useQueryClient();

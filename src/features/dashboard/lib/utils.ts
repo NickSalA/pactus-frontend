@@ -31,3 +31,8 @@ export function formatCurrency(value: number): string {
     maximumFractionDigits: 0,
   }).format(value);
 }
+
+export const COLORS = {
+  COMPANY: '#3B82F6',
+  LABOR: '#EF4444',
+} as const;

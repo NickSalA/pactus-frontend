@@ -23,12 +23,8 @@ type DashboardAreaChartProps = {
   documentType: ApiDocumentType;
 };
 
-const COLORS = {
-  COMPANY: '#10B981',
-  LABOR: '#EF4444',
-} as const;
-
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
+import { COLORS } from '@/features/dashboard/lib/utils';
 
 export function DashboardAreaChart({
   data,
