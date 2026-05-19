@@ -59,10 +59,10 @@ export function ChatHistorySidebar({
     <div
       className={`${
         showHistory ? 'w-80' : 'w-12'
-      } flex flex-shrink-0 flex-col overflow-hidden bg-white/80 shadow-[2px_0_16px_rgba(0,0,0,0.07)] backdrop-blur-xl transition-all duration-300 ease-out`}
+      } flex shrink-0 flex-col overflow-hidden bg-white/80 shadow-[2px_0_16px_rgba(0,0,0,0.07)] backdrop-blur-xl transition-all duration-300 ease-out`}
     >
       {/* Header — no bottom border, blends into list */}
-      <div className="flex flex-shrink-0 items-center bg-white/70 px-3 py-4 backdrop-blur-xl">
+      <div className="flex shrink-0 items-center bg-white/70 px-3 py-4 backdrop-blur-xl">
         {showHistory ? (
           <>
             <div className="flex h-11 flex-1 items-center pl-2">
@@ -127,7 +127,7 @@ export function ChatHistorySidebar({
                     </p>
                     <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
                       <svg
-                        className="h-3 w-3 flex-shrink-0"
+                        className="h-3 w-3 shrink-0"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"

@@ -1,9 +1,9 @@
-import type { KeyboardEvent, RefObject, TextareaHTMLAttributes } from "react";
+import type { KeyboardEvent, RefObject, TextareaHTMLAttributes } from 'react';
 
 type ChatComposerProps = {
   inputValue: string;
   isLoading: boolean;
-  onChange: TextareaHTMLAttributes<HTMLTextAreaElement>["onChange"];
+  onChange: TextareaHTMLAttributes<HTMLTextAreaElement>['onChange'];
   onContainerClick: () => void;
   onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
   onSubmit: () => void;
@@ -20,7 +20,7 @@ export function ChatComposer({
   textareaRef,
 }: ChatComposerProps) {
   return (
-    <div className="flex-shrink-0 border-t border-slate-200/60 bg-white/90 px-4 py-4 backdrop-blur-xl sm:px-8">
+    <div className="shrink-0 border-t border-slate-200/60 bg-white/90 px-4 py-4 backdrop-blur-xl sm:px-8">
       <div className="mx-auto max-w-3xl">
         <div
           onClick={onContainerClick}
@@ -32,7 +32,7 @@ export function ChatComposer({
             onChange={onChange}
             onKeyDown={onKeyDown}
             placeholder="Escribe tu mensaje aqui..."
-            className="min-h-[28px] max-h-[120px] flex-1 resize-none bg-transparent py-1 text-[15px] leading-relaxed text-slate-700 outline-none placeholder:text-slate-400"
+            className="min-h-7 max-h-30 flex-1 resize-none bg-transparent py-1 text-[15px] leading-relaxed text-slate-700 outline-none placeholder:text-slate-400"
             rows={1}
             disabled={isLoading}
           />
@@ -41,10 +41,10 @@ export function ChatComposer({
             type="button"
             onClick={onSubmit}
             disabled={!inputValue.trim() || isLoading}
-            className={`flex-shrink-0 rounded-xl p-3 transition-all duration-200 ${
+            className={`shrink-0 rounded-xl p-3 transition-all duration-200 ${
               inputValue.trim() && !isLoading
-                ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95"
-                : "cursor-not-allowed bg-slate-200 text-slate-400"
+                ? 'bg-linear-r from-blue-600 to-indigo-600 text-white hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95'
+                : 'cursor-not-allowed bg-slate-200 text-slate-400'
             }`}
           >
             <svg
@@ -59,7 +59,15 @@ export function ChatComposer({
         </div>
 
         <p className="mt-3 text-center text-xs text-slate-400">
-          Presiona <kbd className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-500">Enter</kbd> para enviar • <kbd className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-500">Shift+Enter</kbd> para nueva linea
+          Presiona{' '}
+          <kbd className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-500">
+            Enter
+          </kbd>{' '}
+          para enviar •{' '}
+          <kbd className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-500">
+            Shift+Enter
+          </kbd>{' '}
+          para nueva linea
         </p>
       </div>
     </div>
