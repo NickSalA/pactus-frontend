@@ -263,7 +263,7 @@ function parseMarkdownTable(lines: string[]): ReactNode | null {
     <div className="my-3 overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
       <table className="min-w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50/30">
+          <tr className="border-b border-slate-200 bg-linear-to-r from-slate-50 to-blue-50/30">
             {headerCells.map((cell, i) => (
               <th
                 key={i}

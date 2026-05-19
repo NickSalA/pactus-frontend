@@ -11,7 +11,7 @@ export function AIAgentPageContent() {
   const page = useAIAgentPage();
 
   return (
-    <div className="-m-8 flex h-[calc(100vh-95px)] overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
+    <div className="-m-8 flex h-[calc(100vh-95px)] overflow-hidden bg-linear-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
       <ChatHistorySidebar
         activeConversationId={page.threadId}
         conversations={page.conversations}
