@@ -7,7 +7,7 @@ import { TablePagination } from '@/components/templates/TablePagination';
 import { useAdminFolders } from '@/features/admin/hooks/use-admin-folders';
 import { useTablePagination } from '@/hooks/useTablePagination';
 import { formatDate } from '@/lib/utils';
-import { getFolderVisibilityLabel } from '@/features/admin/lib/admin-formatters';
+import { getFolderVisibilityLabel } from '@/features/admin/lib/adminFormatters';
 
 export function AdminFoldersSection() {
   const section = useAdminFolders();
