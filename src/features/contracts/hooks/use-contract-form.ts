@@ -211,18 +211,24 @@ export function useContractForm({
       const result =
         editMode && initialData
           ? await updateDocument(initialData.id, {
-              folder_id: form.folder_id,
-              form_data: formDataPayload,
-              service_items: serviceItemsPayload,
-              state: form.state,
-              contract_type: form.type as 'COMPANY' | 'LABOR',
+              file: editMode ? file : null,
+              document: {
+                folder_id: form.folder_id,
+                form_data: formDataPayload,
+                service_items: serviceItemsPayload,
+                state: form.state,
+                contract_type: form.type as 'COMPANY' | 'LABOR',
+              },
             })
           : await uploadDocument({
-              folder_id: defaultFolderId,
-              form_data: formDataPayload,
-              service_items: serviceItemsPayload,
-              state: form.state,
-              contract_type: form.type as 'COMPANY' | 'LABOR',
+              file: file as File,
+              document: {
+                folder_id: defaultFolderId,
+                form_data: formDataPayload,
+                service_items: serviceItemsPayload,
+                state: form.state,
+                contract_type: form.type as 'COMPANY' | 'LABOR',
+              },
             });
 
       onAdd(result);

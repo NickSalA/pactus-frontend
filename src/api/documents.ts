@@ -2,6 +2,8 @@ import type {
   ApiDocumentCompanyContractRequest,
   ApiDocumentFileUrlResponse,
   ApiDocumentLaborContractRequest,
+  ApiDocumentMultipartCreateRequest,
+  ApiDocumentMultipartUpdateRequest,
   ApiDocumentResponse,
   ApiDocumentServiceItemRequest,
   ApiDocumentState,
@@ -21,7 +23,9 @@ import type { DocumentFlatten, DocumentFolder } from '@/types/ui.types';
 import { TIMEOUTS } from './constants';
 import { apiGet, apiPost, apiPatch, apiDelete } from './axiosInstance';
 
-export const normalizeDocument = (doc: ApiDocumentResponse): DocumentFlatten => {
+export const normalizeDocument = (
+  doc: ApiDocumentResponse,
+): DocumentFlatten => {
   const hasCompanyContract = Boolean(doc.company_contract);
   const hasLaborContract = Boolean(doc.labor_contract);
 
@@ -62,44 +66,17 @@ export const normalizeDocument = (doc: ApiDocumentResponse): DocumentFlatten => 
   };
 };
 
-type DocumentPayload = {
-  contract_type?: ApiDocumentType | null;
-  company_contract?: ApiDocumentCompanyContractRequest | null;
-  labor_contract?: ApiDocumentLaborContractRequest | null;
-  start_date?: string | null;
-  end_date?: string | null;
-  form_data?: object | null;
-  state?: ApiDocumentState | null;
-  folder_id?: number | null;
-  service_items?: ApiDocumentServiceItemRequest[] | null;
-  type?: string | null;
-  name?: string | null;
-  client?: string | null;
-};
-
-const appendDocumentPayload = (formData: FormData, data: DocumentPayload) => {
-  formData.append('document', JSON.stringify(data));
-};
-
 export async function uploadDocument(
-  data: ApiDocumentCreateRequest,
+  data: ApiDocumentMultipartCreateRequest,
 ): Promise<DocumentFlatten> {
   const formData = new FormData();
 
-  appendDocumentPayload(formData, {
-    contract_type: data.contract_type,
-    company_contract: data.company_contract,
-    labor_contract: data.labor_contract,
-    form_data: data.form_data,
-    state: data.state,
-    folder_id: data.folder_id,
-    service_items: data.service_items ?? [],
-  });
+  formData.append('file', data.file);
+  formData.append('document', JSON.stringify(data.document));
 
   const createdDocument = normalizeDocument(
     await apiPost<ApiDocumentResponse>('/documents/', formData, {
       timeout: TIMEOUTS.UPLOAD,
-      headers: { 'Content-Type': 'multipart/form-data' },
     }),
   );
 
@@ -207,32 +184,19 @@ export async function getDocumentFileUrl(id: number): Promise<string> {
 
 export async function updateDocument(
   id: number,
-  data: ApiDocumentUpdateRequest,
+  data: ApiDocumentMultipartUpdateRequest,
 ): Promise<DocumentFlatten> {
   const formData = new FormData();
 
-  appendDocumentPayload(formData, {
-    ...(data.contract_type !== undefined && {
-      contract_type: data.contract_type,
-    }),
-    ...(data.company_contract !== undefined && {
-      company_contract: data.company_contract,
-    }),
-    ...(data.labor_contract !== undefined && {
-      labor_contract: data.labor_contract,
-    }),
-    ...(data.form_data !== undefined && { form_data: data.form_data }),
-    ...(data.state !== undefined && { state: data.state }),
-    ...(data.folder_id !== undefined && { folder_id: data.folder_id }),
-    ...(data.service_items !== undefined && {
-      service_items: data.service_items,
-    }),
-  });
+  if (data.file !== null) {
+    formData.append('file', data.file);
+  }
+
+  formData.append('document', JSON.stringify(data.document));
 
   const updatedDocument = normalizeDocument(
     await apiPatch<ApiDocumentResponse>(`/documents/${id}`, formData, {
       timeout: TIMEOUTS.UPLOAD,
-      headers: { 'Content-Type': 'multipart/form-data' },
     }),
   );
 
