@@ -10,12 +10,6 @@ import { toFirstName } from '@/lib/authUser';
 import { useAuthStore } from '@/store';
 import { useDashboardManagerPage } from '@/features/dashboard/hooks/use-dashboard-manager-page';
 
-const PlaceholderCell = ({ label }: { label: string }) => (
-  <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50">
-    <span className="text-sm text-gray-400">{label}</span>
-  </div>
-);
-
 export function DashboardManagerPageContent() {
   const { user } = useAuthStore();
   const {
@@ -30,8 +24,10 @@ export function DashboardManagerPageContent() {
   const firstName = toFirstName(user?.name || 'Usuario');
 
   return (
-    <div className="space-y-6">
-      <DashboardWelcome firstName={firstName} />
+    <div className="flex flex-col gap-6 h-full overflow-visible">
+      <div className="flex-none overflow-visible">
+        <DashboardWelcome firstName={firstName} />
+      </div>
 
       {error && (
         <section className="rounded-2xl border border-red-200 bg-red-50 px-6 py-4 text-sm text-red-700 shadow-sm">
@@ -39,10 +35,7 @@ export function DashboardManagerPageContent() {
         </section>
       )}
 
-      <section
-        className="grid gap-4 md:grid-cols-2"
-        style={{ gridTemplateRows: '1fr 1fr' }}
-      >
+      <section className="grid grid-rows-[1fr_1fr] grid-cols-[1fr_1fr] gap-4 flex-1 min-h-0 overflow-visible">
         <DashboardAreaChart
           data={areaChart!}
           isLoading={isLoading}
