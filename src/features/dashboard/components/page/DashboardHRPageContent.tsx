@@ -26,8 +26,8 @@ export function DashboardHRPageContent() {
         </section>
       )}
 
-      <section className="grid grid-rows-[1fr_1fr] gap-4 grid-cols-[1fr_1fr_1fr] flex-1 min-h-0 overflow-visible">
-        <div className="col-span-2">
+      <section className="grid grid-rows-[1fr_1fr] gap-4 grid-cols-[1fr_1fr] flex-1 min-h-0 overflow-visible">
+        <div className="row-span-2">
           <DashboardAreaChart
             data={areaChart!}
             isLoading={isLoading}
@@ -35,7 +35,7 @@ export function DashboardHRPageContent() {
           />
         </div>
         <DashboardAlertCenter alerts={alerts} isLoading={isLoading} />
-        <div className="col-span-3">
+        <div className="col-start-2">
           <DashboardRecentDocumentsTable
             documents={recentContracts}
             isLoading={isLoading}
