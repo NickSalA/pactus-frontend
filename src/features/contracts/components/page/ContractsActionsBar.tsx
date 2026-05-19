@@ -1,14 +1,20 @@
-"use client";
+'use client';
 
-import { type ReactNode, useRef, useState } from "react";
-import { CalendarDays, Plus, Search, X } from "lucide-react";
-import { FILTER_OPTIONS, type DocumentFilterValue } from "@/features/contracts/lib/contracts-utils";
-import type { DateRange, SortOrder } from "@/features/contracts/hooks/use-contracts-filters";
-import { Select } from "@/components/ui/Select";
-import type { Document } from "@/types/api.types";
+import { type ReactNode, useRef, useState } from 'react';
+import { CalendarDays, Plus, Search, X } from 'lucide-react';
+import {
+  FILTER_OPTIONS,
+  type DocumentFilterValue,
+} from '@/features/contracts/lib/contracts-utils';
+import type {
+  DateRange,
+  SortOrder,
+} from '@/features/contracts/hooks/use-contracts-filters';
+import { Select } from '@/components/ui/Select';
+import type { DocumentFlatten } from '@/types/api.types';
 
 type ContractsActionsBarProps = {
-  contracts: Document[];
+  contracts: DocumentFlatten[];
   dateRange: DateRange;
   filter: DocumentFilterValue;
   importControl?: ReactNode;
@@ -21,49 +27,58 @@ type ContractsActionsBarProps = {
   sortOrder: SortOrder;
 };
 
-const FILTER_CHIP_STYLES: Record<string, { active: string; activeBadge: string; inactive: string; dot: string }> = {
+const FILTER_CHIP_STYLES: Record<
+  string,
+  { active: string; activeBadge: string; inactive: string; dot: string }
+> = {
   all: {
-    active: "bg-blue-50 border border-blue-200 text-blue-700 ring-0",
-    activeBadge: "bg-blue-100 text-blue-600",
-    inactive: "bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-blue-300 hover:text-blue-700 hover:bg-blue-50/50",
-    dot: "bg-blue-400",
+    active: 'bg-blue-50 border border-blue-200 text-blue-700 ring-0',
+    activeBadge: 'bg-blue-100 text-blue-600',
+    inactive:
+      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-blue-300 hover:text-blue-700 hover:bg-blue-50/50',
+    dot: 'bg-blue-400',
   },
   DRAFT: {
-    active: "bg-slate-100 border border-slate-300 text-slate-700 ring-0",
-    activeBadge: "bg-slate-200 text-slate-600",
-    inactive: "bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-slate-400 hover:text-slate-800 hover:bg-slate-50",
-    dot: "bg-slate-400",
+    active: 'bg-slate-100 border border-slate-300 text-slate-700 ring-0',
+    activeBadge: 'bg-slate-200 text-slate-600',
+    inactive:
+      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-slate-400 hover:text-slate-800 hover:bg-slate-50',
+    dot: 'bg-slate-400',
   },
   PENDING_SIGNATURE: {
-    active: "bg-sky-50 border border-sky-200 text-sky-700 ring-0",
-    activeBadge: "bg-sky-100 text-sky-600",
-    inactive: "bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-blue-300 hover:text-blue-700 hover:bg-blue-50/50",
-    dot: "bg-sky-400",
+    active: 'bg-sky-50 border border-sky-200 text-sky-700 ring-0',
+    activeBadge: 'bg-sky-100 text-sky-600',
+    inactive:
+      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-blue-300 hover:text-blue-700 hover:bg-blue-50/50',
+    dot: 'bg-sky-400',
   },
   ACTIVE: {
-    active: "bg-emerald-50 border border-emerald-200 text-emerald-700 ring-0",
-    activeBadge: "bg-emerald-100 text-emerald-600",
-    inactive: "bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-emerald-300 hover:text-emerald-700 hover:bg-emerald-50/50",
-    dot: "bg-emerald-400",
+    active: 'bg-emerald-50 border border-emerald-200 text-emerald-700 ring-0',
+    activeBadge: 'bg-emerald-100 text-emerald-600',
+    inactive:
+      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-emerald-300 hover:text-emerald-700 hover:bg-emerald-50/50',
+    dot: 'bg-emerald-400',
   },
   EXPIRING_SOON: {
-    active: "bg-amber-50 border border-amber-200 text-amber-700 ring-0",
-    activeBadge: "bg-amber-100 text-amber-600",
-    inactive: "bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-amber-300 hover:text-amber-700 hover:bg-amber-50/50",
-    dot: "bg-amber-400",
+    active: 'bg-amber-50 border border-amber-200 text-amber-700 ring-0',
+    activeBadge: 'bg-amber-100 text-amber-600',
+    inactive:
+      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-amber-300 hover:text-amber-700 hover:bg-amber-50/50',
+    dot: 'bg-amber-400',
   },
   EXPIRED: {
-    active: "bg-red-50 border border-red-200 text-red-700 ring-0",
-    activeBadge: "bg-red-100 text-red-600",
-    inactive: "bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-red-300 hover:text-red-700 hover:bg-red-50/50",
-    dot: "bg-red-400",
+    active: 'bg-red-50 border border-red-200 text-red-700 ring-0',
+    activeBadge: 'bg-red-100 text-red-600',
+    inactive:
+      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-red-300 hover:text-red-700 hover:bg-red-50/50',
+    dot: 'bg-red-400',
   },
 };
 
 const DEFAULT_CHIP_STYLE = FILTER_CHIP_STYLES.all!;
 
 function formatDateDisplay(iso: string): string {
-  const [year, month, day] = iso.split("-");
+  const [year, month, day] = iso.split('-');
   return `${day}/${month}/${year}`;
 }
 
@@ -84,13 +99,17 @@ export function ContractsActionsBar({
   const [localRange, setLocalRange] = useState<DateRange>(dateRange);
   const datePickerRef = useRef<HTMLDivElement>(null);
 
-  const filterCounts = FILTER_OPTIONS.reduce<Record<string, number>>((counts, option) => {
-    counts[option.value] =
-      option.value === "all"
-        ? contracts.length
-        : contracts.filter((contract) => contract.state === option.value).length;
-    return counts;
-  }, {});
+  const filterCounts = FILTER_OPTIONS.reduce<Record<string, number>>(
+    (counts, option) => {
+      counts[option.value] =
+        option.value === 'all'
+          ? contracts.length
+          : contracts.filter((contract) => contract.state === option.value)
+              .length;
+      return counts;
+    },
+    {},
+  );
 
   const hasDateFilter = Boolean(dateRange.start ?? dateRange.end);
 
@@ -127,7 +146,7 @@ export function ContractsActionsBar({
           {search.trim().length > 0 && (
             <button
               type="button"
-              onClick={() => onSearchChange("")}
+              onClick={() => onSearchChange('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
             >
               <X className="h-3.5 w-3.5" />
@@ -155,7 +174,8 @@ export function ContractsActionsBar({
         <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none">
           {FILTER_OPTIONS.map((option) => {
             const isActive = option.value === filter;
-            const chipStyle = FILTER_CHIP_STYLES[option.value] ?? DEFAULT_CHIP_STYLE;
+            const chipStyle =
+              FILTER_CHIP_STYLES[option.value] ?? DEFAULT_CHIP_STYLE;
             const count = filterCounts[option.value] ?? 0;
 
             return (
@@ -167,13 +187,17 @@ export function ContractsActionsBar({
                   isActive ? chipStyle.active : chipStyle.inactive
                 }`}
               >
-                {!isActive && option.value !== "all" && (
-                  <span className={`h-2 w-2 flex-shrink-0 rounded-full ${chipStyle.dot}`} />
+                {!isActive && option.value !== 'all' && (
+                  <span
+                    className={`h-2 w-2 flex-shrink-0 rounded-full ${chipStyle.dot}`}
+                  />
                 )}
                 <span className="whitespace-nowrap">{option.label}</span>
                 <span
                   className={`inline-flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[11px] font-semibold tabular-nums transition-colors ${
-                    isActive ? chipStyle.activeBadge : "bg-slate-100 text-slate-500 group-hover:bg-slate-200/80"
+                    isActive
+                      ? chipStyle.activeBadge
+                      : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200/80'
                   }`}
                 >
                   {count}
@@ -200,23 +224,27 @@ export function ContractsActionsBar({
         <div className="relative" ref={datePickerRef}>
           <button
             type="button"
-            onClick={showDatePicker ? () => setShowDatePicker(false) : openDatePicker}
+            onClick={
+              showDatePicker ? () => setShowDatePicker(false) : openDatePicker
+            }
             className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
               hasDateFilter
-                ? "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100"
-                : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                ? 'border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100'
+                : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
             }`}
           >
             <CalendarDays className="h-4 w-4" />
             {hasDateFilter
-              ? `${dateRange.start ? formatDateDisplay(dateRange.start) : "…"} — ${dateRange.end ? formatDateDisplay(dateRange.end) : "…"}`
-              : "Rango de fechas"}
+              ? `${dateRange.start ? formatDateDisplay(dateRange.start) : '…'} — ${dateRange.end ? formatDateDisplay(dateRange.end) : '…'}`
+              : 'Rango de fechas'}
           </button>
 
           {showDatePicker && (
             <div className="absolute left-0 top-full z-50 mt-2 w-[340px] rounded-xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-200/60">
               <div className="mb-4 flex items-center justify-between">
-                <p className="text-sm font-medium text-slate-700">Filtrar por fecha de inicio</p>
+                <p className="text-sm font-medium text-slate-700">
+                  Filtrar por fecha de inicio
+                </p>
                 <button
                   type="button"
                   onClick={() => setShowDatePicker(false)}
@@ -228,22 +256,36 @@ export function ContractsActionsBar({
 
               <div className="space-y-3">
                 <div>
-                  <label className="mb-1.5 block text-xs font-medium text-slate-500">Desde</label>
+                  <label className="mb-1.5 block text-xs font-medium text-slate-500">
+                    Desde
+                  </label>
                   <input
                     type="date"
-                    value={localRange.start ?? ""}
+                    value={localRange.start ?? ''}
                     max={localRange.end ?? undefined}
-                    onChange={(e) => setLocalRange((prev) => ({ ...prev, start: e.target.value || null }))}
+                    onChange={(e) =>
+                      setLocalRange((prev) => ({
+                        ...prev,
+                        start: e.target.value || null,
+                      }))
+                    }
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-medium text-slate-500">Hasta</label>
+                  <label className="mb-1.5 block text-xs font-medium text-slate-500">
+                    Hasta
+                  </label>
                   <input
                     type="date"
-                    value={localRange.end ?? ""}
+                    value={localRange.end ?? ''}
                     min={localRange.start ?? undefined}
-                    onChange={(e) => setLocalRange((prev) => ({ ...prev, end: e.target.value || null }))}
+                    onChange={(e) =>
+                      setLocalRange((prev) => ({
+                        ...prev,
+                        end: e.target.value || null,
+                      }))
+                    }
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
@@ -292,7 +334,7 @@ export function ContractsActionsBar({
             &ldquo;{search.trim()}&rdquo;
             <button
               type="button"
-              onClick={() => onSearchChange("")}
+              onClick={() => onSearchChange('')}
               className="rounded-full p-0.5 transition-colors hover:bg-blue-100"
             >
               <X className="h-3 w-3" />

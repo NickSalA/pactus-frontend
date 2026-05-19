@@ -2,7 +2,7 @@ import {
   getDocumentFileLabel,
   getDocumentTypeLabel,
 } from '@/lib/document.utils';
-import type { Document, DocumentState } from '@/types/api.types';
+import type { DocumentFlatten, DocumentState } from '@/types/api.types';
 import { ApiDashboardRecentContractResponse } from '@/types/api';
 
 export type DashboardMetricTone = 'primary' | 'warning' | 'danger';
@@ -81,7 +81,7 @@ const formatChange = (
 };
 
 export const buildDashboardMetrics = (
-  documents: Document[],
+  documents: DocumentFlatten[],
 ): DashboardMetric[] => {
   const now = new Date();
   const currentMonth = monthKey(now);
@@ -173,7 +173,7 @@ export const buildDashboardMetrics = (
 };
 
 export const buildRecentDocuments = (
-  documents: Document[],
+  documents: DocumentFlatten[],
 ): RecentDashboardDocument[] => {
   return [...documents]
     .sort((a, b) => b.id - a.id)

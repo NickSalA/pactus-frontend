@@ -1,19 +1,25 @@
-"use client";
+'use client';
 
-import { useCallback, useMemo, useState } from "react";
-import { filterContracts, type DocumentFilterValue } from "@/features/contracts/lib/contracts-utils";
-import type { Document } from "@/types/api.types";
+import { useCallback, useMemo, useState } from 'react';
+import {
+  filterContracts,
+  type DocumentFilterValue,
+} from '@/features/contracts/lib/contracts-utils';
+import type { DocumentFlatten } from '@/types/api.types';
 
-export type SortOrder = "newest" | "oldest";
+export type SortOrder = 'newest' | 'oldest';
 export type DateRange = { end: string | null; start: string | null };
 
-export function useContractsFilters(activeContracts: Document[]) {
-  const [filter, setFilter] = useState<DocumentFilterValue>("all");
-  const [search, setSearch] = useState("");
+export function useContractsFilters(activeContracts: DocumentFlatten[]) {
+  const [filter, setFilter] = useState<DocumentFilterValue>('all');
+  const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(9);
-  const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
-  const [dateRange, setDateRange] = useState<DateRange>({ end: null, start: null });
+  const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
+  const [dateRange, setDateRange] = useState<DateRange>({
+    end: null,
+    start: null,
+  });
 
   const filteredContracts = useMemo(() => {
     let result = filterContracts(activeContracts, filter, search);
@@ -29,16 +35,22 @@ export function useContractsFilters(activeContracts: Document[]) {
 
     result = [...result].sort((a, b) => {
       const cmp = a.start_date.localeCompare(b.start_date);
-      return sortOrder === "newest" ? -cmp : cmp;
+      return sortOrder === 'newest' ? -cmp : cmp;
     });
 
     return result;
   }, [activeContracts, filter, search, sortOrder, dateRange]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredContracts.length / itemsPerPage));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredContracts.length / itemsPerPage),
+  );
   const safeCurrentPage = Math.min(currentPage, totalPages);
   const startIndex = (safeCurrentPage - 1) * itemsPerPage;
-  const paginatedContracts = filteredContracts.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedContracts = filteredContracts.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
   const isEmpty = activeContracts.length === 0;
 
   const resetPagination = useCallback(() => setCurrentPage(1), []);

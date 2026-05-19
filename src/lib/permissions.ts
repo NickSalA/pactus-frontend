@@ -1,4 +1,4 @@
-import type { Document, DocumentType } from '@/types/api.types';
+import type { DocumentFlatten, DocumentType } from '@/types/api.types';
 import { ApiUserRole } from '@/types/api';
 
 type RoleValue = ApiUserRole | string | null | undefined;
@@ -164,9 +164,9 @@ export const canManageFolderRole = (
 };
 
 export const filterVisibleDocuments = (
-  documents: Document[],
+  documents: DocumentFlatten[],
   role: RoleValue,
-): Document[] => {
+): DocumentFlatten[] => {
   return documents.filter((document) =>
     canViewDocumentType(role, document.contract_type),
   );

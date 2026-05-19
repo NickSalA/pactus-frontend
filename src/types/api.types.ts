@@ -59,7 +59,7 @@ export type DocumentState =
   | 'EXPIRING_SOON'
   | 'EXPIRED'
   | 'TERMINATED';
-export type CurrencyType = 'PEN' | 'USD' | 'EUR';
+export type ApiCurrencyType = 'PEN' | 'USD' | 'EUR';
 
 export interface LaborContractResponse {
   id: number;
@@ -68,7 +68,7 @@ export interface LaborContractResponse {
   worker_document_number?: string | null;
   position?: string | null;
   salary_value?: number | null;
-  salary_currency?: CurrencyType | null;
+  salary_currency?: ApiCurrencyType | null;
   salary_periodicity?: string | null;
   contract_modality?: string | null;
   created_at: string;
@@ -77,7 +77,7 @@ export interface LaborContractResponse {
 
 export interface DocumentFormData {
   value?: number;
-  currency?: CurrencyType;
+  currency?: ApiCurrencyType;
   [key: string]: unknown;
 }
 
@@ -85,7 +85,7 @@ export interface DocumentServiceItemPayload {
   service_id: number;
   description?: string | null;
   value: number;
-  currency: CurrencyType;
+  currency: ApiCurrencyType;
   start_date: string;
   end_date: string;
 }
@@ -107,7 +107,7 @@ export interface DocumentFolder {
   updated_at: string;
 }
 
-export interface Document {
+export interface DocumentFlatten {
   id: number;
   name: string;
   type?: ApiDocumentType;

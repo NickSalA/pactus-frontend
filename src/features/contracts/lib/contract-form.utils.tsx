@@ -5,8 +5,8 @@ import {
 } from '@/lib/document.utils';
 import { ApiServiceResponse } from '@/types/api';
 import type {
-  CurrencyType,
-  Document,
+  ApiCurrencyType,
+  DocumentFlatten,
   DocumentState,
   DocumentType,
 } from '@/types/api.types';
@@ -30,7 +30,7 @@ export type FormState = {
   start_date: string;
   end_date: string;
   state: DocumentState;
-  contract_currency: CurrencyType;
+  contract_currency: ApiCurrencyType;
   service_items: ServiceItemDraft[];
 };
 
@@ -68,7 +68,7 @@ export const createEmptyServiceItem = (
   end_date: end,
 });
 
-export const buildFormState = (document?: Document): FormState => ({
+export const buildFormState = (document?: DocumentFlatten): FormState => ({
   name: document?.client ?? '',
   client: document?.client ?? '',
   folder_id: document?.folder_id ?? null,
@@ -91,7 +91,7 @@ export const buildFormState = (document?: Document): FormState => ({
 });
 
 export const buildFormStateWithDefaultType = (
-  document: Document | undefined,
+  document: DocumentFlatten | undefined,
   defaultType: DocumentType,
 ): FormState => ({
   ...buildFormState(document),
@@ -176,7 +176,7 @@ export const getServiceOptions = (
   );
 };
 
-export const getInitialContractTotal = (document?: Document): number => {
+export const getInitialContractTotal = (document?: DocumentFlatten): number => {
   return document ? getDocumentTotalValue(document) : 0;
 };
 

@@ -6,10 +6,10 @@ import {
   getDocumentFileLabel,
   getDocumentTypeLabel,
 } from '@/lib/document.utils';
-import type { Document } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/api.types';
 
 type ContractPreviewModalProps = {
-  contract: Document;
+  contract: DocumentFlatten;
   error: string | null;
   loading: boolean;
   onClose: () => void;

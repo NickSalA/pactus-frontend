@@ -14,22 +14,22 @@ import {
 } from '@/lib/document.utils';
 import { getVisiblePageNumbers } from '@/features/contracts/lib/contracts-utils';
 import { Select } from '@/components/ui/Select';
-import type { Document } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/api.types';
 import { ApiUserRole } from '@/types/api';
 
 type ContractsTableProps = {
   canDelete: boolean;
   canEdit: boolean;
-  contracts: Document[];
+  contracts: DocumentFlatten[];
   currentPage: number;
   filteredCount: number;
   itemsPerPage: number;
-  onDelete: (contract: Document) => void;
-  onEdit: (contract: Document) => void;
+  onDelete: (contract: DocumentFlatten) => void;
+  onEdit: (contract: DocumentFlatten) => void;
   onItemsPerPageChange: (value: number) => void;
   onPageChange: (page: number) => void;
   onToggleSelect?: (id: number) => void;
-  onView: (contract: Document) => void;
+  onView: (contract: DocumentFlatten) => void;
   selectedIds?: Set<number>;
   startIndex: number;
   totalPages: number;

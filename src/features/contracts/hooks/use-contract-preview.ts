@@ -1,15 +1,19 @@
-"use client";
+'use client';
 
-import { useCallback, useRef, useState } from "react";
-import { hasContractPreviewFile, supportsInlineContractPreview } from "@/features/contracts/lib/contracts-preview.utils";
-import { getDocumentFileUrl } from "@/api";
-import type { Document } from "@/types/api.types";
+import { useCallback, useRef, useState } from 'react';
+import {
+  hasContractPreviewFile,
+  supportsInlineContractPreview,
+} from '@/features/contracts/lib/contracts-preview.utils';
+import { getDocumentFileUrl } from '@/api';
+import type { DocumentFlatten } from '@/types/api.types';
 
-const PREVIEW_FILE_MISSING_MESSAGE = "Este contrato no tiene un archivo disponible para vista previa.";
-const PREVIEW_OPENING_ERROR_MESSAGE = "No se pudo abrir el documento";
+const PREVIEW_FILE_MISSING_MESSAGE =
+  'Este contrato no tiene un archivo disponible para vista previa.';
+const PREVIEW_OPENING_ERROR_MESSAGE = 'No se pudo abrir el documento';
 
 const openUrlInNewTab = (url: string): void => {
-  window.open(url, "_blank", "noopener,noreferrer");
+  window.open(url, '_blank', 'noopener,noreferrer');
 };
 
 export function useContractPreview() {
@@ -18,7 +22,8 @@ export function useContractPreview() {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [previewContract, setPreviewContract] = useState<Document | null>(null);
+  const [previewContract, setPreviewContract] =
+    useState<DocumentFlatten | null>(null);
 
   const resetPreview = useCallback(() => {
     setShowPreview(false);
@@ -41,60 +46,64 @@ export function useContractPreview() {
     openUrlInNewTab(previewUrl);
   }, [previewUrl]);
 
-  const openPreview = useCallback(async (contract: Document) => {
-    if (!hasContractPreviewFile(contract)) {
-      window.alert(PREVIEW_FILE_MISSING_MESSAGE);
-      return;
-    }
-
-    const supportsInlinePreview = supportsInlineContractPreview(contract);
-    const nextRequestId = requestIdRef.current + 1;
-    requestIdRef.current = nextRequestId;
-
-    setPreviewContract(contract);
-    setPreviewLoading(true);
-    setPreviewError(null);
-    setPreviewUrl(null);
-    setShowPreview(supportsInlinePreview);
-
-    try {
-      const signedUrl = await getDocumentFileUrl(contract.id);
-
-      if (requestIdRef.current !== nextRequestId) {
+  const openPreview = useCallback(
+    async (contract: DocumentFlatten) => {
+      if (!hasContractPreviewFile(contract)) {
+        window.alert(PREVIEW_FILE_MISSING_MESSAGE);
         return;
       }
 
-      if (!supportsInlinePreview) {
-        openUrlInNewTab(signedUrl);
-        resetPreview();
-        return;
+      const supportsInlinePreview = supportsInlineContractPreview(contract);
+      const nextRequestId = requestIdRef.current + 1;
+      requestIdRef.current = nextRequestId;
+
+      setPreviewContract(contract);
+      setPreviewLoading(true);
+      setPreviewError(null);
+      setPreviewUrl(null);
+      setShowPreview(supportsInlinePreview);
+
+      try {
+        const signedUrl = await getDocumentFileUrl(contract.id);
+
+        if (requestIdRef.current !== nextRequestId) {
+          return;
+        }
+
+        if (!supportsInlinePreview) {
+          openUrlInNewTab(signedUrl);
+          resetPreview();
+          return;
+        }
+
+        setPreviewUrl(signedUrl);
+        setShowPreview(true);
+      } catch (err) {
+        if (requestIdRef.current !== nextRequestId) {
+          return;
+        }
+
+        console.error('Error al abrir documento:', err);
+
+        const message =
+          err instanceof Error ? err.message : PREVIEW_OPENING_ERROR_MESSAGE;
+
+        if (!supportsInlinePreview) {
+          window.alert(message);
+          resetPreview();
+          return;
+        }
+
+        setPreviewError(message);
+        setShowPreview(true);
+      } finally {
+        if (requestIdRef.current === nextRequestId) {
+          setPreviewLoading(false);
+        }
       }
-
-      setPreviewUrl(signedUrl);
-      setShowPreview(true);
-    } catch (err) {
-      if (requestIdRef.current !== nextRequestId) {
-        return;
-      }
-
-      console.error("Error al abrir documento:", err);
-
-      const message = err instanceof Error ? err.message : PREVIEW_OPENING_ERROR_MESSAGE;
-
-      if (!supportsInlinePreview) {
-        window.alert(message);
-        resetPreview();
-        return;
-      }
-
-      setPreviewError(message);
-      setShowPreview(true);
-    } finally {
-      if (requestIdRef.current === nextRequestId) {
-        setPreviewLoading(false);
-      }
-    }
-  }, [resetPreview]);
+    },
+    [resetPreview],
+  );
 
   return {
     closePreview,

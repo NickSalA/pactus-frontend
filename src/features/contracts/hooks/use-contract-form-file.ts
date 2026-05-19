@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useCallback, useMemo, useState } from "react";
-import { isAllowedFile } from "@/features/contracts/lib/contract-form.utils";
-import type { Document } from "@/types/api.types";
+import { useCallback, useMemo, useState } from 'react';
+import { isAllowedFile } from '@/features/contracts/lib/contract-form.utils';
+import type { DocumentFlatten } from '@/types/api.types';
 
 type UseContractFormFileOptions = {
   editMode?: boolean;
-  initialData?: Document;
+  initialData?: DocumentFlatten;
   onInvalidFile: (message: string) => void;
 };
 
@@ -22,24 +22,27 @@ export function useContractFormFile({
   );
   const [fileError, setFileError] = useState(false);
 
-  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.[0]) {
-      setFile(event.target.files[0]);
-      setKeepOriginalFile(false);
-      setFileError(false);
-    }
-  }, []);
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files?.[0]) {
+        setFile(event.target.files[0]);
+        setKeepOriginalFile(false);
+        setFileError(false);
+      }
+    },
+    [],
+  );
 
   const handleDrag = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (event.type === "dragenter" || event.type === "dragover") {
+    if (event.type === 'dragenter' || event.type === 'dragover') {
       setDragActive(true);
       return;
     }
 
-    if (event.type === "dragleave") {
+    if (event.type === 'dragleave') {
       setDragActive(false);
     }
   }, []);
@@ -60,7 +63,9 @@ export function useContractFormFile({
           return;
         }
 
-        onInvalidFile("Formato no permitido. Usa PDF, Excel (.xlsx/.xls) o Word (.doc/.docx).");
+        onInvalidFile(
+          'Formato no permitido. Usa PDF, Excel (.xlsx/.xls) o Word (.doc/.docx).',
+        );
       }
     },
     [onInvalidFile],
@@ -75,7 +80,10 @@ export function useContractFormFile({
     }
   }, [editMode, initialData]);
 
-  const hasValidFile = useMemo(() => file !== null || keepOriginalFile, [file, keepOriginalFile]);
+  const hasValidFile = useMemo(
+    () => file !== null || keepOriginalFile,
+    [file, keepOriginalFile],
+  );
 
   return {
     dragActive,

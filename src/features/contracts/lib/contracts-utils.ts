@@ -1,7 +1,7 @@
 import { ApiUserRole } from '@/types/api';
 import type { GooglePickerFile } from '@/lib/googlePicker';
 import { DOCUMENT_STATE_OPTIONS } from '@/lib/document.utils';
-import type { Document, DocumentState } from '@/types/api.types';
+import type { DocumentFlatten, DocumentState } from '@/types/api.types';
 
 export type DocumentFilterValue = 'all' | DocumentState;
 export type ContractFolder = {
@@ -54,10 +54,10 @@ export const isDriveFolder = (
 };
 
 export const filterContracts = (
-  contracts: Document[],
+  contracts: DocumentFlatten[],
   filter: DocumentFilterValue,
   search: string,
-): Document[] => {
+): DocumentFlatten[] => {
   const searchTerm = search.trim().toLowerCase();
 
   return contracts.filter((contract) => {

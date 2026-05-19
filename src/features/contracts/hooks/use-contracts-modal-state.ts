@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import type { Document } from "@/types/api.types";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import type { DocumentFlatten } from '@/types/api.types';
 
 type UseContractsModalStateOptions = {
   shouldOpenCreateModal?: boolean;
@@ -17,9 +17,12 @@ export function useContractsModalState({
 
   const [showForm, setShowForm] = useState(shouldOpenCreateModal);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [contractToEdit, setContractToEdit] = useState<Document | null>(null);
+  const [contractToEdit, setContractToEdit] = useState<DocumentFlatten | null>(
+    null,
+  );
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [contractToDelete, setContractToDelete] = useState<Document | null>(null);
+  const [contractToDelete, setContractToDelete] =
+    useState<DocumentFlatten | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
@@ -39,7 +42,7 @@ export function useContractsModalState({
     setShowForm(false);
   }, []);
 
-  const openEditForm = useCallback((contract: Document) => {
+  const openEditForm = useCallback((contract: DocumentFlatten) => {
     setContractToEdit(contract);
     setShowEditForm(true);
   }, []);
@@ -49,7 +52,7 @@ export function useContractsModalState({
     setContractToEdit(null);
   }, []);
 
-  const openDeleteModal = useCallback((contract: Document) => {
+  const openDeleteModal = useCallback((contract: DocumentFlatten) => {
     setContractToDelete(contract);
     setShowDeleteModal(true);
   }, []);

@@ -19,15 +19,15 @@ import {
   getWritableDocumentTypes,
 } from '@/lib/permissions';
 import { useAuthStore } from '@/store';
-import type { Document, DocumentState } from '@/types/api.types';
+import type { DocumentFlatten, DocumentState } from '@/types/api.types';
 import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
 
 type ContractFormProps = {
   readonly availableFolders?: readonly ContractFolder[];
   readonly defaultFolderId?: number | null;
   readonly editMode?: boolean;
-  readonly initialData?: Document;
-  readonly onAdd: (contract: Document) => void;
+  readonly initialData?: DocumentFlatten;
+  readonly onAdd: (contract: DocumentFlatten) => void;
   readonly onClose: () => void;
 };
 

@@ -1,11 +1,13 @@
-import type { Document } from '@/types/api.types';
+import type { DocumentFlatten } from '@/types/api.types';
 import type { ApiDocumentResponse, ApiDocumentType } from '@/types/api';
 import type {
   ApiDocumentCompanyContractResponse,
   ApiDocumentLaborContractResponse,
 } from '@/types/api';
 
-export const normalizeDocument = (doc: ApiDocumentResponse): Document => {
+export const normalizeDocument = (
+  doc: ApiDocumentResponse,
+): DocumentFlatten => {
   const hasCompanyContract = Boolean(doc.company_contract);
   const hasLaborContract = Boolean(doc.labor_contract);
 

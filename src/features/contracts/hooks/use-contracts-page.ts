@@ -15,7 +15,7 @@ import { useContractsDrivePicker } from '@/features/contracts/hooks/use-contract
 import { useContractsFilters } from '@/features/contracts/hooks/use-contracts-filters';
 import { useContractsModalState } from '@/features/contracts/hooks/use-contracts-modal-state';
 import { useAuthStore } from '@/store';
-import type { Document, DocumentType } from '@/types/api.types';
+import type { DocumentFlatten, DocumentType } from '@/types/api.types';
 
 type UseContractsPageOptions = {
   shouldOpenCreateModal?: boolean;
@@ -114,7 +114,7 @@ export function useContractsPage({
   } = useContractPreview();
 
   const updateContract = useCallback(
-    (updatedContract: Document) => {
+    (updatedContract: DocumentFlatten) => {
       updateCollectionContract(updatedContract);
       closeEditForm();
     },
@@ -207,7 +207,7 @@ export function useContractsPage({
   }, [canCreateContract, openCreateForm]);
 
   const handleOpenEditForm = useCallback(
-    (contract: Document) => {
+    (contract: DocumentFlatten) => {
       console.log(
         '[DEBUG] handleOpenEditForm - Role:',
         userRole,
@@ -230,7 +230,7 @@ export function useContractsPage({
   );
 
   const handleOpenDeleteModal = useCallback(
-    (contract: Document) => {
+    (contract: DocumentFlatten) => {
       console.log(
         '[DEBUG] handleOpenDeleteModal - Role:',
         userRole,

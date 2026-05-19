@@ -1,9 +1,10 @@
-import type { Conversation } from "@/types/api.types";
-import { formatConversationDate } from "@/features/ai-agent/lib/chat-utils";
+import { ApiConversationList } from '@/types/api';
+
+import { formatConversationDate } from '@/features/ai-agent/lib/chat-utils';
 
 type ChatHistorySidebarProps = {
   activeConversationId?: number;
-  conversations: Conversation[];
+  conversations: ApiConversationList[];
   isLoading: boolean;
   onSelectConversation: (conversationId: number) => void;
   onToggle: () => void;
@@ -12,16 +13,36 @@ type ChatHistorySidebarProps = {
 
 function PanelCollapseIcon() {
   return (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={1.75}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+      />
     </svg>
   );
 }
 
 function PanelExpandIcon() {
   return (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={1.75}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M13 5l7 7-7 7M5 5l7 7-7 7"
+      />
     </svg>
   );
 }
@@ -37,7 +58,7 @@ export function ChatHistorySidebar({
   return (
     <div
       className={`${
-        showHistory ? "w-80" : "w-12"
+        showHistory ? 'w-80' : 'w-12'
       } flex flex-shrink-0 flex-col overflow-hidden bg-white/80 shadow-[2px_0_16px_rgba(0,0,0,0.07)] backdrop-blur-xl transition-all duration-300 ease-out`}
     >
       {/* Header — no bottom border, blends into list */}
@@ -45,7 +66,9 @@ export function ChatHistorySidebar({
         {showHistory ? (
           <>
             <div className="flex h-11 flex-1 items-center pl-2">
-              <h2 className="font-semibold tracking-tight text-slate-800">Conversaciones</h2>
+              <h2 className="font-semibold tracking-tight text-slate-800">
+                Conversaciones
+              </h2>
             </div>
             <button
               onClick={onToggle}
@@ -89,20 +112,32 @@ export function ChatHistorySidebar({
                     onClick={() => onSelectConversation(conversation.id)}
                     className={`group w-full rounded-lg px-3 py-2.5 text-left transition-all duration-150 ${
                       isActive
-                        ? "border border-blue-300 bg-blue-50"
-                        : "border border-transparent hover:bg-slate-100/70"
+                        ? 'border border-blue-300 bg-blue-50'
+                        : 'border border-transparent hover:bg-slate-100/70'
                     }`}
                   >
-                    <p className={`truncate text-sm font-medium transition-colors duration-150 ${
-                      isActive
-                        ? "text-blue-700"
-                        : "text-slate-700 group-hover:text-slate-900"
-                    }`}>
+                    <p
+                      className={`truncate text-sm font-medium transition-colors duration-150 ${
+                        isActive
+                          ? 'text-blue-700'
+                          : 'text-slate-700 group-hover:text-slate-900'
+                      }`}
+                    >
                       {conversation.title}
                     </p>
                     <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
-                      <svg className="h-3 w-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <svg
+                        className="h-3 w-3 flex-shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
                       </svg>
                       {formatConversationDate(conversation.created_at)}
                     </p>

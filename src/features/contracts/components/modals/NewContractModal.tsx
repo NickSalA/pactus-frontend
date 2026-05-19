@@ -45,7 +45,7 @@ import type {
   ApiTemplateResponse,
   ApiServiceResponse,
 } from '@/types/api';
-import type { Document, DocumentType } from '@/types/api.types';
+import type { DocumentFlatten, DocumentType } from '@/types/api.types';
 import { normalizeDocument } from '../../lib/normalize-document';
 
 const ContractForm = dynamic(
@@ -107,7 +107,7 @@ export type NewContractModalProps = {
   defaultFolderId?: number | null;
   open: boolean;
   onClose: () => void;
-  onSubmit: (contract: Document) => void;
+  onSubmit: (contract: DocumentFlatten) => void;
 };
 
 const CURRENCY_OPTIONS: readonly ApiCurrencyType[] = ['PEN', 'USD', 'EUR'];
@@ -671,9 +671,8 @@ export function NewContractModal({
   const [submitState, setSubmitState] = useState<RequestState>('idle');
   const [flowError, setFlowError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [generatedDocument, setGeneratedDocument] = useState<Document | null>(
-    null,
-  );
+  const [generatedDocument, setGeneratedDocument] =
+    useState<DocumentFlatten | null>(null);
   const [openFieldSections, setOpenFieldSections] = useState<
     Record<string, boolean>
   >({});

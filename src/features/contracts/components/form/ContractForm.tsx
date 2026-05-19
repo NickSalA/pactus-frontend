@@ -1,39 +1,69 @@
-"use client";
+'use client';
 
-import { Check, Plus } from "lucide-react";
-import { formatCurrencyValue, formatFormDate } from "@/features/contracts/lib/contract-form.utils";
-import { useContractForm } from "@/features/contracts/hooks/use-contract-form";
-import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
-import { getDocumentStateLabel, getDocumentTypeLabel } from "@/lib/document.utils";
-import type { Document } from "@/types/api.types";
-import { ContractFormDocumentSection } from "./ContractFormDocumentSection";
-import { ContractFormGeneralFields } from "./ContractFormGeneralFields";
-import { ContractFormProgress } from "./ContractFormProgress";
-import { ContractFormServicesSection } from "./ContractFormServicesSection";
-import { ContractFormSummaryAccordion } from "./ContractFormSummaryAccordion";
-import { ContractStatusChanger } from "./ContractStatusChanger";
+import { Check, Plus } from 'lucide-react';
+import {
+  formatCurrencyValue,
+  formatFormDate,
+} from '@/features/contracts/lib/contract-form.utils';
+import { useContractForm } from '@/features/contracts/hooks/use-contract-form';
+import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
+import {
+  getDocumentStateLabel,
+  getDocumentTypeLabel,
+} from '@/lib/document.utils';
+import type { DocumentFlatten } from '@/types/api.types';
+import { ContractFormDocumentSection } from './ContractFormDocumentSection';
+import { ContractFormGeneralFields } from './ContractFormGeneralFields';
+import { ContractFormProgress } from './ContractFormProgress';
+import { ContractFormServicesSection } from './ContractFormServicesSection';
+import { ContractFormSummaryAccordion } from './ContractFormSummaryAccordion';
+import { ContractStatusChanger } from './ContractStatusChanger';
 
 type Props = {
   readonly availableFolders?: readonly ContractFolder[];
   readonly defaultFolderId?: number | null;
-  readonly onAdd: (contract: Document) => void;
+  readonly onAdd: (contract: DocumentFlatten) => void;
   readonly onClose: () => void;
   readonly editMode?: boolean;
-  readonly initialData?: Document;
+  readonly initialData?: DocumentFlatten;
 };
 
-export default function ContractForm({ availableFolders, defaultFolderId, onAdd, onClose, editMode = false, initialData }: Props) {
-  const formState = useContractForm({ availableFolders, defaultFolderId, editMode, initialData, onAdd, onClose });
-  const showStatusChanger = editMode && (initialData?.state === "DRAFT" || initialData?.state === "PENDING_SIGNATURE");
+export default function ContractForm({
+  availableFolders,
+  defaultFolderId,
+  onAdd,
+  onClose,
+  editMode = false,
+  initialData,
+}: Props) {
+  const formState = useContractForm({
+    availableFolders,
+    defaultFolderId,
+    editMode,
+    initialData,
+    onAdd,
+    onClose,
+  });
+  const showStatusChanger =
+    editMode &&
+    (initialData?.state === 'DRAFT' ||
+      initialData?.state === 'PENDING_SIGNATURE');
 
   const generalPreview = (
     <p className="mt-0.5 truncate text-sm text-slate-700">
-      <span className="font-medium">{formState.form.name || "-"}</span>
-      {formState.form.client && <span className="text-slate-500"> · {formState.form.client}</span>}
-      <span className="text-slate-400"> · {formState.form.contract_currency}</span>
+      <span className="font-medium">{formState.form.name || '-'}</span>
+      {formState.form.client && (
+        <span className="text-slate-500"> · {formState.form.client}</span>
+      )}
+      <span className="text-slate-400">
+        {' '}
+        · {formState.form.contract_currency}
+      </span>
       {formState.form.start_date && formState.form.end_date && (
         <span className="text-slate-400">
-          {" "}· {formatFormDate(formState.form.start_date)} — {formatFormDate(formState.form.end_date)}
+          {' '}
+          · {formatFormDate(formState.form.start_date)} —{' '}
+          {formatFormDate(formState.form.end_date)}
         </span>
       )}
     </p>
@@ -41,10 +71,15 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
 
   const generalPreviewDetailed = (
     <p className="mt-0.5 truncate text-sm text-slate-700">
-      <span className="font-medium">{formState.form.name || "-"}</span>
-      {formState.form.client && <span className="text-slate-500"> · {formState.form.client}</span>}
+      <span className="font-medium">{formState.form.name || '-'}</span>
+      {formState.form.client && (
+        <span className="text-slate-500"> · {formState.form.client}</span>
+      )}
       <span className="text-slate-400">
-        {" "}· {getDocumentTypeLabel(formState.form.type)} · {getDocumentStateLabel(formState.form.state)} · {formState.form.contract_currency}
+        {' '}
+        · {getDocumentTypeLabel(formState.form.type)} ·{' '}
+        {getDocumentStateLabel(formState.form.state)} ·{' '}
+        {formState.form.contract_currency}
       </span>
     </p>
   );
@@ -57,10 +92,12 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
         <>
           <span className="font-medium">
             {formState.form.service_items.length} servicio
-            {formState.form.service_items.length !== 1 ? "s" : ""}
+            {formState.form.service_items.length !== 1 ? 's' : ''}
           </span>
           <span className="text-slate-400">
-            {" "}· Total: {formState.form.contract_currency} {formatCurrencyValue(formState.contractTotal)}
+            {' '}
+            · Total: {formState.form.contract_currency}{' '}
+            {formatCurrencyValue(formState.contractTotal)}
           </span>
         </>
       )}
@@ -98,7 +135,9 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
 
   const servicesHeader = (
     <div className="mb-3 flex items-center justify-between">
-      <p className="text-sm font-semibold text-slate-800">Servicios asociados</p>
+      <p className="text-sm font-semibold text-slate-800">
+        Servicios asociados
+      </p>
       <button
         type="button"
         onClick={formState.startAddingService}
@@ -117,7 +156,9 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
 
   const servicesSummaryHeader = (
     <div className="mb-3 flex items-center justify-between">
-      <p className="text-xs text-slate-500">Edita los servicios directamente sin retroceder.</p>
+      <p className="text-xs text-slate-500">
+        Edita los servicios directamente sin retroceder.
+      </p>
       <button
         type="button"
         onClick={formState.startAddingService}
@@ -157,13 +198,15 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
     <div className="flex h-full flex-col px-7 py-6">
       <div className="shrink-0">
         <h2 className="mb-4 text-xl font-semibold text-slate-800">
-          {editMode ? "Editar Contrato" : "Nuevo Contrato"}
+          {editMode ? 'Editar Contrato' : 'Nuevo Contrato'}
         </h2>
         <ContractFormProgress currentStep={formState.currentStep} />
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className={`transition-opacity duration-150 ${formState.visible ? "opacity-100" : "opacity-0"}`}>
+        <div
+          className={`transition-opacity duration-150 ${formState.visible ? 'opacity-100' : 'opacity-0'}`}
+        >
           {formState.currentStep === 1 && (
             <ContractFormGeneralFields
               allowedDocumentTypes={formState.allowedDocumentTypes}
@@ -179,7 +222,9 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
               <ContractFormSummaryAccordion
                 expanded={formState.summary1Expanded}
                 onToggle={() =>
-                  formState.summary1Expanded ? formState.closeSummary1() : formState.openSummary1()
+                  formState.summary1Expanded
+                    ? formState.closeSummary1()
+                    : formState.openSummary1()
                 }
                 preview={generalPreview}
                 title="Datos generales"
@@ -199,7 +244,9 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
               <ContractFormSummaryAccordion
                 expanded={formState.summary1Expanded}
                 onToggle={() =>
-                  formState.summary1Expanded ? formState.closeSummary1() : formState.openSummary1()
+                  formState.summary1Expanded
+                    ? formState.closeSummary1()
+                    : formState.openSummary1()
                 }
                 preview={generalPreviewDetailed}
                 title="Datos generales"
@@ -210,7 +257,9 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
               <ContractFormSummaryAccordion
                 expanded={formState.summary2Expanded}
                 maxHeightClass="max-h-[800px]"
-                onToggle={() => formState.setSummary2Expanded((previous) => !previous)}
+                onToggle={() =>
+                  formState.setSummary2Expanded((previous) => !previous)
+                }
                 preview={servicesPreview}
                 title="Servicios"
               >
@@ -229,7 +278,9 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
                 hasValidFile={formState.hasValidFile}
                 initialData={initialData}
                 keepOriginalFile={formState.keepOriginalFile}
-                onDisableOriginalFile={() => formState.setKeepOriginalFile(false)}
+                onDisableOriginalFile={() =>
+                  formState.setKeepOriginalFile(false)
+                }
                 onDrag={formState.handleDrag}
                 onDrop={formState.handleDrop}
                 onFileChange={formState.handleFileChange}
@@ -262,7 +313,7 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
           disabled={formState.loading}
           className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
         >
-          {formState.currentStep === 1 ? "Volver" : "← Anterior"}
+          {formState.currentStep === 1 ? 'Volver' : '← Anterior'}
         </button>
 
         {formState.currentStep < 3 ? (
@@ -283,12 +334,12 @@ export default function ContractForm({ availableFolders, defaultFolderId, onAdd,
             {formState.loading ? (
               <>
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                {editMode ? "Actualizando..." : "Guardando..."}
+                {editMode ? 'Actualizando...' : 'Guardando...'}
               </>
             ) : (
               <>
                 <Check className="h-4 w-4" />
-                {editMode ? "Guardar cambios" : "Crear contrato"}
+                {editMode ? 'Guardar cambios' : 'Crear contrato'}
               </>
             )}
           </button>

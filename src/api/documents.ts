@@ -17,14 +17,14 @@ import type {
   ApiServiceResponse,
 } from '@/types/api';
 import type {
-  Document,
+  DocumentFlatten,
   DocumentFolder,
   LaborContractResponse,
 } from '@/types/api.types';
 import { TIMEOUTS } from './constants';
 import { apiGet, apiPost, apiPatch, apiDelete } from './axiosInstance';
 
-const normalizeDocument = (doc: ApiDocumentResponse): Document => {
+const normalizeDocument = (doc: ApiDocumentResponse): DocumentFlatten => {
   const hasCompanyContract = Boolean(doc.company_contract);
   const hasLaborContract = Boolean(doc.labor_contract);
 
@@ -84,7 +84,7 @@ const appendDocumentPayload = (formData: FormData, data: DocumentPayload) => {
 
 export async function uploadDocument(
   data: ApiDocumentCreateRequest,
-): Promise<Document> {
+): Promise<DocumentFlatten> {
   const formData = new FormData();
 
   appendDocumentPayload(formData, {
@@ -107,7 +107,7 @@ export async function uploadDocument(
   return createdDocument;
 }
 
-export async function getDocuments(): Promise<Document[]> {
+export async function getDocuments(): Promise<DocumentFlatten[]> {
   const documents = await apiGet<ApiDocumentResponse[]>('/documents/', {
     timeout: TIMEOUTS.DEFAULT,
   });
@@ -187,7 +187,7 @@ export async function deleteDocument(id: number): Promise<void> {
   return apiDelete(`/documents/${id}`, { timeout: TIMEOUTS.AUTH });
 }
 
-export async function getDocumentById(id: number): Promise<Document> {
+export async function getDocumentById(id: number): Promise<DocumentFlatten> {
   const document = await apiGet<ApiDocumentResponse>(`/documents/${id}`, {
     timeout: TIMEOUTS.DEFAULT,
   });
@@ -209,7 +209,7 @@ export async function getDocumentFileUrl(id: number): Promise<string> {
 export async function updateDocument(
   id: number,
   data: ApiDocumentUpdateRequest,
-): Promise<Document> {
+): Promise<DocumentFlatten> {
   const formData = new FormData();
 
   appendDocumentPayload(formData, {

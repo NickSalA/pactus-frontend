@@ -1,5 +1,5 @@
 import { apiGet } from './axiosInstance';
-import type { CurrencyType } from '@/types/api.types';
+import type { ApiCurrencyType } from '@/types/api.types';
 
 import {
   ApiDashboardAlertCategory,
@@ -11,7 +11,7 @@ import {
 } from '@/types/api';
 
 export async function getAreaChartCompany(
-  currency?: CurrencyType,
+  currency?: ApiCurrencyType,
 ): Promise<ApiDashboardAreaChartResponse> {
   const query = currency ? `?currency=${currency}` : '';
   return apiGet<ApiDashboardAreaChartResponse>(
@@ -20,7 +20,7 @@ export async function getAreaChartCompany(
 }
 
 export async function getAreaChartLabor(
-  currency?: CurrencyType,
+  currency?: ApiCurrencyType,
 ): Promise<ApiDashboardAreaChartResponse> {
   const query = currency ? `?currency=${currency}` : '';
   return apiGet<ApiDashboardAreaChartResponse>(
@@ -57,7 +57,7 @@ export async function getRecentContractsLabor(): Promise<
 }
 
 export async function getTopCompanies(
-  currency?: CurrencyType,
+  currency?: ApiCurrencyType,
   sort_by?: ApiTopRankingSortBy,
 ): Promise<ApiDashboardTopCompanyResponse[]> {
   const params = new URLSearchParams();
@@ -70,7 +70,7 @@ export async function getTopCompanies(
 }
 
 export async function getTopServices(
-  currency?: CurrencyType,
+  currency?: ApiCurrencyType,
   sort_by?: ApiTopRankingSortBy,
 ): Promise<ApiDashboardTopServiceResponse[]> {
   const params = new URLSearchParams();

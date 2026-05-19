@@ -14,7 +14,7 @@ import {
   updateNotificationRule,
 } from '@/api';
 import { useAdminGuard } from '@/features/admin/hooks/use-admin-guard';
-import type { Document, NotificationRule } from '@/types/api.types';
+import type { DocumentFlatten, NotificationRule } from '@/types/api.types';
 
 type RuleDraft = {
   days_before_due: number;
@@ -30,7 +30,7 @@ const EMPTY_DRAFT: RuleDraft = {
 
 export function useAdminAlertRules() {
   const access = useAdminGuard();
-  const [documents, setDocuments] = useState<Document[]>([]);
+  const [documents, setDocuments] = useState<DocumentFlatten[]>([]);
   const [rules, setRules] = useState<NotificationRule[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

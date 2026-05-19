@@ -1,4 +1,4 @@
-import { Document } from '@/types/api.types';
+import { DocumentFlatten } from '@/types/api.types';
 import {
   ApiDocumentFormData,
   ApiDocumentState,
@@ -115,7 +115,7 @@ export const getDocumentCurrency = (
 };
 
 export const getDocumentTotalValue = (
-  document: Pick<Document, 'form_data' | 'service_items'>,
+  document: Pick<DocumentFlatten, 'form_data' | 'service_items'>,
 ): number => {
   if (document.service_items.length > 0) {
     return document.service_items.reduce((total, serviceItem) => {
@@ -128,7 +128,7 @@ export const getDocumentTotalValue = (
 };
 
 export const getDocumentPrimaryCurrency = (
-  document: Pick<Document, 'form_data' | 'service_items'>,
+  document: Pick<DocumentFlatten, 'form_data' | 'service_items'>,
 ): ApiCurrencyType | null => {
   const serviceCurrency = document.service_items[0]?.currency;
   if (
@@ -155,7 +155,7 @@ export const formatCurrencyAmount = (
 };
 
 export const getDocumentSummary = (
-  document: Pick<Document, 'form_data' | 'service_items'>,
+  document: Pick<DocumentFlatten, 'form_data' | 'service_items'>,
 ): string => {
   const parts: string[] = [];
   const totalValue = getDocumentTotalValue(document);
@@ -175,7 +175,7 @@ export const getDocumentSummary = (
 };
 
 export const getDocumentFileLabel = (
-  document: Pick<Document, 'file_name'>,
+  document: Pick<DocumentFlatten, 'file_name'>,
 ): string => {
   return readString(document.file_name) ?? 'Sin archivo';
 };
