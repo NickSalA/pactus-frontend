@@ -6,7 +6,7 @@ import { DashboardRecentDocumentsTable } from '@/features/dashboard/components/D
 import { DashboardWelcome } from '@/features/dashboard/components/DashboardWelcome';
 import { toFirstName } from '@/lib/authUser';
 import { useAuthStore } from '@/store';
-import { useDashboardHRPage } from '@/features/dashboard/hooks/use-dashboard-hr-page';
+import { useDashboardHRPage } from '@/features/dashboard/hooks/useDashboardHRPage';
 
 export function DashboardHRPageContent() {
   const { user } = useAuthStore();

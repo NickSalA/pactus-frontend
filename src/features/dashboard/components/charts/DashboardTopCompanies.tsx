@@ -49,7 +49,13 @@ export function DashboardTopCompanies({
   const [activeMetric, setActiveMetric] = useState<MetricKey>('amount');
 
   if (isLoading) {
-    return <LoadingSkeleton />;
+    return (
+      <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
+        <CardContent className="flex flex-1 items-center justify-center">
+          <LoadingSkeleton />
+        </CardContent>
+      </Card>
+    );
   }
 
   const barColor = COLORS[documentType];
@@ -70,7 +76,9 @@ export function DashboardTopCompanies({
   return (
     <Card className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
       <CardHeader className="mb-4 flex items-center justify-between p-0">
-        <CardTitle className="text-lg font-semibold text-slate-800">Top Empresas</CardTitle>
+        <CardTitle className="text-lg font-semibold text-slate-800">
+          Top Empresas
+        </CardTitle>
         <div className="flex rounded-lg bg-gray-100 p-0.5">
           <button
             onClick={() => setActiveMetric('contracts')}

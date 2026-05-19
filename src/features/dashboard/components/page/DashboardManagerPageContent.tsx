@@ -8,7 +8,7 @@ import { DashboardTopServices } from '@/features/dashboard/components/charts/Das
 import { DashboardWelcome } from '@/features/dashboard/components/DashboardWelcome';
 import { toFirstName } from '@/lib/authUser';
 import { useAuthStore } from '@/store';
-import { useDashboardManagerPage } from '@/features/dashboard/hooks/use-dashboard-manager-page';
+import { useDashboardManagerPage } from '@/features/dashboard/hooks/useDashboardManagerPage';
 
 export function DashboardManagerPageContent() {
   const { user } = useAuthStore();
