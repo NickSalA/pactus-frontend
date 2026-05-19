@@ -1,33 +1,46 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
-import { useSendMessage } from "@/queries/hooks/chat/mutations";
-import { useConversation, useConversations } from "@/queries/hooks/chat/queries";
-import { useLiveNow } from "@/features/aiAgent/hooks/useLiveNow";
-import { mapConversationToMessages } from "@/features/aiAgent/lib/utils";
-import type { ChatMessage } from "@/features/aiAgent/lib/utils";
-import { useAuthStore } from "@/store";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type KeyboardEvent,
+} from 'react';
+import { useSendMessage } from '@/queries/hooks/chat/mutations';
+import {
+  useConversation,
+  useConversations,
+} from '@/queries/hooks/chat/queries';
+import { mapConversationToMessages } from '@/features/aiAgent/lib/utils';
+import type { ChatMessage } from '@/features/aiAgent/lib/utils';
+import { useAuthStore } from '@/store';
 
 export function useAIAgentPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [threadId, setThreadId] = useState<number | undefined>(undefined);
   const [showHistory, setShowHistory] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const now = useLiveNow();
 
   const user = useAuthStore((state) => state.user);
   const userId = user ? parseInt(user.id, 10) : NaN;
 
-  const { data: conversationsData, isLoading: isHistoryLoading, refetch: reloadConversations } = useConversations(userId);
-  const { data: conversationData, isLoading: isConversationLoading } = useConversation(threadId ?? 0);
+  const {
+    data: conversationsData,
+    isLoading: isHistoryLoading,
+    refetch: reloadConversations,
+  } = useConversations(userId);
+  const { data: conversationData, isLoading: isConversationLoading } =
+    useConversation(threadId ?? 0);
 
   const conversations = conversationsData ?? [];
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   useEffect(() => {
@@ -51,17 +64,17 @@ export function useAIAgentPage() {
 
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
-      sender: "user",
+      sender: 'user',
       content: trimmedValue,
       timestamp: new Date(),
     };
 
     setMessages((currentMessages) => [...currentMessages, userMessage]);
-    setInputValue("");
+    setInputValue('');
     setIsLoading(true);
 
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = 'auto';
     }
 
     try {
@@ -72,7 +85,7 @@ export function useAIAgentPage() {
 
       const botMessage: ChatMessage = {
         id: `bot-${Date.now()}`,
-        sender: "bot",
+        sender: 'bot',
         content: response.response,
         timestamp: new Date(),
       };
@@ -82,8 +95,9 @@ export function useAIAgentPage() {
     } catch {
       const errorMessage: ChatMessage = {
         id: `error-${Date.now()}`,
-        sender: "bot",
-        content: "Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta de nuevo.",
+        sender: 'bot',
+        content:
+          'Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta de nuevo.',
         timestamp: new Date(),
       };
 
@@ -117,15 +131,18 @@ export function useAIAgentPage() {
     textareaRef.current?.focus();
   }, []);
 
-  const handleInputChange = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(event.target.value);
-    event.target.style.height = "auto";
-    event.target.style.height = `${Math.min(event.target.scrollHeight, 120)}px`;
-  }, []);
+  const handleInputChange = useCallback(
+    (event: ChangeEvent<HTMLTextAreaElement>) => {
+      setInputValue(event.target.value);
+      event.target.style.height = 'auto';
+      event.target.style.height = `${Math.min(event.target.scrollHeight, 120)}px`;
+    },
+    [],
+  );
 
   const handleComposerKeyDown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
-      if (event.key === "Enter" && !event.shiftKey) {
+      if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
         void submitCurrentMessage();
       }
@@ -159,7 +176,6 @@ export function useAIAgentPage() {
     loadConversation,
     messages,
     messagesEndRef,
-    now,
     showHistory,
     startNewConversation,
     textareaRef,

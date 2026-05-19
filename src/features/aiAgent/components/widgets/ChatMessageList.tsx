@@ -1,8 +1,5 @@
 import type { RefObject } from 'react';
-import {
-  formatMessageTime,
-  isRecentTimestamp,
-} from '@/features/aiAgent/lib/utils';
+import { formatMessageTime } from '@/features/aiAgent/lib/utils';
 import type { ChatMessage } from '@/features/aiAgent/lib/utils';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { RobotIcon } from '@/features/aiAgent/components/ui/RobotIcon';
@@ -11,14 +8,12 @@ type ChatMessageListProps = {
   bottomRef: RefObject<HTMLDivElement | null>;
   isLoading: boolean;
   messages: ChatMessage[];
-  now: Date;
 };
 
 export function ChatMessageList({
   bottomRef,
   isLoading,
   messages,
-  now,
 }: ChatMessageListProps) {
   return (
     <div className="mx-auto max-w-3xl space-y-5 pb-4">
@@ -86,7 +81,7 @@ export function ChatMessageList({
                   >
                     {message.sender === 'user' ? 'Enviado' : 'ContractAI'}
                   </span>
-                  {isRecentTimestamp(message.timestamp, now) && (
+                  {Date.now() - message.timestamp.getTime() < 60_000 && (
                     <span className="ml-1 h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   )}
                 </span>
@@ -99,7 +94,7 @@ export function ChatMessageList({
       {isLoading && (
         <div className="flex justify-start">
           <div className="flex items-end gap-3">
-            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-linear-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
               <RobotIcon size="sm" />
             </div>
             <div className="rounded-2xl rounded-bl-md border border-slate-100 bg-white px-5 py-4 shadow-lg shadow-slate-200/50">

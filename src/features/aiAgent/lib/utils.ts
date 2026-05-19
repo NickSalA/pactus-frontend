@@ -1,7 +1,4 @@
-import type {
-  ApiConversationList,
-  ApiConversationRead,
-} from '@/types/api';
+import type { ApiConversationList, ApiConversationRead } from '@/types/api';
 
 export type ChatMessage = {
   id: string;

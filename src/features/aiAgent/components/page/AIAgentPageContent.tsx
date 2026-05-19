@@ -79,7 +79,6 @@ export function AIAgentPageContent() {
               bottomRef={page.messagesEndRef}
               isLoading={page.isLoading}
               messages={page.messages}
-              now={page.now}
             />
           )}
         </div>
