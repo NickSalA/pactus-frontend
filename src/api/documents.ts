@@ -1,26 +1,28 @@
 import type {
-  CompanyContractResponse,
+  ApiDocumentCompanyContractRequest,
+  ApiDocumentFileUrlResponse,
+  ApiDocumentLaborContractRequest,
+  ApiDocumentResponse,
+  ApiDocumentServiceItemRequest,
+  ApiDocumentState,
+  ApiDocumentType,
+  ApiDocumentUpdateRequest,
+  ApiFolderCreateRequest,
+  ApiFolderUpdateRequest,
+  ApiServiceCreateRequest,
+  ApiServiceUpdateRequest,
+  ApiDocumentCreateRequest,
+  ApiDocumentCompanyContractResponse,
+  ApiServiceListResponse,
+  ApiServiceResponse,
+} from '@/types/api';
+import type {
   Document,
-  DocumentCreateRequest,
-  DocumentFileUrlResponse,
   DocumentFolder,
-  DocumentFormData,
-  DocumentServiceItem,
-  DocumentUpdateRequest,
   LaborContractResponse,
-  ServiceCatalogItem,
-  ServiceCatalogItemCreateRequest,
 } from '@/types/api.types';
 import { TIMEOUTS } from './constants';
 import { apiGet, apiPost, apiPatch, apiDelete } from './axiosInstance';
-import {
-  ApiServiceCreateRequest,
-  ApiServiceUpdateRequest,
-  ApiFolderUpdateRequest,
-  ApiDocumentResponse,
-  ApiDocumentType,
-  ApiFolderCreateRequest,
-} from '@/types/api';
 
 const normalizeDocument = (doc: ApiDocumentResponse): Document => {
   const hasCompanyContract = Boolean(doc.company_contract);
@@ -52,7 +54,7 @@ const normalizeDocument = (doc: ApiDocumentResponse): Document => {
     file_path: doc.file_path ?? null,
     file_name: doc.file_name ?? null,
     company_contract: doc.company_contract as
-      | CompanyContractResponse
+      | ApiDocumentCompanyContractResponse
       | undefined,
     labor_contract: doc.labor_contract as LaborContractResponse | undefined,
     created_at: doc.created_at ?? '',
@@ -61,28 +63,29 @@ const normalizeDocument = (doc: ApiDocumentResponse): Document => {
   };
 };
 
-const appendDocumentPayload = (
-  formData: FormData,
-  data: {
-    contract_type?: Document['contract_type'];
-    company_contract?: DocumentCreateRequest['company_contract'];
-    labor_contract?: DocumentCreateRequest['labor_contract'];
-    start_date?: string;
-    end_date?: string;
-    form_data?: DocumentFormData;
-    state?: Document['state'];
-    folder_id?: number | null;
-    service_items?: DocumentCreateRequest['service_items'];
-  },
-) => {
+type DocumentPayload = {
+  contract_type?: ApiDocumentType | null;
+  company_contract?: ApiDocumentCompanyContractRequest | null;
+  labor_contract?: ApiDocumentLaborContractRequest | null;
+  start_date?: string | null;
+  end_date?: string | null;
+  form_data?: object | null;
+  state?: ApiDocumentState | null;
+  folder_id?: number | null;
+  service_items?: ApiDocumentServiceItemRequest[] | null;
+  type?: string | null;
+  name?: string | null;
+  client?: string | null;
+};
+
+const appendDocumentPayload = (formData: FormData, data: DocumentPayload) => {
   formData.append('document', JSON.stringify(data));
 };
 
 export async function uploadDocument(
-  data: DocumentCreateRequest,
+  data: ApiDocumentCreateRequest,
 ): Promise<Document> {
   const formData = new FormData();
-  formData.append('file', data.file);
 
   appendDocumentPayload(formData, {
     contract_type: data.contract_type,
@@ -95,7 +98,7 @@ export async function uploadDocument(
   });
 
   const createdDocument = normalizeDocument(
-    await apiPost<Document>('/documents/', formData, {
+    await apiPost<ApiDocumentResponse>('/documents/', formData, {
       timeout: TIMEOUTS.UPLOAD,
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
@@ -105,22 +108,22 @@ export async function uploadDocument(
 }
 
 export async function getDocuments(): Promise<Document[]> {
-  const documents = await apiGet<Document[]>('/documents/', {
+  const documents = await apiGet<ApiDocumentResponse[]>('/documents/', {
     timeout: TIMEOUTS.DEFAULT,
   });
   return documents.map(normalizeDocument);
 }
 
-export async function getServices(): Promise<ServiceCatalogItem[]> {
-  return apiGet<ServiceCatalogItem[]>('/services', {
+export async function getServices(): Promise<ApiServiceResponse[]> {
+  return apiGet<ApiServiceResponse[]>('/services', {
     timeout: TIMEOUTS.DEFAULT,
   });
 }
 
 export async function getServicesAdmin(
   includeInactive: boolean = true,
-): Promise<ServiceCatalogItem[]> {
-  return apiGet<ServiceCatalogItem[]>(
+): Promise<ApiServiceListResponse[]> {
+  return apiGet<ApiServiceListResponse[]>(
     `/services?include_inactive=${includeInactive ? 'true' : 'false'}`,
     {
       timeout: TIMEOUTS.DEFAULT,
@@ -130,9 +133,9 @@ export async function getServicesAdmin(
 }
 
 export async function createServiceCatalogItem(
-  payload: ServiceCatalogItemCreateRequest,
-): Promise<ServiceCatalogItem> {
-  return apiPost<ServiceCatalogItem>('/services', payload, {
+  payload: ApiServiceCreateRequest,
+): Promise<ApiServiceListResponse> {
+  return apiPost<ApiServiceListResponse>('/services', payload, {
     timeout: TIMEOUTS.AUTH,
   });
 }
@@ -140,8 +143,8 @@ export async function createServiceCatalogItem(
 export async function updateServiceCatalogItem(
   serviceId: number,
   payload: ApiServiceUpdateRequest,
-): Promise<ServiceCatalogItem> {
-  return apiPatch<ServiceCatalogItem>(`/services/${serviceId}`, payload, {
+): Promise<ApiServiceListResponse> {
+  return apiPatch<ApiServiceListResponse>(`/services/${serviceId}`, payload, {
     timeout: TIMEOUTS.AUTH,
   });
 }
@@ -185,7 +188,7 @@ export async function deleteDocument(id: number): Promise<void> {
 }
 
 export async function getDocumentById(id: number): Promise<Document> {
-  const document = await apiGet<Document>(`/documents/${id}`, {
+  const document = await apiGet<ApiDocumentResponse>(`/documents/${id}`, {
     timeout: TIMEOUTS.DEFAULT,
   });
 
@@ -193,7 +196,7 @@ export async function getDocumentById(id: number): Promise<Document> {
 }
 
 export async function getDocumentFileUrl(id: number): Promise<string> {
-  const response = await apiGet<DocumentFileUrlResponse>(
+  const response = await apiGet<ApiDocumentFileUrlResponse>(
     `/documents/${id}/file-url`,
     {
       timeout: TIMEOUTS.DEFAULT,
@@ -205,13 +208,9 @@ export async function getDocumentFileUrl(id: number): Promise<string> {
 
 export async function updateDocument(
   id: number,
-  data: DocumentUpdateRequest,
+  data: ApiDocumentUpdateRequest,
 ): Promise<Document> {
   const formData = new FormData();
-
-  if (data.file) {
-    formData.append('file', data.file);
-  }
 
   appendDocumentPayload(formData, {
     ...(data.contract_type !== undefined && {
@@ -232,7 +231,7 @@ export async function updateDocument(
   });
 
   const updatedDocument = normalizeDocument(
-    await apiPatch<Document>(`/documents/${id}`, formData, {
+    await apiPatch<ApiDocumentResponse>(`/documents/${id}`, formData, {
       timeout: TIMEOUTS.UPLOAD,
       headers: { 'Content-Type': 'multipart/form-data' },
     }),

@@ -217,7 +217,6 @@ export function useContractForm({
               contract_type: form.type as 'COMPANY' | 'LABOR',
             })
           : await uploadDocument({
-              file: file!,
               folder_id: defaultFolderId,
               form_data: formDataPayload,
               service_items: serviceItemsPayload,

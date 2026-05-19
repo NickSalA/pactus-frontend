@@ -7,7 +7,7 @@ import {
   type FormState,
   type ServiceItemDraft,
 } from '@/features/contracts/lib/contract-form.utils';
-import type { ServiceCatalogItem } from '@/types/api.types';
+import { ApiServiceResponse } from '@/types/api';
 import { Select } from '@/components/ui/Select';
 import { contractFormStyles } from './contract-form.styles';
 
@@ -29,7 +29,7 @@ type ContractFormServicesSectionProps = {
     value: string,
   ) => void;
   onSetEditingServiceKey: (key: string | null) => void;
-  serviceOptions: ServiceCatalogItem[];
+  serviceOptions: ApiServiceResponse[];
   servicesLoadError: Error | null;
   servicesLoading: boolean;
 };

@@ -3,12 +3,12 @@ import {
   getDocumentPrimaryCurrency,
   getDocumentTotalValue,
 } from '@/lib/document.utils';
+import { ApiServiceResponse } from '@/types/api';
 import type {
   CurrencyType,
   Document,
   DocumentState,
   DocumentType,
-  ServiceCatalogItem,
 } from '@/types/api.types';
 
 export type ServiceItemDraft = {
@@ -149,10 +149,10 @@ export const getFileTypeBadge = (
 };
 
 export const getServiceOptions = (
-  services: ServiceCatalogItem[],
+  services: ApiServiceResponse[],
   draftItems: ServiceItemDraft[],
-): ServiceCatalogItem[] => {
-  const servicesById = new Map<string, ServiceCatalogItem>();
+): ApiServiceResponse[] => {
+  const servicesById = new Map<string, ApiServiceResponse>();
 
   services.forEach((service) => {
     servicesById.set(String(service.id), service);

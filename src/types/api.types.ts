@@ -2,6 +2,11 @@
 // Tipos TypeScript para la API de ContractIA
 
 import {
+  ApiDocumentCompanyContractRequest,
+  ApiDocumentLaborContractResponse,
+  ApiDocumentServiceItemResponse,
+} from './api/apiDocument';
+import {
   ApiDocumentFormData,
   ApiDocumentState,
   ApiDocumentType,
@@ -56,15 +61,6 @@ export type DocumentState =
   | 'TERMINATED';
 export type CurrencyType = 'PEN' | 'USD' | 'EUR';
 
-export interface CompanyContractResponse {
-  id: number;
-  document_id: number;
-  ruc?: string | null;
-  client?: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface LaborContractResponse {
   id: number;
   document_id: number;
@@ -98,20 +94,6 @@ export interface DocumentServiceItem extends DocumentServiceItemPayload {
   id: number;
 }
 
-export interface ServiceCatalogItem {
-  id: number;
-  name: string;
-  is_active: boolean;
-  documents_count: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ServiceCatalogItemCreateRequest {
-  name: string;
-  is_active?: boolean;
-}
-
 export interface DocumentFolder {
   id: number;
   organization_id: number;
@@ -135,62 +117,14 @@ export interface Document {
   end_date: string;
   form_data: ApiDocumentFormData;
   state: ApiDocumentState;
-  service_items: DocumentServiceItem[];
+  service_items: ApiDocumentServiceItemResponse[];
   folder_id?: number | null;
   file_path?: string | null;
   file_name?: string | null;
-  company_contract?: CompanyContractResponse;
-  labor_contract?: LaborContractResponse;
+  company_contract?: ApiDocumentCompanyContractRequest;
+  labor_contract?: ApiDocumentLaborContractResponse;
   created_at: string;
   updated_at: string;
-}
-
-export interface DocumentCreateRequest {
-  file: File;
-  contract_type: DocumentType;
-  company_contract?: {
-    ruc?: string;
-    client?: string;
-  };
-  labor_contract?: {
-    worker_name?: string;
-    worker_document_number?: string;
-    position?: string;
-    salary_value?: number;
-    salary_currency?: CurrencyType;
-    salary_periodicity?: string;
-    contract_modality?: string;
-  };
-  form_data: DocumentFormData;
-  state?: DocumentState;
-  folder_id?: number | null;
-  service_items?: DocumentServiceItemPayload[];
-}
-
-export interface DocumentUpdateRequest {
-  contract_type?: DocumentType;
-  company_contract?: {
-    ruc?: string;
-    client?: string;
-  };
-  labor_contract?: {
-    worker_name?: string;
-    worker_document_number?: string;
-    position?: string;
-    salary_value?: number;
-    salary_currency?: CurrencyType;
-    salary_periodicity?: string;
-    contract_modality?: string;
-  };
-  form_data?: DocumentFormData;
-  state?: DocumentState;
-  folder_id?: number | null;
-  service_items?: DocumentServiceItemPayload[];
-  file?: File;
-}
-
-export interface DocumentFileUrlResponse {
-  url: string;
 }
 
 // ============================================
@@ -217,17 +151,6 @@ export interface NotificationRule {
   updated_at: string;
 }
 
-export interface NotificationRuleCreateRequest {
-  document_id?: number | null;
-  days_before_due: number;
-  is_active?: boolean;
-}
-
-export interface NotificationRuleUpdateRequest {
-  days_before_due?: number;
-  is_active?: boolean;
-}
-
 export type TemplateState = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 export type TemplateFieldType = 'text' | 'number' | 'date' | 'time' | 'boolean';
 export type TemplateGenerationMode = 'adaptive' | 'strict';
@@ -238,45 +161,4 @@ export interface TemplateField {
   type: TemplateFieldType | (string & {});
   required: boolean;
   placeholder?: string | null;
-}
-
-export interface TemplateContractDateMapping {
-  start_date_field: string;
-  end_date_field: string;
-}
-
-export interface TemplateContent {
-  body_md: string;
-  fields: TemplateField[];
-  operational_fields?: TemplateField[];
-  version?: string | null;
-  contract_date_mapping?: TemplateContractDateMapping | null;
-}
-
-export interface Template {
-  id: number;
-  organization_id: number;
-  name: string;
-  description?: string | null;
-  document_type: DocumentType;
-  template_format_id?: number | null;
-  format_code?: string | null;
-  format_label?: string | null;
-  content: TemplateContent;
-  created_at?: string | null;
-  state: TemplateState;
-}
-
-export interface TemplateCreateRequest {
-  name?: string | null;
-  description?: string | null;
-  document_type?: DocumentType | null;
-  format_code: string;
-  content: TemplateContent;
-}
-
-export interface TemplateUpdateRequest {
-  name?: string;
-  description?: string | null;
-  content?: TemplateContent;
 }

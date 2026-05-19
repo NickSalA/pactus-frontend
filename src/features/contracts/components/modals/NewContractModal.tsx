@@ -43,12 +43,9 @@ import type {
   ApiDocumentType,
   ApiTemplateField,
   ApiTemplateResponse,
+  ApiServiceResponse,
 } from '@/types/api';
-import type {
-  Document,
-  DocumentType,
-  ServiceCatalogItem,
-} from '@/types/api.types';
+import type { Document, DocumentType } from '@/types/api.types';
 import { normalizeDocument } from '../../lib/normalize-document';
 
 const ContractForm = dynamic(
@@ -668,7 +665,7 @@ export function NewContractModal({
   const [folderId, setFolderId] = useState<number | null>(defaultFolderId);
   const [partyName, setPartyName] = useState('');
   const [serviceItems, setServiceItems] = useState<ServiceItemDraft[]>([]);
-  const [services, setServices] = useState<ServiceCatalogItem[]>([]);
+  const [services, setServices] = useState<ApiServiceResponse[]>([]);
   const [servicesState, setServicesState] = useState<RequestState>('idle');
   const [servicesError, setServicesError] = useState<string | null>(null);
   const [submitState, setSubmitState] = useState<RequestState>('idle');

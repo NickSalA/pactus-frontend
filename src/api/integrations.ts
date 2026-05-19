@@ -1,11 +1,11 @@
-import type { GooglePickerFile } from "@/lib/googlePicker";
-import { GOOGLE_DRIVE_SCOPE } from "@/lib/googlePicker";
-import { isDriveFolder } from "@/features/contracts/lib/contracts-utils";
-import type { DocumentUpdateRequest } from "@/types/api.types";
-import { TIMEOUTS } from "./constants";
-import { apiPost } from "./axiosInstance";
+import type { GooglePickerFile } from '@/lib/googlePicker';
+import { GOOGLE_DRIVE_SCOPE } from '@/lib/googlePicker';
+import { isDriveFolder } from '@/features/contracts/lib/contracts-utils';
+import { ApiDocumentUpdateRequest } from '@/types/api';
+import { TIMEOUTS } from './constants';
+import { apiPost } from './axiosInstance';
 
-type DriveImportDocumentPayload = Omit<DocumentUpdateRequest, "file">;
+type DriveImportDocumentPayload = Omit<ApiDocumentUpdateRequest, 'file'>;
 
 type DriveImportFilePayload = {
   file_id: string;
@@ -32,21 +32,25 @@ export type GoogleDriveImportResponse = DriveImportApiResponse & {
 
 export async function importGoogleDriveFiles(
   accessToken: string,
-  files: GooglePickerFile[]
+  files: GooglePickerFile[],
 ): Promise<GoogleDriveImportResponse> {
   const importableFiles = files.filter((file) => !isDriveFolder(file));
   const skippedFiles = files.length - importableFiles.length;
 
   if (!accessToken.trim()) {
-    throw new Error("No se encontro un token valido de Google Drive para importar los archivos.");
+    throw new Error(
+      'No se encontro un token valido de Google Drive para importar los archivos.',
+    );
   }
 
   if (importableFiles.length === 0) {
-    throw new Error("Selecciona al menos un archivo de Google Drive. Las carpetas no se pueden importar.");
+    throw new Error(
+      'Selecciona al menos un archivo de Google Drive. Las carpetas no se pueden importar.',
+    );
   }
 
   const response = await apiPost<DriveImportApiResponse>(
-    "/integrations/drive/import",
+    '/integrations/drive/import',
     {
       token: {
         token: accessToken,
@@ -57,7 +61,7 @@ export async function importGoogleDriveFiles(
         document: {} satisfies DriveImportDocumentPayload,
       })),
     } satisfies DriveImportRequest,
-    { timeout: TIMEOUTS.UPLOAD }
+    { timeout: TIMEOUTS.UPLOAD },
   );
 
   return {
