@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import { ApiDashboardAlertCategory, ApiDashboardAlertItem } from '@/types/api';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 type DashboardAlertCenterProps = {
   alerts: ApiDashboardAlertCategory[];
@@ -49,7 +50,7 @@ function AlertCard({
     >
       <div className="flex items-center gap-2 min-w-0">
         <span
-          className="h-2 w-2 rounded-full flex-shrink-0"
+          className="h-2 w-2 rounded-full shrink-0"
           style={{ backgroundColor: accentColor }}
         />
         <span className="text-sm font-medium text-slate-800 truncate">
@@ -59,7 +60,7 @@ function AlertCard({
           <span className="text-xs text-gray-500 truncate">{item.detail}</span>
         )}
       </div>
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex items-center gap-2 shrink-0">
         <span
           className="rounded-full px-2 py-1 text-xs font-medium"
           style={{
@@ -81,9 +82,11 @@ export function DashboardAlertCenter({
 }: DashboardAlertCenterProps) {
   if (isLoading) {
     return (
-      <section className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
-        <LoadingSkeleton />
-      </section>
+      <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
+        <CardContent className="flex flex-1 items-center justify-center">
+          <LoadingSkeleton />
+        </CardContent>
+      </Card>
     );
   }
 
@@ -102,10 +105,12 @@ export function DashboardAlertCenter({
   const accentColor = selectedAlert?.color.accent ?? '#64748B';
 
   return (
-    <section className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
-      <h3 className="mb-4 text-lg font-semibold text-slate-800">
-        Centro de Alertas
-      </h3>
+    <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
+      <CardHeader className="mb-4 p-0">
+        <CardTitle className="text-lg font-semibold text-slate-800">
+          Centro de Alertas
+        </CardTitle>
+      </CardHeader>
 
       <div className="mb-4 flex flex-1 items-stretch justify-center gap-2">
         {tabs.map((tab, index) => (
@@ -147,7 +152,7 @@ export function DashboardAlertCenter({
         ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <CardContent className="flex-1 overflow-y-auto p-0">
         <div className="flex flex-col gap-3">
           {items.map((item: ApiDashboardAlertItem) => (
             <AlertCard key={item.id} item={item} accentColor={accentColor} />
@@ -158,7 +163,7 @@ export function DashboardAlertCenter({
             </p>
           )}
         </div>
-      </div>
-    </section>
+      </CardContent>
+    </Card>
   );
 }

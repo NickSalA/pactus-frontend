@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   useAlertCenterCompany,
   useAreaChartCompany,
   useRecentContractsCompany,
   useTopCompanies,
   useTopServices,
-} from "@/queries/hooks/dashboard/queries";
-import { buildRecentDocumentsFromAPI } from "@/features/dashboard/lib/dashboard-data";
-import type { RecentDashboardDocument } from "@/features/dashboard/lib/dashboard-data";
+} from '@/queries/hooks/dashboard/queries';
+import { buildRecentDocumentsFromAPI } from '@/features/admin/dashboard/lib/dashboard-data';
+import type { RecentDashboardDocument } from '@/features/admin/dashboard/lib/dashboard-data';
 
 export function useDashboardManagerPage() {
   const queryClient = useQueryClient();
@@ -46,13 +46,24 @@ export function useDashboardManagerPage() {
   } = useTopServices();
 
   const recentContracts = useMemo<RecentDashboardDocument[]>(
-    () => (recentContractsRaw ? buildRecentDocumentsFromAPI(recentContractsRaw) : []),
-    [recentContractsRaw]
+    () =>
+      recentContractsRaw ? buildRecentDocumentsFromAPI(recentContractsRaw) : [],
+    [recentContractsRaw],
   );
 
-  const isLoading = areaChartLoading || alertsLoading || recentContractsLoading || topCompaniesLoading || topServicesLoading;
+  const isLoading =
+    areaChartLoading ||
+    alertsLoading ||
+    recentContractsLoading ||
+    topCompaniesLoading ||
+    topServicesLoading;
 
-  const error = areaChartError || alertsError || recentContractsError || topCompaniesError || topServicesError;
+  const error =
+    areaChartError ||
+    alertsError ||
+    recentContractsError ||
+    topCompaniesError ||
+    topServicesError;
 
   return {
     areaChart: areaChart ?? null,
@@ -63,7 +74,7 @@ export function useDashboardManagerPage() {
     isLoading,
     error,
     reload: () => {
-      void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      void queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   };
 }

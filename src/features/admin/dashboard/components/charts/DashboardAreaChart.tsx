@@ -9,6 +9,7 @@ import {
   YAxis,
 } from 'recharts';
 import { ApiDashboardAreaChartResponse, ApiDocumentType } from '@/types/api';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 type DashboardAreaChartProps = {
   data: ApiDashboardAreaChartResponse;
@@ -59,11 +60,11 @@ export function DashboardAreaChart({
   };
 
   return (
-    <section className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
-      <header className="mb-4">
-        <h3 className="text-lg font-semibold text-slate-800">{props.title}</h3>
-        <p className="text-sm text-slate-500">{props.subtitle}</p>
-      </header>
+    <Card className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
+      <CardHeader className="mb-4 p-0">
+        <CardTitle className="text-lg font-semibold text-slate-800">{props.title}</CardTitle>
+        <CardDescription className="text-sm text-slate-500">{props.subtitle}</CardDescription>
+      </CardHeader>
 
       <div className="flex-1 relative min-h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
@@ -128,6 +129,6 @@ export function DashboardAreaChart({
       <p className="mt-2 text-xs text-slate-400">
         * Datos con línea punteada son proyecciones
       </p>
-    </section>
+    </Card>
   );
 }

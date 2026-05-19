@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   useAlertCenterLabor,
   useAreaChartLabor,
   useRecentContractsLabor,
-} from "@/queries/hooks/dashboard/queries";
-import { buildRecentDocumentsFromAPI } from "@/features/dashboard/lib/dashboard-data";
-import type { RecentDashboardDocument } from "@/features/dashboard/lib/dashboard-data";
+} from '@/queries/hooks/dashboard/queries';
+import { buildRecentDocumentsFromAPI } from '@/features/admin/dashboard/lib/dashboard-data';
+import type { RecentDashboardDocument } from '@/features/admin/dashboard/lib/dashboard-data';
 
 export function useDashboardHRPage() {
   const queryClient = useQueryClient();
@@ -32,8 +32,9 @@ export function useDashboardHRPage() {
   } = useRecentContractsLabor();
 
   const recentContracts = useMemo<RecentDashboardDocument[]>(
-    () => (recentContractsRaw ? buildRecentDocumentsFromAPI(recentContractsRaw) : []),
-    [recentContractsRaw]
+    () =>
+      recentContractsRaw ? buildRecentDocumentsFromAPI(recentContractsRaw) : [],
+    [recentContractsRaw],
   );
 
   const isLoading = areaChartLoading || alertsLoading || recentContractsLoading;
@@ -47,7 +48,7 @@ export function useDashboardHRPage() {
     isLoading,
     error,
     reload: () => {
-      void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      void queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   };
 }

@@ -11,15 +11,16 @@ import {
   YAxis,
 } from 'recharts';
 import { ApiDocumentType } from '@/types/api';
-import { ApiDashboardTopCompanyResponse } from '@/types/api';
+import { ApiDashboardTopServiceResponse } from '@/types/api';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-type DashboardTopCompaniesProps = {
-  data: ApiDashboardTopCompanyResponse[];
+type DashboardTopServicesProps = {
+  data: ApiDashboardTopServiceResponse[];
   isLoading: boolean;
   documentType: ApiDocumentType;
 };
 
-type MetricKey = 'contracts' | 'amount';
+type MetricKey = 'quantity' | 'amount';
 
 const COLORS = {
   COMPANY: '#3B82F6',
@@ -40,11 +41,11 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 0,
   }).format(value);
 
-export function DashboardTopCompanies({
+export function DashboardTopServices({
   data,
   isLoading,
   documentType,
-}: DashboardTopCompaniesProps) {
+}: DashboardTopServicesProps) {
   const [activeMetric, setActiveMetric] = useState<MetricKey>('amount');
 
   if (isLoading) {
@@ -55,7 +56,7 @@ export function DashboardTopCompanies({
 
   const chartData = data.map((item) => ({
     name: item.name,
-    [activeMetric]: activeMetric === 'amount' ? item.amount : item.contracts,
+    [activeMetric]: activeMetric === 'amount' ? item.amount : item.quantity,
   }));
 
   const tooltipFormatter = (value: unknown, name: unknown) => {
@@ -63,18 +64,18 @@ export function DashboardTopCompanies({
     if (String(name) === 'amount') {
       return [formatCurrency(value), 'Monto'];
     }
-    return [value, 'Contratos'];
+    return [value, 'Cantidad'];
   };
 
   return (
-    <section className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
-      <header className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-slate-800">Top Empresas</h3>
+    <Card className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
+      <CardHeader className="mb-4 flex items-center justify-between p-0">
+        <CardTitle className="text-lg font-semibold text-slate-800">Top Servicios</CardTitle>
         <div className="flex rounded-lg bg-gray-100 p-0.5">
           <button
-            onClick={() => setActiveMetric('contracts')}
+            onClick={() => setActiveMetric('quantity')}
             className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
-              activeMetric === 'contracts'
+              activeMetric === 'quantity'
                 ? 'bg-white text-blue-600 shadow-sm'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
@@ -92,7 +93,7 @@ export function DashboardTopCompanies({
             VALOR
           </button>
         </div>
-      </header>
+      </CardHeader>
 
       <div className="flex-1 relative min-h-48 w-full">
         <ResponsiveContainer width="100%" height="100%">
@@ -144,6 +145,6 @@ export function DashboardTopCompanies({
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </section>
+    </Card>
   );
 }
