@@ -12,7 +12,7 @@ import {
   getDocumentStateLabel,
   getDocumentTypeLabel,
 } from '@/lib/document.utils';
-import { getVisiblePageNumbers } from '@/features/contracts/lib/contracts-utils';
+import { getVisiblePageNumbers } from '@/lib/utils';
 import { Select } from '@/components/ui/Select';
 import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiUserRole } from '@/types/api';

@@ -13,9 +13,6 @@ export type ContractFolder = {
   isSystem?: boolean;
 };
 
-export const GOOGLE_DRIVE_FOLDER_MIME_TYPE =
-  'application/vnd.google-apps.folder';
-
 export const FILTER_OPTIONS: Array<{
   value: DocumentFilterValue;
   label: string;
@@ -34,25 +31,6 @@ export const mergeDriveSelections = (
   return Array.from(filesById.values());
 };
 
-export const getDriveItemTypeLabel = (mimeType: string): string => {
-  if (mimeType === GOOGLE_DRIVE_FOLDER_MIME_TYPE) {
-    return 'Carpeta';
-  }
-
-  if (mimeType.startsWith('application/vnd.google-apps.')) {
-    return 'Google Workspace';
-  }
-
-  const [, subtype] = mimeType.split('/');
-  return subtype ? subtype.toUpperCase() : 'Archivo';
-};
-
-export const isDriveFolder = (
-  file: Pick<GooglePickerFile, 'mimeType'>,
-): boolean => {
-  return file.mimeType === GOOGLE_DRIVE_FOLDER_MIME_TYPE;
-};
-
 export const filterContracts = (
   contracts: DocumentFlatten[],
   filter: DocumentFilterValue,
@@ -64,19 +42,8 @@ export const filterContracts = (
     const matchesFilter = filter === 'all' || contract.state === filter;
     const matchesSearch =
       searchTerm.length === 0 ||
-      contract.client.toLowerCase().includes(searchTerm) ||
       contract.client.toLowerCase().includes(searchTerm);
 
     return matchesFilter && matchesSearch;
   });
-};
-
-export const getVisiblePageNumbers = (
-  currentPage: number,
-  totalPages: number,
-): number[] => {
-  return Array.from({ length: totalPages }, (_, index) => index + 1).filter(
-    (page) =>
-      page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1,
-  );
 };

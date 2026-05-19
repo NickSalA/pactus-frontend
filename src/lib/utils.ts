@@ -21,3 +21,13 @@ export const formatDate = (value?: string | null): string => {
     year: 'numeric',
   });
 };
+
+export const getVisiblePageNumbers = (
+  currentPage: number,
+  totalPages: number,
+): number[] => {
+  return Array.from({ length: totalPages }, (_, index) => index + 1).filter(
+    (page) =>
+      page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1,
+  );
+};

@@ -1,6 +1,6 @@
 import type { GooglePickerFile } from '@/lib/googlePicker';
 import { GOOGLE_DRIVE_SCOPE } from '@/lib/googlePicker';
-import { isDriveFolder } from '@/features/contracts/lib/contracts-utils';
+import { isDriveFolder } from '@/lib/googlePicker';
 import { ApiDocumentUpdateRequest } from '@/types/api';
 import { TIMEOUTS } from './constants';
 import { apiPost } from './axiosInstance';

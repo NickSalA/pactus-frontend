@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { Select } from "@/components/ui/Select";
-import { getVisiblePageNumbers } from "@/features/contracts/lib/contracts-utils";
+import { getVisiblePageNumbers } from "@/lib/utils";
 import { TABLE_PAGINATION_PAGE_SIZE_OPTIONS } from "@/hooks/useTablePagination";
 
 type TablePaginationProps = {

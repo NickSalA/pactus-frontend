@@ -9,7 +9,6 @@ import {
 import { HelpTip } from '@/features/contracts/components/form/HelpTip';
 import { ApiServiceResponse } from '@/types/api';
 import { Select } from '@/components/ui/Select';
-import { contractFormStyles } from './contract-form.styles';
 
 type ServiceItemDraftField = keyof Omit<ServiceItemDraft, 'key'>;
 
@@ -33,6 +32,8 @@ type ContractFormServicesSectionProps = {
   servicesLoadError: Error | null;
   servicesLoading: boolean;
 };
+
+const SMALL_INPUT_CLASS = "w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20";
 
 export function ContractFormServicesSection({
   addingService,
@@ -202,7 +203,7 @@ export function ContractFormServicesSection({
                             )
                           }
                           placeholder="Detalle opcional"
-                          className={contractFormStyles.smallInput}
+                          className={SMALL_INPUT_CLASS}
                         />
                       </div>
                       <div>
@@ -222,7 +223,7 @@ export function ContractFormServicesSection({
                             )
                           }
                           placeholder="0.00"
-                          className={contractFormStyles.smallInput}
+                          className={SMALL_INPUT_CLASS}
                         />
                       </div>
                       <div>
@@ -247,7 +248,7 @@ export function ContractFormServicesSection({
                               event.target.value,
                             )
                           }
-                          className={contractFormStyles.smallInput}
+                          className={SMALL_INPUT_CLASS}
                         />
                       </div>
                       <div>
@@ -264,7 +265,7 @@ export function ContractFormServicesSection({
                               event.target.value,
                             )
                           }
-                          className={contractFormStyles.smallInput}
+                          className={SMALL_INPUT_CLASS}
                         />
                       </div>
                     </div>
@@ -329,7 +330,7 @@ export function ContractFormServicesSection({
                   onNewDraftChange('description', event.target.value)
                 }
                 placeholder="Detalle opcional"
-                className={contractFormStyles.smallInput}
+                className={SMALL_INPUT_CLASS}
               />
             </div>
             <div>
@@ -345,7 +346,7 @@ export function ContractFormServicesSection({
                   onNewDraftChange('value', event.target.value)
                 }
                 placeholder="0.00"
-                className={contractFormStyles.smallInput}
+                className={SMALL_INPUT_CLASS}
               />
             </div>
             <div>
@@ -366,7 +367,7 @@ export function ContractFormServicesSection({
                 onChange={(event) =>
                   onNewDraftChange('start_date', event.target.value)
                 }
-                className={contractFormStyles.smallInput}
+                className={SMALL_INPUT_CLASS}
               />
             </div>
             <div>
@@ -379,7 +380,7 @@ export function ContractFormServicesSection({
                 onChange={(event) =>
                   onNewDraftChange('end_date', event.target.value)
                 }
-                className={contractFormStyles.smallInput}
+                className={SMALL_INPUT_CLASS}
               />
             </div>
           </div>

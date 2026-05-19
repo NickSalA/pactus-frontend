@@ -1,6 +1,6 @@
 import { LoaderCircle, Upload, X } from "lucide-react";
 import type { GooglePickerFile } from "@/lib/googlePicker";
-import { getDriveItemTypeLabel, isDriveFolder } from "@/features/contracts/lib/contracts-utils";
+import { getDriveItemTypeLabel, isDriveFolder } from "@/lib/googlePicker";
 import { GoogleDriveIcon } from "./GoogleDriveIcon";
 
 type ContractsDriveSelectionProps = {

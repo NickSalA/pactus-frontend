@@ -11,7 +11,6 @@ import { HelpTip } from '@/features/contracts/components/form/HelpTip';
 import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
 import { ApiDocumentType } from '@/types/api';
 import { Select } from '@/components/ui/Select';
-import { contractFormStyles } from './contract-form.styles';
 
 type ContractFormGeneralFieldsProps = {
   allowedDocumentTypes?: readonly ApiDocumentType[] | null;
@@ -20,6 +19,9 @@ type ContractFormGeneralFieldsProps = {
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   showFolderField?: boolean;
 };
+
+const LABEL_CLASS = "mb-1.5 flex items-center text-sm font-medium text-slate-700";
+const INPUT_CLASS = "w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20";
 
 export function ContractFormGeneralFields({
   allowedDocumentTypes,
@@ -37,28 +39,28 @@ export function ContractFormGeneralFields({
   return (
     <div className="grid grid-cols-2 gap-x-5 gap-y-4">
       <div>
-        <label className={contractFormStyles.label}>Nombre del contrato</label>
+        <label className={LABEL_CLASS}>Nombre del contrato</label>
         <input
           name="name"
           value={data.name}
           placeholder="Ej: Contrato de servicios 2024"
           onChange={onChange}
-          className={contractFormStyles.input}
+          className={INPUT_CLASS}
         />
       </div>
       <div>
-        <label className={contractFormStyles.label}>Cliente</label>
+        <label className={LABEL_CLASS}>Cliente</label>
         <input
           name="client"
           value={data.client}
           placeholder="Nombre del cliente"
           onChange={onChange}
-          className={contractFormStyles.input}
+          className={INPUT_CLASS}
         />
       </div>
       {showFolderField && (
         <div>
-          <label className={contractFormStyles.label}>
+          <label className={LABEL_CLASS}>
             Carpeta
             <HelpTip text="Usa este campo solo si necesitas corregir la carpeta donde se guarda el contrato." />
           </label>
@@ -79,7 +81,7 @@ export function ContractFormGeneralFields({
         </div>
       )}
       <div>
-        <label className={contractFormStyles.label}>
+        <label className={LABEL_CLASS}>
           Tipo de contrato
           <HelpTip text="Empresa = contratos corporativos, comerciales o con clientes. Trabajador = contratos laborales, de personal o gestionados por RRHH." />
         </label>
@@ -99,7 +101,7 @@ export function ContractFormGeneralFields({
         </Select>
       </div>
       <div>
-        <label className={contractFormStyles.label}>
+        <label className={LABEL_CLASS}>
           Estado
           <HelpTip text="Borrador = en preparacion. Pendiente de firma = generado pero aun no firmado. Por vencer = dentro de la ventana de alerta. Terminado = cierre anticipado." />
         </label>
@@ -118,27 +120,27 @@ export function ContractFormGeneralFields({
         </Select>
       </div>
       <div>
-        <label className={contractFormStyles.label}>Fecha de inicio</label>
+        <label className={LABEL_CLASS}>Fecha de inicio</label>
         <input
           type="date"
           name="start_date"
           value={data.start_date}
           onChange={onChange}
-          className={contractFormStyles.input}
+          className={INPUT_CLASS}
         />
       </div>
       <div>
-        <label className={contractFormStyles.label}>Fecha de vencimiento</label>
+        <label className={LABEL_CLASS}>Fecha de vencimiento</label>
         <input
           type="date"
           name="end_date"
           value={data.end_date}
           onChange={onChange}
-          className={contractFormStyles.input}
+          className={INPUT_CLASS}
         />
       </div>
       <div className="col-span-2">
-        <label className={contractFormStyles.label}>
+        <label className={LABEL_CLASS}>
           Moneda del contrato
           <HelpTip text="La moneda elegida se aplicara automaticamente a todos los servicios. No se puede cambiar por servicio individual." />
         </label>
