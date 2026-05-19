@@ -20,7 +20,7 @@ import { AdminTablePagination } from '@/features/admin/components/shared/AdminTa
 import { formatAdminDate } from '@/features/admin/lib/admin-formatters';
 import { getDocumentTypeLabel } from '@/lib/document.utils';
 import { getTemplateFieldCount } from '@/lib/template-fields';
-import type { Template } from '@/types/api.types';
+import type { ApiTemplateResponse } from '@/types/api';
 
 const getTemplateStateClasses = (state: string): string => {
   if (state === 'PUBLISHED') return 'bg-emerald-50 text-emerald-700';
@@ -33,6 +33,8 @@ const STATE_LABELS: Record<string, string> = {
   PUBLISHED: 'Publicada',
   ARCHIVED: 'Archivada',
 };
+
+type Template = ApiTemplateResponse;
 
 export function AdminTemplatesSection() {
   const section = useAdminTemplates();

@@ -141,7 +141,7 @@ export function ContractsPageContent({
       )}
 
       <ContractPreviewModal
-        contract={page.previewContract}
+        contract={page.previewContract!}
         error={page.previewError}
         loading={page.previewLoading}
         onClose={page.closePreview}

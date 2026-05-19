@@ -12,31 +12,32 @@ import {
 } from "@/lib/template-fields";
 import { getDocumentTypeLabel } from "@/lib/document.utils";
 import type {
-  Template,
-  TemplateContent,
-  TemplateField,
-  TemplateUpdateRequest,
-} from "@/types/api.types";
+  ApiTemplateResponse,
+  ApiTemplateContent,
+  ApiTemplateField,
+} from "@/types/api";
+import type { ApiTemplateUpdateRequest } from "@/types/api";
 import { TemplateSummaryAccordion } from "./TemplateSummaryAccordion";
 import { TemplateWizardProgress } from "./TemplateWizardProgress";
+import { useMutation } from "@tanstack/react-query";
 
 type TemplateEditModalProps = {
-  template: Template | null;
+  template: ApiTemplateResponse | null;
   open: boolean;
   onClose: () => void;
-  onSaved: (template: Template, message: string, warnings?: string[]) => void;
+  onSaved: (template: ApiTemplateResponse, message: string, warnings?: string[]) => void;
   updateTemplateMutation: (options: {
     templateId: number;
-    payload: TemplateUpdateRequest;
-  }) => Promise<Template>;
+    payload: ApiTemplateUpdateRequest;
+  }) => Promise<ApiTemplateResponse>;
 };
 
 type EditStep = 1 | 2 | 3;
 const STEPS = ["Datos base", "Contenido", "Campos"];
 
-const EMPTY_CONTENT: TemplateContent = { body_md: "", fields: [], operational_fields: [], version: "1.0" };
+const EMPTY_CONTENT: ApiTemplateContent = { body_md: "", fields: [], operational_fields: [], version: "1.0" };
 
-const buildInitialState = (template: Template | null) => ({
+const buildInitialState = (template: ApiTemplateResponse | null) => ({
   templateId: template?.id ?? null,
   name: template?.name ?? "",
   description: template?.description ?? "",
@@ -101,7 +102,7 @@ export function TemplateEditModal({ template, open, onClose, onSaved, updateTemp
 
   if (!open || !template) return null;
 
-  const setContent = (next: TemplateContent) =>
+  const setContent = (next: ApiTemplateContent) =>
     setEditorState((prev) => ({ ...prev, content: next }));
 
   const validateStep = (step: EditStep): string | null => {
@@ -174,7 +175,7 @@ export function TemplateEditModal({ template, open, onClose, onSaved, updateTemp
     </p>
   );
 
-  const renderFieldTable = (fields: TemplateField[], emptyMessage: string) => {
+  const renderFieldTable = (fields: ApiTemplateField[], emptyMessage: string) => {
     if (fields.length === 0) {
       return (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">

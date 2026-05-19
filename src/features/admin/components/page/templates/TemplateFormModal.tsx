@@ -5,12 +5,12 @@ import { FileText, Upload, X } from "lucide-react";
 import { getDocumentTypeLabel } from "@/lib/document.utils";
 import { Select } from "@/components/ui/Select";
 import type {
-  DocumentType,
-  TemplateGenerationMode,
-  Template,
-  TemplateFormatResponse,
-  PersistedTemplateDraftResponse,
-} from "@/types/api.types";
+  ApiDocumentType,
+  ApiTemplateFormatResponse,
+  ApiTemplateGenerateRequest,
+  ApiTemplateGenerationMode,
+  ApiTemplateResponse,
+} from "@/types/api";
 import { TemplateSummaryAccordion } from "./TemplateSummaryAccordion";
 import { TemplateWizardProgress } from "./TemplateWizardProgress";
 
@@ -19,23 +19,15 @@ type TemplateFormStep = 1 | 2 | 3;
 const WIZARD_STEPS = ["Formato", "Detalles", "Generar borrador"];
 
 type TemplateFormModalProps = {
-  allowedDocumentTypes: readonly DocumentType[] | null;
-  formats: TemplateFormatResponse[];
+  allowedDocumentTypes: readonly ApiDocumentType[] | null;
+  formats: ApiTemplateFormatResponse[];
   open: boolean;
   onClose: () => void;
-  onSaved: (template: Template, message: string, warnings?: string[]) => void;
+  onSaved: (template: ApiTemplateResponse, message: string, warnings?: string[]) => void;
   generateTemplateDraftMutation: (options: {
-    request: {
-      name: string | null;
-      description: string | null;
-      format_code: string;
-      document_type: DocumentType | null;
-      instructions: string | null;
-      jurisdiction: string | null;
-      generation_mode: TemplateGenerationMode;
-    };
+    request: ApiTemplateGenerateRequest;
     file?: File | null;
-  }) => Promise<PersistedTemplateDraftResponse>;
+  }) => Promise<{ template: ApiTemplateResponse; warnings: string[]; source: Record<string, unknown>; usage: { input_tokens: number; output_tokens: number; total_tokens: number } | null }>;
 };
 
 const isPdfFile = (file: File): boolean => {
@@ -44,7 +36,7 @@ const isPdfFile = (file: File): boolean => {
 
 export function TemplateFormModal({ allowedDocumentTypes, formats, open, onClose, onSaved, generateTemplateDraftMutation }: TemplateFormModalProps) {
   // Step 1 state
-  const [selectedDocumentType, setSelectedDocumentType] = useState<DocumentType | null>(null);
+  const [selectedDocumentType, setSelectedDocumentType] = useState<ApiDocumentType | null>(null);
   const [selectedFormatCode, setSelectedFormatCode] = useState("");
 
   // Step 2 state
@@ -54,7 +46,7 @@ export function TemplateFormModal({ allowedDocumentTypes, formats, open, onClose
   // Step 3 state
   const [instructions, setInstructions] = useState("");
   const [jurisdiction, setJurisdiction] = useState("");
-  const [generationMode, setGenerationMode] = useState<TemplateGenerationMode>("adaptive");
+  const [generationMode, setGenerationMode] = useState<ApiTemplateGenerationMode>("adaptive");
   const [referenceFile, setReferenceFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
 
@@ -315,7 +307,7 @@ export function TemplateFormModal({ allowedDocumentTypes, formats, open, onClose
                         <Select
                           variant="lg"
                           value={selectedDocumentType ?? ""}
-                          onChange={(event) => setSelectedDocumentType(event.target.value as DocumentType)}
+                          onChange={(event) => setSelectedDocumentType(event.target.value as ApiDocumentType)}
                         >
                           {(allowedDocumentTypes ?? ["LABOR", "COMPANY"]).map((documentType) => (
                             <option key={documentType} value={documentType}>
@@ -498,7 +490,7 @@ export function TemplateFormModal({ allowedDocumentTypes, formats, open, onClose
                                   variant="lg"
                                   className="w-full"
                                   value={generationMode}
-                                  onChange={(event) => setGenerationMode(event.target.value as TemplateGenerationMode)}
+                                  onChange={(event) => setGenerationMode(event.target.value as ApiTemplateGenerationMode)}
                                 >
                                   <option value="adaptive">Adaptativa</option>
                                   <option value="strict">Estricta</option>

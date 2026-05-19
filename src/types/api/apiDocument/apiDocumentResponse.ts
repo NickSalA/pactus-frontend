@@ -1,5 +1,6 @@
 import type { ApiDocumentState } from '../shared';
 import type { ApiDocumentCompanyContractResponse } from './apiDocumentCompanyContractResponse';
+import { ApiDocumentFormData } from './apiDocumentFormData';
 import type { ApiDocumentLaborContractResponse } from './apiDocumentLaborContractResponse';
 import type { ApiDocumentServiceItemResponse } from './apiDocumentServiceItemResponse';
 
@@ -8,7 +9,7 @@ export interface ApiDocumentResponse {
   type?: string | null;
   start_date?: string | null;
   end_date?: string | null;
-  form_data?: object;
+  form_data?: ApiDocumentFormData;
   state?: ApiDocumentState | null;
   folder_id?: number | null;
   file_path?: string | null;

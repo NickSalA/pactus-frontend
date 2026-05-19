@@ -1,6 +1,8 @@
 // src/types/api.types.ts
 // Tipos TypeScript para la API de ContractIA
 
+import { ApiDocumentType } from './api/shared';
+
 // ============================================
 // AUTH TYPES
 // ============================================
@@ -192,8 +194,9 @@ export interface DocumentFolderUpdateRequest {
 
 export interface Document {
   id: number;
-  type?: string | null;
-  contract_type: DocumentType;
+  name: string;
+  type?: ApiDocumentType;
+  contract_type: ApiDocumentType;
   client: string;
   start_date: string;
   end_date: string;

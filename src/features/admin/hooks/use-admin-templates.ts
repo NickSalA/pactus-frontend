@@ -19,16 +19,15 @@ import {
 } from '@/lib/permissions';
 import { useAuthStore } from '@/store';
 import type {
-  DocumentType,
-  Template,
-  TemplateCreateRequest,
-  TemplateFormatResponse,
-  TemplateState,
-  TemplateUpdateRequest,
-} from '@/types/api.types';
+  ApiDocumentType,
+  ApiTemplateResponse,
+  ApiTemplateState,
+  ApiTemplateCreateRequest,
+  ApiTemplateUpdateRequest,
+} from '@/types/api';
 
-type StateFilterValue = 'ACTIVE' | 'ALL' | TemplateState;
-type DocumentTypeFilterValue = 'ALL' | DocumentType;
+type StateFilterValue = 'ACTIVE' | 'ALL' | ApiTemplateState;
+type DocumentTypeFilterValue = 'ALL' | ApiDocumentType;
 
 export function useAdminTemplates() {
   const queryClient = useQueryClient();
@@ -60,8 +59,10 @@ export function useAdminTemplates() {
   const [formatFilter, setFormatFilter] = useState<string>('ALL');
   const [documentTypeFilter, setDocumentTypeFilter] =
     useState<DocumentTypeFilterValue>(defaultDocumentTypeFilter);
-  const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
-  const [viewingTemplate, setViewingTemplate] = useState<Template | null>(null);
+  const [editingTemplate, setEditingTemplate] =
+    useState<ApiTemplateResponse | null>(null);
+  const [viewingTemplate, setViewingTemplate] =
+    useState<ApiTemplateResponse | null>(null);
   const [viewingTemplateWarnings, setViewingTemplateWarnings] = useState<
     string[]
   >([]);
@@ -144,7 +145,7 @@ export function useAdminTemplates() {
     setIsEditorOpen(true);
   }, []);
 
-  const openEditEditor = useCallback((template: Template) => {
+  const openEditEditor = useCallback((template: ApiTemplateResponse) => {
     setEditingTemplate(template);
     setIsEditorOpen(true);
   }, []);
@@ -159,7 +160,7 @@ export function useAdminTemplates() {
   }, [saving]);
 
   const openViewer = useCallback(
-    (template: Template, warnings: string[] = []) => {
+    (template: ApiTemplateResponse, warnings: string[] = []) => {
       setViewingTemplate(template);
       setViewingTemplateWarnings(warnings);
       setIsViewerOpen(true);
@@ -174,19 +175,19 @@ export function useAdminTemplates() {
   }, []);
 
   const saveTemplate = useCallback(
-    async (payload: TemplateCreateRequest | TemplateUpdateRequest) => {
+    async (payload: ApiTemplateCreateRequest | ApiTemplateUpdateRequest) => {
       try {
         setSaving(true);
 
         if (editingTemplate) {
           const updatedTemplate = await updateTemplateMutation({
             templateId: editingTemplate.id,
-            payload: payload as TemplateUpdateRequest,
+            payload: payload as ApiTemplateUpdateRequest,
           });
           setViewingTemplate(updatedTemplate);
         } else {
           const createdTemplate = await createTemplateMutation(
-            payload as TemplateCreateRequest,
+            payload as ApiTemplateCreateRequest,
           );
           setViewingTemplate(createdTemplate);
         }
@@ -207,7 +208,7 @@ export function useAdminTemplates() {
   );
 
   const publishOneTemplate = useCallback(
-    async (template: Template) => {
+    async (template: ApiTemplateResponse) => {
       try {
         setSaving(true);
         await publishTemplateMutation(template.id);
@@ -221,7 +222,7 @@ export function useAdminTemplates() {
   );
 
   const archiveOneTemplate = useCallback(
-    async (template: Template) => {
+    async (template: ApiTemplateResponse) => {
       try {
         setSaving(true);
         await archiveTemplateMutation(template.id);
@@ -234,7 +235,7 @@ export function useAdminTemplates() {
     [archiveTemplateMutation],
   );
 
-  const upsertTemplate = useCallback((updated: Template) => {
+  const upsertTemplate = useCallback((updated: ApiTemplateResponse) => {
     // This method is no longer needed with TanStack Query's automatic cache updates
     // Kept for backward compatibility
     void updated;

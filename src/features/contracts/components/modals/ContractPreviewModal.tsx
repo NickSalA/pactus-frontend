@@ -1,12 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { ExternalLink, FileText, X } from "lucide-react";
-import { getDocumentFileLabel, getDocumentTypeLabel } from "@/lib/document.utils";
-import type { Document } from "@/types/api.types";
+import { useEffect } from 'react';
+import { ExternalLink, FileText, X } from 'lucide-react';
+import {
+  getDocumentFileLabel,
+  getDocumentTypeLabel,
+} from '@/lib/document.utils';
+import type { Document } from '@/types/api.types';
 
 type ContractPreviewModalProps = {
-  contract: Document | null;
+  contract: Document;
   error: string | null;
   loading: boolean;
   onClose: () => void;
@@ -30,18 +33,18 @@ export function ContractPreviewModal({
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
 
     const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.body.style.overflow = originalOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [onClose, open]);
 
@@ -63,10 +66,14 @@ export function ContractPreviewModal({
         <div className="flex flex-shrink-0 items-start justify-between gap-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 via-white to-blue-50/80 px-5 py-4 sm:px-6">
           <div className="min-w-0">
             <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
-              <span className="rounded-full bg-red-100 px-2.5 py-1 text-red-700">PDF</span>
-              <span>{getDocumentTypeLabel(contract.type)}</span>
+              <span className="rounded-full bg-red-100 px-2.5 py-1 text-red-700">
+                PDF
+              </span>
+              <span>{getDocumentTypeLabel(contract.type!)}</span>
             </div>
-            <h3 className="truncate text-lg font-semibold text-slate-900 sm:text-xl">{contract.name}</h3>
+            <h3 className="truncate text-lg font-semibold text-slate-900 sm:text-xl">
+              {contract.name}
+            </h3>
             <p className="mt-1 flex items-center gap-2 truncate text-sm text-slate-500">
               <FileText className="h-4 w-4 flex-shrink-0" />
               <span className="truncate">{fileLabel}</span>
@@ -98,15 +105,22 @@ export function ContractPreviewModal({
             <div className="flex h-full flex-col items-center justify-center gap-4 px-6 text-center">
               <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
               <div>
-                <p className="text-base font-medium text-slate-800">Preparando vista previa...</p>
-                <p className="mt-1 text-sm text-slate-500">Estamos generando un acceso temporal seguro al archivo.</p>
+                <p className="text-base font-medium text-slate-800">
+                  Preparando vista previa...
+                </p>
+                <p className="mt-1 text-sm text-slate-500">
+                  Estamos generando un acceso temporal seguro al archivo.
+                </p>
               </div>
             </div>
           ) : error ? (
             <div className="flex h-full flex-col items-center justify-center gap-4 px-6 text-center">
-              <div className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">{error}</div>
+              <div className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+                {error}
+              </div>
               <p className="max-w-md text-sm text-slate-500">
-                No fue posible cargar la vista previa embebida. Puedes cerrar esta ventana e intentar nuevamente.
+                No fue posible cargar la vista previa embebida. Puedes cerrar
+                esta ventana e intentar nuevamente.
               </p>
             </div>
           ) : previewUrl ? (
@@ -120,8 +134,8 @@ export function ContractPreviewModal({
                 />
               </div>
               <p className="mt-3 text-center text-xs text-slate-500">
-                Si el PDF no se muestra correctamente en tu navegador, usa &quot;Abrir aparte&quot; para verlo en una
-                pestaña nueva.
+                Si el PDF no se muestra correctamente en tu navegador, usa
+                &quot;Abrir aparte&quot; para verlo en una pestaña nueva.
               </p>
             </div>
           ) : null}

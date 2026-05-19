@@ -8,11 +8,11 @@ import {
   updateTemplate,
 } from "@/api";
 import type {
-  GenerateTemplateDraftRequest,
-  Template,
-  TemplateCreateRequest,
-  TemplateUpdateRequest,
-} from "@/types/api.types";
+  ApiTemplateGenerateRequest,
+  ApiTemplateResponse,
+  ApiTemplateCreateRequest,
+  ApiTemplateUpdateRequest,
+} from "@/types/api";
 
 const TEMPLATES_KEY = ["templates"] as const;
 
@@ -24,7 +24,7 @@ const templateKeys = {
 
 const updateTemplateInAllLists = (
   queryClient: QueryClient,
-  updatedTemplate: Template,
+  updatedTemplate: ApiTemplateResponse,
   templateId: number
 ) => {
   const listQueries = queryClient.getQueryCache().getAll().filter((query) => {
@@ -54,7 +54,7 @@ export const useCreateTemplate = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: TemplateCreateRequest) => createTemplate(payload),
+    mutationFn: (payload: ApiTemplateCreateRequest) => createTemplate(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TEMPLATES_KEY });
     },
@@ -70,7 +70,7 @@ export const useUpdateTemplate = () => {
       payload,
     }: {
       templateId: number;
-      payload: TemplateUpdateRequest;
+      payload: ApiTemplateUpdateRequest;
     }) => updateTemplate(templateId, payload),
     onSuccess: (updatedTemplate, { templateId }) => {
       queryClient.setQueryData(templateKeys.detail(templateId), updatedTemplate);
@@ -111,9 +111,21 @@ export const useGenerateTemplateDraft = () => {
       request,
       file,
     }: {
-      request: GenerateTemplateDraftRequest;
+      request: ApiTemplateGenerateRequest;
       file?: File | null;
-    }) => generateTemplateDraft(request, file),
+    }) =>
+      generateTemplateDraft(request, file).then((result) => ({
+        template: result.template,
+        warnings: result.warnings,
+        source: result.source as Record<string, unknown>,
+        usage: result.usage
+          ? {
+              input_tokens: result.usage.input_tokens ?? 0,
+              output_tokens: result.usage.output_tokens ?? 0,
+              total_tokens: result.usage.total_tokens ?? 0,
+            }
+          : null,
+      })),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TEMPLATES_KEY });
     },

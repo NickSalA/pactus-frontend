@@ -10,11 +10,11 @@ import {
   TEMPLATE_FIELD_TYPE_LABELS,
 } from "@/lib/template-fields";
 import { getDocumentTypeLabel } from "@/lib/document.utils";
-import type { Template, TemplateField } from "@/types/api.types";
+import type { ApiTemplateResponse, ApiTemplateField } from "@/types/api";
 import { TemplateWizardProgress } from "./TemplateWizardProgress";
 
 type TemplateViewModalProps = {
-  template: Template | null;
+  template: ApiTemplateResponse | null;
   warnings?: string[];
   onClose: () => void;
 };
@@ -22,7 +22,7 @@ type TemplateViewModalProps = {
 type ViewStep = 1 | 2 | 3;
 const STEPS = ["Resumen", "Contenido", "Campos"];
 
-const STATE_STYLES: Record<Template["state"], string> = {
+const STATE_STYLES: Record<ApiTemplateResponse["state"], string> = {
   DRAFT: "bg-amber-100 text-amber-700",
   PUBLISHED: "bg-emerald-100 text-emerald-700",
   ARCHIVED: "bg-slate-200 text-slate-700",
@@ -44,7 +44,7 @@ export function TemplateViewModal({ template, warnings = [], onClose }: Template
 
   if (!template) return null;
 
-  const renderFieldTable = (fields: TemplateField[], emptyMessage: string) => {
+  const renderFieldTable = (fields: ApiTemplateField[], emptyMessage: string) => {
     if (fields.length === 0) {
       return (
         <div className="mt-4 rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
