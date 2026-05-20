@@ -8,7 +8,6 @@ import {
   ArrowRight,
   Building2,
   CheckCircle2,
-  ChevronDown,
   FilePlus,
   FileText,
   LoaderCircle,
@@ -20,6 +19,13 @@ import {
 } from 'lucide-react';
 import { ContractFormProgress } from '@/features/contracts/components/form/ContractFormProgress';
 import { Select } from '@/components/ui/Select';
+import { FieldSectionCard } from '@/features/contracts/components/ui/FieldSectionCard';
+import { FieldSectionHorizontalStepper } from '@/features/contracts/components/ui/FieldSectionHorizontalStepper';
+import { FieldSectionTimeline } from '@/features/contracts/components/ui/FieldSectionTimeline';
+import { LabeledField } from '@/features/contracts/components/ui/LabeledField';
+import { SelectionCard } from '@/features/contracts/components/ui/SelectionCard';
+import { StepHeading } from '@/features/contracts/components/ui/StepHeading';
+import type { FieldSectionNavItem } from '@/features/contracts/types/FieldSectionNavItem';
 import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
 import { deleteDocument, getServices } from '@/api';
 import { getDocumentFileUrl } from '@/api/documents';
@@ -93,12 +99,6 @@ type FieldSectionDefinition = {
 type FieldSection = {
   fields: ApiTemplateField[];
   id: string;
-  title: string;
-};
-
-type FieldSectionNavItem = {
-  id: string;
-  saved: boolean;
   title: string;
 };
 
@@ -356,290 +356,6 @@ const buildTemplateFieldSections = (
     },
   ];
 };
-
-function SelectionCard({
-  badge,
-  description,
-  disabled,
-  icon,
-  onClick,
-  selected,
-  title,
-}: {
-  badge?: { colorClass: string; label: string };
-  description: string;
-  disabled?: boolean;
-  icon: ReactNode;
-  onClick?: () => void;
-  selected?: boolean;
-  title: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={disabled ? undefined : onClick}
-      disabled={disabled}
-      className={`relative flex h-full flex-col items-center justify-center gap-4 rounded-2xl border-2 p-7 text-center transition-all duration-150 ${
-        disabled
-          ? 'cursor-not-allowed border-slate-200 bg-slate-50 opacity-60'
-          : selected
-            ? 'border-blue-500 bg-blue-50/70 shadow-sm'
-            : 'border-slate-200 bg-white hover:border-blue-400 hover:shadow-md active:scale-[0.98]'
-      }`}
-    >
-      {badge && (
-        <span
-          className={`absolute right-3 top-3 rounded-full px-2 py-0.5 text-[10px] font-semibold ${badge.colorClass}`}
-        >
-          {badge.label}
-        </span>
-      )}
-      <div
-        className={`flex h-14 w-14 items-center justify-center rounded-2xl ${selected ? 'bg-blue-100' : disabled ? 'bg-slate-100' : 'bg-blue-50'}`}
-      >
-        {icon}
-      </div>
-      <div className="space-y-1">
-        <p
-          className={`text-sm font-semibold ${disabled ? 'text-slate-400' : 'text-slate-800'}`}
-        >
-          {title}
-        </p>
-        <p
-          className={`text-xs leading-relaxed ${disabled ? 'text-slate-400' : 'text-slate-500'}`}
-        >
-          {description}
-        </p>
-      </div>
-    </button>
-  );
-}
-
-function LabeledField({
-  label,
-  children,
-  required,
-}: {
-  children: ReactNode;
-  label: string;
-  required?: boolean;
-}) {
-  return (
-    <label className="flex flex-col gap-1.5">
-      <span className="text-xs font-medium text-slate-600">
-        {label}
-        {required && <span className="ml-0.5 text-red-500">*</span>}
-      </span>
-      {children}
-    </label>
-  );
-}
-
-function StepHeading({
-  currentStep,
-  description,
-  title,
-  totalSteps,
-}: {
-  currentStep: number;
-  description: string;
-  title: string;
-  totalSteps: number;
-}) {
-  return (
-    <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-        Paso {currentStep} de {totalSteps}
-      </p>
-      <h2 className="mt-2 text-2xl font-semibold text-slate-900">{title}</h2>
-      <p className="mt-1 text-sm text-slate-500">{description}</p>
-    </div>
-  );
-}
-
-function FieldSectionCard({
-  children,
-  expanded,
-  onToggle,
-  saved,
-  title,
-}: {
-  children: ReactNode;
-  expanded: boolean;
-  onToggle: () => void;
-  saved: boolean;
-  title: string;
-}) {
-  return (
-    <div
-      className={`overflow-hidden rounded-3xl border shadow-sm transition-colors ${saved ? 'border-emerald-300 bg-emerald-50/40' : 'border-slate-200 bg-white'}`}
-    >
-      <button
-        type="button"
-        onClick={onToggle}
-        className={`flex w-full items-center justify-between gap-4 px-5 py-3 text-left transition ${saved ? 'hover:bg-emerald-50/60' : 'hover:bg-slate-50'}`}
-      >
-        <div>
-          <p className="text-base font-semibold text-slate-900">{title}</p>
-          {saved && (
-            <p className="mt-0.5 text-xs text-slate-500">
-              Sección guardada · puedes editarla si lo necesitas
-            </p>
-          )}
-        </div>
-
-        <div className="flex items-center gap-3">
-          <span
-            className={`rounded-full px-3 py-1 text-xs font-medium ${saved ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}
-          >
-            {saved ? 'Guardada' : 'Pendiente'}
-          </span>
-          <ChevronDown
-            className={`h-4 w-4 shrink-0 text-slate-400 transition-transform ${expanded ? 'rotate-180' : ''}`}
-          />
-        </div>
-      </button>
-
-      {expanded && <div className="border-t border-slate-200">{children}</div>}
-    </div>
-  );
-}
-
-function FieldSectionTimeline({
-  activeId,
-  items,
-  onSelect,
-}: {
-  activeId: string | null;
-  items: readonly FieldSectionNavItem[];
-  onSelect: (id: string) => void;
-}) {
-  return (
-    <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-        Áreas del contrato
-      </p>
-      <div className="mt-4 space-y-1">
-        {items.map((item, index) => {
-          const isActive = item.id === activeId;
-
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => onSelect(item.id)}
-              className={`grid w-full grid-cols-[20px_minmax(0,1fr)] gap-3 rounded-2xl px-3 py-3 text-left transition ${
-                isActive
-                  ? 'bg-white shadow-sm ring-1 ring-blue-200'
-                  : 'hover:bg-white/70'
-              }`}
-            >
-              <div className="flex flex-col items-center">
-                <span
-                  className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
-                    item.saved
-                      ? 'border-emerald-500 bg-emerald-500 text-white'
-                      : isActive
-                        ? 'border-blue-500 bg-blue-500 text-white'
-                        : 'border-slate-300 bg-white text-slate-400'
-                  }`}
-                >
-                  {item.saved ? (
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                  ) : (
-                    <span className="h-2 w-2 rounded-full bg-current" />
-                  )}
-                </span>
-                {index < items.length - 1 && (
-                  <span
-                    className={`mt-1 h-8 w-px ${item.saved ? 'bg-emerald-300' : 'bg-slate-200'}`}
-                  />
-                )}
-              </div>
-
-              <div className="min-w-0 pt-0.5">
-                <p
-                  className={`text-sm font-semibold ${isActive ? 'text-slate-900' : 'text-slate-700'}`}
-                >
-                  {item.title}
-                </p>
-                <p
-                  className={`mt-0.5 text-xs ${item.saved ? 'text-emerald-700' : 'text-slate-500'}`}
-                >
-                  {item.saved ? 'Completada' : 'Pendiente'}
-                </p>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function FieldSectionHorizontalStepper({
-  activeId,
-  items,
-  onSelect,
-}: {
-  activeId: string | null;
-  items: readonly FieldSectionNavItem[];
-  onSelect: (id: string) => void;
-}) {
-  return (
-    <div className="flex items-center gap-0.5 overflow-x-auto">
-      {items.map((item, index) => {
-        const isActive = item.id === activeId;
-
-        return (
-          <div key={item.id} className="flex shrink-0 items-center">
-            <button
-              type="button"
-              onClick={() => onSelect(item.id)}
-              className={`flex items-center gap-2 rounded-xl px-3 py-2 transition ${
-                isActive
-                  ? 'bg-white shadow-sm ring-1 ring-blue-200'
-                  : 'hover:bg-white/70'
-              }`}
-            >
-              <span
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 text-[10px] font-bold ${
-                  item.saved
-                    ? 'border-emerald-500 bg-emerald-500 text-white'
-                    : isActive
-                      ? 'border-blue-500 bg-blue-500 text-white'
-                      : 'border-slate-300 bg-white text-slate-400'
-                }`}
-              >
-                {item.saved ? (
-                  <CheckCircle2 className="h-3 w-3" />
-                ) : (
-                  <span className="h-1.5 w-1.5 rounded-full bg-current" />
-                )}
-              </span>
-              <span
-                className={`whitespace-nowrap text-xs font-medium ${
-                  isActive
-                    ? 'text-slate-900'
-                    : item.saved
-                      ? 'text-emerald-700'
-                      : 'text-slate-600'
-                }`}
-              >
-                {item.title}
-              </span>
-            </button>
-            {index < items.length - 1 && (
-              <div
-                className={`mx-0.5 h-px w-3 shrink-0 ${item.saved ? 'bg-emerald-300' : 'bg-slate-200'}`}
-              />
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 export function NewContractModal({
   availableFolders = [],
