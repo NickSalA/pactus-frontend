@@ -197,6 +197,7 @@ export async function updateDocument(
   const updatedDocument = normalizeDocument(
     await apiPatch<ApiDocumentResponse>(`/documents/${id}`, formData, {
       timeout: TIMEOUTS.UPLOAD,
+      headers: { 'Content-Type': 'multipart/form-data' },
     }),
   );
 
