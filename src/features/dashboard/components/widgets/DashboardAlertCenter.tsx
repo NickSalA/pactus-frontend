@@ -111,7 +111,7 @@ export function DashboardAlertCenter({
       <div className="mb-4 flex items-stretch justify-center gap-2">
         {tabs.map((tab, index) => (
           <button
-            key={tab.label}
+            key={index}
             onClick={() => setSelectedIndex(index)}
             onMouseEnter={() => setHoveredTabIndex(index)}
             onMouseLeave={() => setHoveredTabIndex(null)}

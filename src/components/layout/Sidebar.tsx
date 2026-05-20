@@ -122,11 +122,11 @@ export default function Sidebar() {
             size={28}
             className={`text-brand-neutral-50 shrink-0 ${isCollapsed ? 'hidden' : ''}`}
           />
-          <h1
+          <span
             className={`text-display-large-logo text-brand-neutral-50 ${isCollapsed ? 'hidden' : ''}`}
           >
             Pactus
-          </h1>
+          </span>
           <button
             onClick={toggleSidebar}
             className="p-1 hover:bg-white/10 rounded-lg transition-colors"

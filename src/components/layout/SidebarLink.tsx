@@ -31,7 +31,9 @@ export function SidebarLink({ item, isActive }: SidebarLinkProps) {
         }`}
       >
         <Icon size={22} className="shrink-0" />
-        <span className={`min-w-0 overflow-hidden whitespace-nowrap text-[15px] ${isCollapsed ? 'hidden' : ''}`}>
+        <span
+          className={`min-w-0 overflow-hidden whitespace-nowrap text-[15px] ${isCollapsed ? 'hidden' : ''}`}
+        >
           {item.name}
         </span>
       </Link>
