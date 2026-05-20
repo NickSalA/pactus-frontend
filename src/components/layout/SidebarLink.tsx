@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { type ComponentType } from 'react';
+import { useSidebarStore } from '@/store';
 
 type MenuItem = {
   href: string;
@@ -16,6 +17,7 @@ type SidebarLinkProps = {
 };
 
 export function SidebarLink({ item, isActive }: SidebarLinkProps) {
+  const { isCollapsed } = useSidebarStore();
   const Icon = item.icon;
 
   return (
@@ -29,7 +31,7 @@ export function SidebarLink({ item, isActive }: SidebarLinkProps) {
         }`}
       >
         <Icon size={22} className="shrink-0" />
-        <span className="min-w-0 overflow-hidden whitespace-nowrap text-[15px]">
+        <span className={`min-w-0 overflow-hidden whitespace-nowrap text-[15px] ${isCollapsed ? 'hidden' : ''}`}>
           {item.name}
         </span>
       </Link>

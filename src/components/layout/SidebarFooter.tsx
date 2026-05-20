@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bell, User, LogOut } from 'lucide-react';
 import { logout as clearApiSession, getNotifications } from '@/api';
-import { useAuthStore } from '@/store';
+import { useAuthStore, useSidebarStore } from '@/store';
 import { supabase } from '@/lib/supabaseClient';
 import { getUserRoleLabel, toNameAndLastName } from '@/lib/authUser';
 import NotificationDropdown from './NotificationDropdown';
@@ -42,6 +42,7 @@ export function SidebarFooter() {
   );
   const router = useRouter();
   const { isHydrating, user, logout } = useAuthStore();
+  const { isCollapsed } = useSidebarStore();
 
   const userName = toNameAndLastName(
     user?.name || (isHydrating ? 'Cargando usuario' : 'Usuario'),
@@ -134,7 +135,39 @@ export function SidebarFooter() {
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className={`flex items-center gap-3 ${isCollapsed ? 'flex-col' : 'flex-row-reverse'}`}>
+      <div className="relative">
+        <button
+          onClick={() => setIsDropdownOpen((prev) => !prev)}
+          className="relative p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+        >
+          <Bell size={20} />
+          {hasUnread && (
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+          )}
+        </button>
+
+        {isDropdownOpen && (
+          <NotificationDropdown
+            notifications={notifications}
+            onViewAll={() => setIsSidebarOpen(true)}
+            onClose={() => setIsDropdownOpen(false)}
+            onMarkAsRead={handleMarkAsRead}
+            alignRight={isCollapsed}
+          />
+        )}
+      </div>
+
+      {isSidebarOpen && (
+        <NotificationSidebar
+          notifications={notifications}
+          onClose={() => setIsSidebarOpen(false)}
+          onDeleteOne={handleDismissOne}
+          onDeleteAll={handleDismissAll}
+          onMarkAllAsRead={handleMarkAllAsRead}
+        />
+      )}
+
       <div className="relative flex-1">
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -145,7 +178,7 @@ export function SidebarFooter() {
               {userInitials}
             </span>
           </div>
-          <div className="text-left min-w-0">
+          <div className={`text-left min-w-0 ${isCollapsed ? 'hidden' : ''}`}>
             <p className="text-sm font-medium text-white truncate">
               {userName}
             </p>
@@ -182,36 +215,6 @@ export function SidebarFooter() {
           </>
         )}
       </div>
-      <div className="relative">
-        <button
-          onClick={() => setIsDropdownOpen((prev) => !prev)}
-          className="relative p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
-        >
-          <Bell size={20} />
-          {hasUnread && (
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-          )}
-        </button>
-
-        {isDropdownOpen && (
-          <NotificationDropdown
-            notifications={notifications}
-            onViewAll={() => setIsSidebarOpen(true)}
-            onClose={() => setIsDropdownOpen(false)}
-            onMarkAsRead={handleMarkAsRead}
-          />
-        )}
-      </div>
-
-      {isSidebarOpen && (
-        <NotificationSidebar
-          notifications={notifications}
-          onClose={() => setIsSidebarOpen(false)}
-          onDeleteOne={handleDismissOne}
-          onDeleteAll={handleDismissAll}
-          onMarkAllAsRead={handleMarkAllAsRead}
-        />
-      )}
     </div>
   );
 }
