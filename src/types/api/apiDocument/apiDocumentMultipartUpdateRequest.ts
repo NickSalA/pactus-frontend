@@ -1,6 +1,6 @@
-import type { ApiDocumentCreateRequest } from './apiDocumentCreateRequest';
+import type { ApiDocumentUpdateRequest } from './apiDocumentUpdateRequest';
 
 export interface ApiDocumentMultipartUpdateRequest {
   file: File | null;
-  document: ApiDocumentCreateRequest;
+  document: ApiDocumentUpdateRequest;
 }
