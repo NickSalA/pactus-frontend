@@ -1,64 +1,48 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useServicesAdmin } from '@/queries/hooks/contracts/queries';
 import {
-  createServiceCatalogItem,
-  deleteServiceCatalogItem,
-  getServicesAdmin,
-  updateServiceCatalogItem,
-} from '@/api';
+  useCreateServiceCatalogItem,
+  useDeleteServiceCatalogItem,
+  useUpdateServiceCatalogItem,
+} from '@/queries/hooks/contracts/mutations';
 import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
-
 import {
-  ApiServiceResponse,
   ApiServiceCreateRequest,
+  ApiServiceResponse,
   ApiServiceUpdateRequest,
 } from '@/types/api';
 
 export function useAdminServices() {
   const access = useAdminGuard();
-  const [services, setServices] = useState<ApiServiceResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [editingService, setEditingService] =
     useState<ApiServiceResponse | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
-  const loadServices = useCallback(
-    async (options: { force?: boolean } = {}) => {
-      if (!access.isAdmin) {
-        setLoading(false);
-        return;
-      }
+  const {
+    data: services = [],
+    isLoading: loading,
+    error,
+    refetch: reload,
+  } = useServicesAdmin(true);
 
-      try {
-        setLoading(true);
-        setError(null);
-        const nextServices = await getServicesAdmin(true);
-        setServices(nextServices);
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : 'No se pudieron cargar los servicios.',
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    [access.isAdmin],
-  );
+  const createServiceMutation = useCreateServiceCatalogItem();
+  const updateServiceMutation = useUpdateServiceCatalogItem();
+  const deleteServiceMutation = useDeleteServiceCatalogItem();
 
-  useEffect(() => {
-    void loadServices();
-  }, [loadServices]);
+  const saving =
+    createServiceMutation.isPending ||
+    updateServiceMutation.isPending ||
+    deleteServiceMutation.isPending;
 
   const stats = useMemo(
     () => ({
-      activeCount: services.filter((service) => service.is_active).length,
-      inUseCount: services.filter((service) => service.documents_count > 0)
+      activeCount: services.filter((service: ApiServiceResponse) => service.is_active)
         .length,
+      inUseCount: services.filter(
+        (service: ApiServiceResponse) => service.documents_count > 0,
+      ).length,
       totalCount: services.length,
     }),
     [services],
@@ -85,98 +69,50 @@ export function useAdminServices() {
 
   const saveService = useCallback(
     async (payload: ApiServiceCreateRequest | ApiServiceUpdateRequest) => {
-      try {
-        setSaving(true);
-        setError(null);
-
-        if (editingService) {
-          const updatedService = await updateServiceCatalogItem(
-            editingService.id,
-            payload as ApiServiceUpdateRequest,
-          );
-          setServices((previousServices) =>
-            previousServices.map((service) =>
-              service.id === updatedService.id ? updatedService : service,
-            ),
-          );
-        } else {
-          const createdService = await createServiceCatalogItem(
-            payload as ApiServiceCreateRequest,
-          );
-          setServices((previousServices) => [
-            ...previousServices,
-            createdService,
-          ]);
-        }
-
-        setEditingService(null);
-        setIsEditorOpen(false);
-      } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : 'No se pudo guardar el servicio.';
-        setError(message);
-        throw new Error(message);
-      } finally {
-        setSaving(false);
+      if (editingService) {
+        await updateServiceMutation.mutateAsync({
+          serviceId: editingService.id,
+          payload: payload as ApiServiceUpdateRequest,
+        });
+      } else {
+        await createServiceMutation.mutateAsync(
+          payload as ApiServiceCreateRequest,
+        );
       }
+
+      setEditingService(null);
+      setIsEditorOpen(false);
     },
-    [editingService],
+    [editingService, createServiceMutation, updateServiceMutation],
   );
 
-  const toggleService = useCallback(async (service: ApiServiceResponse) => {
-    try {
-      setSaving(true);
-      setError(null);
-      const updatedService = await updateServiceCatalogItem(service.id, {
-        is_active: !service.is_active,
+  const toggleService = useCallback(
+    async (service: ApiServiceResponse) => {
+      await updateServiceMutation.mutateAsync({
+        serviceId: service.id,
+        payload: { is_active: !service.is_active },
       });
-      setServices((previousServices) =>
-        previousServices.map((currentService) =>
-          currentService.id === updatedService.id
-            ? updatedService
-            : currentService,
-        ),
-      );
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'No se pudo actualizar el estado del servicio.',
-      );
-    } finally {
-      setSaving(false);
-    }
-  }, []);
+    },
+    [updateServiceMutation],
+  );
 
-  const removeService = useCallback(async (serviceId: number) => {
-    try {
-      setSaving(true);
-      setError(null);
-      await deleteServiceCatalogItem(serviceId);
-      setServices((previousServices) =>
-        previousServices.filter((service) => service.id !== serviceId),
-      );
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'No se pudo eliminar el servicio.',
-      );
-    } finally {
-      setSaving(false);
-    }
-  }, []);
+  const removeService = useCallback(
+    async (serviceId: number) => {
+      await deleteServiceMutation.mutateAsync(serviceId);
+    },
+    [deleteServiceMutation],
+  );
 
   return {
     ...access,
     closeEditor,
     editingService,
-    error,
+    error: error instanceof Error ? error.message : error ? String(error) : null,
     isEditorOpen,
     loading,
     openCreateEditor,
     openEditEditor,
-    reload: () => loadServices({ force: true }),
+    reload,
     removeService,
     saveService,
     saving,

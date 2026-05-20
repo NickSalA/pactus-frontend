@@ -1,11 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createDocumentFolder,
+  createServiceCatalogItem,
   deleteDocument,
   deleteDocumentFolder,
+  deleteServiceCatalogItem,
   importGoogleDriveFiles,
   updateDocument,
   updateDocumentFolder,
+  updateServiceCatalogItem,
   uploadDocument,
 } from '@/api';
 import type {
@@ -13,12 +16,16 @@ import type {
   ApiDocumentMultipartUpdateRequest,
   ApiFolderCreateRequest,
   ApiFolderUpdateRequest,
+  ApiServiceCreateRequest,
+  ApiServiceResponse,
+  ApiServiceUpdateRequest,
 } from '@/types/api';
 import type { GooglePickerFile } from '@/lib/googlePicker';
 import type { DocumentFlatten, DocumentFolder } from '@/types/ui.types';
 
 const CONTRACTS_KEY = ['contracts'] as const;
 const FOLDERS_KEY = [...CONTRACTS_KEY, 'folders'] as const;
+const SERVICES_ADMIN_KEY = [...CONTRACTS_KEY, 'services-admin'] as const;
 
 export const useUploadDocument = () => {
   const queryClient = useQueryClient();
@@ -123,6 +130,55 @@ export const useImportGoogleDriveFiles = () => {
     }) => importGoogleDriveFiles(accessToken, files),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CONTRACTS_KEY });
+    },
+  });
+};
+
+export const useCreateServiceCatalogItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: ApiServiceCreateRequest) =>
+      createServiceCatalogItem(payload),
+    onSuccess: (newService) => {
+      queryClient.setQueryData<ApiServiceResponse[]>(
+        [...SERVICES_ADMIN_KEY, true],
+        (old) => (old ? [...old, newService] : [newService]),
+      );
+    },
+  });
+};
+
+export const useUpdateServiceCatalogItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      serviceId,
+      payload,
+    }: {
+      serviceId: number;
+      payload: ApiServiceUpdateRequest;
+    }) => updateServiceCatalogItem(serviceId, payload),
+    onSuccess: (updatedService) => {
+      queryClient.setQueryData<ApiServiceResponse[]>(
+        [...SERVICES_ADMIN_KEY, true],
+        (old) => old?.map((s) => (s.id === updatedService.id ? updatedService : s)),
+      );
+    },
+  });
+};
+
+export const useDeleteServiceCatalogItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (serviceId: number) => deleteServiceCatalogItem(serviceId),
+    onSuccess: (_, deletedId) => {
+      queryClient.setQueryData<ApiServiceResponse[]>(
+        [...SERVICES_ADMIN_KEY, true],
+        (old) => old?.filter((s) => s.id !== deletedId),
+      );
     },
   });
 };

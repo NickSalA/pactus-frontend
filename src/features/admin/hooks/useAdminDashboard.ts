@@ -1,14 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  getDocumentFolders,
-  getDocuments,
-  getNotificationRules,
-  getOrganizationMembers,
-  getServicesAdmin,
-  getTemplates,
-} from '@/api';
+import { useMemo } from 'react';
+import { useDocumentFolders, useDocuments, useServicesAdmin } from '@/queries/hooks/contracts/queries';
+import { useNotificationRules } from '@/queries/hooks/notifications/queries';
+import { useOrganizationMembers } from '@/queries/hooks/organizations/queries';
+import { useTemplates } from '@/queries/hooks/templates/queries';
 import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 
 export type AdminMetricId =
@@ -32,83 +28,84 @@ export type AdminMetric = {
   value: number;
 };
 
-type AdminSummary = {
-  activeUsers: number;
-  configuredAlertCount: number;
-  documentCount: number;
-  folderCount: number;
-  activeServiceCount: number;
-  serviceCount: number;
-  templateCount: number;
-  totalUsers: number;
-};
-
-const EMPTY_SUMMARY: AdminSummary = {
-  activeUsers: 0,
-  configuredAlertCount: 0,
-  documentCount: 0,
-  folderCount: 0,
-  activeServiceCount: 0,
-  serviceCount: 0,
-  templateCount: 0,
-  totalUsers: 0,
-};
-
 export function useAdminDashboard() {
   const access = useAdminGuard();
-  const [summary, setSummary] = useState<AdminSummary>(EMPTY_SUMMARY);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const loadSummary = useCallback(
-    async (options: { force?: boolean } = {}) => {
-      if (!access.isAdmin) {
-        setLoading(false);
-        return;
-      }
+  const {
+    data: members = [],
+    isLoading: membersLoading,
+    error: membersError,
+    refetch: reloadMembers,
+  } = useOrganizationMembers();
 
-      try {
-        setLoading(true);
-        setError(null);
+  const {
+    data: rules = [],
+    isLoading: rulesLoading,
+    error: rulesError,
+    refetch: reloadRules,
+  } = useNotificationRules();
 
-        const [members, rules, templates, services, documents, folders] =
-          await Promise.all([
-            getOrganizationMembers(),
-            getNotificationRules(),
-            getTemplates(),
-            getServicesAdmin(true),
-            getDocuments(),
-            getDocumentFolders(),
-          ]);
+  const {
+    data: templates = [],
+    isLoading: templatesLoading,
+    error: templatesError,
+    refetch: reloadTemplates,
+  } = useTemplates();
 
-        const nextSummary = {
-          activeUsers: members.filter((member) => member.is_active).length,
-          configuredAlertCount: rules.length,
-          documentCount: documents.length,
-          folderCount: folders.length,
-          activeServiceCount: services.filter((service) => service.is_active)
-            .length,
-          serviceCount: services.length,
-          templateCount: templates.length,
-          totalUsers: members.length,
-        };
-        setSummary(nextSummary);
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : 'No se pudo cargar el panel de administración.',
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    [access.isAdmin],
+  const {
+    data: servicesData,
+    isLoading: servicesLoading,
+    error: servicesError,
+    refetch: reloadServices,
+  } = useServicesAdmin(true);
+
+  const {
+    data: documents = [],
+    isLoading: documentsLoading,
+    error: documentsError,
+    refetch: reloadDocuments,
+  } = useDocuments();
+
+  const {
+    data: folders = [],
+    isLoading: foldersLoading,
+    error: foldersError,
+    refetch: reloadFolders,
+  } = useDocumentFolders();
+
+  const loading =
+    membersLoading ||
+    rulesLoading ||
+    templatesLoading ||
+    servicesLoading ||
+    documentsLoading ||
+    foldersLoading;
+
+  const error =
+    membersError?.message ??
+    rulesError?.message ??
+    templatesError?.message ??
+    servicesError?.message ??
+    documentsError?.message ??
+    foldersError?.message ??
+    null;
+
+  const services = servicesData ?? [];
+
+  const summary = useMemo(
+    () => ({
+      activeUsers: members.filter((member) => member.is_active).length,
+      configuredAlertCount: rules.length,
+      documentCount: documents.length,
+      folderCount: folders.length,
+      activeServiceCount: services.filter((service) => service.is_active)
+        .length,
+      serviceCount: services.length,
+      templateCount: templates.length,
+      totalUsers: members.length,
+    }),
+    [members, rules, documents, folders, services, templates],
   );
-
-  useEffect(() => {
-    void loadSummary();
-  }, [loadSummary]);
 
   const metrics = useMemo<AdminMetric[]>(
     () => [
@@ -151,11 +148,20 @@ export function useAdminDashboard() {
     [summary],
   );
 
+  const reload = () => {
+    reloadMembers();
+    reloadRules();
+    reloadTemplates();
+    reloadServices();
+    reloadDocuments();
+    reloadFolders();
+  };
+
   return {
     ...access,
     error,
     loading,
     metrics,
-    reload: () => loadSummary({ force: true }),
+    reload,
   };
 }

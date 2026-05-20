@@ -1,18 +1,18 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   ApiNotificationRuleCreateRequest,
   ApiNotificationRuleUpdateRequest,
 } from '@/types/api';
+import { useDocuments } from '@/queries/hooks/contracts/queries';
+import { useNotificationRules } from '@/queries/hooks/notifications/queries';
 import {
-  createNotificationRule,
-  deleteNotificationRule,
-  getDocuments,
-  getNotificationRules,
-  sendEmailAlerts,
-  updateNotificationRule,
-} from '@/api';
+  useCreateNotificationRule,
+  useDeleteNotificationRule,
+  useSendEmailAlerts,
+  useUpdateNotificationRule,
+} from '@/queries/hooks/notifications/mutations';
 import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiNotificationRuleResponse } from '@/types/api';
@@ -31,49 +31,57 @@ const EMPTY_DRAFT: RuleDraft = {
 
 export function useAdminAlertRules() {
   const access = useAdminGuard();
-  const [documents, setDocuments] = useState<DocumentFlatten[]>([]);
-  const [rules, setRules] = useState<ApiNotificationRuleResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRule, setEditingRule] =
     useState<ApiNotificationRuleResponse | null>(null);
-  const [sendingAlerts, setSendingAlerts] = useState(false);
   const [sendAlertsMessage, setSendAlertsMessage] = useState<string | null>(
     null,
   );
 
-  const loadData = useCallback(async () => {
-    if (!access.isAdmin) {
-      setLoading(false);
-      return;
-    }
+  const {
+    data: rules = [],
+    isLoading: loading,
+    error,
+    refetch: reload,
+  } = useNotificationRules();
 
-    try {
-      setLoading(true);
-      setError(null);
-      setSendAlertsMessage(null);
-      const [nextRules, nextDocuments] = await Promise.all([
-        getNotificationRules(),
-        getDocuments(),
-      ]);
-      setRules(nextRules);
-      setDocuments(nextDocuments);
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'No se pudieron cargar las reglas de alerta.',
+  const { data: documents = [] } = useDocuments();
+
+  const createRuleMutation = useCreateNotificationRule({
+    onError: (err) => {
+      console.error('Error creating rule:', err);
+    },
+  });
+
+  const updateRuleMutation = useUpdateNotificationRule({
+    onError: (err) => {
+      console.error('Error updating rule:', err);
+    },
+  });
+
+  const deleteRuleMutation = useDeleteNotificationRule({
+    onError: (err) => {
+      console.error('Error deleting rule:', err);
+    },
+  });
+
+  const sendAlertsMutation = useSendEmailAlerts({
+    onSuccess: (data) => {
+      setSendAlertsMessage(
+        data.emails_sent === 0
+          ? 'No se enviaron correos porque no hay alertas pendientes o usuarios suscritos.'
+          : `Se enviaron ${data.emails_sent} correo${data.emails_sent === 1 ? '' : 's'} de alerta.`,
       );
-    } finally {
-      setLoading(false);
-    }
-  }, [access.isAdmin]);
+    },
+    onError: (err) => {
+      console.error('Error sending alerts:', err);
+    },
+  });
 
-  useEffect(() => {
-    void loadData();
-  }, [loadData]);
+  const saving =
+    createRuleMutation.isPending ||
+    updateRuleMutation.isPending ||
+    deleteRuleMutation.isPending;
 
   const openCreateModal = useCallback(() => {
     setEditingRule(null);
@@ -96,87 +104,42 @@ export function useAdminAlertRules() {
 
   const saveRule = useCallback(
     async (draft: RuleDraft) => {
-      try {
-        setSaving(true);
-        setError(null);
+      const payload = {
+        document_id: draft.document_id,
+        days_before_due: draft.days_before_due,
+        is_active: draft.is_active,
+      } satisfies ApiNotificationRuleCreateRequest;
 
-        const payload = {
-          document_id: draft.document_id,
+      if (editingRule) {
+        const updatedPayload: ApiNotificationRuleUpdateRequest = {
           days_before_due: draft.days_before_due,
           is_active: draft.is_active,
-        } satisfies ApiNotificationRuleCreateRequest;
-
-        if (editingRule) {
-          const updatedPayload: ApiNotificationRuleUpdateRequest = {
-            days_before_due: draft.days_before_due,
-            is_active: draft.is_active,
-          };
-          const updatedRule = await updateNotificationRule(
-            editingRule.id,
-            updatedPayload,
-          );
-          setRules((previousRules) =>
-            previousRules.map((rule) =>
-              rule.id === updatedRule.id ? updatedRule : rule,
-            ),
-          );
-        } else {
-          const createdRule = await createNotificationRule(payload);
-          setRules((previousRules) => [...previousRules, createdRule]);
-        }
-
-        setIsModalOpen(false);
-        setEditingRule(null);
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'No se pudo guardar la regla.';
-        setError(message);
-        throw new Error(message);
-      } finally {
-        setSaving(false);
+        };
+        await updateRuleMutation.mutateAsync({
+          ruleId: editingRule.id,
+          payload: updatedPayload,
+        });
+      } else {
+        await createRuleMutation.mutateAsync(payload);
       }
+
+      setIsModalOpen(false);
+      setEditingRule(null);
     },
-    [editingRule],
+    [editingRule, createRuleMutation, updateRuleMutation],
   );
 
   const triggerEmailAlerts = useCallback(async () => {
-    try {
-      setSendingAlerts(true);
-      setError(null);
-      setSendAlertsMessage(null);
-      const result = await sendEmailAlerts();
-      setSendAlertsMessage(
-        result.emails_sent === 0
-          ? 'No se enviaron correos porque no hay alertas pendientes o usuarios suscritos.'
-          : `Se enviaron ${result.emails_sent} correo${result.emails_sent === 1 ? '' : 's'} de alerta.`,
-      );
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'No se pudieron enviar las alertas por correo.',
-      );
-    } finally {
-      setSendingAlerts(false);
-    }
-  }, []);
+    setSendAlertsMessage(null);
+    await sendAlertsMutation.mutateAsync();
+  }, [sendAlertsMutation]);
 
-  const removeRule = useCallback(async (ruleId: number) => {
-    try {
-      setSaving(true);
-      setError(null);
-      await deleteNotificationRule(ruleId);
-      setRules((previousRules) =>
-        previousRules.filter((rule) => rule.id !== ruleId),
-      );
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'No se pudo eliminar la regla.',
-      );
-    } finally {
-      setSaving(false);
-    }
-  }, []);
+  const removeRule = useCallback(
+    async (ruleId: number) => {
+      await deleteRuleMutation.mutateAsync(ruleId);
+    },
+    [deleteRuleMutation],
+  );
 
   const stats = useMemo(
     () => ({
@@ -190,7 +153,7 @@ export function useAdminAlertRules() {
   );
 
   const documentById = useMemo(
-    () => new Map(documents.map((document) => [document.id, document])),
+    () => new Map<number, DocumentFlatten>(documents.map((d) => [d.id, d])),
     [documents],
   );
 
@@ -201,18 +164,18 @@ export function useAdminAlertRules() {
     documents,
     editingRule,
     emptyDraft: EMPTY_DRAFT,
-    error,
+    error: error instanceof Error ? error.message : error ? String(error) : null,
     isModalOpen,
     loading,
     openCreateModal,
     openEditModal,
-    reload: loadData,
+    reload,
     removeRule,
     rules,
     saveRule,
     saving,
     sendAlertsMessage,
-    sendingAlerts,
+    sendingAlerts: sendAlertsMutation.isPending,
     stats,
     triggerEmailAlerts,
   };

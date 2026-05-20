@@ -1,62 +1,43 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useDocumentFolders } from '@/queries/hooks/contracts/queries';
 import {
-  deleteDocumentFolder,
-  getDocumentFolders,
-  updateDocumentFolder,
-} from '@/api';
+  useDeleteDocumentFolder,
+  useUpdateDocumentFolder,
+} from '@/queries/hooks/contracts/mutations';
 import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 import type { DocumentFolder } from '@/types/ui.types';
 import { ApiFolderUpdateRequest } from '@/types/api';
 
 export function useAdminFolders() {
   const access = useAdminGuard();
-  const [folders, setFolders] = useState<DocumentFolder[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [editingFolder, setEditingFolder] = useState<DocumentFolder | null>(
     null,
   );
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
-  const loadFolders = useCallback(
-    async (options: { force?: boolean } = {}) => {
-      if (!access.isAdmin) {
-        setLoading(false);
-        return;
-      }
+  const {
+    data: folders = [],
+    isLoading: loading,
+    error,
+    refetch: reload,
+  } = useDocumentFolders();
 
-      try {
-        setLoading(true);
-        setError(null);
-        const nextFolders = await getDocumentFolders();
-        setFolders(nextFolders);
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : 'No se pudieron cargar las carpetas.',
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    [access.isAdmin],
-  );
+  const updateFolderMutation = useUpdateDocumentFolder();
 
-  useEffect(() => {
-    void loadFolders();
-  }, [loadFolders]);
+  const deleteFolderMutation = useDeleteDocumentFolder();
+
+  const saving =
+    updateFolderMutation.isPending || deleteFolderMutation.isPending;
 
   const stats = useMemo(
     () => ({
-      hrCount: folders.filter((folder) => folder.owner_role === 'HR').length,
-      managerCount: folders.filter((folder) => folder.owner_role === 'MANAGER')
+      hrCount: folders.filter((folder: DocumentFolder) => folder.owner_role === 'HR').length,
+      managerCount: folders.filter((folder: DocumentFolder) => folder.owner_role === 'MANAGER')
         .length,
       totalDocuments: folders.reduce(
-        (total, folder) => total + folder.documents_count,
+        (total: number, folder: DocumentFolder) => total + folder.documents_count,
         0,
       ),
       totalFolders: folders.length,
@@ -84,56 +65,21 @@ export function useAdminFolders() {
         return;
       }
 
-      try {
-        setSaving(true);
-        setError(null);
-        const updatedFolder = await updateDocumentFolder(
-          editingFolder.id,
-          payload,
-        );
-        setFolders((currentFolders) =>
-          currentFolders.map((folder) =>
-            folder.id === updatedFolder.id ? updatedFolder : folder,
-          ),
-        );
-        setEditingFolder(updatedFolder);
-        setIsEditorOpen(false);
-      } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : 'No se pudo actualizar la carpeta.';
-        void loadFolders({ force: true });
-        setError(message);
-        throw new Error(message);
-      } finally {
-        setSaving(false);
-      }
+      const updatedFolder = await updateFolderMutation.mutateAsync({
+        folderId: editingFolder.id,
+        payload,
+      });
+      setEditingFolder(updatedFolder);
+      setIsEditorOpen(false);
     },
-    [editingFolder, loadFolders],
+    [editingFolder, updateFolderMutation],
   );
 
   const removeFolder = useCallback(
     async (folderId: number) => {
-      try {
-        setSaving(true);
-        setError(null);
-        setFolders((previousFolders) =>
-          previousFolders.filter((folder) => folder.id !== folderId),
-        );
-        await deleteDocumentFolder(folderId);
-      } catch (err) {
-        void loadFolders({ force: true });
-        setError(
-          err instanceof Error
-            ? err.message
-            : 'No se pudo eliminar la carpeta.',
-        );
-      } finally {
-        setSaving(false);
-      }
+      await deleteFolderMutation.mutateAsync(folderId);
     },
-    [loadFolders],
+    [deleteFolderMutation],
   );
 
   return {
@@ -141,12 +87,12 @@ export function useAdminFolders() {
     canCreateFolder: false,
     closeEditor,
     editingFolder,
-    error,
+    error: error instanceof Error ? error.message : error ? String(error) : null,
     folders,
     isEditorOpen,
     loading,
     openEditFolder,
-    reload: () => loadFolders({ force: true }),
+    reload,
     removeFolder,
     saveFolder,
     saving,

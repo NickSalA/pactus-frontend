@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getDocuments } from '@/api';
+import { useMemo } from 'react';
+import { useDocuments } from '@/queries/hooks/contracts/queries';
 import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 import { ApiDocumentType } from '@/types/api';
 
@@ -15,55 +15,26 @@ type DocumentTypeCatalogItem = {
 
 export function useAdminDocumentTypes() {
   const access = useAdminGuard();
-  const [counts, setCounts] = useState<Record<ApiDocumentType, number>>({
-    COMPANY: 0,
-    LABOR: 0,
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const loadCatalog = useCallback(
-    async (options: { force?: boolean } = {}) => {
-      if (!access.isAdmin) {
-        setLoading(false);
-        return;
-      }
+  const {
+    data: documents = [],
+    isLoading: loading,
+    error,
+    refetch: reload,
+  } = useDocuments();
 
-      try {
-        setLoading(true);
-        setError(null);
-        const documents = await getDocuments();
-        const nextCounts = {
-          COMPANY: documents.filter(
-            (document) => document.contract_type === 'COMPANY',
-          ).length,
-          LABOR: documents.filter(
-            (document) => document.contract_type === 'LABOR',
-          ).length,
-        };
-        setCounts(nextCounts);
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : 'No se pudo cargar el catálogo de tipos de documento.',
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    [access.isAdmin],
-  );
+  const items = useMemo<DocumentTypeCatalogItem[]>(() => {
+    const companyCount = documents.filter(
+      (document) => document.contract_type === 'COMPANY',
+    ).length;
+    const laborCount = documents.filter(
+      (document) => document.contract_type === 'LABOR',
+    ).length;
 
-  useEffect(() => {
-    void loadCatalog();
-  }, [loadCatalog]);
-
-  const items = useMemo<DocumentTypeCatalogItem[]>(
-    () => [
+    return [
       {
         code: 'COMPANY',
-        count: counts.COMPANY,
+        count: companyCount,
         description:
           'Contratos comerciales y corporativos del flujo operativo.',
         editable: false,
@@ -71,21 +42,20 @@ export function useAdminDocumentTypes() {
       },
       {
         code: 'LABOR',
-        count: counts.LABOR,
+        count: laborCount,
         description:
           'Contratos laborales y de RRHH administrados por recursos humanos.',
         editable: false,
         label: 'Trabajador',
       },
-    ],
-    [counts],
-  );
+    ];
+  }, [documents]);
 
   return {
     ...access,
-    error,
+    error: error instanceof Error ? error.message : error ? String(error) : null,
     items,
     loading,
-    reload: () => loadCatalog({ force: true }),
+    reload,
   };
 }
