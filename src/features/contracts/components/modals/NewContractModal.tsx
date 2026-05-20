@@ -117,11 +117,11 @@ export function NewContractModal({
     serviceNameById,
     services,
     servicesError,
-    servicesState,
+    servicesLoading,
     shouldUseTextarea,
     submitState,
     templatesError,
-    templatesState,
+    templatesLoading,
     visibleTemplates,
     wizardSteps,
   } = useContractGeneration({
@@ -190,7 +190,7 @@ export function NewContractModal({
                   allowedDocumentTypes={allowedDocumentTypes}
                   selectedDocumentType={selectedDocumentType}
                   selectedTemplateId={selectedTemplateId}
-                  templatesState={templatesState}
+                  templatesLoading={templatesLoading}
                   templatesError={templatesError}
                   visibleTemplates={visibleTemplates}
                   onSelectTemplate={handleSelectTemplate}
@@ -203,7 +203,7 @@ export function NewContractModal({
                   currentWizardStep={currentWizardStep}
                   wizardSteps={wizardSteps}
                   flowError={flowError}
-                  servicesState={servicesState}
+                  servicesLoading={servicesLoading}
                   servicesError={servicesError}
                   serviceItems={serviceItems}
                   services={services}

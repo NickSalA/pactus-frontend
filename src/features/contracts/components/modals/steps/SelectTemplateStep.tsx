@@ -15,7 +15,7 @@ type SelectTemplateStepProps = {
   allowedDocumentTypes?: readonly ApiDocumentType[] | null;
   selectedDocumentType: ApiDocumentType;
   selectedTemplateId: number | null;
-  templatesState: 'idle' | 'loading' | 'success' | 'error';
+  templatesLoading: boolean;
   templatesError: string | null;
   visibleTemplates: readonly ApiTemplateResponse[];
   onSelectTemplate: (template: ApiTemplateResponse) => void;
@@ -30,7 +30,7 @@ export function SelectTemplateStep({
   allowedDocumentTypes,
   selectedDocumentType,
   selectedTemplateId,
-  templatesState,
+  templatesLoading,
   templatesError,
   visibleTemplates,
   onSelectTemplate,
@@ -85,7 +85,7 @@ export function SelectTemplateStep({
           )}
         </div>
 
-        {templatesState === 'loading' && (
+        {templatesLoading && (
           <div className="flex min-h-[280px] items-center justify-center">
             <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
               <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -94,13 +94,13 @@ export function SelectTemplateStep({
           </div>
         )}
 
-        {templatesState !== 'loading' && templatesError && (
+        {!templatesLoading && templatesError && (
           <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {templatesError}
           </div>
         )}
 
-        {templatesState !== 'loading' && !templatesError && (
+        {!templatesLoading && !templatesError && (
           <div className="mt-5 grid auto-rows-max gap-4 md:grid-cols-2 xl:grid-cols-3">
             {visibleTemplates.map((template) => {
               const isSelected = template.id === selectedTemplateId;

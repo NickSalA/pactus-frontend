@@ -1,10 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { deleteDocument, getServices } from '@/api';
-import { getDocumentFileUrl, normalizeDocument } from '@/api/documents';
-import { getTemplates } from '@/api/templates';
+import { normalizeDocument } from '@/api/documents';
+import { useServices } from '@/queries/hooks/contracts/queries';
+import { useDeleteDocument } from '@/queries/hooks/contracts/mutations';
 import { useGenerateContractFromTemplate } from '@/queries/hooks/templates/mutations';
+import { useTemplates } from '@/queries/hooks/templates/queries';
+import { useDocumentFileUrl } from '@/queries/hooks/contracts/queries';
 import {
   getAllTemplateFields,
   normalizeTemplateFieldType,
@@ -144,9 +146,6 @@ export function useContractGeneration({
 
   const [flow, setFlow] = useState<Flow>('select-action');
   const [selectedAction, setSelectedAction] = useState<WizardAction>(null);
-  const [templates, setTemplates] = useState<ApiTemplateResponse[]>([]);
-  const [templatesState, setTemplatesState] = useState<RequestState>('idle');
-  const [templatesError, setTemplatesError] = useState<string | null>(null);
   const [selectedDocumentType, setSelectedDocumentType] =
     useState<ApiDocumentType>(defaultDocumentType);
   const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(
@@ -156,12 +155,8 @@ export function useContractGeneration({
   const [folderId, setFolderId] = useState<number | null>(defaultFolderId);
   const [partyName, setPartyName] = useState('');
   const [serviceItems, setServiceItems] = useState<ServiceItemDraft[]>([]);
-  const [services, setServices] = useState<ApiServiceResponse[]>([]);
-  const [servicesState, setServicesState] = useState<RequestState>('idle');
-  const [servicesError, setServicesError] = useState<string | null>(null);
   const [submitState, setSubmitState] = useState<RequestState>('idle');
   const [flowError, setFlowError] = useState<string | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [generatedDocument, setGeneratedDocument] =
     useState<DocumentFlatten | null>(null);
   const [openFieldSections, setOpenFieldSections] = useState<
@@ -175,18 +170,34 @@ export function useContractGeneration({
 
   const { mutateAsync: generateContractMutation } =
     useGenerateContractFromTemplate();
+  const { mutateAsync: deleteDocument } = useDeleteDocument();
+
+  const {
+    data: servicesData,
+    isLoading: servicesLoading,
+    error: servicesError,
+  } = useServices();
+  const {
+    data: templatesData = [],
+    isLoading: templatesLoading,
+    error: templatesError,
+  } = useTemplates({ state: 'PUBLISHED' });
+
+  const { data: previewUrl } = useDocumentFileUrl(
+    generatedDocument?.id ?? 0,
+  );
 
   const selectedTemplate = useMemo(() => {
     return (
-      templates.find((template) => template.id === selectedTemplateId) ?? null
+      templatesData.find((template) => template.id === selectedTemplateId) ?? null
     );
-  }, [selectedTemplateId, templates]);
+  }, [selectedTemplateId, templatesData]);
 
   const visibleTemplates = useMemo(() => {
-    return templates.filter(
+    return templatesData.filter(
       (template) => template.document_type === selectedDocumentType,
     );
-  }, [selectedDocumentType, templates]);
+  }, [selectedDocumentType, templatesData]);
 
   const canChooseDocumentType = (allowedDocumentTypes?.length ?? 0) !== 1;
   const showServicesStep = selectedDocumentType === 'COMPANY';
@@ -228,9 +239,9 @@ export function useContractGeneration({
 
   const serviceNameById = useMemo(() => {
     return new Map(
-      services.map((service) => [String(service.id), service.name]),
+      (servicesData ?? []).map((service) => [String(service.id), service.name]),
     );
-  }, [services]);
+  }, [servicesData]);
 
   const fieldSections = useMemo(() => {
     return buildTemplateFieldSections(selectedTemplate);
@@ -274,7 +285,6 @@ export function useContractGeneration({
     setServiceItems([]);
     setSubmitState('idle');
     setFlowError(null);
-    setPreviewUrl(null);
     setGeneratedDocument(null);
     setOpenFieldSections({});
     setSavedFieldSections({});
@@ -287,10 +297,6 @@ export function useContractGeneration({
     setSelectedAction(null);
     setSelectedDocumentType(defaultDocumentType);
     resetGenerationState();
-    setTemplatesError(null);
-    setServices([]);
-    setServicesState('idle');
-    setServicesError(null);
   }, [defaultDocumentType, resetGenerationState]);
 
   useEffect(() => {
@@ -305,65 +311,19 @@ export function useContractGeneration({
     }
   }, [open, resetModal]);
 
-  useEffect(() => {
-    if (!selectedTemplate || selectedTemplate.document_type !== 'COMPANY') {
-      return;
-    }
-
-    if (servicesState !== 'idle') {
-      return;
-    }
-
-    const loadServices = async () => {
-      try {
-        setServicesState('loading');
-        setServicesError(null);
-        setServices(await getServices());
-        setServicesState('success');
-      } catch (error) {
-        setServicesState('error');
-        setServicesError(
-          error instanceof Error
-            ? error.message
-            : 'No se pudo cargar el catálogo de servicios.',
-        );
-      }
-    };
-
-    void loadServices();
-  }, [selectedTemplate, servicesState]);
-
-  const loadPublishedTemplates = useCallback(async () => {
-    try {
-      setTemplatesState('loading');
-      setTemplatesError(null);
-      const publishedTemplates = await getTemplates({ state: 'PUBLISHED' });
-      setTemplates(publishedTemplates);
-      setTemplatesState('success');
-    } catch (error) {
-      setTemplatesState('error');
-      setTemplatesError(
-        error instanceof Error
-          ? error.message
-          : 'No se pudieron cargar las plantillas publicadas.',
-      );
-    }
-  }, []);
-
   const clearGeneratedPreview = useCallback(() => {
     if (generatedDocument) {
-      void deleteDocument(generatedDocument.id).catch(() => undefined);
+      void deleteDocument(generatedDocument.id);
     }
 
     setSubmitState('idle');
     setFlowError(null);
-    setPreviewUrl(null);
     setGeneratedDocument(null);
   }, [generatedDocument]);
 
   const handleClose = useCallback(() => {
     if (generatedDocument) {
-      void deleteDocument(generatedDocument.id).catch(() => undefined);
+      void deleteDocument(generatedDocument.id);
     }
 
     onClose();
@@ -381,7 +341,6 @@ export function useContractGeneration({
       setServiceItems([]);
       setSubmitState('idle');
       setFlowError(null);
-      setPreviewUrl(null);
       setGeneratedDocument(null);
       setOpenFieldSections({});
       setSavedFieldSections({});
@@ -413,7 +372,6 @@ export function useContractGeneration({
     setServiceItems([]);
     setSubmitState('idle');
     setFlowError(null);
-    setPreviewUrl(null);
     setGeneratedDocument(null);
     setOpenFieldSections(nextOpenSections);
     setSavedFieldSections(
@@ -814,7 +772,6 @@ export function useContractGeneration({
 
     setSubmitState('loading');
     setFlowError(null);
-    setPreviewUrl(null);
     setGeneratedDocument(null);
 
     try {
@@ -824,7 +781,6 @@ export function useContractGeneration({
         payload,
       });
       setGeneratedDocument(normalizeDocument(document));
-      setPreviewUrl(await getDocumentFileUrl(document.id));
       setSubmitState('success');
     } catch (error) {
       setSubmitState('error');
@@ -895,7 +851,6 @@ export function useContractGeneration({
 
       resetGenerationState();
       setFlow('select-template');
-      await loadPublishedTemplates();
       return;
     }
 
@@ -944,7 +899,6 @@ export function useContractGeneration({
     flow,
     handleClose,
     handleGenerateContract,
-    loadPublishedTemplates,
     resetGenerationState,
     selectedAction,
     selectedTemplate,
@@ -994,7 +948,7 @@ export function useContractGeneration({
     flow === 'select-action'
       ? !selectedAction
       : flow === 'select-template'
-        ? templatesState === 'loading' || !selectedTemplate
+        ? templatesLoading || !selectedTemplate
         : false;
 
   const primaryButtonLabel = 'Continuar';
@@ -1041,7 +995,7 @@ export function useContractGeneration({
     operationalNameLabel,
     operationalNamePlaceholder,
     partyName,
-    previewUrl,
+    previewUrl: previewUrl ?? null,
     primaryButtonDisabled,
     primaryButtonLabel,
     removeServiceItem,
@@ -1055,14 +1009,14 @@ export function useContractGeneration({
     selectedTemplateId,
     serviceItems,
     serviceNameById,
-    services,
-    servicesError,
-    servicesState,
+    services: servicesData ?? [],
+    servicesError: servicesError instanceof Error ? servicesError.message : servicesError ? String(servicesError) : null,
+    servicesLoading,
     shouldUseTextarea,
     showServicesStep,
     submitState,
-    templatesError,
-    templatesState,
+    templatesError: templatesError instanceof Error ? templatesError.message : templatesError ? String(templatesError) : null,
+    templatesLoading,
     visibleTemplates,
     wizardSteps,
   };

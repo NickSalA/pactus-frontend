@@ -1,11 +1,11 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   hasContractPreviewFile,
   supportsInlineContractPreview,
 } from '@/features/contracts/lib/contracts-preview.utils';
-import { getDocumentFileUrl } from '@/api';
+import { useDocumentFileUrl } from '@/queries/hooks/contracts/queries';
 import type { DocumentFlatten } from '@/types/ui.types';
 
 const PREVIEW_FILE_MISSING_MESSAGE =
@@ -17,24 +17,22 @@ const openUrlInNewTab = (url: string): void => {
 };
 
 export function useContractPreview() {
-  const requestIdRef = useRef(0);
   const [showPreview, setShowPreview] = useState(false);
-  const [previewLoading, setPreviewLoading] = useState(false);
-  const [previewError, setPreviewError] = useState<string | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewContract, setPreviewContract] =
     useState<DocumentFlatten | null>(null);
 
+  const { data: previewUrl, isLoading: previewLoading, error } =
+    useDocumentFileUrl(previewContract?.id ?? 0);
+
+  const previewError =
+    error instanceof Error ? error.message : error ? String(error) : null;
+
   const resetPreview = useCallback(() => {
     setShowPreview(false);
-    setPreviewLoading(false);
-    setPreviewError(null);
-    setPreviewUrl(null);
     setPreviewContract(null);
   }, []);
 
   const closePreview = useCallback(() => {
-    requestIdRef.current += 1;
     resetPreview();
   }, [resetPreview]);
 
@@ -47,62 +45,22 @@ export function useContractPreview() {
   }, [previewUrl]);
 
   const openPreview = useCallback(
-    async (contract: DocumentFlatten) => {
+    (contract: DocumentFlatten) => {
       if (!hasContractPreviewFile(contract)) {
         window.alert(PREVIEW_FILE_MISSING_MESSAGE);
         return;
       }
 
       const supportsInlinePreview = supportsInlineContractPreview(contract);
-      const nextRequestId = requestIdRef.current + 1;
-      requestIdRef.current = nextRequestId;
 
       setPreviewContract(contract);
-      setPreviewLoading(true);
-      setPreviewError(null);
-      setPreviewUrl(null);
       setShowPreview(supportsInlinePreview);
 
-      try {
-        const signedUrl = await getDocumentFileUrl(contract.id);
-
-        if (requestIdRef.current !== nextRequestId) {
-          return;
-        }
-
-        if (!supportsInlinePreview) {
-          openUrlInNewTab(signedUrl);
-          resetPreview();
-          return;
-        }
-
-        setPreviewUrl(signedUrl);
-        setShowPreview(true);
-      } catch (err) {
-        if (requestIdRef.current !== nextRequestId) {
-          return;
-        }
-
-        console.error('Error al abrir documento:', err);
-
-        const message =
-          err instanceof Error ? err.message : PREVIEW_OPENING_ERROR_MESSAGE;
-
-        if (!supportsInlinePreview) {
-          window.alert(message);
-          resetPreview();
-          return;
-        }
-
-        setPreviewError(message);
-        setShowPreview(true);
-      } finally {
-        if (requestIdRef.current === nextRequestId) {
-          setPreviewLoading(false);
-        }
+      if (!supportsInlinePreview && previewUrl) {
+        openUrlInNewTab(previewUrl);
       }
     },
-    [resetPreview],
+    [previewUrl],
   );
 
   return {
@@ -112,7 +70,7 @@ export function useContractPreview() {
     previewContract,
     previewError,
     previewLoading,
-    previewUrl,
+    previewUrl: previewUrl ?? null,
     showPreview,
   };
 }

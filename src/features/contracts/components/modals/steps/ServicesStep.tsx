@@ -12,7 +12,7 @@ type ServicesStepProps = {
   currentWizardStep: number;
   wizardSteps: readonly string[];
   flowError: string | null;
-  servicesState: 'idle' | 'loading' | 'success' | 'error';
+  servicesLoading: boolean;
   servicesError: string | null;
   serviceItems: readonly ServiceItemDraft[];
   services: readonly ApiServiceResponse[];
@@ -30,7 +30,7 @@ export function ServicesStep({
   currentWizardStep,
   wizardSteps,
   flowError,
-  servicesState,
+  servicesLoading,
   servicesError,
   serviceItems,
   services,
@@ -75,7 +75,7 @@ export function ServicesStep({
           </button>
         </div>
 
-        {servicesState === 'loading' && (
+        {servicesLoading && (
           <div className="mt-5 flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
             <LoaderCircle className="h-4 w-4 animate-spin" />
             Cargando catálogo de servicios...
