@@ -108,48 +108,47 @@ export function DashboardAlertCenter({
         </CardTitle>
       </CardHeader>
 
-      <div className="mb-4 flex items-stretch justify-center gap-2">
-        {tabs.map((tab, index) => (
-          <button
-            key={index}
-            onClick={() => setSelectedIndex(index)}
-            onMouseEnter={() => setHoveredTabIndex(index)}
-            onMouseLeave={() => setHoveredTabIndex(null)}
-            className={`flex flex-1 flex-col justify-center items-center gap-px rounded-lg p-3 text-center transition-colors ${
-              selectedIndex === index ? 'font-medium' : 'text-gray-500'
-            }`}
-            style={
-              selectedIndex === index || hoveredTabIndex === index
-                ? {
-                    backgroundColor: `${tab.color.bg}3D`,
-                    color: tab.color.accent,
-                    borderWidth: '1px',
-                    borderColor: tab.color.accent,
-                  }
-                : {
-                    borderWidth: '1px',
-                    borderColor: tab.color.accent,
-                    color: tab.color.accent,
-                  }
-            }
-          >
-            <span className="text-xl font-extrabold leading-none">
-              {tab.count}
-            </span>
-            <span className="text-sm font-extrabold leading-tight">
-              {tab.label}
-            </span>
-            {tab.dueTo && (
-              <span className="text-sm font-extrabold leading-tight">
-                {tab.dueTo} dias
+      <CardContent className="flex-1 flex overflow-y-auto p-0 gap-4">
+        <div className="mb-4 flex flex-col items-stretch justify-center gap-2">
+          {tabs.map((tab, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedIndex(index)}
+              onMouseEnter={() => setHoveredTabIndex(index)}
+              onMouseLeave={() => setHoveredTabIndex(null)}
+              className={`flex flex-1 flex-col justify-center items-center gap-px rounded-lg p-3 text-center transition-colors ${
+                selectedIndex === index ? 'font-medium' : 'text-gray-500'
+              }`}
+              style={
+                selectedIndex === index || hoveredTabIndex === index
+                  ? {
+                      backgroundColor: `${tab.color.bg}3D`,
+                      color: tab.color.accent,
+                      borderWidth: '1px',
+                      borderColor: tab.color.accent,
+                    }
+                  : {
+                      borderWidth: '1px',
+                      borderColor: tab.color.accent,
+                      color: tab.color.accent,
+                    }
+              }
+            >
+              <span className="text-xl font-extrabold leading-none">
+                {tab.count}
               </span>
-            )}
-          </button>
-        ))}
-      </div>
-
-      <CardContent className="flex-1 overflow-y-auto p-0">
-        <div className="flex flex-col gap-3">
+              <span className="text-sm font-extrabold leading-tight">
+                {tab.label}
+              </span>
+              {tab.dueTo && (
+                <span className="text-sm font-extrabold leading-tight">
+                  {tab.dueTo} dias
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-1 flex-col gap-3">
           {items.map((item: ApiDashboardAlertItem) => (
             <AlertCard key={item.id} item={item} accentColor={accentColor} />
           ))}
