@@ -40,9 +40,9 @@ type Flow =
   | 'folder'
   | 'fill-template';
 type RequestState = 'idle' | 'loading' | 'success' | 'error';
-type WizardAction = 'generate' | 'upload' | null;
+export type WizardAction = 'generate' | 'upload' | null;
 
-type ServiceItemDraft = {
+export type ServiceItemDraft = {
   currency: ApiCurrencyType;
   description: string;
   end_date: string;
@@ -53,6 +53,7 @@ type ServiceItemDraft = {
 };
 
 type DynamicFieldValues = Record<string, string | boolean>;
+export type { DynamicFieldValues };
 
 export type UseContractGenerationOptions = {
   availableFolders?: readonly ContractFolder[];
@@ -1004,6 +1005,7 @@ export function useContractGeneration({
     clearGeneratedPreview,
     completedRequiredFieldsCount,
     currentFieldSection,
+    fieldSections,
     currentSectionItem,
     currentWizardStep,
     fieldValues,
