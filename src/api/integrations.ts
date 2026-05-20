@@ -1,32 +1,17 @@
 import type { GooglePickerFile } from '@/lib/googlePicker';
 import { GOOGLE_DRIVE_SCOPE } from '@/lib/googlePicker';
 import { isDriveFolder } from '@/lib/googlePicker';
-import { ApiDocumentUpdateRequest } from '@/types/api';
+import {
+  ApiDocumentUpdateRequest,
+  ApiIntegrationImportRequest,
+  ApiIntegrationImportResponse,
+} from '@/types/api';
 import { TIMEOUTS } from './constants';
 import { apiPost } from './axiosInstance';
 
 type DriveImportDocumentPayload = Omit<ApiDocumentUpdateRequest, 'file'>;
 
-type DriveImportFilePayload = {
-  file_id: string;
-  document: DriveImportDocumentPayload;
-};
-
-type DriveImportRequest = {
-  token: {
-    token: string;
-    scopes: string[];
-  };
-  files: DriveImportFilePayload[];
-};
-
-type DriveImportApiResponse = {
-  message: string;
-  queued_files: number;
-  index_name: string;
-};
-
-export type GoogleDriveImportResponse = DriveImportApiResponse & {
+export type GoogleDriveImportResponse = ApiIntegrationImportResponse & {
   skipped_files: number;
 };
 
@@ -49,7 +34,7 @@ export async function importGoogleDriveFiles(
     );
   }
 
-  const response = await apiPost<DriveImportApiResponse>(
+  const response = await apiPost<ApiIntegrationImportResponse>(
     '/integrations/drive/import',
     {
       token: {
@@ -60,7 +45,7 @@ export async function importGoogleDriveFiles(
         file_id: file.id,
         document: {} satisfies DriveImportDocumentPayload,
       })),
-    } satisfies DriveImportRequest,
+    } satisfies ApiIntegrationImportRequest,
     { timeout: TIMEOUTS.UPLOAD },
   );
 
