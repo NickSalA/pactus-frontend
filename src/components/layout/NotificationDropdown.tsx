@@ -38,7 +38,7 @@ export default function NotificationDropdown({ notifications, onViewAll, onClose
       {/* Overlay invisible para cerrar al hacer clic fuera */}
       <div className="fixed inset-0 z-30" onClick={onClose} />
 
-      <div className={`absolute ${alignRight ? 'right-0' : 'left-1/2 -translate-x-1/2'} bottom-full mb-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 z-40 overflow-hidden`}>
+      <div className={`absolute ${alignRight ? 'left-0' : 'left-1/2 -translate-x-1/2'} bottom-full mb-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 z-40 overflow-hidden`}>
         {/* Header del dropdown */}
         <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
           <span className="font-semibold text-gray-800 text-sm">Notificaciones</span>
