@@ -1,7 +1,6 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import type { ReactNode } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -141,7 +140,7 @@ export function NewContractModal({
       onClick={handleClose}
     >
       <div
-        className="relative flex h-[94vh] max-h-[980px] w-full max-w-[1280px] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+        className="relative flex h-[94vh] max-h-245 w-full max-w-[1280px] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
         <button
