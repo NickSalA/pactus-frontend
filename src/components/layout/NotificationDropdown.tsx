@@ -92,7 +92,7 @@ export default function NotificationDropdown({ notifications, onViewAll, onClose
         <div className="px-4 py-3 border-t border-gray-100">
           <button
             onClick={() => { onClose(); onViewAll(); }}
-            className="w-full text-center text-sm font-medium text-primary hover:text-primary-dark transition-colors"
+            className="w-full text-center text-sm font-medium text-brand-primary hover:text-brand-primary-dark transition-colors"
           >
             Ver todas las notificaciones
           </button>

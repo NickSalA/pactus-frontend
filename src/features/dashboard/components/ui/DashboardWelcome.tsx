@@ -11,7 +11,7 @@ export function DashboardWelcome({ firstName }: DashboardWelcomeProps) {
         <h1 className="text-3xl font-semibold text-slate-800">
           Bienvenido, {firstName}
         </h1>
-        <p className="text-sm text-gray-medium md:text-base">
+        <p className="text-sm text-brand-gray-medium md:text-base">
           Este es el resumen de tus contratos y documentos para hoy.
         </p>
       </CardContent>

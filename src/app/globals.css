@@ -80,13 +80,13 @@
   --font-heading: var(--font-sans);
   --font-sans: var(--font-sans);
 
-  /* ContractAI brand colors - generate bg-primary, text-primary-dark, etc. */
-  --color-primary: #0a4fba;
-  --color-primary-dark: #0e42a8;
-  --color-primary-light: #3b7aed;
-  --color-secondary: #0047ab;
-  --color-gray-light: #f8fafc;
-  --color-gray-medium: #64748b;
+  /* ContractAI brand colors */
+  --color-brand-primary: #0a4fba;
+  --color-brand-primary-dark: #0e42a8;
+  --color-brand-primary-light: #3b7aed;
+  --color-brand-secondary: #0047ab;
+  --color-brand-gray-light: #f8fafc;
+  --color-brand-gray-medium: #64748b;
 
   /* shadcn colors as Tailwind utilities - referenced from :root via var() */
   --color-background: var(--background);
