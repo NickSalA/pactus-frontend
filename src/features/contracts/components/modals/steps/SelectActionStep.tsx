@@ -1,4 +1,4 @@
-import type { WizardAction } from '@/features/contracts/hooks/use-contract-generation';
+import type { WizardAction } from '@/features/contracts/hooks/useContractGeneration';
 import { StepHeading } from '@/features/contracts/components/ui/StepHeading';
 import { SelectionCard } from '@/features/contracts/components/ui/SelectionCard';
 import { Upload, FilePlus } from 'lucide-react';

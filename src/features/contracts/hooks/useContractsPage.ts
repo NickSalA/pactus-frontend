@@ -9,11 +9,11 @@ import {
   canManageDocumentType,
   canManageFolderRole,
 } from '@/lib/permissions';
-import { useContractsCollection } from '@/features/contracts/hooks/use-contracts-collection';
-import { useContractPreview } from '@/features/contracts/hooks/use-contract-preview';
-import { useContractsDrivePicker } from '@/features/contracts/hooks/use-contracts-drive-picker';
-import { useContractsFilters } from '@/features/contracts/hooks/use-contracts-filters';
-import { useContractsModalState } from '@/features/contracts/hooks/use-contracts-modal-state';
+import { useContractsCollection } from '@/features/contracts/hooks/useContractsCollection';
+import { useContractPreview } from '@/features/contracts/hooks/useContractPreview';
+import { useContractsDrivePicker } from '@/features/contracts/hooks/useContractsDrivePicker';
+import { useContractsFilters } from '@/features/contracts/hooks/useContractsFilters';
+import { useContractsModalState } from '@/features/contracts/hooks/useContractsModalState';
 import { useAuthStore } from '@/store';
 import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiDocumentType } from '@/types/api';

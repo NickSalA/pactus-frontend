@@ -12,7 +12,7 @@ import {
 import type { ApiTemplateResponse, ApiTemplateField } from '@/types/api';
 import type { FieldSection } from '@/features/contracts/lib/field-utils';
 import type { FieldSectionNavItem } from '@/features/contracts/types/FieldSectionNavItem';
-import type { DynamicFieldValues } from '@/features/contracts/hooks/use-contract-generation';
+import type { DynamicFieldValues } from '@/features/contracts/hooks/useContractGeneration';
 import { FieldSectionHorizontalStepper } from '@/features/contracts/components/ui/FieldSectionHorizontalStepper';
 import { LabeledField } from '@/features/contracts/components/ui/LabeledField';
 import {

@@ -5,7 +5,7 @@ import {
   formatCurrencyValue,
   formatFormDate,
 } from '@/features/contracts/lib/contract-form.utils';
-import { useContractForm } from '@/features/contracts/hooks/use-contract-form';
+import { useContractForm } from '@/features/contracts/hooks/useContractForm';
 import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
 import {
   getDocumentStateLabel,

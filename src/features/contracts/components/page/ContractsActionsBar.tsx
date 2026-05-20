@@ -9,7 +9,7 @@ import {
 import type {
   DateRange,
   SortOrder,
-} from '@/features/contracts/hooks/use-contracts-filters';
+} from '@/features/contracts/hooks/useContractsFilters';
 import { Select } from '@/components/ui/Select';
 import type { DocumentFlatten } from '@/types/ui.types';
 

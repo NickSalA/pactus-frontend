@@ -6,7 +6,7 @@ import { LabeledField } from '@/features/contracts/components/ui/LabeledField';
 import { StepHeading } from '@/features/contracts/components/ui/StepHeading';
 import { CURRENCY_OPTIONS } from '@/lib/document.utils';
 import type { ApiCurrencyType, ApiServiceResponse } from '@/types/api';
-import type { ServiceItemDraft } from '@/features/contracts/hooks/use-contract-generation';
+import type { ServiceItemDraft } from '@/features/contracts/hooks/useContractGeneration';
 
 type ServicesStepProps = {
   currentWizardStep: number;

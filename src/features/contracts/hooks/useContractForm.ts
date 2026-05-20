@@ -6,12 +6,12 @@ import {
   type FormState,
 } from '@/features/contracts/lib/contract-form.utils';
 import { buildContractFormDataPayload } from '@/features/contracts/lib/contract-form-payloads';
-import { useContractFormFile } from '@/features/contracts/hooks/use-contract-form-file';
-import { useContractFormServices } from '@/features/contracts/hooks/use-contract-form-services';
+import { useContractFormFile } from '@/features/contracts/hooks/useContractFormFile';
+import { useContractFormServices } from '@/features/contracts/hooks/useContractFormServices';
 import {
   useContractFormWizard,
   type ContractFormStep,
-} from '@/features/contracts/hooks/use-contract-form-wizard';
+} from '@/features/contracts/hooks/useContractFormWizard';
 import { updateDocument, uploadDocument } from '@/api';
 import {
   canManageDocumentType,

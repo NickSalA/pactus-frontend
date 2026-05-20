@@ -26,7 +26,7 @@ import {
   SelectTemplateStep,
   ServicesStep,
 } from '@/features/contracts/components/modals/steps';
-import { useContractGeneration } from '@/features/contracts/hooks/use-contract-generation';
+import { useContractGeneration } from '@/features/contracts/hooks/useContractGeneration';
 import type { DocumentFlatten } from '@/types/ui.types';
 import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
 import type { ApiDocumentType } from '@/types/api';
