@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { deleteDocument, getServices } from '@/api';
 import { getDocumentFileUrl, normalizeDocument } from '@/api/documents';
-import { generateContractFromTemplate, getTemplates } from '@/api/templates';
+import { getTemplates } from '@/api/templates';
+import { useGenerateContractFromTemplate } from '@/queries/hooks/templates/mutations';
 import {
   getAllTemplateFields,
   normalizeTemplateFieldType,
@@ -171,6 +172,9 @@ export function useContractGeneration({
   >({});
   const [isOperationalFieldSaved, setIsOperationalFieldSaved] = useState(true);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+
+  const { mutateAsync: generateContractMutation } =
+    useGenerateContractFromTemplate();
 
   const selectedTemplate = useMemo(() => {
     return (
@@ -815,10 +819,10 @@ export function useContractGeneration({
 
     try {
       const payload = buildTemplatePayload();
-      const document = await generateContractFromTemplate(
-        selectedTemplate.id,
+      const document = await generateContractMutation({
+        templateId: selectedTemplate.id,
         payload,
-      );
+      });
       setGeneratedDocument(normalizeDocument(document));
       setPreviewUrl(await getDocumentFileUrl(document.id));
       setSubmitState('success');
@@ -830,7 +834,7 @@ export function useContractGeneration({
           : 'No se pudo generar el contrato.',
       );
     }
-  }, [buildTemplatePayload, generationValidationError, selectedTemplate]);
+  }, [buildTemplatePayload, generateContractMutation, generationValidationError, selectedTemplate]);
 
   const handleGenerateOnLastSection = useCallback(async () => {
     if (isCurrentSectionOperational) {

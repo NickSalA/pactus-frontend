@@ -60,10 +60,10 @@ export function ContractPreviewModal({
       onClick={onClose}
     >
       <div
-        className="relative flex h-dvh w-full flex-col overflow-hidden bg-white shadow-2xl sm:h-[92vh] sm:max-h-[960px] sm:max-w-6xl sm:rounded-3xl"
+        className="relative flex h-dvh w-full flex-col overflow-hidden bg-white shadow-2xl sm:h-[92vh] sm:max-h-240 sm:max-w-6xl sm:rounded-3xl"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex flex-shrink-0 items-start justify-between gap-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 via-white to-blue-50/80 px-5 py-4 sm:px-6">
+        <div className="flex shrink-0 items-start justify-between gap-4 border-b border-slate-200 bg-linear-to-r from-slate-50 via-white to-blue-50/80 px-5 py-4 sm:px-6">
           <div className="min-w-0">
             <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">
               <span className="rounded-full bg-red-100 px-2.5 py-1 text-red-700">
@@ -75,7 +75,7 @@ export function ContractPreviewModal({
               {contract.name}
             </h3>
             <p className="mt-1 flex items-center gap-2 truncate text-sm text-slate-500">
-              <FileText className="h-4 w-4 flex-shrink-0" />
+              <FileText className="h-4 w-4 shrink-0" />
               <span className="truncate">{fileLabel}</span>
             </p>
           </div>

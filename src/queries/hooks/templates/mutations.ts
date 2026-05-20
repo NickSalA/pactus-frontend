@@ -3,18 +3,25 @@ import type { QueryClient } from "@tanstack/react-query";
 import {
   archiveTemplate,
   createTemplate,
+  generateContractFromTemplate,
   generateTemplateDraft,
+  previewTemplate,
   publishTemplate,
   updateTemplate,
 } from "@/api";
 import type {
+  ApiDocumentResponse,
   ApiTemplateGenerateRequest,
+  ApiTemplatePreviewRequest,
+  ApiTemplatePreviewResponse,
   ApiTemplateResponse,
   ApiTemplateCreateRequest,
   ApiTemplateUpdateRequest,
 } from "@/types/api";
+import type { TemplateGenerateContractRequest } from "@/api/templates";
 
 const TEMPLATES_KEY = ["templates"] as const;
+const CONTRACTS_KEY = ["contracts"] as const;
 
 const templateKeys = {
   all: TEMPLATES_KEY,
@@ -128,6 +135,30 @@ export const useGenerateTemplateDraft = () => {
       })),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TEMPLATES_KEY });
+    },
+  });
+};
+
+export const usePreviewTemplate = () => {
+  return useMutation({
+    mutationFn: (payload: ApiTemplatePreviewRequest) =>
+      previewTemplate(payload),
+  });
+};
+
+export const useGenerateContractFromTemplate = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      templateId,
+      payload,
+    }: {
+      templateId: number;
+      payload: TemplateGenerateContractRequest;
+    }) => generateContractFromTemplate(templateId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: CONTRACTS_KEY });
     },
   });
 };

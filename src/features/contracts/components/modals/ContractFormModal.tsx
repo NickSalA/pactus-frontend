@@ -44,7 +44,7 @@ export function ContractFormModal({
       onClick={onClose}
     >
       <div
-        className="relative flex h-[700px] w-full max-w-[650px] flex-col rounded-2xl bg-white shadow-2xl"
+        className="relative flex h-175 w-full max-w-162.5 flex-col rounded-2xl bg-white shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
         <button
