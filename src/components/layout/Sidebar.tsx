@@ -115,9 +115,11 @@ export default function Sidebar() {
       className={`flex h-full max-h-screen flex-col justify-between bg-brand-primary p-5 transition-all duration-300 ${isCollapsed ? 'w-fit' : 'w-72'} rounded-xl`}
     >
       <div className="flex flex-col gap-8">
-        <header className={`flex items-center gap-3 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+        <header
+          className={`flex items-center gap-3 ${isCollapsed ? 'justify-center' : 'justify-between'}`}
+        >
           <Handshake
-            size={32}
+            size={28}
             className={`text-brand-neutral-50 shrink-0 ${isCollapsed ? 'hidden' : ''}`}
           />
           <h1
@@ -129,7 +131,7 @@ export default function Sidebar() {
             onClick={toggleSidebar}
             className="p-1 hover:bg-white/10 rounded-lg transition-colors"
           >
-            <PanelBottom size={24} className="text-brand-neutral-50" />
+            <PanelBottom size={28} className="text-brand-neutral-50" />
           </button>
         </header>
 

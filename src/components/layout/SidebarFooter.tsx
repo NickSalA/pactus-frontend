@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Bell, User, LogOut } from 'lucide-react';
+import { Bell, Settings, User, LogOut } from 'lucide-react';
 import { logout as clearApiSession, getNotifications } from '@/api';
 import { useAuthStore, useSidebarStore } from '@/store';
 import { supabase } from '@/lib/supabaseClient';
@@ -135,27 +135,35 @@ export function SidebarFooter() {
   };
 
   return (
-    <div className={`flex items-center gap-3 ${isCollapsed ? 'flex-col' : 'flex-row-reverse'}`}>
-      <div className="relative">
-        <button
-          onClick={() => setIsDropdownOpen((prev) => !prev)}
-          className="relative p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
-        >
-          <Bell size={20} />
-          {hasUnread && (
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-          )}
-        </button>
+    <div
+      className={`flex items-center gap-3 ${isCollapsed ? 'flex-col' : 'flex-row-reverse'}`}
+    >
+      <div
+        className={`relative flex items-center gap-2 ${isCollapsed ? 'flex-col' : 'flex-row-reverse'}`}
+      >
+        <div className="relative">
+          <button
+            onClick={() => setIsDropdownOpen((prev) => !prev)}
+            className="relative p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+          >
+            <Bell size={20} />
+            {hasUnread && (
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+            )}
+          </button>
 
-        {isDropdownOpen && (
-          <NotificationDropdown
-            notifications={notifications}
-            onViewAll={() => setIsSidebarOpen(true)}
-            onClose={() => setIsDropdownOpen(false)}
-            onMarkAsRead={handleMarkAsRead}
-            alignRight={isCollapsed}
-          />
-        )}
+          {isDropdownOpen && (
+            <NotificationDropdown
+              notifications={notifications}
+              onViewAll={() => setIsSidebarOpen(true)}
+              onClose={() => setIsDropdownOpen(false)}
+              onMarkAsRead={handleMarkAsRead}
+              alignRight={isCollapsed}
+            />
+          )}
+        </div>
+
+        <Settings size={20} className="text-white/70 shrink-0" />
       </div>
 
       {isSidebarOpen && (
