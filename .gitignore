@@ -41,3 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 MIGRATION_TANSTACK_QUERY.md
+styles.json

@@ -77,8 +77,9 @@
 }
 
 @theme {
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-heading);
   --font-sans: var(--font-sans);
+  --font-body: var(--font-body);
 
   /* ContractAI brand colors */
   --color-brand-primary: #0a4fba;
@@ -87,6 +88,47 @@
   --color-brand-secondary: #0047ab;
   --color-brand-gray-light: #f8fafc;
   --color-brand-gray-medium: #64748b;
+
+  /* brand contract status */
+  --color-brand-contract-status-draft-bg: #f1f5f9;
+  --color-brand-contract-status-draft-text: #334155;
+  --color-brand-contract-status-draft-border: #47556940;
+  --color-brand-contract-status-pending-signature-text: #1d4ed8;
+  --color-brand-contract-status-pending-signature-border: #2563eb40;
+  --color-brand-contract-status-active-bg: #ecfdf5;
+  --color-brand-contract-status-active-text: #047857;
+  --color-brand-contract-status-active-border: #05966940;
+  --color-brand-contract-status-expiring-soon-bg: #fffbeb;
+  --color-brand-contract-status-expiring-soon-text: #b45309;
+  --color-brand-contract-status-expiring-soon-border: #d9770640;
+  --color-brand-contract-status-expired-text: #b91c1c;
+  --color-brand-contract-status-expired-border: #dc262640;
+  --color-brand-template-status-draft-text: #b45309;
+  --color-brand-template-status-published-bg: #d1fae5;
+  --color-brand-template-status-published-text: #047857;
+  --color-brand-template-status-archived-text: #334155;
+
+  /* brand palette */
+  --color-brand-red-100: #fee2e2;
+  --color-brand-red-500: #ef4444;
+  --color-brand-neutral-50: #ffffff;
+  --color-brand-neutral-100: #f8f9fa;
+  --color-brand-neutral-200: #e9ecef;
+  --color-brand-neutral-300: #cbd5e1;
+  --color-brand-neutral-400: #94a3b8;
+  --color-brand-neutral-500: #64748b;
+  --color-brand-neutral-600: #475569;
+  --color-brand-neutral-700: #334155;
+  --color-brand-neutral-800: #1e293b;
+  --color-brand-neutral-900: #0f172a;
+  --color-brand-blue-100: #dbeafe;
+  --color-brand-blue-200: #bfdbfe;
+  --color-brand-blue-500: #3b82f6;
+  --color-brand-blue-600: #2563eb;
+  --color-brand-green-50: #f0fdf4;
+  --color-brand-green-500: #22c55e;
+  --color-brand-green-600: #16a34a;
+  --color-brand-yellow-500: #f59e0b;
 
   /* shadcn colors as Tailwind utilities - referenced from :root via var() */
   --color-background: var(--background);
@@ -127,6 +169,83 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@utility text-display-large-logo {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 0;
+}
+
+@utility text-display-large-regular {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 40px;
+  letter-spacing: 0;
+}
+
+@utility text-display-large-bold {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 40px;
+  letter-spacing: 0;
+}
+
+@utility text-body-main-regular {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: 0;
+}
+
+@utility text-body-main-bold {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 0;
+}
+
+@utility text-body-small-regular {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0;
+}
+
+@utility text-body-small-bold {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0;
+}
+
+@utility text-label-main-regular {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+@utility text-label-main-bold {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+@utility text-label-small-regular {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 8px;
+  letter-spacing: 0;
+}
+
+@utility text-label-small-bold {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 8px;
+  letter-spacing: 0;
 }
 
 @layer base {
