@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getDocumentById, getDocumentFolders, getDocuments, getServices } from "@/api";
+import { getDocumentById, getDocumentFolders, getDocuments, getDocumentFileUrl, getServices } from "@/api";
 
 const CONTRACTS_KEY = ["contracts"] as const;
 
@@ -26,4 +26,11 @@ export const useServices = () =>
   useQuery({
     queryKey: [...CONTRACTS_KEY, "services"] as const,
     queryFn: () => getServices(),
+  });
+
+export const useDocumentFileUrl = (id: number) =>
+  useQuery({
+    queryKey: [...CONTRACTS_KEY, id, "file-url"] as const,
+    queryFn: () => getDocumentFileUrl(id),
+    enabled: id > 0,
   });
