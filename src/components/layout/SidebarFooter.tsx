@@ -31,7 +31,7 @@ export interface DisplayNotification extends ApiNotificationResponse {
   read: boolean;
 }
 
-export default function Header() {
+export function SidebarFooter() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -65,7 +65,6 @@ export default function Header() {
 
   const hasUnread = notifications.some((n) => !n.read);
 
-  // Las alertas se recalculan a nivel diario y en este flujo local se cargan una sola vez por sesión visible.
   useEffect(() => {
     let mounted = true;
 
@@ -135,83 +134,84 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 flex items-center justify-end px-8 py-4">
-      <div className="flex items-center gap-4">
-        <div className="relative">
-          <button
-            onClick={() => setIsDropdownOpen((prev) => !prev)}
-            className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <Bell size={22} />
-            {hasUnread && (
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-            )}
-          </button>
+    <div className="flex items-center gap-3">
+      <div className="relative flex-1">
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="flex items-center gap-3 hover:bg-white/10 rounded-lg p-2 transition-colors w-full"
+        >
+          <div className="w-9 h-9 bg-brand-neutral-50 rounded-full flex items-center justify-center shrink-0">
+            <span className="text-brand-primary font-medium text-sm">
+              {userInitials}
+            </span>
+          </div>
+          <div className="text-left min-w-0">
+            <p className="text-sm font-medium text-white truncate">
+              {userName}
+            </p>
+            <p className="text-xs text-white/50 truncate">{userRole}</p>
+          </div>
+        </button>
 
-          {isDropdownOpen && (
-            <NotificationDropdown
-              notifications={notifications}
-              onViewAll={() => setIsSidebarOpen(true)}
-              onClose={() => setIsDropdownOpen(false)}
-              onMarkAsRead={handleMarkAsRead}
+        {isMenuOpen && (
+          <>
+            <div
+              className="fixed inset-0 z-10"
+              onClick={() => setIsMenuOpen(false)}
             />
+            <div className="absolute left-0 bottom-full mb-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20">
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  router.push('/profile');
+                }}
+                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <User size={18} />
+                Ver perfil
+              </button>
+              <hr className="my-2 border-gray-100" />
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+              >
+                <LogOut size={18} />
+                Cerrar sesión
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+      <div className="relative">
+        <button
+          onClick={() => setIsDropdownOpen((prev) => !prev)}
+          className="relative p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+        >
+          <Bell size={20} />
+          {hasUnread && (
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
           )}
-        </div>
+        </button>
 
-        {isSidebarOpen && (
-          <NotificationSidebar
+        {isDropdownOpen && (
+          <NotificationDropdown
             notifications={notifications}
-            onClose={() => setIsSidebarOpen(false)}
-            onDeleteOne={handleDismissOne}
-            onDeleteAll={handleDismissAll}
-            onMarkAllAsRead={handleMarkAllAsRead}
+            onViewAll={() => setIsSidebarOpen(true)}
+            onClose={() => setIsDropdownOpen(false)}
+            onMarkAsRead={handleMarkAsRead}
           />
         )}
-
-        <div className="relative">
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center gap-3 hover:bg-gray-50 rounded-lg p-2 transition-colors"
-          >
-            <div className="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center">
-              <span className="text-white font-medium">{userInitials}</span>
-            </div>
-            <div className="text-left">
-              <p className="text-sm font-medium text-gray-800">{userName}</p>
-              <p className="text-xs text-gray-500">{userRole}</p>
-            </div>
-          </button>
-
-          {isMenuOpen && (
-            <>
-              <div
-                className="fixed inset-0 z-10"
-                onClick={() => setIsMenuOpen(false)}
-              />
-              <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20">
-                <button
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    router.push('/profile');
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  <User size={18} />
-                  Ver perfil
-                </button>
-                <hr className="my-2 border-gray-100" />
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                >
-                  <LogOut size={18} />
-                  Cerrar sesión
-                </button>
-              </div>
-            </>
-          )}
-        </div>
       </div>
-    </header>
+
+      {isSidebarOpen && (
+        <NotificationSidebar
+          notifications={notifications}
+          onClose={() => setIsSidebarOpen(false)}
+          onDeleteOne={handleDismissOne}
+          onDeleteAll={handleDismissAll}
+          onMarkAllAsRead={handleMarkAllAsRead}
+        />
+      )}
+    </div>
   );
 }

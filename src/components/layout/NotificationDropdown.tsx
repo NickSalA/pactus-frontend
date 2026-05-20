@@ -2,7 +2,7 @@
 
 import { AlertCircle, AlertTriangle, Info } from "lucide-react";
 import { getDaysLabel, type ApiNotificationType } from "@/lib/mockNotifications";
-import type { DisplayNotification } from "./Header";
+import type { DisplayNotification } from "./SidebarFooter";
 
 const PREVIEW_COUNT = 4;
 
@@ -37,7 +37,7 @@ export default function NotificationDropdown({ notifications, onViewAll, onClose
       {/* Overlay invisible para cerrar al hacer clic fuera */}
       <div className="fixed inset-0 z-30" onClick={onClose} />
 
-      <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 z-40 overflow-hidden">
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 z-40 overflow-hidden">
         {/* Header del dropdown */}
         <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
           <span className="font-semibold text-gray-800 text-sm">Notificaciones</span>

@@ -19,6 +19,7 @@ import { useAuthStore } from '@/store';
 import { ApiUserRole } from '@/types/api';
 import { SidebarLink } from './SidebarLink';
 import { SidebarNav } from './SidebarNav';
+import { SidebarFooter } from './SidebarFooter';
 
 type MenuItem = {
   href: string;
@@ -108,9 +109,9 @@ export default function Sidebar() {
       : mainMenuItems;
 
   return (
-    <div
+    <nav
       aria-label="Barra lateral"
-      className="flex h-full max-h-screen w-72 flex-col bg-brand-primary p-5 rounded-xl"
+      className="flex h-full max-h-screen w-72 flex-col justify-between bg-brand-primary p-5 rounded-xl"
     >
       <div className="flex flex-col gap-8">
         <header className="flex items-center justify-between gap-3">
@@ -131,6 +132,8 @@ export default function Sidebar() {
           ))}
         </SidebarNav>
       </div>
-    </div>
+
+      <SidebarFooter />
+    </nav>
   );
 }

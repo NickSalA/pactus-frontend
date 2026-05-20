@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { X, AlertCircle, AlertTriangle, Info, Trash2 } from "lucide-react";
 import { getDaysLabel, type ApiNotificationType } from "@/lib/mockNotifications";
-import type { DisplayNotification } from "./Header";
+import type { DisplayNotification } from "./SidebarFooter";
 
 type Filter = "all" | ApiNotificationType;
 

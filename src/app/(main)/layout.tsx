@@ -1,5 +1,4 @@
 import Sidebar from '@/components/layout/Sidebar';
-import Header from '@/components/layout/Header';
 
 export default function MainLayout({
   children,
@@ -11,12 +10,9 @@ export default function MainLayout({
       <aside className="pl-1 py-1">
         <Sidebar />
       </aside>
-      <div className="flex flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 bg-gray-50 p-8 min-h-0 overflow-hidden">
-          {children}
-        </main>
-      </div>
+      <main className="flex-1 bg-gray-50 p-8 min-h-0 overflow-hidden">
+        {children}
+      </main>
     </div>
   );
 }
