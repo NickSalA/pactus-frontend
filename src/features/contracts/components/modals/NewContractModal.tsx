@@ -56,64 +56,6 @@ export type NewContractModalProps = {
   onSubmit: (contract: DocumentFlatten) => void;
 };
 
-const LONG_TEXT_HINTS = [
-  'direccion',
-  'domicilio',
-  'objeto',
-  'descripcion',
-  'detalle',
-  'causas',
-  'actividades',
-  'alcance',
-  'funciones',
-];
-
-const normalizeSearchText = (value: string): string => {
-  return value
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/_/g, ' ')
-    .trim();
-};
-LONG_;
-
-const shouldUseTextarea = (field: {
-  key: string;
-  label: string;
-  type?: string;
-}): boolean => {
-  const searchable = normalizeSearchText(`${field.key} ${field.label}`);
-  return LONG_TEXT_HINTS.some((hint) => searchable.includes(hint));
-};
-
-const getFieldPlaceholder = (field: {
-  key: string;
-  label: string;
-  placeholder?: string | null;
-  type?: string;
-}): string => {
-  if (typeof field.placeholder === 'string' && field.placeholder.trim()) {
-    return field.placeholder;
-  }
-
-  const fieldType = normalizeTemplateFieldType(field.type);
-
-  if (fieldType === 'date') {
-    return '';
-  }
-
-  if (fieldType === 'time') {
-    return 'HH:MM';
-  }
-
-  if (fieldType === 'number') {
-    return 'Ingresa un valor';
-  }
-
-  return `Completa ${field.label.toLowerCase()}`;
-};
-
 export function NewContractModal({
   availableFolders = [],
   defaultFolderId = null,
@@ -125,7 +67,6 @@ export function NewContractModal({
     addServiceItem,
     allowedDocumentTypes,
     canChooseDocumentType,
-    clearGeneratedPreview,
     completedRequiredFieldsCount,
     currentFieldSection,
     currentSectionItem,
@@ -136,6 +77,7 @@ export function NewContractModal({
     folderId,
     generatedDocument,
     generationValidationError,
+    getFieldPlaceholder,
     handleBackFromUpload,
     handleClose,
     handleDocumentTypeChange,
@@ -175,7 +117,7 @@ export function NewContractModal({
     services,
     servicesError,
     servicesState,
-    showServicesStep,
+    shouldUseTextarea,
     submitState,
     templatesError,
     templatesState,
