@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { openGooglePicker, type GooglePickerFile } from "@/lib/googlePicker";
-import { importGoogleDriveFiles } from "@/api";
+import { useImportGoogleDriveFiles } from "@/queries/hooks/contracts/mutations";
 import { mergeDriveSelections } from "@/features/contracts/lib/contracts-utils";
 import { useAuthStore } from "@/store";
 
@@ -16,6 +16,8 @@ export function useContractsDrivePicker() {
   const [googleDriveAccessToken, setGoogleDriveAccessToken] = useState<string | null>(null);
   const [googleDriveAccessTokenExpiresAt, setGoogleDriveAccessTokenExpiresAt] = useState<number | null>(null);
   const [selectedDriveFiles, setSelectedDriveFiles] = useState<GooglePickerFile[]>([]);
+
+  const { mutateAsync: importDriveFiles } = useImportGoogleDriveFiles();
 
   const openDrivePicker = useCallback(async () => {
     setDrivePickerError(null);
@@ -63,10 +65,10 @@ export function useContractsDrivePicker() {
     setIsImportingDriveFiles(true);
 
     try {
-      const result = await importGoogleDriveFiles(
-        googleDriveAccessToken,
-        selectedDriveFiles,
-      );
+      const result = await importDriveFiles({
+        accessToken: googleDriveAccessToken,
+        files: selectedDriveFiles,
+      });
       const skippedMessage =
         result.skipped_files > 0
           ? ` Se omitieron ${result.skipped_files} carpeta${result.skipped_files === 1 ? "" : "s"}.`

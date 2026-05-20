@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  createDocumentFolder,
-  deleteDocumentFolder,
-  updateDocumentFolder,
-} from '@/api';
-import {
   useDocumentFolders,
   useDocuments,
 } from '@/queries/hooks/contracts/queries';
+import {
+  useCreateDocumentFolder,
+  useDeleteDocumentFolder,
+  useUpdateDocumentFolder,
+} from '@/queries/hooks/contracts/mutations';
 import { filterVisibleDocuments } from '@/lib/permissions';
 import { useAuthStore } from '@/store';
 import type { DocumentFlatten } from '@/types/ui.types';
@@ -42,6 +42,10 @@ export function useContractsCollection() {
 
   const { data: documentsData, isLoading, error, refetch } = useDocuments();
   const { data: foldersData } = useDocumentFolders();
+
+  const { mutateAsync: createFolderMutation } = useCreateDocumentFolder();
+  const { mutateAsync: updateFolderMutation } = useUpdateDocumentFolder();
+  const { mutateAsync: deleteFolderMutation } = useDeleteDocumentFolder();
 
   useEffect(() => {
     if (documentsData) {
@@ -156,7 +160,7 @@ export function useContractsCollection() {
       setActiveFolderId(optimisticFolderId);
 
       try {
-        const createdFolder = await createDocumentFolder({ name });
+        const createdFolder = await createFolderMutation({ name });
         const nextFolder = {
           documents_count: 0,
           id: createdFolder.id,
@@ -199,8 +203,9 @@ export function useContractsCollection() {
       );
 
       try {
-        const updatedFolder = await updateDocumentFolder(folderId, {
-          name: normalizedName,
+        const updatedFolder = await updateFolderMutation({
+          folderId,
+          payload: { name: normalizedName },
         });
         setFolderState((previousFolders) =>
           previousFolders.map((folder) =>
@@ -238,7 +243,7 @@ export function useContractsCollection() {
       }
 
       try {
-        await deleteDocumentFolder(folderId);
+        await deleteFolderMutation(folderId);
       } catch (err) {
         setFolderState(previousFolders);
         setActiveFolderId(previousActiveFolderId);

@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback } from 'react';
-import { deleteDocument } from '@/api';
 import {
   canCreateContracts,
   canCreateFolders,
@@ -14,6 +13,7 @@ import { useContractPreview } from '@/features/contracts/hooks/useContractPrevie
 import { useContractsDrivePicker } from '@/features/contracts/hooks/useContractsDrivePicker';
 import { useContractsFilters } from '@/features/contracts/hooks/useContractsFilters';
 import { useContractsModalState } from '@/features/contracts/hooks/useContractsModalState';
+import { useDeleteDocument } from '@/queries/hooks/contracts/mutations';
 import { useAuthStore } from '@/store';
 import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiDocumentType } from '@/types/api';
@@ -71,6 +71,8 @@ export function useContractsPage({
     startIndex,
     totalPages,
   } = useContractsFilters(activeContracts);
+
+  const { mutateAsync: deleteDocument } = useDeleteDocument();
 
   const {
     clearDriveSelection,

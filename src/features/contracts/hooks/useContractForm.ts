@@ -12,7 +12,10 @@ import {
   useContractFormWizard,
   type ContractFormStep,
 } from '@/features/contracts/hooks/useContractFormWizard';
-import { updateDocument, uploadDocument } from '@/api';
+import {
+  useUploadDocument,
+  useUpdateDocument,
+} from '@/queries/hooks/contracts/mutations';
 import {
   canManageDocumentType,
   getDefaultWritableDocumentType,
@@ -101,6 +104,9 @@ export function useContractForm({
     setForm,
     validateStep2,
   });
+
+  const { mutateAsync: uploadDocumentMutation } = useUploadDocument();
+  const { mutateAsync: updateDocumentMutation } = useUpdateDocument();
 
   const {
     closeSummary1,
@@ -210,17 +216,20 @@ export function useContractForm({
 
       const result =
         editMode && initialData
-          ? await updateDocument(initialData.id, {
-              file: editMode ? file : null,
-              document: {
-                folder_id: form.folder_id,
-                form_data: formDataPayload,
-                service_items: serviceItemsPayload,
-                state: form.state,
-                contract_type: form.type as 'COMPANY' | 'LABOR',
+          ? await updateDocumentMutation({
+              id: initialData.id,
+              data: {
+                file: editMode ? file : null,
+                document: {
+                  folder_id: form.folder_id,
+                  form_data: formDataPayload,
+                  service_items: serviceItemsPayload,
+                  state: form.state,
+                  contract_type: form.type as 'COMPANY' | 'LABOR',
+                },
               },
             })
-          : await uploadDocument({
+          : await uploadDocumentMutation({
               file: file as File,
               document: {
                 folder_id: defaultFolderId,
@@ -254,6 +263,8 @@ export function useContractForm({
     onAdd,
     onClose,
     setFileError,
+    updateDocumentMutation,
+    uploadDocumentMutation,
     userRole,
   ]);
 
