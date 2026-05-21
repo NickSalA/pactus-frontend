@@ -20,6 +20,7 @@ import { ApiUserRole } from '@/types/api';
 import { SidebarLink } from './SidebarLink';
 import { SidebarNav } from './SidebarNav';
 import { SidebarFooter } from './SidebarFooter';
+import { motion } from 'motion/react';
 
 type MenuItem = {
   href: string;
@@ -112,7 +113,7 @@ export default function Sidebar() {
   return (
     <nav
       aria-label="Barra lateral"
-      className={`flex h-full max-h-screen flex-col justify-between bg-brand-primary p-5 transition-all duration-300 ${isCollapsed ? 'w-24' : 'w-72'} rounded-xl`}
+      className={`flex h-full max-h-screen flex-col justify-between bg-brand-primary p-5 transition-all duration-300 ${isCollapsed ? 'w-24' : 'w-84'} rounded-xl`}
     >
       <div className="flex flex-col gap-8">
         <header

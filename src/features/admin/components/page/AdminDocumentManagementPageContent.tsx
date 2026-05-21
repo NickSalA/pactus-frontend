@@ -21,7 +21,7 @@ export function AdminDocumentManagementPageContent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex h-full flex-col gap-5">
       <div className="flex flex-wrap items-center gap-3">
         <AdminSegmentedTabs
           activeTab={page.activeSection}
@@ -35,10 +35,12 @@ export function AdminDocumentManagementPageContent() {
       </div>
 
       {page.activeSection === 'templates' && (
-        <TemplatesSection
-          section={templatesSection}
-          pagination={templatesPagination}
-        />
+        <div className="flex-1 min-h-0">
+          <TemplatesSection
+            section={templatesSection}
+            pagination={templatesPagination}
+          />
+        </div>
       )}
       {page.activeSection === 'folders' && <AdminFoldersSection />}
       {page.activeSection === 'masters' && (

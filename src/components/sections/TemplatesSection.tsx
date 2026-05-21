@@ -174,33 +174,6 @@ export function TemplatesSection({
             <option value="ALL">Todas</option>
           </Select>
         </div>
-
-        <div className="grid gap-4 sm:grid-cols-3 xl:w-auto">
-          <article className="rounded-[24px] border border-slate-200/80 bg-white px-5 py-4 shadow-sm shadow-slate-200/70">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-              Plantillas
-            </p>
-            <p className="mt-2 text-3xl font-semibold text-slate-900">
-              {section.stats.totalCount}
-            </p>
-          </article>
-          <article className="rounded-[24px] border border-slate-200/80 bg-white px-5 py-4 shadow-sm shadow-slate-200/70">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-              Borradores
-            </p>
-            <p className="mt-2 text-3xl font-semibold text-slate-900">
-              {section.stats.draftCount}
-            </p>
-          </article>
-          <article className="rounded-[24px] border border-slate-200/80 bg-white px-5 py-4 shadow-sm shadow-slate-200/70">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-              Publicadas
-            </p>
-            <p className="mt-2 text-3xl font-semibold text-slate-900">
-              {section.stats.publishedCount}
-            </p>
-          </article>
-        </div>
       </section>
 
       {section.error && (
