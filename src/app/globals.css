@@ -45,6 +45,52 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* ContractAI brand colors */
+  --brand-primary: #0a4fba;
+  --brand-primary-dark: #0e42a8;
+  --brand-primary-light: #3b7aed;
+  --brand-secondary: #0047ab;
+  --brand-gray-light: #f8fafc;
+  --brand-gray-medium: #64748b;
+  --brand-contract-status-draft-bg: #f1f5f9;
+  --brand-contract-status-draft-text: #334155;
+  --brand-contract-status-draft-border: #47556940;
+  --brand-contract-status-pending-signature-text: #1d4ed8;
+  --brand-contract-status-pending-signature-border: #2563eb40;
+  --brand-contract-status-active-bg: #ecfdf5;
+  --brand-contract-status-active-text: #047857;
+  --brand-contract-status-active-border: #05966940;
+  --brand-contract-status-expiring-soon-bg: #fffbeb;
+  --brand-contract-status-expiring-soon-text: #b45309;
+  --brand-contract-status-expiring-soon-border: #d9770640;
+  --brand-contract-status-expired-text: #b91c1c;
+  --brand-contract-status-expired-border: #dc262640;
+  --brand-template-status-draft-text: #b45309;
+  --brand-template-status-published-bg: #d1fae5;
+  --brand-template-status-published-text: #047857;
+  --brand-template-status-archived-text: #334155;
+  --brand-red-100: #fee2e2;
+  --brand-red-500: #ef4444;
+  --brand-neutral-50: #ffffff;
+  --brand-neutral-100: #f8f9fa;
+  --brand-neutral-200: #e9ecef;
+  --brand-neutral-300: #cbd5e1;
+  --brand-neutral-400: #94a3b8;
+  --brand-neutral-500: #64748b;
+  --brand-neutral-600: #475569;
+  --brand-neutral-700: #334155;
+  --brand-neutral-800: #1e293b;
+  --brand-neutral-900: #0f172a;
+  --brand-blue-50: #eff6ff;
+  --brand-blue-100: #dbeafe;
+  --brand-blue-200: #bfdbfe;
+  --brand-blue-500: #3b82f6;
+  --brand-blue-600: #2563eb;
+  --brand-green-50: #f0fdf4;
+  --brand-green-500: #22c55e;
+  --brand-green-600: #16a34a;
+  --brand-yellow-500: #f59e0b;
 }
 
 .dark {
@@ -82,53 +128,86 @@
   --font-body: var(--font-body);
 
   /* ContractAI brand colors */
-  --color-brand-primary: #0a4fba;
-  --color-brand-primary-dark: #0e42a8;
-  --color-brand-primary-light: #3b7aed;
-  --color-brand-secondary: #0047ab;
-  --color-brand-gray-light: #f8fafc;
-  --color-brand-gray-medium: #64748b;
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-dark: var(--brand-primary-dark);
+  --color-brand-primary-light: var(--brand-primary-light);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-gray-light: var(--brand-gray-light);
+  --color-brand-gray-medium: var(--brand-gray-medium);
 
   /* brand contract status */
-  --color-brand-contract-status-draft-bg: #f1f5f9;
-  --color-brand-contract-status-draft-text: #334155;
-  --color-brand-contract-status-draft-border: #47556940;
-  --color-brand-contract-status-pending-signature-text: #1d4ed8;
-  --color-brand-contract-status-pending-signature-border: #2563eb40;
-  --color-brand-contract-status-active-bg: #ecfdf5;
-  --color-brand-contract-status-active-text: #047857;
-  --color-brand-contract-status-active-border: #05966940;
-  --color-brand-contract-status-expiring-soon-bg: #fffbeb;
-  --color-brand-contract-status-expiring-soon-text: #b45309;
-  --color-brand-contract-status-expiring-soon-border: #d9770640;
-  --color-brand-contract-status-expired-text: #b91c1c;
-  --color-brand-contract-status-expired-border: #dc262640;
-  --color-brand-template-status-draft-text: #b45309;
-  --color-brand-template-status-published-bg: #d1fae5;
-  --color-brand-template-status-published-text: #047857;
-  --color-brand-template-status-archived-text: #334155;
+  --color-brand-contract-status-draft-bg: var(--brand-contract-status-draft-bg);
+  --color-brand-contract-status-draft-text: var(
+    --brand-contract-status-draft-text
+  );
+  --color-brand-contract-status-draft-border: var(
+    --brand-contract-status-draft-border
+  );
+  --color-brand-contract-status-pending-signature-text: var(
+    --brand-contract-status-pending-signature-text
+  );
+  --color-brand-contract-status-pending-signature-border: var(
+    --brand-contract-status-pending-signature-border
+  );
+  --color-brand-contract-status-active-bg: var(
+    --brand-contract-status-active-bg
+  );
+  --color-brand-contract-status-active-text: var(
+    --brand-contract-status-active-text
+  );
+  --color-brand-contract-status-active-border: var(
+    --brand-contract-status-active-border
+  );
+  --color-brand-contract-status-expiring-soon-bg: var(
+    --brand-contract-status-expiring-soon-bg
+  );
+  --color-brand-contract-status-expiring-soon-text: var(
+    --brand-contract-status-expiring-soon-text
+  );
+  --color-brand-contract-status-expiring-soon-border: var(
+    --brand-contract-status-expiring-soon-border
+  );
+  --color-brand-contract-status-expired-text: var(
+    --brand-contract-status-expired-text
+  );
+  --color-brand-contract-status-expired-border: var(
+    --brand-contract-status-expired-border
+  );
+  --color-brand-template-status-draft-text: var(
+    --brand-template-status-draft-text
+  );
+  --color-brand-template-status-published-bg: var(
+    --brand-template-status-published-bg
+  );
+  --color-brand-template-status-published-text: var(
+    --brand-template-status-published-text
+  );
+  --color-brand-template-status-archived-text: var(
+    --brand-template-status-archived-text
+  );
 
   /* brand palette */
-  --color-brand-red-100: #fee2e2;
-  --color-brand-red-500: #ef4444;
-  --color-brand-neutral-50: #ffffff;
-  --color-brand-neutral-100: #f8f9fa;
-  --color-brand-neutral-200: #e9ecef;
-  --color-brand-neutral-300: #cbd5e1;
-  --color-brand-neutral-400: #94a3b8;
-  --color-brand-neutral-500: #64748b;
-  --color-brand-neutral-600: #475569;
-  --color-brand-neutral-700: #334155;
-  --color-brand-neutral-800: #1e293b;
-  --color-brand-neutral-900: #0f172a;
-  --color-brand-blue-100: #dbeafe;
-  --color-brand-blue-200: #bfdbfe;
-  --color-brand-blue-500: #3b82f6;
-  --color-brand-blue-600: #2563eb;
-  --color-brand-green-50: #f0fdf4;
-  --color-brand-green-500: #22c55e;
-  --color-brand-green-600: #16a34a;
-  --color-brand-yellow-500: #f59e0b;
+  --color-brand-red-100: var(--brand-red-100);
+  --color-brand-red-500: var(--brand-red-500);
+  --color-brand-neutral-50: var(--brand-neutral-50);
+  --color-brand-neutral-100: var(--brand-neutral-100);
+  --color-brand-neutral-200: var(--brand-neutral-200);
+  --color-brand-neutral-300: var(--brand-neutral-300);
+  --color-brand-neutral-400: var(--brand-neutral-400);
+  --color-brand-neutral-500: var(--brand-neutral-500);
+  --color-brand-neutral-600: var(--brand-neutral-600);
+  --color-brand-neutral-700: var(--brand-neutral-700);
+  --color-brand-neutral-800: var(--brand-neutral-800);
+  --color-brand-neutral-900: var(--brand-neutral-900);
+  --color-brand-blue-50: var(--brand-blue-50);
+  --color-brand-blue-100: var(--brand-blue-100);
+  --color-brand-blue-200: var(--brand-blue-200);
+  --color-brand-blue-500: var(--brand-blue-500);
+  --color-brand-blue-600: var(--brand-blue-600);
+  --color-brand-green-50: var(--brand-green-50);
+  --color-brand-green-500: var(--brand-green-500);
+  --color-brand-green-600: var(--brand-green-600);
+  --color-brand-yellow-500: var(--brand-yellow-500);
 
   /* shadcn colors as Tailwind utilities - referenced from :root via var() */
   --color-background: var(--background);
@@ -253,7 +332,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-brand-blue-50 text-foreground;
   }
   html {
     @apply font-sans;
