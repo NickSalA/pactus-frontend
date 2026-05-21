@@ -15,6 +15,7 @@ export type GoogleDriveImportResponse = ApiIntegrationImportResponse & {
   skipped_files: number;
 };
 
+// TODO Quitar boton de "Importar en contratos"
 export async function importGoogleDriveFiles(
   accessToken: string,
   files: GooglePickerFile[],
