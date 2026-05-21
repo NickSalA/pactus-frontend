@@ -63,7 +63,7 @@ export function ContractsTable({
   const totalColumns = showCheckboxes ? baseColumns + 1 : baseColumns;
 
   return (
-    <div className="flex flex-col rounded-2xl border border-slate-200/60 bg-white shadow-sm h-full">
+    <div className="flex flex-col rounded-2xl border border-slate-200/60 bg-white shadow-sm max-h-full">
       <div className="overflow-x-auto">
         <table className="min-w-full table-fixed text-sm">
           <colgroup>
