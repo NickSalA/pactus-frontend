@@ -63,7 +63,7 @@ export function ContractsTable({
   const totalColumns = showCheckboxes ? baseColumns + 1 : baseColumns;
 
   return (
-    <div className="flex flex-col rounded-2xl border border-slate-200/60 bg-white shadow-sm">
+    <div className="flex flex-col rounded-2xl border border-slate-200/60 bg-white shadow-sm h-full">
       <div className="overflow-x-auto">
         <table className="min-w-full table-fixed text-sm">
           <colgroup>
@@ -90,7 +90,7 @@ export function ContractsTable({
             )}
           </colgroup>
           <thead>
-            <tr className="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100/80">
+            <tr className="border-b border-slate-200 bg-linear-to-r from-slate-50 to-slate-100/80">
               {showCheckboxes && <th className="w-10 px-4 py-4" />}
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                 {clientColumnLabel}
@@ -308,7 +308,7 @@ export function ContractsTable({
                   )}
                   <button
                     onClick={() => onPageChange(page)}
-                    className={`h-9 min-w-[2.25rem] rounded-lg text-sm font-medium transition-all ${
+                    className={`h-9 min-w-9 rounded-lg text-sm font-medium transition-all ${
                       currentPage === page
                         ? 'bg-blue-600 text-white shadow-sm'
                         : 'text-slate-600 hover:bg-slate-200/60'

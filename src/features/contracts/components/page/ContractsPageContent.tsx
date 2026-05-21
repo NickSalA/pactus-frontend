@@ -84,7 +84,7 @@ export function ContractsPageContent({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="mb-4 flex flex-shrink-0 flex-col gap-1">
+      <div className="mb-4 flex shrink-0 flex-col gap-1">
         <h1 className="text-2xl font-semibold text-slate-800">
           Gestion de Contratos
         </h1>
@@ -104,51 +104,6 @@ export function ContractsPageContent({
         onDeleteFolder={page.deleteFolder}
         onRenameFolder={page.renameFolder}
         onSelectFolder={page.selectFolder}
-      />
-
-      {page.canCreateContract && (
-        <NewContractModal
-          availableFolders={page.availableFolders}
-          defaultFolderId={
-            page.activeFolder.id === 0 ? null : page.activeFolder.id
-          }
-          onClose={page.closeCreateForm}
-          onSubmit={page.addContract}
-          open={page.showForm}
-        />
-      )}
-
-      {page.canEditContract && (
-        <ContractFormModal
-          availableFolders={page.availableFolders}
-          editMode
-          initialData={page.contractToEdit ?? undefined}
-          onClose={page.closeEditForm}
-          onSubmit={page.updateContract}
-          open={page.showEditForm && Boolean(page.contractToEdit)}
-        />
-      )}
-
-      {page.canDeleteContract && (
-        <ContractDeleteModal
-          contractName={page.contractToDelete?.client ?? null}
-          deleting={page.deleting}
-          onClose={page.closeDeleteModal}
-          onConfirm={() => {
-            void page.confirmDelete();
-          }}
-          open={page.showDeleteModal}
-        />
-      )}
-
-      <ContractPreviewModal
-        contract={page.previewContract!}
-        error={page.previewError}
-        loading={page.previewLoading}
-        onClose={page.closePreview}
-        onOpenInNewTab={page.openPreviewInNewTab}
-        open={page.showPreview}
-        previewUrl={page.previewUrl}
       />
 
       {page.canImportContract && page.drivePickerError && (
@@ -242,29 +197,76 @@ export function ContractsPageContent({
             </div>
           )}
 
-          <ContractsTable
-            canDelete={page.canDeleteContract}
-            canEdit={page.canEditContract}
-            contracts={page.paginatedContracts}
-            userRole={page.userRole as ApiUserRole | null}
-            currentPage={page.safeCurrentPage}
-            filteredCount={page.filteredContracts.length}
-            itemsPerPage={page.itemsPerPage}
-            onDelete={page.openDeleteModal}
-            onEdit={page.openEditForm}
-            onItemsPerPageChange={page.changeItemsPerPage}
-            onPageChange={page.changePage}
-            onToggleSelect={
-              page.canDeleteContract ? toggleSelectContract : undefined
-            }
-            onView={(contract: DocumentFlatten) => {
-              void page.viewContract(contract);
-            }}
-            selectedIds={page.canDeleteContract ? selectedIds : undefined}
-            startIndex={page.startIndex}
-            totalPages={page.totalPages}
-          />
+          <div className="flex-1 min-h-0">
+            <ContractsTable
+              canDelete={page.canDeleteContract}
+              canEdit={page.canEditContract}
+              contracts={page.paginatedContracts}
+              userRole={page.userRole as ApiUserRole | null}
+              currentPage={page.safeCurrentPage}
+              filteredCount={page.filteredContracts.length}
+              itemsPerPage={page.itemsPerPage}
+              onDelete={page.openDeleteModal}
+              onEdit={page.openEditForm}
+              onItemsPerPageChange={page.changeItemsPerPage}
+              onPageChange={page.changePage}
+              onToggleSelect={
+                page.canDeleteContract ? toggleSelectContract : undefined
+              }
+              onView={(contract: DocumentFlatten) => {
+                void page.viewContract(contract);
+              }}
+              selectedIds={page.canDeleteContract ? selectedIds : undefined}
+              startIndex={page.startIndex}
+              totalPages={page.totalPages}
+            />
+          </div>
         </>
+      )}
+
+      <ContractPreviewModal
+        contract={page.previewContract!}
+        error={page.previewError}
+        loading={page.previewLoading}
+        onClose={page.closePreview}
+        onOpenInNewTab={page.openPreviewInNewTab}
+        open={page.showPreview}
+        previewUrl={page.previewUrl}
+      />
+
+      {page.canCreateContract && (
+        <NewContractModal
+          availableFolders={page.availableFolders}
+          defaultFolderId={
+            page.activeFolder.id === 0 ? null : page.activeFolder.id
+          }
+          onClose={page.closeCreateForm}
+          onSubmit={page.addContract}
+          open={page.showForm}
+        />
+      )}
+
+      {page.canEditContract && (
+        <ContractFormModal
+          availableFolders={page.availableFolders}
+          editMode
+          initialData={page.contractToEdit ?? undefined}
+          onClose={page.closeEditForm}
+          onSubmit={page.updateContract}
+          open={page.showEditForm && Boolean(page.contractToEdit)}
+        />
+      )}
+
+      {page.canDeleteContract && (
+        <ContractDeleteModal
+          contractName={page.contractToDelete?.client ?? null}
+          deleting={page.deleting}
+          onClose={page.closeDeleteModal}
+          onConfirm={() => {
+            void page.confirmDelete();
+          }}
+          open={page.showDeleteModal}
+        />
       )}
     </div>
   );
