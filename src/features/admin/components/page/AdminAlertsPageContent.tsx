@@ -1,14 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { Bell, CalendarClock, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Bell, CalendarClock, Pencil, Plus } from 'lucide-react';
 import { AdminNotificationRuleModal } from '@/features/admin/components/modals/AdminNotificationRuleModal';
 import { AdminSummaryCard } from '@/features/admin/components/cards/AdminSummaryCard';
 import { AdminErrorState } from '@/features/admin/components/shared/AdminErrorState';
+import { ErrorBanner } from '@/features/admin/components/shared/ErrorBanner';
+import { AlertsTable } from '@/features/admin/components/tables/AlertsTable';
 import { LoadingState } from '@/components/LoadingState';
-import { TablePagination } from '@/components/templates/TablePagination';
-import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
-import { formatDate } from '@/lib/utils';
 import { useAdminAlertRules } from '@/features/admin/hooks/useAdminAlertRules';
 import { useTablePagination } from '@/hooks/useTablePagination';
 
@@ -134,11 +133,7 @@ export function AdminAlertsPageContent() {
         />
       </section>
 
-      {page.error && (
-        <div className="rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
-          {page.error}
-        </div>
-      )}
+      {page.error && <ErrorBanner error={page.error} />}
 
       {page.sendAlertsMessage && (
         <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-700">
@@ -146,149 +141,23 @@ export function AdminAlertsPageContent() {
         </div>
       )}
 
-      <section className="flex flex-col overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-sm shadow-slate-200/70 ">
-        <div className="border-b border-slate-200/80 px-6 py-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-            Listado de Alertas
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold text-slate-900">
-            Reglas de Notificación
-          </h2>
-          {selectedRuleIds.size > 0 && (
-            <div className="mt-4">
-              <TableBulkActionBar
-                isDeleting={isBulkDeleting}
-                itemLabel="regla"
-                onDelete={handleBulkDeleteRules}
-                onDeselectAll={() => setSelectedRuleIds(new Set())}
-                onSelectAll={selectAllRules}
-                selectedCount={selectedRuleIds.size}
-                totalCount={page.rules.length}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="flex-1 min-h-0">
-          <section className="flex flex-col rounded-2xl border border-slate-200/60 bg-white shadow-sm max-h-full">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-200/80 text-left">
-                <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-                  <tr>
-                    <th className="w-10 px-6 py-4" />
-                    <th className="px-6 py-4">Alcance</th>
-                    <th className="px-6 py-4 text-center">Anticipación</th>
-                    <th className="px-6 py-4 text-center">Estado</th>
-                    <th className="px-6 py-4 text-center">Actualizada</th>
-                    <th className="px-6 py-4 text-right">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200/80 bg-white text-sm text-slate-700">
-                  {pagination.paginatedItems.map((rule) => {
-                    const linkedDocument = rule.document_id
-                      ? page.documentById.get(rule.document_id)
-                      : null;
-                    const isSelected = selectedRuleIds.has(rule.id);
-
-                    return (
-                      <tr
-                        key={rule.id}
-                        className={`group ${isSelected ? 'bg-blue-50/50' : ''}`}
-                      >
-                        <td className="px-6 py-4">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => toggleSelectRule(rule.id)}
-                            className={`h-4 w-4 cursor-pointer rounded border-slate-300 accent-blue-600 transition-opacity duration-150 ${
-                              isSelected
-                                ? 'opacity-100'
-                                : 'opacity-0 group-hover:opacity-100'
-                            }`}
-                            aria-label="Seleccionar regla"
-                          />
-                        </td>
-                        <td className="px-6 py-4">
-                          <div>
-                            <p className="font-medium text-slate-900">
-                              {linkedDocument
-                                ? linkedDocument.client
-                                : 'Toda la organización'}
-                            </p>
-                            <p className="text-slate-500">
-                              {linkedDocument
-                                ? linkedDocument.client
-                                : 'Regla general'}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          {rule.days_before_due} día
-                          {rule.days_before_due === 1 ? '' : 's'} antes
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <span
-                            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] ${rule.is_active ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}
-                          >
-                            {rule.is_active ? 'Activa' : 'Inactiva'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-center text-slate-500">
-                          {formatDate(rule.updated_at)}
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              type="button"
-                              onClick={() => page.openEditModal(rule)}
-                              className="rounded-xl p-2 text-slate-400 transition-all hover:bg-blue-50 hover:text-blue-600"
-                              title="Editar regla"
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (
-                                  window.confirm(
-                                    '¿Eliminar esta regla de notificación?',
-                                  )
-                                ) {
-                                  void page.removeRule(rule.id);
-                                }
-                              }}
-                              className="rounded-xl p-2 text-slate-400 transition-all hover:bg-red-50 hover:text-red-600"
-                              title="Eliminar regla"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </section>
-        </div>
-
-        {page.rules.length === 0 ? (
-          <div className="px-6 py-8 text-center text-sm text-slate-500">
-            Aún no hay reglas de alerta configuradas.
-          </div>
-        ) : (
-          <TablePagination
-            currentPage={pagination.currentPage}
-            itemsPerPage={pagination.itemsPerPage}
-            onItemsPerPageChange={pagination.changeItemsPerPage}
-            onPageChange={pagination.changePage}
-            startIndex={pagination.startIndex}
-            totalCount={pagination.totalCount}
-            totalPages={pagination.totalPages}
-          />
-        )}
-      </section>
+      <AlertsTable
+        rules={page.rules}
+        documentById={page.documentById}
+        pagination={pagination}
+        selectedRuleIds={selectedRuleIds}
+        onToggleSelect={toggleSelectRule}
+        onEditRule={page.openEditModal}
+        onDeleteRule={(rule) => {
+          void page.removeRule(rule.id);
+        }}
+        isBulkDeleting={isBulkDeleting}
+        onBulkDelete={handleBulkDeleteRules}
+        onDeselectAll={() => setSelectedRuleIds(new Set())}
+        selectAllRules={selectAllRules}
+        selectedCount={selectedRuleIds.size}
+        totalRulesCount={page.rules.length}
+      />
 
       <AdminNotificationRuleModal
         key={page.editingRule ? `rule-${page.editingRule.id}` : 'rule-new'}
