@@ -8,6 +8,7 @@ import { AdminErrorState } from '@/features/admin/components/shared/AdminErrorSt
 import { ErrorBanner } from '@/features/admin/components/shared/ErrorBanner';
 import { AlertsTable } from '@/features/admin/components/tables/AlertsTable';
 import { LoadingState } from '@/components/LoadingState';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { useAdminAlertRules } from '@/features/admin/hooks/useAdminAlertRules';
 import { useTablePagination } from '@/hooks/useTablePagination';
 
@@ -62,52 +63,33 @@ export function AdminAlertsPageContent() {
   }
 
   return (
-    <div className="flex h-full flex-col gap-5">
-      <section className="rounded-[32px] border border-slate-200/70 bg-white px-8 py-7 shadow-sm shadow-slate-200/70">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-500">
-              <Bell className="h-6 w-6" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                Configuración de Alertas
-              </p>
-              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900">
-                Configuración de Alertas
-              </h1>
-              <p className="mt-1 text-sm text-slate-500">
-                Define cuándo se disparan alertas generales o específicas por
-                contrato.
-              </p>
-            </div>
-          </div>
+    <div className="flex h-full flex-col gap-4">
+      <PageHeader
+        title="Configuración de Alertas"
+        subtitle="Define cuándo se disparan alertas generales o específicas por contrato."
+      />
 
-          <div className="flex w-full flex-col gap-3 sm:w-auto lg:min-w-57-5 lg:items-stretch">
-            <button
-              type="button"
-              onClick={page.openCreateModal}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
-            >
-              <Plus className="h-4 w-4" />
-              Nueva alerta
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                void page.triggerEmailAlerts();
-              }}
-              disabled={page.sendingAlerts}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/80 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <Bell className="h-4 w-4" />
-              {page.sendingAlerts
-                ? 'Enviando alertas...'
-                : 'Enviar alertas ahora'}
-            </button>
-          </div>
-        </div>
-      </section>
+      <div className="flex w-full justify-end gap-3 sm:w-auto lg:min-w-57-5 lg:items-stretch">
+        <button
+          type="button"
+          onClick={() => {
+            void page.triggerEmailAlerts();
+          }}
+          disabled={page.sendingAlerts}
+          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/80 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <Bell className="h-4 w-4" />
+          {page.sendingAlerts ? 'Enviando alertas...' : 'Enviar alertas ahora'}
+        </button>
+        <button
+          type="button"
+          onClick={page.openCreateModal}
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
+        >
+          <Plus className="h-4 w-4" />
+          Nueva alerta
+        </button>
+      </div>
 
       <section className="grid gap-4 lg:grid-cols-3">
         <AdminSummaryCard

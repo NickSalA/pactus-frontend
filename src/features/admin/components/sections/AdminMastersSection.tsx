@@ -1,10 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import {
-  BriefcaseBusiness,
-  Plus,
-} from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { AdminServiceModal } from '@/features/admin/components/modals/AdminServiceModal';
 import { LoadingState } from '@/components/LoadingState';
 import { AdminSegmentedTabs } from '@/features/admin/components/shared/AdminSegmentedTabs';
@@ -13,6 +10,7 @@ import { AdminStatCard } from '@/features/admin/components/cards/AdminStatCard';
 import { DocumentTypeCard } from '@/features/admin/components/cards/DocumentTypeCard';
 import { ServiceRow } from '@/features/admin/components/cards/ServiceRow';
 import { ErrorBanner } from '@/features/admin/components/shared/ErrorBanner';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { type DocumentManagementCatalog } from '@/features/admin/hooks/useAdminDocumentManagementPage';
 import { useAdminDocumentTypes } from '@/features/admin/hooks/useAdminDocumentTypes';
 import { useAdminServices } from '@/features/admin/hooks/useAdminServices';
@@ -78,37 +76,14 @@ export function AdminMastersSection({
 
   return (
     <div className="flex h-full flex-col gap-5">
-      <section className="rounded-[32px] border border-slate-200/70 bg-white px-8 py-7 shadow-sm shadow-slate-200/70 ">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-50 text-violet-600">
-              <BriefcaseBusiness className="h-6 w-6" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-semibold tracking-tight text-slate-900">
-                Gestión de servicios
-              </h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Catálogos editables de servicios y referencia de los tipos de
-                documento.
-              </p>
-            </div>
-          </div>
-
-          {activeCatalog === 'services' && (
-            <button
-              type="button"
-              onClick={servicesSection.openCreateEditor}
-              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
-            >
-              <Plus className="h-4 w-4" />
-              Nuevo servicio
-            </button>
-          )}
-        </div>
-      </section>
+      <PageHeader
+        title="Gestión de servicios"
+        subtitle="Catálogos editables de servicios y referencia de los tipos de documento."
+      />
 
       <AdminSegmentedTabs
+        activeCatalog={activeCatalog}
+        openCreaterEditor={servicesSection.openCreateEditor}
         activeTab={activeCatalog}
         onChange={onCatalogChange}
         tabs={[
@@ -142,7 +117,9 @@ export function AdminMastersSection({
             />
           </section>
 
-          {servicesSection.error && <ErrorBanner error={servicesSection.error} />}
+          {servicesSection.error && (
+            <ErrorBanner error={servicesSection.error} />
+          )}
 
           <section className="overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-sm shadow-slate-200/70">
             {selectedServiceIds.size > 0 && (

@@ -12,6 +12,7 @@ import { ContractFormModal } from '@/features/contracts/components/modals/Contra
 import { ContractPreviewModal } from '@/features/contracts/components/modals/ContractPreviewModal';
 import { NewContractModal } from '@/features/contracts/components/modals/NewContractModal';
 import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { useContractsPage } from '@/features/contracts/hooks/useContractsPage';
 import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiUserRole } from '@/types/api';
@@ -84,16 +85,10 @@ export function ContractsPageContent({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="mb-4 flex shrink-0 flex-col gap-1">
-        <h1 className="text-2xl font-semibold text-slate-800">
-          Gestion de Contratos
-        </h1>
-        <p className="text-sm text-slate-500">
-          {page.filteredContracts.length} contrato
-          {page.filteredContracts.length !== 1 ? 's' : ''} en{' '}
-          {page.activeFolder.name}
-        </p>
-      </div>
+      <PageHeader
+        title="Gestion de Contratos"
+        subtitle={`${page.filteredContracts.length} contrato${page.filteredContracts.length !== 1 ? 's' : ''} en ${page.activeFolder.name}`}
+      />
 
       <ContractsFolderTabs
         activeFolder={page.activeFolder}

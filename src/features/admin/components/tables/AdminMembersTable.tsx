@@ -1,6 +1,6 @@
 'use client';
 
-import { Bell, Mail, ShieldCheck } from 'lucide-react';
+import { Bell, Mail, Plus, ShieldCheck } from 'lucide-react';
 import { getUserRoleLabel } from '@/lib/authUser';
 import { TablePagination } from '@/components/templates/TablePagination';
 import { useTablePagination } from '@/hooks/useTablePagination';
@@ -13,6 +13,9 @@ type AdminMembersTableProps = {
     memberId: number,
     receivesNotifications: boolean,
   ) => Promise<void>;
+  activeMembers: any;
+  totalMembers: any;
+  openAddModal: any;
 };
 
 const buildUserInitials = (label: string): string => {
@@ -34,18 +37,32 @@ export function AdminMembersTable({
   isSaving,
   members,
   onToggleNotifications,
+  activeMembers,
+  openAddModal,
+  totalMembers,
 }: AdminMembersTableProps) {
   const pagination = useTablePagination(members);
 
   return (
     <div className="flex flex-col receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Fri, 22 May 2026 17:54:32 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'CF-Ray', b'9ffdafc8de7ecdca-LIM'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Content-Encoding', b'gzip'), (b'Server', b'cloudflare'), (b'Strict-Transport-Security', b'max-age=31536000; overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-sm shadow-slate-200/70">
-      <div className="border-b border-slate-200/80 px-6 py-5">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-          Gestión de Personal
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-slate-900">
-          Asignación de Personas
-        </h2>
+      <div className="border-b border-slate-200/80 px-6 py-5 flex justify-between items-center">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+            Gestión de Personal
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-slate-900">
+            Asignación de Personas
+          </h2>
+        </div>
+
+        <button
+          type="button"
+          onClick={openAddModal}
+          className="inline-flex h-fit items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
+        >
+          <Plus className="h-4 w-4" />
+          Agregar Usuario
+        </button>
       </div>
 
       <div className="flex-1 min-h-0">
