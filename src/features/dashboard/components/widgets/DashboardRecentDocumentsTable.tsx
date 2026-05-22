@@ -13,6 +13,7 @@ import {
   getDocumentStateLabel,
 } from '@/lib/document.utils';
 import type { RecentDashboardDocument } from '@/features/dashboard/lib/utils';
+import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 
 type DashboardRecentDocumentsTableProps = {
   currentPage: number;
@@ -24,27 +25,6 @@ type DashboardRecentDocumentsTableProps = {
   totalPages: number;
   totalRecords: number;
 };
-
-const LoadingSkeleton = () => (
-  <div className="flex flex-1 flex-col px-6 py-4">
-    {[1, 2, 3].map((i) => (
-      <div
-        key={i}
-        className="flex items-center gap-4 py-3 border-b border-slate-100 last:border-0"
-      >
-        <div className="flex items-center gap-3 flex-1">
-          <div className="h-10 w-10 rounded-lg bg-gray-200 animate-pulse" />
-          <div className="flex-1 space-y-2">
-            <div className="h-4 w-3/4 rounded bg-gray-200 animate-pulse" />
-            <div className="h-3 w-1/2 rounded bg-gray-200 animate-pulse" />
-          </div>
-        </div>
-        <div className="h-6 w-20 rounded-full bg-gray-200 animate-pulse" />
-        <div className="h-4 w-20 rounded bg-gray-200 animate-pulse" />
-      </div>
-    ))}
-  </div>
-);
 
 export function DashboardRecentDocumentsTable({
   currentPage,
@@ -58,16 +38,8 @@ export function DashboardRecentDocumentsTable({
 }: DashboardRecentDocumentsTableProps) {
   if (isLoading) {
     return (
-      <Card className="flex flex-col rounded-2xl bg-white shadow-md">
-        <CardHeader className="border-b border-slate-100 px-6 py-5">
-          <CardTitle className="text-lg font-semibold text-slate-800">
-            Contratos recientes
-          </CardTitle>
-          <CardDescription className="text-sm text-brand-gray-medium">
-            Ultimas actualizaciones registradas en tus contratos.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex-1 p-0">
+      <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
+        <CardContent className="flex flex-1 items-center justify-center">
           <LoadingSkeleton />
         </CardContent>
       </Card>
@@ -106,7 +78,10 @@ export function DashboardRecentDocumentsTable({
           <tbody>
             {documents.length === 0 && (
               <tr>
-                <td className="px-6 py-6 text-sm text-brand-gray-medium" colSpan={4}>
+                <td
+                  className="px-6 py-6 text-sm text-brand-gray-medium"
+                  colSpan={4}
+                >
                   No hay documentos disponibles.
                 </td>
               </tr>

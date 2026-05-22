@@ -78,7 +78,7 @@ export function DashboardAlertCenter({
 }: DashboardAlertCenterProps) {
   if (isLoading) {
     return (
-      <Card className="flex flex-col rounded-2xl bg-white p-5 shadow-md">
+      <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
         <CardContent className="flex flex-1 items-center justify-center">
           <LoadingSkeleton />
         </CardContent>

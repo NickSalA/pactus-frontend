@@ -14,6 +14,7 @@ import { useAdminDocumentManagementPage } from '@/features/admin/hooks/useAdminD
 import { useTemplates } from '@/hooks/useTemplates';
 import { useTablePagination } from '@/hooks/useTablePagination';
 import type { ApiTemplateResponse } from '@/types/api';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 type Template = ApiTemplateResponse;
 
@@ -57,12 +58,14 @@ export function AdminDocumentManagementPageContent() {
       {page.activeSection === 'templates' && (
         <div className="flex-1 min-h-0">
           <div className="flex h-full flex-col gap-5">
-            <TemplateHeader
-              onRefresh={templatesSection.reload}
-              onCreate={templatesSection.openCreateEditor}
+            <PageHeader
+              title="Plantillas de Contratos"
+              subtitle="Crea, edita, previsualiza y publica plantillas."
             />
 
             <TemplatesFilterBar
+              onRefresh={templatesSection.reload}
+              onCreate={templatesSection.openCreateEditor}
               search={templatesSection.search}
               onSearchChange={templatesSection.setSearch}
               documentTypeFilter={templatesSection.documentTypeFilter}
