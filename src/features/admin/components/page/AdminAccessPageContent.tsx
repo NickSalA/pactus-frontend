@@ -25,7 +25,7 @@ export function AdminAccessPageContent() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="flex h-full flex-col gap-5">
       <section className="rounded-[32px] border border-slate-200/70 bg-white px-8 py-7 shadow-sm shadow-slate-200/70">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-start gap-4">
