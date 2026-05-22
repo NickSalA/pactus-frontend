@@ -5,7 +5,7 @@ import { useDocuments } from '@/queries/hooks/contracts/queries';
 import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 import { ApiDocumentType } from '@/types/api';
 
-type DocumentTypeCatalogItem = {
+export type DocumentTypeCatalogItem = {
   code: ApiDocumentType;
   count: number;
   description: string;
