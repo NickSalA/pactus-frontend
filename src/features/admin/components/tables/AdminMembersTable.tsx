@@ -38,7 +38,7 @@ export function AdminMembersTable({
   const pagination = useTablePagination(members);
 
   return (
-    <div className="flex flex-colreceive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Fri, 22 May 2026 17:54:32 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'CF-Ray', b'9ffdafc8de7ecdca-LIM'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Content-Encoding', b'gzip'), (b'Server', b'cloudflare'), (b'Strict-Transport-Security', b'max-age=31536000; overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-sm shadow-slate-200/70">
+    <div className="flex flex-col receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Fri, 22 May 2026 17:54:32 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'CF-Ray', b'9ffdafc8de7ecdca-LIM'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Content-Encoding', b'gzip'), (b'Server', b'cloudflare'), (b'Strict-Transport-Security', b'max-age=31536000; overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-sm shadow-slate-200/70">
       <div className="border-b border-slate-200/80 px-6 py-5">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
           Gestión de Personal
