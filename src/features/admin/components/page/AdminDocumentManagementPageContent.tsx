@@ -137,12 +137,18 @@ export function AdminDocumentManagementPageContent() {
           </div>
         </div>
       )}
-      {page.activeSection === 'folders' && <AdminFoldersSection />}
+      {page.activeSection === 'folders' && (
+        <div className="flex-1 min-h-0">
+          <AdminFoldersSection />
+        </div>
+      )}
       {page.activeSection === 'masters' && (
-        <AdminMastersSection
-          activeCatalog={page.activeCatalog}
-          onCatalogChange={page.setActiveCatalog}
-        />
+        <div className="flex-1 min-h-0">
+          <AdminMastersSection
+            activeCatalog={page.activeCatalog}
+            onCatalogChange={page.setActiveCatalog}
+          />
+        </div>
       )}
     </div>
   );

@@ -77,8 +77,8 @@ export function AdminMastersSection({
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[32px] border border-slate-200/70 bg-white px-8 py-7 shadow-sm shadow-slate-200/70">
+    <div className="flex h-full flex-col gap-5">
+      <section className="rounded-[32px] border border-slate-200/70 bg-white px-8 py-7 shadow-sm shadow-slate-200/70 ">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-start gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-50 text-violet-600">
@@ -174,7 +174,7 @@ export function AdminMastersSection({
                 />
               </div>
             )}
-            <div className="overflow-x-auto">
+            <div className="flex-1 max-h-full overflow-auto">
               <table className="min-w-full divide-y divide-slate-200/80 text-left">
                 <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
                   <tr>
@@ -186,7 +186,7 @@ export function AdminMastersSection({
                     <th className="px-6 py-4 text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200/80 bg-white text-sm text-slate-700">
+                <tbody className="divide-y divide-slate-200/80 bg-white text-sm text-slate-700 ">
                   {servicesPagination.paginatedItems.map((service) => {
                     const canDelete = service.documents_count === 0;
                     const isSelected = selectedServiceIds.has(service.id);
