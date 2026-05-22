@@ -77,6 +77,7 @@ export async function uploadDocument(
   const createdDocument = normalizeDocument(
     await apiPost<ApiDocumentResponse>('/documents/', formData, {
       timeout: TIMEOUTS.UPLOAD,
+      headers: { 'Content-Type': 'multipart/form-data' },
     }),
   );
 
