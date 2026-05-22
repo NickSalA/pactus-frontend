@@ -1,7 +1,12 @@
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
-import { Select } from "@/components/ui/Select";
-import { getVisiblePageNumbers } from "@/lib/utils";
-import { TABLE_PAGINATION_PAGE_SIZE_OPTIONS } from "@/hooks/useTablePagination";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
+import { Select } from '@/components/ui/Select';
+import { getVisiblePageNumbers } from '@/lib/utils';
+import { TABLE_PAGINATION_PAGE_SIZE_OPTIONS } from '@/hooks/useTablePagination';
 
 type TablePaginationProps = {
   currentPage: number;
@@ -30,17 +35,22 @@ export function TablePagination({
     <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200/80 bg-slate-50/50 px-4 py-3 sm:flex-row">
       <div className="flex items-center gap-4 text-sm text-slate-600">
         <span>
-          Mostrando <span className="font-medium text-slate-800">{startIndex + 1}</span>
-          {" – "}
-          <span className="font-medium text-slate-800">{Math.min(startIndex + itemsPerPage, totalCount)}</span>{" "}de{" "}
-          <span className="font-medium text-slate-800">{totalCount}</span>
+          Mostrando{' '}
+          <span className="font-medium text-slate-800">{startIndex + 1}</span>
+          {' – '}
+          <span className="font-medium text-slate-800">
+            {Math.min(startIndex + itemsPerPage, totalCount)}
+          </span>{' '}
+          de <span className="font-medium text-slate-800">{totalCount}</span>
         </span>
         <div className="flex items-center gap-2">
           <span className="text-slate-500">Filas:</span>
           <Select
             variant="mini"
             value={itemsPerPage}
-            onChange={(event) => onItemsPerPageChange(Number(event.target.value))}
+            onChange={(event) =>
+              onItemsPerPageChange(Number(event.target.value))
+            }
           >
             {TABLE_PAGINATION_PAGE_SIZE_OPTIONS.map((rows) => (
               <option key={rows} value={rows}>
@@ -80,10 +90,10 @@ export function TablePagination({
               <button
                 type="button"
                 onClick={() => onPageChange(page)}
-                className={`h-9 min-w-[2.25rem] rounded-lg text-sm font-medium transition-all ${
+                className={`h-9 min-w-9 rounded-lg text-sm font-medium transition-all ${
                   currentPage === page
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-600 hover:bg-slate-200/60"
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-slate-200/60'
                 }`}
               >
                 {page}
