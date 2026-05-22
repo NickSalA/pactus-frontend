@@ -14,6 +14,7 @@ import { useAuthStore } from '@/store';
 import { useTemplates } from '@/hooks/useTemplates';
 import { useTablePagination } from '@/hooks/useTablePagination';
 import type { ApiTemplateResponse } from '@/types/api';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 type Template = ApiTemplateResponse;
 
@@ -56,13 +57,15 @@ export function TemplatesPageContent() {
   };
 
   return (
-    <div className="flex h-full flex-col gap-5">
-      <TemplateHeader
-        onRefresh={section.reload}
-        onCreate={section.openCreateEditor}
+    <div className="flex h-full flex-col gap-4">
+      <PageHeader
+        title="Plantillas de Contratos"
+        subtitle="Crea, edita, previsualiza y publica plantillas."
       />
 
       <TemplatesFilterBar
+        onRefresh={section.reload}
+        onCreate={section.openCreateEditor}
         search={section.search}
         onSearchChange={section.setSearch}
         documentTypeFilter={section.documentTypeFilter}
