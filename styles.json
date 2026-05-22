@@ -1,0 +1,495 @@
+{
+  "styles": {
+    "colors": [
+      {
+        "name": "Brand/Primary",
+        "token": "brand-primary",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Secondary",
+        "token": "brand-secondary",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Draft/Bg",
+        "token": "brand-contract-status-draft-bg",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Draft/Text",
+        "token": "brand-contract-status-draft-text",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Draft/Border",
+        "token": "brand-contract-status-draft-border",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Pending Signature/Bg",
+        "token": "brand-contract-status-pending-signature-bg",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Pending Signature/Text",
+        "token": "brand-contract-status-pending-signature-text",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Pending Signature/Border",
+        "token": "brand-contract-status-pending-signature-border",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Active/Bg",
+        "token": "brand-contract-status-active-bg",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Active/Text",
+        "token": "brand-contract-status-active-text",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Active/Border",
+        "token": "brand-contract-status-active-border",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Expiring Soon/Bg",
+        "token": "brand-contract-status-expiring-soon-bg",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Expiring Soon/Text",
+        "token": "brand-contract-status-expiring-soon-text",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Expiring Soon/Border",
+        "token": "brand-contract-status-expiring-soon-border",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Expired/Bg",
+        "token": "brand-contract-status-expired-bg",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Expired/Text",
+        "token": "brand-contract-status-expired-text",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Contract Status/Expired/Border",
+        "token": "brand-contract-status-expired-border",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Template Status/Draft/Bg",
+        "token": "brand-template-status-draft-bg",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Template Status/Draft/Text",
+        "token": "brand-template-status-draft-text",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Template Status/Published/Bg",
+        "token": "brand-template-status-published-bg",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Template Status/Published/Text",
+        "token": "brand-template-status-published-text",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Template Status/Archived/Bg",
+        "token": "brand-template-status-archived-bg",
+        "type": "solid"
+      },
+      {
+        "name": "Brand/Template Status/Archived/Text",
+        "token": "brand-template-status-archived-text",
+        "type": "solid"
+      },
+      {
+        "name": "Red/100",
+        "token": "red-100",
+        "type": "solid"
+      },
+      {
+        "name": "Red/300",
+        "token": "red-300",
+        "type": "solid"
+      },
+      {
+        "name": "Red/500",
+        "token": "red-500",
+        "type": "solid"
+      },
+      {
+        "name": "Neutral/50",
+        "token": "neutral-50",
+        "type": "solid"
+      },
+      {
+        "name": "Neutral/100",
+        "token": "neutral-100",
+        "type": "solid"
+      },
+      {
+        "name": "Neutral/200",
+        "token": "neutral-200",
+        "type": "solid"
+      },
+      {
+        "name": "Neutral/300",
+        "token": "neutral-300",
+        "type": "solid"
+      },
+      {
+        "name": "Neutral/400",
+        "token": "neutral-400",
+        "type": "solid"
+      },
+      {
+        "name": "Neutral/500",
+        "token": "neutral-500",
+        "type": "solid"
+      },
+      {
+        "name": "Neutral/600",
+        "token": "neutral-600",
+        "type": "solid"
+      },
+      {
+        "name": "Neutral/700",
+        "token": "neutral-700",
+        "type": "solid"
+      },
+      {
+        "name": "Neutral/800",
+        "token": "neutral-800",
+        "type": "solid"
+      },
+      {
+        "name": "Neutral/900",
+        "token": "neutral-900",
+        "type": "solid"
+      },
+      {
+        "name": "Blue/50",
+        "token": "blue-50",
+        "type": "solid"
+      },
+      {
+        "name": "Blue/100",
+        "token": "blue-100",
+        "type": "solid"
+      },
+      {
+        "name": "Blue/200",
+        "token": "blue-200",
+        "type": "solid"
+      },
+      {
+        "name": "Blue/300",
+        "token": "blue-300",
+        "type": "solid"
+      },
+      {
+        "name": "Blue/400",
+        "token": "blue-400",
+        "type": "solid"
+      },
+      {
+        "name": "Blue/500",
+        "token": "blue-500",
+        "type": "solid"
+      },
+      {
+        "name": "Blue/600",
+        "token": "blue-600",
+        "type": "solid"
+      },
+      {
+        "name": "Blue/700",
+        "token": "blue-700",
+        "type": "solid"
+      },
+      {
+        "name": "Green/50",
+        "token": "green-50",
+        "type": "solid"
+      },
+      {
+        "name": "Green/100",
+        "token": "green-100",
+        "type": "solid"
+      },
+      {
+        "name": "Green/200",
+        "token": "green-200",
+        "type": "solid"
+      },
+      {
+        "name": "Green/300",
+        "token": "green-300",
+        "type": "solid"
+      },
+      {
+        "name": "Green/400",
+        "token": "green-400",
+        "type": "solid"
+      },
+      {
+        "name": "Green/500",
+        "token": "green-500",
+        "type": "solid"
+      },
+      {
+        "name": "Green/600",
+        "token": "green-600",
+        "type": "solid"
+      },
+      {
+        "name": "Green/700",
+        "token": "green-700",
+        "type": "solid"
+      },
+      {
+        "name": "Green/800",
+        "token": "green-800",
+        "type": "solid"
+      },
+      {
+        "name": "Green/900",
+        "token": "green-900",
+        "type": "solid"
+      },
+      {
+        "name": "Lightblue/50",
+        "token": "lightblue-50",
+        "type": "solid"
+      },
+      {
+        "name": "Lightblue/100",
+        "token": "lightblue-100",
+        "type": "solid"
+      },
+      {
+        "name": "Lightblue/200",
+        "token": "lightblue-200",
+        "type": "solid"
+      },
+      {
+        "name": "Lightblue/300",
+        "token": "lightblue-300",
+        "type": "solid"
+      },
+      {
+        "name": "Lightblue/400",
+        "token": "lightblue-400",
+        "type": "solid"
+      },
+      {
+        "name": "Lightblue/500",
+        "token": "lightblue-500",
+        "type": "solid"
+      },
+      {
+        "name": "Yellow/50",
+        "token": "yellow-50",
+        "type": "solid"
+      },
+      {
+        "name": "Yellow/100",
+        "token": "yellow-100",
+        "type": "solid"
+      },
+      {
+        "name": "Yellow/200",
+        "token": "yellow-200",
+        "type": "solid"
+      },
+      {
+        "name": "Yellow/300",
+        "token": "yellow-300",
+        "type": "solid"
+      },
+      {
+        "name": "Yellow/400",
+        "token": "yellow-400",
+        "type": "solid"
+      },
+      {
+        "name": "Yellow/500",
+        "token": "yellow-500",
+        "type": "solid"
+      }
+    ],
+    "textStyles": [
+      {
+        "name": "Display/Large/Logo",
+        "token": "display-large-logo",
+        "type": "text",
+        "fontFamily": "Montserrat",
+        "fontWeight": "700",
+        "fontSize": "24px",
+        "letterSpacing": "0%"
+      },
+      {
+        "name": "Display/Large/Regular",
+        "token": "display-large-regular",
+        "type": "text",
+        "fontFamily": "IBM Plex Sans",
+        "fontWeight": "400",
+        "fontSize": "40px",
+        "letterSpacing": "0%"
+      },
+      {
+        "name": "Display/Large/Bold",
+        "token": "display-large-bold",
+        "type": "text",
+        "fontFamily": "IBM Plex Sans",
+        "fontWeight": "700",
+        "fontSize": "40px",
+        "letterSpacing": "0%"
+      },
+      {
+        "name": "Body/Main/Regular",
+        "token": "body-main-regular",
+        "type": "text",
+        "fontFamily": "IBM Plex Sans",
+        "fontWeight": "400",
+        "fontSize": "24px",
+        "letterSpacing": "0%"
+      },
+      {
+        "name": "Body/Main/Bold",
+        "token": "body-main-bold",
+        "type": "text",
+        "fontFamily": "Montserrat",
+        "fontWeight": "700",
+        "fontSize": "24px",
+        "letterSpacing": "0%"
+      },
+      {
+        "name": "Body/Small/Regular",
+        "token": "body-small-regular",
+        "type": "text",
+        "fontFamily": "IBM Plex Sans",
+        "fontWeight": "400",
+        "fontSize": "16px",
+        "letterSpacing": "0%"
+      },
+      {
+        "name": "Body/Small/Bold",
+        "token": "body-small-bold",
+        "type": "text",
+        "fontFamily": "Montserrat",
+        "fontWeight": "700",
+        "fontSize": "16px",
+        "letterSpacing": "0%"
+      },
+      {
+        "name": "Label/Main/Regular",
+        "token": "label-main-regular",
+        "type": "text",
+        "fontFamily": "IBM Plex Sans",
+        "fontWeight": "400",
+        "fontSize": "12px",
+        "letterSpacing": "0%"
+      },
+      {
+        "name": "Label/Main/Bold",
+        "token": "label-main-bold",
+        "type": "text",
+        "fontFamily": "IBM Plex Sans",
+        "fontWeight": "700",
+        "fontSize": "12px",
+        "letterSpacing": "0%"
+      },
+      {
+        "name": "Label/Small/Regular",
+        "token": "label-small-regular",
+        "type": "text",
+        "fontFamily": "IBM Plex Sans",
+        "fontWeight": "400",
+        "fontSize": "8px",
+        "letterSpacing": "0%"
+      },
+      {
+        "name": "Label/Small/Bold",
+        "token": "label-small-bold",
+        "type": "text",
+        "fontFamily": "IBM Plex Sans",
+        "fontWeight": "700",
+        "fontSize": "8px",
+        "letterSpacing": "0%"
+      }
+    ],
+    "effectStyles": [
+      {
+        "name": "Card Box Shadow",
+        "token": "card-box-shadow",
+        "type": "effect",
+        "value": "box-shadow: 0px 0px 10px 1px rgba(6, 50, 118, 0.25)",
+        "effects": [
+          {
+            "type": "drop-shadow",
+            "x": 0,
+            "y": 0,
+            "blur": 10,
+            "spread": 1,
+            "color": "rgba(6, 50, 118, 0.25)"
+          }
+        ]
+      }
+    ],
+    "gridStyles": []
+  },
+  "collections": {
+    "Collection 1": {
+      "id": "VariableCollectionId:17:113",
+      "modes": [
+        {
+          "id": "17:0",
+          "name": "Mode 1"
+        }
+      ],
+      "variables": {
+        "colors": [],
+        "numbers": [
+          {
+            "name": "Card Container Gap",
+            "token": "card-container-gap",
+            "type": "float",
+            "value": 24
+          }
+        ],
+        "strings": [
+          {
+            "name": "App Name",
+            "token": "app-name",
+            "type": "string",
+            "value": "Pactus"
+          }
+        ],
+        "booleans": []
+      }
+    }
+  },
+  "metadata": {
+    "exportDate": "2026-05-20T16:55:01.788Z",
+    "figmaFileKey": "unknown",
+    "fileName": "Pactus Design",
+    "pluginVersion": "1.0.0",
+    "collectionsFound": 1,
+    "collectionsExported": 1
+  }
+}
