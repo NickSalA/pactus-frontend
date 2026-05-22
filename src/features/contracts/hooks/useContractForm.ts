@@ -226,6 +226,8 @@ export function useContractForm({
                   service_items: serviceItemsPayload,
                   state: form.state,
                   contract_type: form.type as 'COMPANY' | 'LABOR',
+                  name: form.name,
+                  client: form.client,
                 },
               },
             })
@@ -237,6 +239,8 @@ export function useContractForm({
                 service_items: serviceItemsPayload,
                 state: form.state,
                 contract_type: form.type as 'COMPANY' | 'LABOR',
+                name: form.name,
+                client: form.client,
               },
             });
 
