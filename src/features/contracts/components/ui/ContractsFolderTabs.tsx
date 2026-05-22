@@ -298,7 +298,7 @@ export function ContractsFolderTabs({
                 void submitRename();
               }}
               disabled={renameLoading}
-              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-70"
             >
               <Save className="h-4 w-4" />
               {renameLoading ? 'Guardando...' : 'Guardar cambios'}
@@ -352,7 +352,7 @@ export function ContractsFolderTabs({
                 void confirmDelete();
               }}
               disabled={deleteLoading}
-              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-red-500 to-rose-500 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-red-500/25 disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-red-500 to-rose-500 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-red-500/25 disabled:cursor-not-allowed disabled:opacity-70"
             >
               <Trash2 className="h-4 w-4" />
               {deleteLoading ? 'Eliminando...' : 'Eliminar carpeta'}
@@ -396,7 +396,7 @@ export function ContractsFolderTabs({
       >
         <div className="space-y-4">
           <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-700">
-            <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0" />
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
             <div>
               <p className="font-semibold text-red-800">Accion bloqueada</p>
               <p className="mt-1">
