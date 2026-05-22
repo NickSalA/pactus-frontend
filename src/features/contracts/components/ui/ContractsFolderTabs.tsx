@@ -1,8 +1,16 @@
-"use client";
+'use client';
 
-import { type ReactNode, useMemo, useState } from "react";
-import { AlertTriangle, Folder, Pencil, Plus, Save, Trash2, X } from "lucide-react";
-import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
+import { type ReactNode, useMemo, useState } from 'react';
+import {
+  AlertTriangle,
+  Folder,
+  Pencil,
+  Plus,
+  Save,
+  Trash2,
+  X,
+} from 'lucide-react';
+import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
 
 type ContractsFolderTabsProps = {
   activeFolder: ContractFolder;
@@ -24,7 +32,14 @@ type FolderDialogProps = {
   title: string;
 };
 
-function FolderDialog({ children, description, footer, onClose, open, title }: FolderDialogProps) {
+function FolderDialog({
+  children,
+  description,
+  footer,
+  onClose,
+  open,
+  title,
+}: FolderDialogProps) {
   if (!open) {
     return null;
   }
@@ -64,10 +79,10 @@ export function ContractsFolderTabs({
   onSelectFolder,
 }: ContractsFolderTabsProps) {
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
-  const [folderName, setFolderName] = useState("");
+  const [folderName, setFolderName] = useState('');
   const [createError, setCreateError] = useState<string | null>(null);
   const [isRenameOpen, setIsRenameOpen] = useState(false);
-  const [renameValue, setRenameValue] = useState("");
+  const [renameValue, setRenameValue] = useState('');
   const [renameError, setRenameError] = useState<string | null>(null);
   const [renameLoading, setRenameLoading] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -77,10 +92,10 @@ export function ContractsFolderTabs({
 
   const activeFolderSummary = useMemo(() => {
     if (activeFolder.isSystem) {
-      return "Los contratos sin carpeta se muestran aqui.";
+      return 'Los contratos sin carpeta se muestran aqui.';
     }
 
-    return `${activeFolder.documents_count} contrato${activeFolder.documents_count === 1 ? "" : "s"} dentro de esta carpeta.`;
+    return `${activeFolder.documents_count} contrato${activeFolder.documents_count === 1 ? '' : 's'} dentro de esta carpeta.`;
   }, [activeFolder]);
 
   const confirmFolderCreation = async () => {
@@ -91,12 +106,14 @@ export function ContractsFolderTabs({
         setCreateError(null);
         await onCreateFolder(normalizedName);
       } catch (err) {
-        setCreateError(err instanceof Error ? err.message : "No se pudo crear la carpeta.");
+        setCreateError(
+          err instanceof Error ? err.message : 'No se pudo crear la carpeta.',
+        );
         return;
       }
     }
 
-    setFolderName("");
+    setFolderName('');
     setIsCreatingFolder(false);
   };
 
@@ -118,7 +135,7 @@ export function ContractsFolderTabs({
   const submitRename = async () => {
     const normalizedName = renameValue.trim();
     if (!normalizedName) {
-      setRenameError("Ingresa un nombre valido para la carpeta.");
+      setRenameError('Ingresa un nombre valido para la carpeta.');
       return;
     }
 
@@ -128,7 +145,9 @@ export function ContractsFolderTabs({
       await onRenameFolder(activeFolder.id, normalizedName);
       setIsRenameOpen(false);
     } catch (err) {
-      setRenameError(err instanceof Error ? err.message : "No se pudo renombrar la carpeta.");
+      setRenameError(
+        err instanceof Error ? err.message : 'No se pudo renombrar la carpeta.',
+      );
     } finally {
       setRenameLoading(false);
     }
@@ -161,7 +180,9 @@ export function ContractsFolderTabs({
       await onDeleteFolder(activeFolder.id);
       setIsDeleteConfirmOpen(false);
     } catch (err) {
-      setDeleteError(err instanceof Error ? err.message : "No se pudo eliminar la carpeta.");
+      setDeleteError(
+        err instanceof Error ? err.message : 'No se pudo eliminar la carpeta.',
+      );
     } finally {
       setDeleteLoading(false);
     }
@@ -170,15 +191,15 @@ export function ContractsFolderTabs({
   return (
     <>
       <div className="mb-4 space-y-3">
-        <div className="flex flex-shrink-0 items-center gap-1 border-b border-slate-200">
+        <div className="flex shrink-0 items-center gap-1 border-b border-slate-200">
           {folders.map((folder) => (
             <button
               key={folder.id}
               onClick={() => onSelectFolder(folder.id)}
               className={`flex items-center gap-2 rounded-t-lg px-4 py-2.5 text-sm font-medium transition-all ${
                 activeFolder.id === folder.id
-                  ? "-mb-px border-b-2 border-blue-600 bg-white text-blue-600"
-                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                  ? '-mb-px border-b-2 border-blue-600 bg-white text-blue-600'
+                  : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
               }`}
             >
               <Folder className="h-4 w-4" />
@@ -198,12 +219,12 @@ export function ContractsFolderTabs({
                 }}
                 onChange={(event) => setFolderName(event.target.value)}
                 onKeyDown={(event) => {
-                  if (event.key === "Enter") {
+                  if (event.key === 'Enter') {
                     void confirmFolderCreation();
                   }
 
-                  if (event.key === "Escape") {
-                    setFolderName("");
+                  if (event.key === 'Escape') {
+                    setFolderName('');
                     setIsCreatingFolder(false);
                     setCreateError(null);
                   }
@@ -225,8 +246,14 @@ export function ContractsFolderTabs({
         {(createError || canManageActiveFolder) && (
           <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white px-4 py-3 shadow-sm shadow-slate-200/60 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-900">{activeFolder.name}</p>
-              <p className={`text-sm ${createError ? "text-red-700" : "text-slate-500"}`}>{createError ?? activeFolderSummary}</p>
+              <p className="text-sm font-medium text-slate-900">
+                {activeFolder.name}
+              </p>
+              <p
+                className={`text-sm ${createError ? 'text-red-700' : 'text-slate-500'}`}
+              >
+                {createError ?? activeFolderSummary}
+              </p>
             </div>
 
             {canManageActiveFolder && (
@@ -274,7 +301,7 @@ export function ContractsFolderTabs({
               className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-70"
             >
               <Save className="h-4 w-4" />
-              {renameLoading ? "Guardando..." : "Guardar cambios"}
+              {renameLoading ? 'Guardando...' : 'Guardar cambios'}
             </button>
           </div>
         }
@@ -284,7 +311,9 @@ export function ContractsFolderTabs({
       >
         <div className="space-y-4">
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Nombre de la carpeta</label>
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Nombre de la carpeta
+            </label>
             <input
               type="text"
               value={renameValue}
@@ -297,7 +326,11 @@ export function ContractsFolderTabs({
             {activeFolderSummary}
           </div>
 
-          {renameError && <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{renameError}</div>}
+          {renameError && (
+            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {renameError}
+            </div>
+          )}
         </div>
       </FolderDialog>
 
@@ -322,7 +355,7 @@ export function ContractsFolderTabs({
               className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-red-500 to-rose-500 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-red-500/25 disabled:cursor-not-allowed disabled:opacity-70"
             >
               <Trash2 className="h-4 w-4" />
-              {deleteLoading ? "Eliminando..." : "Eliminar carpeta"}
+              {deleteLoading ? 'Eliminando...' : 'Eliminar carpeta'}
             </button>
           </div>
         }
@@ -332,9 +365,15 @@ export function ContractsFolderTabs({
       >
         <div className="space-y-4">
           <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-700">
-            Se eliminara <span className="font-semibold">{activeFolder.name}</span>. Esta accion no se puede deshacer.
+            Se eliminara{' '}
+            <span className="font-semibold">{activeFolder.name}</span>. Esta
+            accion no se puede deshacer.
           </div>
-          {deleteError && <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{deleteError}</div>}
+          {deleteError && (
+            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {deleteError}
+            </div>
+          )}
         </div>
       </FolderDialog>
 
@@ -361,8 +400,12 @@ export function ContractsFolderTabs({
             <div>
               <p className="font-semibold text-red-800">Accion bloqueada</p>
               <p className="mt-1">
-                La carpeta <span className="font-semibold">{activeFolder.name}</span> tiene {activeFolder.documents_count} contrato
-                {activeFolder.documents_count === 1 ? "" : "s"} asociado{activeFolder.documents_count === 1 ? "" : "s"}. Mueve o desasigna esos contratos antes de eliminarla.
+                La carpeta{' '}
+                <span className="font-semibold">{activeFolder.name}</span> tiene{' '}
+                {activeFolder.documents_count} contrato
+                {activeFolder.documents_count === 1 ? '' : 's'} asociado
+                {activeFolder.documents_count === 1 ? '' : 's'}. Mueve o
+                desasigna esos contratos antes de eliminarla.
               </p>
             </div>
           </div>

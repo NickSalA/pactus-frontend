@@ -1,4 +1,5 @@
 import type { ChangeEvent, InputHTMLAttributes, ReactNode } from 'react';
+import { X } from 'lucide-react';
 
 type TextFieldProps = {
   variant?: 'sm' | 'md' | 'lg';
@@ -14,6 +15,8 @@ type TextFieldProps = {
   name?: string;
   className?: string;
   icon?: ReactNode;
+  clearable?: boolean;
+  onClear?: () => void;
 };
 
 const VARIANT_STYLES = {
@@ -31,9 +34,13 @@ export function TextField({
   helperText,
   className,
   icon,
+  clearable,
+  onClear,
+  value,
   ...inputProps
 }: TextFieldProps) {
   const inputClasses = VARIANT_STYLES[variant];
+  const hasValue = Boolean(value && String(value).trim().length > 0);
 
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
@@ -52,8 +59,18 @@ export function TextField({
         <input
           {...inputProps}
           type={type}
-          className={`${inputClasses} ${icon ? 'pl-10' : ''} ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : ''} ${className ?? ''}`}
+          value={value}
+          className={`${inputClasses} ${icon ? 'pl-10' : ''} ${clearable && hasValue ? 'pr-10' : ''} ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : ''}`}
         />
+        {clearable && hasValue && (
+          <button
+            type="button"
+            onClick={onClear}
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
       </div>
       {error && <span className="text-xs text-red-500">{error}</span>}
       {helperText && !error && (
