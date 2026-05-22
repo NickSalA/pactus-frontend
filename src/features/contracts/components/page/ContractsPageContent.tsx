@@ -1,12 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { ContractsActionsBar } from '@/features/contracts/components/page/ContractsActionsBar';
-import { ContractsDriveSelection } from '@/features/contracts/components/page/ContractsDriveSelection';
-import { ContractsEmptyState } from '@/features/contracts/components/page/ContractsEmptyState';
-import { ContractsFolderTabs } from '@/features/contracts/components/page/ContractsFolderTabs';
-import { ContractsImportMenu } from '@/features/contracts/components/page/ContractsImportMenu';
-import { ContractsTable } from '@/features/contracts/components/page/ContractsTable';
+import { ContractsActionsBar } from '@/features/contracts/components/ui/ContractsActionsBar';
+import { ContractsDriveSelection } from '@/features/contracts/components/ui/ContractsDriveSelection';
+import { ContractsEmptyState } from '@/features/contracts/components/ui/ContractsEmptyState';
+import { ContractsFolderTabs } from '@/features/contracts/components/ui/ContractsFolderTabs';
+import { ContractsImportMenu } from '@/features/contracts/components/ui/ContractsImportMenu';
+import { ContractsTable } from '@/features/contracts/components/ui/ContractsTable';
 import { ContractDeleteModal } from '@/features/contracts/components/modals/ContractDeleteModal';
 import { ContractFormModal } from '@/features/contracts/components/modals/ContractFormModal';
 import { ContractPreviewModal } from '@/features/contracts/components/modals/ContractPreviewModal';
