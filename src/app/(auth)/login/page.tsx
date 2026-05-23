@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { GOOGLE_DRIVE_SCOPE } from "@/lib/googlePicker";
+import { getDefaultRouteForRole, getDefaultRouteLabelForRole } from "@/lib/roleRoutes";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuthStore } from "@/store";
 
@@ -141,7 +142,7 @@ export default function LoginPage() {
           <div className="mb-14 text-center">
             {/* Gradient Title */}
             <h1 className="mb-4 bg-gradient-to-r from-blue-800 via-blue-600 to-blue-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent">
-              ContractAI
+              Pactus
             </h1>
             <h2 className="mb-5 text-xl font-medium text-slate-700">
               Bienvenido de nuevo
@@ -206,6 +207,15 @@ export default function LoginPage() {
                     {isSigningIn ? "Redirigiendo..." : "Iniciar sesión con Google"}
                   </span>
                 </button>
+
+                <Link
+                  href="/super-admin"
+                  className="group mt-3 flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-4 transition-all duration-300 hover:border-indigo-200 hover:bg-slate-50 hover:shadow-lg hover:shadow-indigo-500/10 focus:outline-none focus:ring-4 focus:ring-indigo-100"
+                >
+                  <span className="text-sm font-medium text-slate-600 transition-colors group-hover:text-slate-800">
+                    Crear organizacion
+                  </span>
+                </Link>
 
                 {error && (
                   <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
@@ -273,20 +283,10 @@ export default function LoginPage() {
                 </div>
 
                 <button
-                  onClick={() => router.push(
-                        authUser.role === "ADMIN"
-                          ? "/admin/dashboard"
-                          : authUser.role === "MANAGER"
-                            ? "/manager/dashboard"
-                            : authUser.role === "HR"
-                              ? "/hr/dashboard"
-                              : authUser.role === "WORKER"
-                                ? "/worker/dashboard"
-                                : "/hr/dashboard"
-                      )}
+                  onClick={() => router.push(getDefaultRouteForRole(authUser.role))}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/30"
                 >
-                  <span>Ir al {authUser.role === "ADMIN" ? "panel de administrador" : authUser.role === "MANAGER" ? "dashboard de manager" : "dashboard de RRHH"}</span>
+                  <span>Ir al {getDefaultRouteLabelForRole(authUser.role)}</span>
                   <svg
                     className="h-4 w-4"
                     fill="none"

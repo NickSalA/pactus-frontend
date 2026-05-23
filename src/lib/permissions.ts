@@ -4,6 +4,7 @@ import { ApiUserRole, ApiDocumentType } from '@/types/api';
 type RoleValue = ApiUserRole | string | null | undefined;
 
 const KNOWN_USER_ROLES = new Set<ApiUserRole>([
+  'SUPERADMIN',
   'ADMIN',
   'HR',
   'MANAGER',
@@ -13,6 +14,7 @@ const KNOWN_USER_ROLES = new Set<ApiUserRole>([
 const READABLE_DOCUMENT_TYPES_BY_ROLE: Partial<
   Record<ApiUserRole, readonly ApiDocumentType[]>
 > = {
+  SUPERADMIN: [],
   HR: ['LABOR'],
   MANAGER: ['COMPANY'],
   WORKER: ['COMPANY'],
@@ -21,6 +23,7 @@ const READABLE_DOCUMENT_TYPES_BY_ROLE: Partial<
 const WRITABLE_DOCUMENT_TYPES_BY_ROLE: Partial<
   Record<ApiUserRole, readonly ApiDocumentType[]>
 > = {
+  SUPERADMIN: [],
   HR: ['LABOR'],
   MANAGER: ['COMPANY'],
   WORKER: [],
@@ -30,6 +33,7 @@ const FOLDER_CREATOR_ROLES = new Set<ApiUserRole>(['HR', 'MANAGER']);
 const MANAGEABLE_FOLDER_OWNER_ROLES_BY_ROLE: Partial<
   Record<ApiUserRole, readonly ApiUserRole[]>
 > = {
+  SUPERADMIN: [],
   HR: ['HR'],
   MANAGER: ['MANAGER'],
   WORKER: [],
@@ -60,8 +64,16 @@ export const isAdminRole = (role: RoleValue): boolean => {
   return normalizeRole(role) === 'ADMIN';
 };
 
+export const isSuperAdminRole = (role: RoleValue): boolean => {
+  return normalizeRole(role) === 'SUPERADMIN';
+};
+
 export const canAccessAdminConsole = (role: RoleValue): boolean => {
   return isAdminRole(role);
+};
+
+export const canAccessSuperAdminConsole = (role: RoleValue): boolean => {
+  return isSuperAdminRole(role);
 };
 
 export const canAuthorTemplates = (role: RoleValue): boolean => {
