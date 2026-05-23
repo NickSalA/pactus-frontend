@@ -101,7 +101,7 @@ export default function Sidebar() {
 
   const hasAdminAccess = canAccessAdminConsole(userRole);
   const isAdminConsole = hasAdminAccess && pathname.startsWith('/admin');
-  const mainMenuItems = userRole
+  const mainMenuItems = userRole && userRole !== 'SUPERADMIN'
     ? buildMainMenuItems(userRole as ApiUserRole)
     : [];
   const menuItems = isAdminConsole

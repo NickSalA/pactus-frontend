@@ -1,1 +1,1 @@
-export type ApiUserRole = 'ADMIN' | 'HR' | 'MANAGER' | 'WORKER';
+export type ApiUserRole = 'SUPERADMIN' | 'ADMIN' | 'HR' | 'MANAGER' | 'WORKER';

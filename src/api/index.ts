@@ -26,9 +26,17 @@ export {
   updateNotificationRule,
 } from './notifications';
 export {
+  createOrganization,
   createOrganizationMember,
+  deleteOrganization,
+  getMyOrganization,
+  getOrganization,
   getOrganizationMembers,
+  listOrganizations,
+  updateMyOrganization,
+  updateOrganization,
   updateOrganizationMemberNotifications,
+  type OrganizationListFilters,
 } from './organizations';
 export { importGoogleDriveFiles } from './integrations';
 export {

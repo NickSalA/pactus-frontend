@@ -19,6 +19,7 @@ export type AuthDisplayUser = {
 };
 
 const ROLE_LABELS: Record<ApiUserRole, string> = {
+  SUPERADMIN: 'Super Administrador',
   ADMIN: 'Administrador',
   HR: 'RRHH',
   MANAGER: 'Gestor de Contratos',

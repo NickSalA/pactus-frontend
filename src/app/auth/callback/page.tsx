@@ -6,6 +6,7 @@ import { logout as clearApiSession, setApiAccessToken } from '@/api';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuthStore } from '@/store';
 import { resolveSessionUser } from '@/lib/authUser';
+import { getDefaultRouteForRole } from '@/lib/roleRoutes';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -51,17 +52,7 @@ export default function AuthCallbackPage() {
             return;
           }
 
-          if (authUser.role === 'ADMIN' || authUser.role === 'Administrador') {
-            router.replace('/admin/dashboard');
-          } else if (authUser.role === 'MANAGER') {
-            router.replace('/manager/dashboard');
-          } else if (authUser.role === 'HR') {
-            router.replace('/hr/dashboard');
-          } else if (authUser.role === 'WORKER') {
-            router.replace('/worker/dashboard');
-          } else {
-            router.replace('/hr/dashboard');
-          }
+          router.replace(getDefaultRouteForRole(authUser.role));
           return;
         }
 
