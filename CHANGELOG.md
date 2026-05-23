@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/NickSalA/contractia-frontend/compare/v1.0.0...v1.0.1) (2026-05-23)
+
+
+### Bug Fixes
+
+* update Git author and committer email in release workflow ([5e9d9e0](https://github.com/NickSalA/contractia-frontend/commit/5e9d9e04a64a3993fab129d19b59c56daca85cab))
+
 # 1.0.0 (2026-05-23)
 
 
