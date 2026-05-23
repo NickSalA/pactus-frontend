@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import type { ChipRenderData } from './ChipRenderData';
 
 type StateFilterChipsProps = {
@@ -22,7 +22,7 @@ export function StateFilterChips({
   onChange,
 }: StateFilterChipsProps) {
   return (
-    <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none z-100 pr-3">
+    <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none">
       {items.map((item) => {
         const isActive = item.value === value;
         const a = item.activeColor;
@@ -34,30 +34,28 @@ export function StateFilterChips({
             key={item.value}
             type="button"
             onClick={() => onChange(item.value)}
-            className="group relative flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium"
+            className="group relative flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200"
             style={{
-              backgroundColor: isActive ? hexToRgba(a, 0.1) : 'transparent',
-              color: isActive ? a : i,
+              backgroundColor: isActive ? hexToRgba(a, 0.15) : 'transparent',
+              color: isActive ? a : a,
               borderWidth: '1px',
               borderStyle: 'solid',
-              borderColor: isActive ? hexToRgba(a, 0.3) : hexToRgba(i, 0.2),
+              borderColor: hexToRgba(a, isActive ? 0.4 : 0.2),
             }}
-            transition={{ duration: 0.2 }}
+            whileTap={{ scale: 0.97 }}
           >
             {!isActive && item.hasDot && (
               <span
                 className="h-2 w-2 shrink-0 rounded-full"
-                style={{ backgroundColor: hexToRgba(i, 0.4) }}
+                style={{ backgroundColor: hexToRgba(a, 0.5) }}
               />
             )}
             <span className="whitespace-nowrap">{item.label}</span>
             <span
               className="rounded-full px-1.5 text-[11px] font-semibold tabular-nums"
               style={{
-                backgroundColor: isActive
-                  ? hexToRgba(a, 0.2)
-                  : hexToRgba(i, 0.1),
-                color: isActive ? a : i,
+                backgroundColor: isActive ? hexToRgba(a, 0.25) : hexToRgba(a, 0.1),
+                color: a,
                 minWidth: '20px',
                 minHeight: '20px',
                 display: 'inline-flex',
@@ -65,17 +63,7 @@ export function StateFilterChips({
                 justifyContent: 'center',
               }}
             >
-              <motion.span
-                layout
-                key={item.count}
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }}
-                transition={{ duration: 0.2 }}
-                style={{ display: 'block' }}
-              >
-                {item.count}
-              </motion.span>
+              {item.count}
             </span>
           </motion.button>
         );
