@@ -1,0 +1,1 @@
+export type ApiDocumentType = 'COMPANY' | 'LABOR';

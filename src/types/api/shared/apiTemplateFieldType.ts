@@ -1,0 +1,1 @@
+export type ApiTemplateFieldType = 'text' | 'number' | 'date' | 'time' | 'boolean';

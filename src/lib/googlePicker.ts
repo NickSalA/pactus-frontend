@@ -22,6 +22,28 @@ export type GooglePickerFile = {
   url?: string;
 };
 
+export const GOOGLE_DRIVE_FOLDER_MIME_TYPE =
+  'application/vnd.google-apps.folder';
+
+export const getDriveItemTypeLabel = (mimeType: string): string => {
+  if (mimeType === GOOGLE_DRIVE_FOLDER_MIME_TYPE) {
+    return 'Carpeta';
+  }
+
+  if (mimeType.startsWith('application/vnd.google-apps.')) {
+    return 'Google Workspace';
+  }
+
+  const [, subtype] = mimeType.split('/');
+  return subtype ? subtype.toUpperCase() : 'Archivo';
+};
+
+export const isDriveFolder = (
+  file: Pick<GooglePickerFile, 'mimeType'>,
+): boolean => {
+  return file.mimeType === GOOGLE_DRIVE_FOLDER_MIME_TYPE;
+};
+
 type GooglePickerConfig = {
   clientId: string;
   apiKey: string;

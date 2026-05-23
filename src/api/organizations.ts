@@ -1,10 +1,10 @@
-import type {
-  OrganizationMember,
-  OrganizationMemberCreateRequest,
-  OrganizationMemberNotificationsUpdateRequest,
-} from "@/types/api.types";
-import { TIMEOUTS } from "./constants";
-import { apiGet, apiPost, apiPatch } from "./axiosInstance";
+import type { OrganizationMember } from '@/types/ui.types';
+import {
+  ApiOrganizationMemberNotificationsUpdateRequest,
+  ApiOrganizationMemberCreateRequest,
+} from '@/types/api';
+import { TIMEOUTS } from './constants';
+import { apiGet, apiPost, apiPatch } from './axiosInstance';
 
 const normalizeMember = (member: OrganizationMember): OrganizationMember => ({
   ...member,
@@ -15,29 +15,36 @@ const normalizeMember = (member: OrganizationMember): OrganizationMember => ({
 });
 
 export async function getOrganizationMembers(): Promise<OrganizationMember[]> {
-  const members = await apiGet<OrganizationMember[]>("/organizations/me/members", { timeout: TIMEOUTS.DEFAULT });
+  const members = await apiGet<OrganizationMember[]>(
+    '/organizations/me/members',
+    { timeout: TIMEOUTS.DEFAULT },
+  );
   return members.map(normalizeMember);
 }
 
 export async function createOrganizationMember(
-  payload: OrganizationMemberCreateRequest
+  payload: ApiOrganizationMemberCreateRequest,
 ): Promise<OrganizationMember> {
   const member = normalizeMember(
-    await apiPost<OrganizationMember>("/organizations/me/members", payload, {
+    await apiPost<OrganizationMember>('/organizations/me/members', payload, {
       timeout: TIMEOUTS.AUTH,
-    })
+    }),
   );
   return member;
 }
 
 export async function updateOrganizationMemberNotifications(
   memberId: number,
-  payload: OrganizationMemberNotificationsUpdateRequest
+  payload: ApiOrganizationMemberNotificationsUpdateRequest,
 ): Promise<OrganizationMember> {
   const member = normalizeMember(
-    await apiPatch<OrganizationMember>(`/organizations/me/members/${memberId}/notifications`, payload, {
-      timeout: TIMEOUTS.AUTH,
-    })
+    await apiPatch<OrganizationMember>(
+      `/organizations/me/members/${memberId}/notifications`,
+      payload,
+      {
+        timeout: TIMEOUTS.AUTH,
+      },
+    ),
   );
   return member;
 }

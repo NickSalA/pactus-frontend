@@ -1,0 +1,1 @@
+export type ApiUserRole = 'ADMIN' | 'HR' | 'MANAGER' | 'WORKER';

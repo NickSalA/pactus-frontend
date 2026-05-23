@@ -1,20 +1,26 @@
-import type {
-  ChatRequest,
-  ChatResponse,
-  Conversation,
-  ConversationWithContent,
-} from "@/types/api.types";
-import { TIMEOUTS } from "./constants";
-import { apiPost, apiGet } from "./axiosInstance";
+import { ApiConversationList, ApiConversationRead } from '@/types/api';
+import { ApiChatRequest, ApiChatResponse } from '@/types/api';
+import { TIMEOUTS } from './constants';
+import { apiPost, apiGet } from './axiosInstance';
 
-export async function sendMessage(data: ChatRequest): Promise<ChatResponse> {
-  return apiPost<ChatResponse>("/chatbot/", data, { timeout: TIMEOUTS.AI });
+export async function sendMessage(
+  data: ApiChatRequest,
+): Promise<ApiChatResponse> {
+  return apiPost<ApiChatResponse>('/chatbot/', data, { timeout: TIMEOUTS.AI });
 }
 
-export async function getConversations(userId: number): Promise<Conversation[]> {
-  return apiGet<Conversation[]>(`/conversations/user/${userId}`, { timeout: TIMEOUTS.DEFAULT });
+export async function getConversations(
+  userId: number,
+): Promise<ApiConversationList[]> {
+  return apiGet<ApiConversationList[]>(`/conversations/user/${userId}`, {
+    timeout: TIMEOUTS.DEFAULT,
+  });
 }
 
-export async function getConversationById(id: number): Promise<ConversationWithContent> {
-  return apiGet<ConversationWithContent>(`/conversations/${id}`, { timeout: TIMEOUTS.DEFAULT });
+export async function getConversationById(
+  id: number,
+): Promise<ApiConversationRead> {
+  return apiGet<ApiConversationRead>(`/conversations/${id}`, {
+    timeout: TIMEOUTS.DEFAULT,
+  });
 }

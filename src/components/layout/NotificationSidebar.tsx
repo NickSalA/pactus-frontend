@@ -1,41 +1,58 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { X, AlertCircle, AlertTriangle, Info, Trash2 } from "lucide-react";
-import { getDaysLabel, type NotificationType } from "@/lib/mockNotifications";
-import type { DisplayNotification } from "./Header";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { X, AlertCircle, AlertTriangle, Info, Trash2 } from 'lucide-react';
+import {
+  getDaysLabel,
+  type ApiNotificationType,
+} from '@/lib/mockNotifications';
+import type { DisplayNotification } from './SidebarFooter';
 
-type Filter = "all" | NotificationType;
+type Filter = 'all' | ApiNotificationType;
 
 const filterLabels: Record<Filter, string> = {
-  all: "Todos",
-  critical: "Críticos",
-  warning: "Advertencias",
-  info: "Informativas",
+  all: 'Todos',
+  critical: 'Críticos',
+  warning: 'Advertencias',
+  info: 'Informativas',
 };
 
 const typeConfig: Record<
-  NotificationType,
-  { icon: React.ReactNode; cardStyle: React.CSSProperties; border: string; badge: string }
+  ApiNotificationType,
+  {
+    icon: React.ReactNode;
+    cardStyle: React.CSSProperties;
+    border: string;
+    badge: string;
+  }
 > = {
   critical: {
     icon: <AlertCircle size={20} className="text-red-500" />,
-    cardStyle: { background: "rgba(255, 240, 240, 0.4)", border: "1px solid rgba(252, 165, 165, 0.3)" },
-    border: "",
-    badge: "bg-red-100/80 text-red-600",
+    cardStyle: {
+      background: 'rgba(255, 240, 240, 0.4)',
+      border: '1px solid rgba(252, 165, 165, 0.3)',
+    },
+    border: '',
+    badge: 'bg-red-100/80 text-red-600',
   },
   warning: {
     icon: <AlertTriangle size={20} className="text-orange-500" />,
-    cardStyle: { background: "rgba(255, 247, 235, 0.4)", border: "1px solid rgba(253, 186, 116, 0.3)" },
-    border: "",
-    badge: "bg-orange-100/80 text-orange-600",
+    cardStyle: {
+      background: 'rgba(255, 247, 235, 0.4)',
+      border: '1px solid rgba(253, 186, 116, 0.3)',
+    },
+    border: '',
+    badge: 'bg-orange-100/80 text-orange-600',
   },
   info: {
     icon: <Info size={20} className="text-blue-500" />,
-    cardStyle: { background: "rgba(235, 245, 255, 0.4)", border: "1px solid rgba(147, 197, 253, 0.3)" },
-    border: "",
-    badge: "bg-blue-100/80 text-blue-600",
+    cardStyle: {
+      background: 'rgba(235, 245, 255, 0.4)',
+      border: '1px solid rgba(147, 197, 253, 0.3)',
+    },
+    border: '',
+    badge: 'bg-blue-100/80 text-blue-600',
   },
 };
 
@@ -54,11 +71,11 @@ export default function NotificationSidebar({
   onDeleteAll,
   onMarkAllAsRead,
 }: Props) {
-  const [activeFilter, setActiveFilter] = useState<Filter>("all");
+  const [activeFilter, setActiveFilter] = useState<Filter>('all');
   const router = useRouter();
 
   const filtered = notifications.filter(
-    (n) => activeFilter === "all" || n.type === activeFilter
+    (n) => activeFilter === 'all' || n.type === activeFilter,
   );
 
   return (
@@ -66,32 +83,35 @@ export default function NotificationSidebar({
       {/* Fondo oscurecido */}
       <div
         className="fixed inset-0 z-40 transition-opacity"
-        style={{ background: "rgba(0, 0, 0, 0.2)" }}
+        style={{ background: 'rgba(0, 0, 0, 0.2)' }}
         onClick={onClose}
       />
 
       {/* Panel lateral — glassmorphism */}
       <div
-        className="fixed right-0 top-0 h-full w-[420px] max-w-full z-50 flex flex-col border-l border-white/30"
+        className="fixed right-0 top-0 h-full w-105 max-w-full z-50 flex flex-col border-l border-white/30"
         style={{
-          background: "rgba(255, 255, 255, 0.5)",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
-          boxShadow: "-8px 0 32px rgba(0, 0, 0, 0.12), -1px 0 0 rgba(255, 255, 255, 0.5)",
+          background: 'rgba(255, 255, 255, 0.5)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          boxShadow:
+            '-8px 0 32px rgba(0, 0, 0, 0.12), -1px 0 0 rgba(255, 255, 255, 0.5)',
         }}
       >
         {/* Header */}
         <div className="px-6 pt-6 pb-4 border-b border-white/30">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Notificaciones</h2>
+              <h2 className="text-lg font-bold text-gray-900">
+                Notificaciones
+              </h2>
               <p className="text-sm text-gray-500 mt-0.5">Actividad Reciente</p>
             </div>
             <div className="flex items-center gap-2">
               {notifications.some((n) => !n.read) && (
                 <button
                   onClick={onMarkAllAsRead}
-                  className="text-xs text-[var(--primary)] hover:underline"
+                  className="text-xs text-brand-primary hover:underline"
                 >
                   Marcar todas leídas
                 </button>
@@ -114,8 +134,8 @@ export default function NotificationSidebar({
                 onClick={() => setActiveFilter(filter)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                   activeFilter === filter
-                    ? "bg-[var(--primary)] text-white"
-                    : "bg-white/50 text-gray-600 hover:bg-white/80 border border-white/40"
+                    ? 'bg-brand-primary text-white'
+                    : 'bg-white/50 text-gray-600 hover:bg-white/80 border border-white/40'
                 }`}
               >
                 {filterLabels[filter]}
@@ -131,8 +151,12 @@ export default function NotificationSidebar({
               <div className="w-14 h-14 bg-white/50 rounded-full flex items-center justify-center mb-3 border border-white/40">
                 <AlertCircle size={24} className="text-gray-400" />
               </div>
-              <p className="text-sm font-medium text-gray-500">Sin notificaciones</p>
-              <p className="text-xs text-gray-400 mt-1">No hay actividad en esta categoría</p>
+              <p className="text-sm font-medium text-gray-500">
+                Sin notificaciones
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                No hay actividad en esta categoría
+              </p>
             </div>
           ) : (
             filtered.map((notification) => {
@@ -140,7 +164,7 @@ export default function NotificationSidebar({
               return (
                 <div
                   key={notification.id}
-                  className={`rounded-xl p-4 ${!notification.read ? "ring-1 ring-inset ring-white/20" : ""}`}
+                  className={`rounded-xl p-4 ${!notification.read ? 'ring-1 ring-inset ring-white/20' : ''}`}
                   style={cardStyle}
                 >
                   <div className="flex items-start gap-3">
@@ -153,7 +177,9 @@ export default function NotificationSidebar({
                         <p className="text-sm font-semibold text-gray-800">
                           {notification.title}
                         </p>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${badge}`}>
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${badge}`}
+                        >
                           {getDaysLabel(notification.days_remaining)}
                         </span>
                       </div>
@@ -164,8 +190,11 @@ export default function NotificationSidebar({
                       {/* Botones de acción */}
                       <div className="flex gap-2 mt-3">
                         <button
-                          onClick={() => { onClose(); router.push("/contracts"); }}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)] transition-colors"
+                          onClick={() => {
+                            onClose();
+                            router.push('/contracts');
+                          }}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-primary text-white hover:bg-brand-primary-dark transition-colors"
                         >
                           Ver contrato
                         </button>

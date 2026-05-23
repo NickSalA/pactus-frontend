@@ -1,12 +1,12 @@
 "use client";
 
 import { AlertCircle, AlertTriangle, Info } from "lucide-react";
-import { getDaysLabel, type NotificationType } from "@/lib/mockNotifications";
-import type { DisplayNotification } from "./Header";
+import { getDaysLabel, type ApiNotificationType } from "@/lib/mockNotifications";
+import type { DisplayNotification } from "./SidebarFooter";
 
 const PREVIEW_COUNT = 4;
 
-const typeConfig: Record<NotificationType, { icon: React.ReactNode; dot: string }> = {
+const typeConfig: Record<ApiNotificationType, { icon: React.ReactNode; dot: string }> = {
   critical: {
     icon: <AlertCircle size={16} className="text-red-500" />,
     dot: "bg-red-500",
@@ -26,9 +26,10 @@ interface Props {
   onViewAll: () => void;
   onClose: () => void;
   onMarkAsRead: (id: string) => void;
+  alignRight?: boolean;
 }
 
-export default function NotificationDropdown({ notifications, onViewAll, onClose, onMarkAsRead }: Props) {
+export default function NotificationDropdown({ notifications, onViewAll, onClose, onMarkAsRead, alignRight }: Props) {
   const preview = notifications.slice(0, PREVIEW_COUNT);
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -37,7 +38,7 @@ export default function NotificationDropdown({ notifications, onViewAll, onClose
       {/* Overlay invisible para cerrar al hacer clic fuera */}
       <div className="fixed inset-0 z-30" onClick={onClose} />
 
-      <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 z-40 overflow-hidden">
+      <div className={`absolute ${alignRight ? 'left-0' : 'left-1/2 -translate-x-1/2'} bottom-full mb-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 z-40 overflow-hidden`}>
         {/* Header del dropdown */}
         <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
           <span className="font-semibold text-gray-800 text-sm">Notificaciones</span>
@@ -92,7 +93,7 @@ export default function NotificationDropdown({ notifications, onViewAll, onClose
         <div className="px-4 py-3 border-t border-gray-100">
           <button
             onClick={() => { onClose(); onViewAll(); }}
-            className="w-full text-center text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors"
+            className="w-full text-center text-sm font-medium text-brand-primary hover:text-brand-primary-dark transition-colors"
           >
             Ver todas las notificaciones
           </button>

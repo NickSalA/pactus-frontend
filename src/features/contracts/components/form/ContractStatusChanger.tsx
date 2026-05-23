@@ -1,16 +1,22 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Select } from "@/components/ui/Select";
-import type { DocumentState } from "@/types/api.types";
+import { useState } from 'react';
+import { Select } from '@/components/ui/Select';
+import { ApiDocumentState } from '@/types/api';
 
 type Props = {
-  readonly currentState: DocumentState;
-  readonly onStatusChange: (nextState: DocumentState | null) => void;
+  readonly currentState: ApiDocumentState;
+  readonly onStatusChange: (nextState: ApiDocumentState | null) => void;
 };
 
 /** Shared toggle button used by both variants. */
-function StatusSwitch({ checked, onChange }: { checked: boolean; onChange: (next: boolean) => void }) {
+function StatusSwitch({
+  checked,
+  onChange,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+}) {
   return (
     <button
       type="button"
@@ -18,12 +24,12 @@ function StatusSwitch({ checked, onChange }: { checked: boolean; onChange: (next
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={`relative mt-0.5 inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 ${
-        checked ? "bg-emerald-500" : "bg-slate-300"
+        checked ? 'bg-emerald-500' : 'bg-slate-300'
       }`}
     >
       <span
         className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition duration-200 ease-in-out ${
-          checked ? "translate-x-6" : "translate-x-1"
+          checked ? 'translate-x-6' : 'translate-x-1'
         }`}
       />
     </button>
@@ -31,14 +37,20 @@ function StatusSwitch({ checked, onChange }: { checked: boolean; onChange: (next
 }
 
 /** For PENDING_SIGNATURE: direct switch "Marcar como firmado" (original behavior). */
-function SignedToggle({ onStatusChange }: { onStatusChange: (next: DocumentState | null) => void }) {
+function SignedToggle({
+  onStatusChange,
+}: {
+  onStatusChange: (next: ApiDocumentState | null) => void;
+}) {
   const [checked, setChecked] = useState(false);
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold text-slate-800">Marcar como firmado</p>
+          <p className="text-sm font-semibold text-slate-800">
+            Marcar como firmado
+          </p>
           <p className="mt-0.5 text-xs text-slate-500">
             El contrato pasará a estado &quot;Activo&quot; al guardar
           </p>
@@ -47,7 +59,7 @@ function SignedToggle({ onStatusChange }: { onStatusChange: (next: DocumentState
           checked={checked}
           onChange={(next) => {
             setChecked(next);
-            onStatusChange(next ? "ACTIVE" : null);
+            onStatusChange(next ? 'ACTIVE' : null);
           }}
         />
       </div>
@@ -56,9 +68,15 @@ function SignedToggle({ onStatusChange }: { onStatusChange: (next: DocumentState
 }
 
 /** For DRAFT: switch + dropdown to pick the target state. */
-function DraftStatusChanger({ onStatusChange }: { onStatusChange: (next: DocumentState | null) => void }) {
+function DraftStatusChanger({
+  onStatusChange,
+}: {
+  onStatusChange: (next: ApiDocumentState | null) => void;
+}) {
   const [isChanging, setIsChanging] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<DocumentState | "">("");
+  const [selectedStatus, setSelectedStatus] = useState<ApiDocumentState | ''>(
+    '',
+  );
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
@@ -66,7 +84,9 @@ function DraftStatusChanger({ onStatusChange }: { onStatusChange: (next: Documen
         <div className="flex-1">
           <p className="text-sm font-semibold text-slate-800">Cambiar estado</p>
           {!isChanging ? (
-            <p className="mt-0.5 text-xs text-slate-500">Mantener como Borrador</p>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Mantener como Borrador
+            </p>
           ) : (
             <div className="mt-2 flex items-center gap-2">
               <span className="text-xs text-slate-500">Pasar a:</span>
@@ -74,7 +94,7 @@ function DraftStatusChanger({ onStatusChange }: { onStatusChange: (next: Documen
                 variant="sm"
                 value={selectedStatus}
                 onChange={(event) => {
-                  const value = event.target.value as DocumentState | "";
+                  const value = event.target.value as ApiDocumentState | '';
                   setSelectedStatus(value);
                   onStatusChange(value || null);
                 }}
@@ -86,7 +106,9 @@ function DraftStatusChanger({ onStatusChange }: { onStatusChange: (next: Documen
             </div>
           )}
           {isChanging && selectedStatus && (
-            <p className="mt-1.5 text-xs text-slate-400">El estado se actualizará al guardar.</p>
+            <p className="mt-1.5 text-xs text-slate-400">
+              El estado se actualizará al guardar.
+            </p>
           )}
         </div>
         <StatusSwitch
@@ -94,7 +116,7 @@ function DraftStatusChanger({ onStatusChange }: { onStatusChange: (next: Documen
           onChange={(next) => {
             setIsChanging(next);
             if (!next) {
-              setSelectedStatus("");
+              setSelectedStatus('');
               onStatusChange(null);
             }
           }}
@@ -105,11 +127,11 @@ function DraftStatusChanger({ onStatusChange }: { onStatusChange: (next: Documen
 }
 
 export function ContractStatusChanger({ currentState, onStatusChange }: Props) {
-  if (currentState === "PENDING_SIGNATURE") {
+  if (currentState === 'PENDING_SIGNATURE') {
     return <SignedToggle onStatusChange={onStatusChange} />;
   }
 
-  if (currentState === "DRAFT") {
+  if (currentState === 'DRAFT') {
     return <DraftStatusChanger onStatusChange={onStatusChange} />;
   }
 

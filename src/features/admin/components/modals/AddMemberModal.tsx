@@ -1,23 +1,28 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Plus, X } from "lucide-react";
-import { getUserRoleLabel } from "@/lib/authUser";
-import { Select } from "@/components/ui/Select";
-import type { OrganizationMemberCreateRequest, UserRole } from "@/types/api.types";
+import { useState } from 'react';
+import { Plus, X } from 'lucide-react';
+import { getUserRoleLabel } from '@/lib/authUser';
+import { Select } from '@/components/ui/Select';
+import { ApiOrganizationMemberCreateRequest, ApiUserRole } from '@/types/api';
 
 type AddMemberModalProps = {
   isSubmitting: boolean;
   onClose: () => void;
-  onSubmit: (payload: OrganizationMemberCreateRequest) => Promise<void>;
+  onSubmit: (payload: ApiOrganizationMemberCreateRequest) => Promise<void>;
   open: boolean;
 };
 
-const AVAILABLE_ROLES: UserRole[] = ["WORKER", "HR", "MANAGER", "ADMIN"];
+const AVAILABLE_ROLES: ApiUserRole[] = ['WORKER', 'HR', 'MANAGER', 'ADMIN'];
 
-export function AddMemberModal({ isSubmitting, onClose, onSubmit, open }: AddMemberModalProps) {
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState<UserRole>("WORKER");
+export function AddMemberModal({
+  isSubmitting,
+  onClose,
+  onSubmit,
+  open,
+}: AddMemberModalProps) {
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState<ApiUserRole>('WORKER');
   const [error, setError] = useState<string | null>(null);
 
   if (!open) {
@@ -28,17 +33,19 @@ export function AddMemberModal({ isSubmitting, onClose, onSubmit, open }: AddMem
     const normalizedEmail = email.trim().toLowerCase();
 
     if (!normalizedEmail) {
-      setError("Ingresa un correo válido para crear el usuario.");
+      setError('Ingresa un correo válido para crear el usuario.');
       return;
     }
 
     try {
       setError(null);
       await onSubmit({ email: normalizedEmail, role });
-      setEmail("");
-      setRole("WORKER");
+      setEmail('');
+      setRole('WORKER');
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo agregar el usuario.");
+      setError(
+        err instanceof Error ? err.message : 'No se pudo agregar el usuario.',
+      );
     }
   };
 
@@ -47,9 +54,15 @@ export function AddMemberModal({ isSubmitting, onClose, onSubmit, open }: AddMem
       <div className="w-full max-w-lg rounded-[28px] bg-white shadow-2xl shadow-slate-900/10">
         <div className="flex items-start justify-between border-b border-slate-200/80 px-6 py-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Gestión de Accesos</p>
-            <h2 className="mt-2 text-2xl font-semibold text-slate-900">Agregar Nuevo Usuario</h2>
-            <p className="mt-1 text-sm text-slate-500">Crea un nuevo acceso dentro de la organización actual.</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+              Gestión de Accesos
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold text-slate-900">
+              Agregar Nuevo Usuario
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Crea un nuevo acceso dentro de la organización actual.
+            </p>
           </div>
           <button
             type="button"
@@ -62,7 +75,9 @@ export function AddMemberModal({ isSubmitting, onClose, onSubmit, open }: AddMem
 
         <div className="space-y-5 px-6 py-6">
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Correo electrónico</label>
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Correo electrónico
+            </label>
             <input
               type="email"
               value={email}
@@ -73,12 +88,14 @@ export function AddMemberModal({ isSubmitting, onClose, onSubmit, open }: AddMem
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Rol asignado</label>
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Rol asignado
+            </label>
             <Select
               variant="lg"
               className="w-full"
               value={role}
-              onChange={(event) => setRole(event.target.value as UserRole)}
+              onChange={(event) => setRole(event.target.value as ApiUserRole)}
             >
               {AVAILABLE_ROLES.map((availableRole) => (
                 <option key={availableRole} value={availableRole}>
@@ -88,7 +105,11 @@ export function AddMemberModal({ isSubmitting, onClose, onSubmit, open }: AddMem
             </Select>
           </div>
 
-          {error && <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
+          {error && (
+            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-end gap-3 border-t border-slate-200/80 px-6 py-5">
@@ -106,10 +127,10 @@ export function AddMemberModal({ isSubmitting, onClose, onSubmit, open }: AddMem
               void handleSubmit();
             }}
             disabled={isSubmitting}
-            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-70"
           >
             <Plus className="h-4 w-4" />
-            {isSubmitting ? "Creando..." : "Agregar Usuario"}
+            {isSubmitting ? 'Creando...' : 'Agregar Usuario'}
           </button>
         </div>
       </div>

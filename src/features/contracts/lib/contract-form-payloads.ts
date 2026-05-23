@@ -1,11 +1,11 @@
-import type { Document, DocumentFormData } from "@/types/api.types";
-import type { CurrencyType } from "@/types/api.types";
+import type { DocumentFlatten } from '@/types/ui.types';
+import { ApiCurrencyType, ApiDocumentFormData } from '@/types/api';
 
 type BuildContractFormDataPayloadOptions = {
   contractTotal: number;
-  currency: CurrencyType;
+  currency: ApiCurrencyType;
   editMode?: boolean;
-  initialData?: Document;
+  initialData?: DocumentFlatten;
 };
 
 export const buildContractFormDataPayload = ({
@@ -13,8 +13,9 @@ export const buildContractFormDataPayload = ({
   currency,
   editMode = false,
   initialData,
-}: BuildContractFormDataPayloadOptions): DocumentFormData => {
-  const payload: DocumentFormData = editMode && initialData ? { ...initialData.form_data } : {};
+}: BuildContractFormDataPayloadOptions): ApiDocumentFormData => {
+  const payload: ApiDocumentFormData =
+    editMode && initialData ? { ...initialData.form_data } : {};
 
   delete payload.licenses;
   payload.value = contractTotal;

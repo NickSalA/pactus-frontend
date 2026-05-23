@@ -41,3 +41,11 @@ yarn-error.log*
 next-env.d.ts
 
 MIGRATION_TANSTACK_QUERY.md
+styles.jsonPlan confirmado: Modularización de TemplatesSection
+Estructura final
+src/features/templates/components/
+├── TemplatesSection.tsx      # Orchestration (~80 líneas)
+├── TemplateHeader.tsx        # Header: badge + título + botones (era TemplatesSectionHeader)
+├── TemplatesFilterBar.tsx   # Filtros: search + 3 selects
+├── TemplatesTable.tsx        # Table wrapper + thead + empty + pagination
+└── TemplateRow.tsx          # Fila individual + acciones
