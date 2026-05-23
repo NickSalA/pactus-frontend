@@ -45,6 +45,7 @@ export function TemplatesTable({
     <div className="flex-1 min-h-0">
       <section className="flex flex-col rounded-2xl border border-slate-200/60 bg-white shadow-sm max-h-full">
         <div className="overflow-x-auto">
+          ▲ Next.js 16.1.6 (Turbopack)
           <table className="min-w-full divide-y divide-slate-200/80 text-left">
             <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
               <tr>

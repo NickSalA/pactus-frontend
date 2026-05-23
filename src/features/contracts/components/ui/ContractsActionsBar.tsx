@@ -2,10 +2,8 @@
 
 import { type ReactNode } from 'react';
 import { Plus, Search } from 'lucide-react';
-import {
-  FILTER_OPTIONS,
-  type DocumentFilterValue,
-} from '@/features/contracts/lib/contracts-utils';
+import { FILTER_OPTIONS } from '@/features/contracts/lib/contracts-utils';
+import { CONTRACT_STATUS_COLORS } from '@/lib/contractStatusColors';
 import type {
   DateRange,
   SortOrder,
@@ -14,7 +12,9 @@ import { Select } from '@/components/ui/Select';
 import { TextField } from '@/components/ui/TextField';
 import { DateRangePicker } from '@/components/ui/DateRangePicker';
 import { SearchIndicator } from '@/components/ui/SearchIndicator';
+import { StateFilterChips } from '@/components/ui/StateFilterChips';
 import type { DocumentFlatten } from '@/types/ui.types';
+import type { DocumentFilterValue } from '@/features/contracts/lib/contracts-utils';
 
 type ContractsActionsBarProps = {
   contracts: DocumentFlatten[];
@@ -30,55 +30,18 @@ type ContractsActionsBarProps = {
   sortOrder: SortOrder;
 };
 
-const FILTER_CHIP_STYLES: Record<
-  string,
-  { active: string; activeBadge: string; inactive: string; dot: string }
+const STATUS_KEY_MAP: Record<
+  DocumentFilterValue,
+  keyof typeof CONTRACT_STATUS_COLORS
 > = {
-  all: {
-    active: 'bg-blue-50 border border-blue-200 text-blue-700 ring-0',
-    activeBadge: 'bg-blue-100 text-blue-600',
-    inactive:
-      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-blue-300 hover:text-blue-700 hover:bg-blue-50/50',
-    dot: 'bg-blue-400',
-  },
-  DRAFT: {
-    active: 'bg-slate-100 border border-slate-300 text-slate-700 ring-0',
-    activeBadge: 'bg-slate-200 text-slate-600',
-    inactive:
-      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-slate-400 hover:text-slate-800 hover:bg-slate-50',
-    dot: 'bg-slate-400',
-  },
-  PENDING_SIGNATURE: {
-    active: 'bg-sky-50 border border-sky-200 text-sky-700 ring-0',
-    activeBadge: 'bg-sky-100 text-sky-600',
-    inactive:
-      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-blue-300 hover:text-blue-700 hover:bg-blue-50/50',
-    dot: 'bg-sky-400',
-  },
-  ACTIVE: {
-    active: 'bg-emerald-50 border border-emerald-200 text-emerald-700 ring-0',
-    activeBadge: 'bg-emerald-100 text-emerald-600',
-    inactive:
-      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-emerald-300 hover:text-emerald-700 hover:bg-emerald-50/50',
-    dot: 'bg-emerald-400',
-  },
-  EXPIRING_SOON: {
-    active: 'bg-amber-50 border border-amber-200 text-amber-700 ring-0',
-    activeBadge: 'bg-amber-100 text-amber-600',
-    inactive:
-      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-amber-300 hover:text-amber-700 hover:bg-amber-50/50',
-    dot: 'bg-amber-400',
-  },
-  EXPIRED: {
-    active: 'bg-red-50 border border-red-200 text-red-700 ring-0',
-    activeBadge: 'bg-red-100 text-red-600',
-    inactive:
-      'bg-white text-slate-600 ring-1 ring-slate-200 hover:ring-red-300 hover:text-red-700 hover:bg-red-50/50',
-    dot: 'bg-red-400',
-  },
+  all: 'ALL',
+  DRAFT: 'DRAFT',
+  PENDING_SIGNATURE: 'PENDING_SIGNATURE',
+  ACTIVE: 'ACTIVE',
+  EXPIRING_SOON: 'EXPIRING_SOON',
+  EXPIRED: 'EXPIRED',
+  TERMINATED: 'TERMINATED',
 };
-
-const DEFAULT_CHIP_STYLE = FILTER_CHIP_STYLES.all!;
 
 export function ContractsActionsBar({
   contracts,
@@ -104,6 +67,19 @@ export function ContractsActionsBar({
     },
     {},
   );
+
+  const chips = FILTER_OPTIONS.map((option) => {
+    const statusKey = STATUS_KEY_MAP[option.value];
+    const colors = CONTRACT_STATUS_COLORS[statusKey];
+    return {
+      value: option.value,
+      label: option.label,
+      count: filterCounts[option.value] ?? 0,
+      activeColor: colors.activeColor,
+      inactiveColor: colors.inactiveColor,
+      hasDot: colors.hasDot ?? false,
+    };
+  });
 
   return (
     <div className="mb-4 shrink-0 space-y-3">
@@ -134,44 +110,12 @@ export function ContractsActionsBar({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none">
-          {FILTER_OPTIONS.map((option) => {
-            const isActive = option.value === filter;
-            const chipStyle =
-              FILTER_CHIP_STYLES[option.value] ?? DEFAULT_CHIP_STYLE;
-            const count = filterCounts[option.value] ?? 0;
-
-            return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => onFilterChange(option.value)}
-                className={`group relative flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                  isActive ? chipStyle.active : chipStyle.inactive
-                }`}
-              >
-                {!isActive && option.value !== 'all' && (
-                  <span
-                    className={`h-2 w-2 shrink-0 rounded-full ${chipStyle.dot}`}
-                  />
-                )}
-                <span className="whitespace-nowrap">{option.label}</span>
-                <span
-                  className={`inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold tabular-nums transition-colors ${
-                    isActive
-                      ? chipStyle.activeBadge
-                      : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200/80'
-                  }`}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        <span className="hidden h-5 w-px bg-slate-200 xl:block" />
+      <div className="flex flex-wrap items-center gap-2 relative ">
+        <StateFilterChips
+          items={chips}
+          value={filter}
+          onChange={(v) => onFilterChange(v as DocumentFilterValue)}
+        />
 
         <Select
           variant="sm"
