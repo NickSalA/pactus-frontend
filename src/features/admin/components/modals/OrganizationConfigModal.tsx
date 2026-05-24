@@ -3,6 +3,7 @@
 import { FormProvider } from 'react-hook-form';
 import { Save } from 'lucide-react';
 import { AdminModalShell } from '@/features/admin/components/shared/AdminModalShell';
+import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 import { useOrganizationConfigForm } from '@/features/admin/hooks/useOrganizationConfigForm';
 import { BasicDataSection } from '@/features/admin/components/form/BasicDataSection';
 import { ContactLocationSection } from '@/features/admin/components/form/ContactLocationSection';
@@ -15,7 +16,7 @@ type OrganizationConfigModalProps = {
 };
 
 export function OrganizationConfigModal({ onClose, open }: OrganizationConfigModalProps) {
-  const { form, onSubmit } = useOrganizationConfigForm();
+  const { form, onSubmit, isLoadingOrganization } = useOrganizationConfigForm();
   const isSubmitting = form.formState.isSubmitting;
 
   return (
@@ -28,7 +29,7 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
           <div className="flex justify-end">
             <button
               type="button"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLoadingOrganization}
               onClick={() => void form.handleSubmit(onSubmit)()}
               className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-70"
             >
@@ -49,12 +50,21 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
             </button>
           </aside>
 
-          {/* RIGHT: Secciones del formulario */}
+          {/* RIGHT: Secciones del formulario o esqueleto de carga */}
           <div className="flex-1 space-y-10">
-            <BasicDataSection />
-            <ContactLocationSection />
-            <LegalRepresentationSection />
-            <AccreditationPermitsSection />
+            {isLoadingOrganization ? (
+              <LoadingSkeleton
+                message="Cargando configuración..."
+                className="min-h-64"
+              />
+            ) : (
+              <>
+                <BasicDataSection />
+                <ContactLocationSection />
+                <LegalRepresentationSection />
+                <AccreditationPermitsSection />
+              </>
+            )}
           </div>
         </div>
       </AdminModalShell>
