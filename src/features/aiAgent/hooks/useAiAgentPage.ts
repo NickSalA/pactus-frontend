@@ -110,7 +110,6 @@ export function useAIAgentPage() {
   const startNewConversation = useCallback(() => {
     setMessages([]);
     setThreadId(undefined);
-    setShowHistory(false);
     textareaRef.current?.focus();
   }, []);
 
