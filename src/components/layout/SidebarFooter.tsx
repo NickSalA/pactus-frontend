@@ -7,6 +7,8 @@ import { logout as clearApiSession, getNotifications } from '@/api';
 import { useAuthStore, useSidebarStore } from '@/store';
 import { supabase } from '@/lib/supabaseClient';
 import { getUserRoleLabel, toNameAndLastName } from '@/lib/authUser';
+import { canAccessAdminConsole } from '@/lib/permissions';
+import { OrganizationConfigModal } from '@/features/admin/components/modals/OrganizationConfigModal';
 import NotificationDropdown from './NotificationDropdown';
 import NotificationSidebar from './NotificationSidebar';
 import { ApiNotificationResponse } from '@/types/api';
@@ -35,6 +37,7 @@ export function SidebarFooter() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [raw, setRaw] = useState<ApiNotificationResponse[]>([]);
   const [readIds, setReadIds] = useState<Set<string>>(() => loadSet(LS_READ));
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(() =>
@@ -43,6 +46,8 @@ export function SidebarFooter() {
   const router = useRouter();
   const { isHydrating, user, logout } = useAuthStore();
   const { isCollapsed } = useSidebarStore();
+
+  const isAdmin = canAccessAdminConsole(user?.role);
 
   const userName = toNameAndLastName(
     user?.name || (isHydrating ? 'Cargando usuario' : 'Usuario'),
@@ -163,7 +168,18 @@ export function SidebarFooter() {
           )}
         </div>
 
-        <Settings size={20} className="text-white/70 shrink-0" />
+        {/* {<Settings size={20} className="text-white/70 shrink-0" />} */}
+
+        {isAdmin && (
+          <button
+            type="button"
+            onClick={() => setIsConfigModalOpen(true)}
+            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+            aria-label="Configuración de la organización"
+          >
+            <Settings size={20} />
+          </button>
+        )}
       </div>
 
       {isSidebarOpen && (
@@ -223,6 +239,13 @@ export function SidebarFooter() {
           </>
         )}
       </div>
+
+      {isConfigModalOpen && (
+        <OrganizationConfigModal
+          open={isConfigModalOpen}
+          onClose={() => setIsConfigModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

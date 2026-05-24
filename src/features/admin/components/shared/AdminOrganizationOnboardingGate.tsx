@@ -26,7 +26,7 @@ export function AdminOrganizationOnboardingGate({
 
   if (isHydrating) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue-50">
+      <div className="flex h-full items-center justify-center">
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
       </div>
     );
@@ -57,7 +57,7 @@ export function AdminOrganizationOnboardingGate({
     }
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue-50">
+      <div className="flex h-full items-center justify-center">
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
       </div>
     );

@@ -16,7 +16,8 @@ type OrganizationConfigModalProps = {
 };
 
 export function OrganizationConfigModal({ onClose, open }: OrganizationConfigModalProps) {
-  const { form, onSubmit, isLoadingOrganization } = useOrganizationConfigForm();
+  const { form, onSubmit, isLoadingOrganization, submissionError } =
+    useOrganizationConfigForm(onClose);
   const isSubmitting = form.formState.isSubmitting;
 
   return (
@@ -40,7 +41,6 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
         }
       >
         <div className="flex gap-6">
-          {/* LEFT: Panel de navegación del modal */}
           <aside className="w-36 shrink-0">
             <button
               type="button"
@@ -50,7 +50,6 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
             </button>
           </aside>
 
-          {/* RIGHT: Secciones del formulario o esqueleto de carga */}
           <div className="flex-1 space-y-10">
             {isLoadingOrganization ? (
               <LoadingSkeleton
@@ -63,6 +62,12 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
                 <ContactLocationSection />
                 <LegalRepresentationSection />
                 <AccreditationPermitsSection />
+
+                {submissionError && (
+                  <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {submissionError}
+                  </div>
+                )}
               </>
             )}
           </div>
