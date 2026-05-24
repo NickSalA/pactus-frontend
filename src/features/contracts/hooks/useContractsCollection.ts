@@ -174,7 +174,9 @@ export function useContractsCollection() {
             nextFolder,
           ];
         });
-        setActiveFolderId(createdFolder.id);
+        if (activeFolderId === optimisticFolderId) {
+          setActiveFolderId(createdFolder.id);
+        }
       } catch (err) {
         setFolderState((previousFolders) =>
           previousFolders.filter((folder) => folder.id !== optimisticFolderId),

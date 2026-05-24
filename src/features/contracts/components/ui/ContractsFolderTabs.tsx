@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle,
   Folder,
@@ -80,6 +80,7 @@ export function ContractsFolderTabs({
 }: ContractsFolderTabsProps) {
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [folderName, setFolderName] = useState('');
+  const newFolderInputRef = useRef<HTMLInputElement>(null);
   const [createError, setCreateError] = useState<string | null>(null);
   const [isRenameOpen, setIsRenameOpen] = useState(false);
   const [renameValue, setRenameValue] = useState('');
@@ -101,16 +102,20 @@ export function ContractsFolderTabs({
   const confirmFolderCreation = async () => {
     const normalizedName = folderName.trim();
 
-    if (normalizedName) {
-      try {
-        setCreateError(null);
-        await onCreateFolder(normalizedName);
-      } catch (err) {
-        setCreateError(
-          err instanceof Error ? err.message : 'No se pudo crear la carpeta.',
-        );
-        return;
-      }
+    if (!normalizedName) {
+      setFolderName('');
+      setIsCreatingFolder(false);
+      return;
+    }
+
+    try {
+      setCreateError(null);
+      await onCreateFolder(normalizedName);
+    } catch (err) {
+      setCreateError(
+        err instanceof Error ? err.message : 'No se pudo crear la carpeta.',
+      );
+      return;
     }
 
     setFolderName('');
@@ -210,16 +215,20 @@ export function ContractsFolderTabs({
           {canCreateFolder && isCreatingFolder ? (
             <div className="flex items-center gap-1 px-2">
               <input
+                ref={newFolderInputRef}
                 autoFocus
                 type="text"
                 placeholder="Nombre..."
                 value={folderName}
                 onBlur={() => {
-                  void confirmFolderCreation();
+                  setFolderName('');
+                  setIsCreatingFolder(false);
+                  setCreateError(null);
                 }}
                 onChange={(event) => setFolderName(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
+                    newFolderInputRef.current?.blur();
                     void confirmFolderCreation();
                   }
 
