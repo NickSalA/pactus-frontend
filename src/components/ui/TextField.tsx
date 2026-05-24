@@ -1,19 +1,13 @@
-import type { ChangeEvent, InputHTMLAttributes, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-type TextFieldProps = {
+type TextFieldProps = Omit<React.ComponentProps<'input'>, 'type'> & {
   variant?: 'sm' | 'md' | 'lg';
   type?: 'text' | 'number' | 'date' | 'time' | 'email' | 'password' | 'search';
-  value?: string | number;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  disabled?: boolean;
   label?: string;
-  required?: boolean;
   error?: string;
   helperText?: string;
-  name?: string;
-  className?: string;
   icon?: ReactNode;
   clearable?: boolean;
   onClear?: () => void;
@@ -43,7 +37,7 @@ export function TextField({
   const hasValue = Boolean(value && String(value).trim().length > 0);
 
   return (
-    <div className={`flex flex-col gap-1.5 ${className}`}>
+    <div className={cn('flex flex-col gap-1.5', className)}>
       {label && (
         <label className="text-xs font-medium text-slate-600">
           {label}
