@@ -201,10 +201,10 @@ export function ContractsFolderTabs({
             <button
               key={folder.id}
               onClick={() => onSelectFolder(folder.id)}
-              className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-t-lg px-4 py-2.5 text-sm font-medium transition-all ${
+              className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-t-lg border-b px-4 py-2.5 text-sm font-medium transition-all ${
                 activeFolder.id === folder.id
-                  ? '-mb-px border-b-2 border-blue-600 bg-white text-blue-600'
-                  : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                  ? '-mb-px border-blue-600 bg-white text-blue-600'
+                  : 'border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-700'
               }`}
             >
               <Folder className="h-4 w-4" />
@@ -244,7 +244,7 @@ export function ContractsFolderTabs({
           ) : canCreateFolder ? (
             <button
               onClick={() => setIsCreatingFolder(true)}
-              className="ml-1 flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-t-lg px-3 py-2.5 text-sm font-medium text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-600"
+              className="ml-1 flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-t-lg border border-slate-200 px-3 py-2.5 text-sm font-medium text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-600"
             >
               <Plus className="h-3.5 w-3.5" />
               Nueva carpeta
