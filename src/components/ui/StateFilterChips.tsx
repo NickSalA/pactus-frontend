@@ -22,7 +22,7 @@ export function StateFilterChips({
   onChange,
 }: StateFilterChipsProps) {
   return (
-    <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none">
+    <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pr-4">
       {items.map((item) => {
         const isActive = item.value === value;
         const a = item.activeColor;
