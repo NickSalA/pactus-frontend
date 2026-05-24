@@ -22,7 +22,7 @@ export function LegalRepresentationSection() {
   return (
     <section>
       <h3 className="mb-3 text-xl font-semibold text-brand-primary">Representación Legal</h3>
-      <div className="overflow-hidden rounded-2xl border border-slate-200 divide-y divide-slate-100">
+      <div className="overflow-hidden rounded-2xl border border-brand-neutral-200 divide-y divide-brand-neutral-100">
         <OrgConfigFormRow label="Nombre del representante legal">
           <TextField
             variant="lg"
@@ -49,7 +49,7 @@ export function LegalRepresentationSection() {
             ))}
           </Select>
           {errors.companyType?.message && (
-            <span className="text-xs text-red-500">{errors.companyType.message}</span>
+            <span className="text-xs text-brand-red-500">{errors.companyType.message}</span>
           )}
         </OrgConfigFormRow>
         <OrgConfigFormRow label="Objeto social">

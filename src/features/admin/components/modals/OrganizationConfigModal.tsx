@@ -65,7 +65,7 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
                 <AccreditationPermitsSection />
 
                 {submissionError && (
-                  <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  <div className="rounded-2xl border border-brand-red-500 bg-brand-red-100 px-4 py-3 text-sm text-brand-red-500">
                     {submissionError}
                   </div>
                 )}

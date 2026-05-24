@@ -22,7 +22,7 @@ export function ContactLocationSection() {
   return (
     <section>
       <h3 className="mb-3 text-xl font-semibold text-brand-primary">Contacto y Ubicación</h3>
-      <div className="overflow-hidden rounded-2xl border border-slate-200 divide-y divide-slate-100">
+      <div className="overflow-hidden rounded-2xl border border-brand-neutral-200 divide-y divide-brand-neutral-100">
         <OrgConfigFormRow label="Correo electrónico corporativo">
           <TextField
             variant="lg"
@@ -50,7 +50,7 @@ export function ContactLocationSection() {
             ))}
           </Select>
           {errors.city?.message && (
-            <span className="text-xs text-red-500">{errors.city.message}</span>
+            <span className="text-xs text-brand-red-500">{errors.city.message}</span>
           )}
         </OrgConfigFormRow>
         <OrgConfigFormRow label="País">
@@ -61,7 +61,7 @@ export function ContactLocationSection() {
             ))}
           </Select>
           {errors.jurisdiction?.message && (
-            <span className="text-xs text-red-500">{errors.jurisdiction.message}</span>
+            <span className="text-xs text-brand-red-500">{errors.jurisdiction.message}</span>
           )}
         </OrgConfigFormRow>
         <OrgConfigFormRow label="Dirección Legal">

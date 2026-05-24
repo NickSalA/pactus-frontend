@@ -14,7 +14,7 @@ export function AccreditationPermitsSection() {
   return (
     <section>
       <h3 className="mb-3 text-xl font-semibold text-brand-primary">Acreditación y Permisos Oficiales</h3>
-      <div className="overflow-hidden rounded-2xl border border-slate-200 divide-y divide-slate-100">
+      <div className="overflow-hidden rounded-2xl border border-brand-neutral-200 divide-y divide-brand-neutral-100">
         <OrgConfigFormRow label="Entidad">
           <TextField
             variant="lg"
