@@ -3,8 +3,11 @@
 import { Plus, RefreshCw, Search } from 'lucide-react';
 import { Select } from '@/components/ui/Select';
 import { TextField } from '@/components/ui/TextField';
+import { StateFilterChips } from '@/components/ui/StateFilterChips';
 import { getDocumentTypeLabel } from '@/lib/document.utils';
+import { TEMPLATE_STATUS_COLORS } from '@/lib/templateStatusColors';
 import type { ApiTemplateResponse } from '@/types/api';
+import type { ChipRenderData } from '@/components/ui/ChipRenderData';
 
 type Template = ApiTemplateResponse;
 
@@ -22,6 +25,21 @@ type TemplatesFilterBarProps = {
   visibleFormats: { id: number; label: string; format_code: string }[];
   onRefresh: () => void;
   onCreate: () => void;
+  stateFilterCounts?: {
+    all: number;
+    active: number;
+    draft: number;
+    published: number;
+    archived: number;
+  };
+};
+
+const STATE_KEY_MAP: Record<string, keyof typeof TEMPLATE_STATUS_COLORS> = {
+  ALL: 'ALL',
+  ACTIVE: 'ACTIVE',
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED',
 };
 
 export function TemplatesFilterBar({
@@ -38,6 +56,7 @@ export function TemplatesFilterBar({
   visibleFormats,
   onCreate,
   onRefresh,
+  stateFilterCounts,
 }: TemplatesFilterBarProps) {
   return (
     <section className="flex flex-col gap-4">
@@ -90,22 +109,6 @@ export function TemplatesFilterBar({
                 {format.label}
               </option>
             ))}
-          </Select>
-
-          <Select
-            variant="lg"
-            value={stateFilter}
-            onChange={(e) =>
-              onStateChange(
-                e.target.value as 'ACTIVE' | 'ALL' | Template['state'],
-              )
-            }
-          >
-            <option value="ACTIVE">Activas</option>
-            <option value="DRAFT">Borradores</option>
-            <option value="PUBLISHED">Publicadas</option>
-            <option value="ARCHIVED">Archivadas</option>
-            <option value="ALL">Todas</option>
           </Select>
 
           <button

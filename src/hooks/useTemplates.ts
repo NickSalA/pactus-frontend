@@ -135,6 +135,12 @@ export function useTemplates() {
       publishedCount: templates.filter(
         (template) => template.state === 'PUBLISHED',
       ).length,
+      archivedCount: templates.filter(
+        (template) => template.state === 'ARCHIVED',
+      ).length,
+      activeCount: templates.filter(
+        (template) => template.state !== 'ARCHIVED',
+      ).length,
       totalCount: templates.length,
     }),
     [templates],

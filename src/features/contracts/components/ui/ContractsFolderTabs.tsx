@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle,
   Folder,
@@ -80,6 +80,7 @@ export function ContractsFolderTabs({
 }: ContractsFolderTabsProps) {
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [folderName, setFolderName] = useState('');
+  const newFolderInputRef = useRef<HTMLInputElement>(null);
   const [createError, setCreateError] = useState<string | null>(null);
   const [isRenameOpen, setIsRenameOpen] = useState(false);
   const [renameValue, setRenameValue] = useState('');
@@ -101,16 +102,20 @@ export function ContractsFolderTabs({
   const confirmFolderCreation = async () => {
     const normalizedName = folderName.trim();
 
-    if (normalizedName) {
-      try {
-        setCreateError(null);
-        await onCreateFolder(normalizedName);
-      } catch (err) {
-        setCreateError(
-          err instanceof Error ? err.message : 'No se pudo crear la carpeta.',
-        );
-        return;
-      }
+    if (!normalizedName) {
+      setFolderName('');
+      setIsCreatingFolder(false);
+      return;
+    }
+
+    try {
+      setCreateError(null);
+      await onCreateFolder(normalizedName);
+    } catch (err) {
+      setCreateError(
+        err instanceof Error ? err.message : 'No se pudo crear la carpeta.',
+      );
+      return;
     }
 
     setFolderName('');
@@ -191,15 +196,15 @@ export function ContractsFolderTabs({
   return (
     <>
       <div className="mb-4 space-y-3">
-        <div className="flex shrink-0 items-center gap-1 border-b border-slate-200">
+        <div className="flex w-full shrink-0 items-center gap-1 border-b border-slate-200 overflow-x-auto scrollbar-x">
           {folders.map((folder) => (
             <button
               key={folder.id}
               onClick={() => onSelectFolder(folder.id)}
-              className={`flex items-center gap-2 rounded-t-lg px-4 py-2.5 text-sm font-medium transition-all ${
+              className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-t-lg border-b px-4 py-2.5 text-sm font-medium transition-all ${
                 activeFolder.id === folder.id
-                  ? '-mb-px border-b-2 border-blue-600 bg-white text-blue-600'
-                  : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                  ? '-mb-px border-blue-600 bg-white text-blue-600'
+                  : 'border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-700'
               }`}
             >
               <Folder className="h-4 w-4" />
@@ -210,16 +215,20 @@ export function ContractsFolderTabs({
           {canCreateFolder && isCreatingFolder ? (
             <div className="flex items-center gap-1 px-2">
               <input
+                ref={newFolderInputRef}
                 autoFocus
                 type="text"
                 placeholder="Nombre..."
                 value={folderName}
                 onBlur={() => {
-                  void confirmFolderCreation();
+                  setFolderName('');
+                  setIsCreatingFolder(false);
+                  setCreateError(null);
                 }}
                 onChange={(event) => setFolderName(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
+                    newFolderInputRef.current?.blur();
                     void confirmFolderCreation();
                   }
 
@@ -235,7 +244,7 @@ export function ContractsFolderTabs({
           ) : canCreateFolder ? (
             <button
               onClick={() => setIsCreatingFolder(true)}
-              className="ml-1 flex items-center gap-1.5 rounded-t-lg px-3 py-2.5 text-sm font-medium text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-600"
+              className="ml-1 flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-t-lg border border-slate-200 px-3 py-2.5 text-sm font-medium text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-600"
             >
               <Plus className="h-3.5 w-3.5" />
               Nueva carpeta

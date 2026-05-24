@@ -10,7 +10,7 @@ export default function MainLayout({
       <aside className="pl-1 py-1">
         <Sidebar />
       </aside>
-      <main className="flex-1 p-6 min-h-0 overflow-hidden">{children}</main>
+      <main className="flex-1 p-6 min-h-0 overflow-visible">{children}</main>
     </div>
   );
 }

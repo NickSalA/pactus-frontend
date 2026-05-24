@@ -2,7 +2,7 @@
 
 import { Archive, Eye, Pencil, Send } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
-import { getDocumentTypeLabel } from '@/lib/document.utils';
+import { DocumentTypeBadge } from '@/components/ui/DocumentTypeBadge';
 import { getTemplateFieldCount } from '@/lib/templateFields';
 import type { ApiTemplateResponse } from '@/types/api';
 
@@ -57,9 +57,7 @@ export function TemplateRow({
         </div>
       </td>
       <td className="px-6 py-4 text-center">
-        <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-blue-700">
-          {getDocumentTypeLabel(template.document_type)}
-        </span>
+        <DocumentTypeBadge type={template.document_type} />
       </td>
       <td className="px-6 py-4 text-center">
         <span

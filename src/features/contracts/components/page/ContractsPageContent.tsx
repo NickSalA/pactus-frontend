@@ -58,6 +58,16 @@ export function ContractsPageContent({
     }
   }, [page, selectedIds]);
 
+  // TODO: Comment out to disable import functionality
+  const driveImportMenu = undefined;
+  { /* page.canImportContract ? (
+    <ContractsImportMenu
+      isImportingDriveFiles={page.isImportingDriveFiles}
+      isOpeningDrivePicker={page.isOpeningDrivePicker}
+      onOpenDrive={page.openDrivePicker}
+    />
+  ) : undefined */ }
+
   if (page.isLoading) {
     return (
       <div className="flex h-full flex-col items-center justify-center">
@@ -119,6 +129,7 @@ export function ContractsPageContent({
         </div>
       )}
 
+      {/* TODO: Comment out to disable import functionality
       {page.canImportContract && (
         <ContractsDriveSelection
           activeFolderName={page.activeFolder.name}
@@ -134,20 +145,11 @@ export function ContractsPageContent({
           }}
           selectedFiles={page.selectedDriveFiles}
         />
-      )}
+      )} */}
 
       {page.isEmpty ? (
         <ContractsEmptyState
-          importControl={
-            page.canImportContract ? (
-              <ContractsImportMenu
-                align="left"
-                isImportingDriveFiles={page.isImportingDriveFiles}
-                isOpeningDrivePicker={page.isOpeningDrivePicker}
-                onOpenDrive={page.openDrivePicker}
-              />
-            ) : undefined
-          }
+          importControl={driveImportMenu}
           onCreateContract={
             page.canCreateContract ? page.openCreateForm : undefined
           }
@@ -158,15 +160,7 @@ export function ContractsPageContent({
             contracts={page.activeContracts}
             dateRange={page.dateRange}
             filter={page.filter}
-            importControl={
-              page.canImportContract ? (
-                <ContractsImportMenu
-                  isImportingDriveFiles={page.isImportingDriveFiles}
-                  isOpeningDrivePicker={page.isOpeningDrivePicker}
-                  onOpenDrive={page.openDrivePicker}
-                />
-              ) : undefined
-            }
+            importControl={driveImportMenu}
             onCreateContract={
               page.canCreateContract ? page.openCreateForm : undefined
             }

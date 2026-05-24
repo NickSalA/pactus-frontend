@@ -15,6 +15,10 @@ import { useTemplates } from '@/hooks/useTemplates';
 import { useTablePagination } from '@/hooks/useTablePagination';
 import type { ApiTemplateResponse } from '@/types/api';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { StateFilterChips } from '@/components/ui/StateFilterChips';
+import { ChipRenderData } from '@/components/ui/ChipRenderData';
+import { TEMPLATE_STATUS_COLORS } from '@/lib/templateStatusColors';
+import { Select } from '@/components/ui/Select';
 
 type Template = ApiTemplateResponse;
 
@@ -28,6 +32,49 @@ export function TemplatesPageContent() {
   const isHydrating = useAuthStore((state) => state.isHydrating);
   const userRole = useAuthStore((state) => state.user?.role ?? null);
   const hasTemplateAuthoringAccess = canAuthorTemplates(userRole);
+
+  const stateFilterCounts = {
+    all: section.stats.totalCount,
+    active: section.stats.activeCount,
+    draft: section.stats.draftCount,
+    published: section.stats.publishedCount,
+    archived: section.stats.archivedCount,
+  };
+
+  const stateChips: ChipRenderData[] = stateFilterCounts
+    ? [
+        {
+          value: 'ALL',
+          label: 'Todas',
+          count: stateFilterCounts.all,
+          ...TEMPLATE_STATUS_COLORS.ALL,
+        },
+        {
+          value: 'ACTIVE',
+          label: 'Activas',
+          count: stateFilterCounts.active,
+          ...TEMPLATE_STATUS_COLORS.ACTIVE,
+        },
+        {
+          value: 'DRAFT',
+          label: 'Borradores',
+          count: stateFilterCounts.draft,
+          ...TEMPLATE_STATUS_COLORS.DRAFT,
+        },
+        {
+          value: 'PUBLISHED',
+          label: 'Publicadas',
+          count: stateFilterCounts.published,
+          ...TEMPLATE_STATUS_COLORS.PUBLISHED,
+        },
+        {
+          value: 'ARCHIVED',
+          label: 'Archivadas',
+          count: stateFilterCounts.archived,
+          ...TEMPLATE_STATUS_COLORS.ARCHIVED,
+        },
+      ]
+    : [];
 
   useEffect(() => {
     if (!isHydrating && (!isAuthenticated || !hasTemplateAuthoringAccess)) {
@@ -78,6 +125,32 @@ export function TemplatesPageContent() {
         allowedDocumentTypes={section.allowedDocumentTypes}
         visibleFormats={section.visibleFormats}
       />
+
+      {stateFilterCounts ? (
+        <StateFilterChips
+          items={stateChips}
+          value={section.stateFilter}
+          onChange={(v) =>
+            section.setStateFilter(v as 'ACTIVE' | 'ALL' | Template['state'])
+          }
+        />
+      ) : (
+        <Select
+          variant="lg"
+          value={section.stateFilter}
+          onChange={(e) =>
+            section.setStateFilter(
+              e.target.value as 'ACTIVE' | 'ALL' | Template['state'],
+            )
+          }
+        >
+          <option value="ACTIVE">Activas</option>
+          <option value="DRAFT">Borradores</option>
+          <option value="PUBLISHED">Publicadas</option>
+          <option value="ARCHIVED">Archivadas</option>
+          <option value="ALL">Todas</option>
+        </Select>
+      )}
 
       {section.error && (
         <div className="rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
