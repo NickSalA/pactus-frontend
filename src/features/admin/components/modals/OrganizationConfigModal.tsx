@@ -45,7 +45,7 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
           <aside className="w-40 shrink-0 self-start sticky top-0">
             <button
               type="button"
-              className="w-full rounded-xl bg-blue-600 px-4 py-2 text-left text-sm font-medium text-white"
+              className="w-full rounded-xl bg-brand-primary px-4 py-2 text-left text-sm font-medium text-white"
             >
               Organización
             </button>

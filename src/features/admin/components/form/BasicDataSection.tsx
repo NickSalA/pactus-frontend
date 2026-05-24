@@ -15,7 +15,7 @@ export function BasicDataSection() {
 
   return (
     <section>
-      <h3 className="mb-3 text-xl font-semibold text-blue-600">Datos Básicos</h3>
+      <h3 className="mb-3 text-xl font-semibold text-brand-primary">Datos Básicos</h3>
       <div className="overflow-hidden rounded-2xl border border-slate-200 divide-y divide-slate-100">
         <OrgConfigFormRow label="Razón social o nombre">
           <TextField
@@ -47,8 +47,8 @@ export function BasicDataSection() {
                   aria-checked={field.value}
                   onClick={() => field.onChange(!field.value)}
                   className={cn(
-                    'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-4 focus:ring-blue-100',
-                    field.value ? 'bg-blue-600' : 'bg-slate-300',
+                    'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-4 focus:ring-brand-blue-100',
+                    field.value ? 'bg-brand-primary' : 'bg-slate-300',
                   )}
                 >
                   <span

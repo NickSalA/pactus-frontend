@@ -21,7 +21,7 @@ export function LegalRepresentationSection() {
 
   return (
     <section>
-      <h3 className="mb-3 text-xl font-semibold text-blue-600">Representación Legal</h3>
+      <h3 className="mb-3 text-xl font-semibold text-brand-primary">Representación Legal</h3>
       <div className="overflow-hidden rounded-2xl border border-slate-200 divide-y divide-slate-100">
         <OrgConfigFormRow label="Nombre del representante legal">
           <TextField
