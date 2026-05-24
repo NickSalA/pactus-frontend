@@ -26,6 +26,7 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
         title="Configuración de la organización"
         onClose={onClose}
         open={open}
+        size="lg"
         footer={
           <div className="flex justify-end">
             <button
@@ -41,7 +42,7 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
         }
       >
         <div className="flex gap-6">
-          <aside className="w-36 shrink-0">
+          <aside className="w-40 shrink-0 self-start sticky top-0">
             <button
               type="button"
               className="w-full rounded-xl bg-blue-600 px-4 py-2 text-left text-sm font-medium text-white"
