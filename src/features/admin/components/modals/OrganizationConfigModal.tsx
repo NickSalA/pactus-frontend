@@ -41,7 +41,7 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
           </div>
         }
       >
-        <div className="flex gap-6">
+        <div className="flex gap-10">
           <aside className="w-40 shrink-0 self-start sticky top-0">
             <button
               type="button"

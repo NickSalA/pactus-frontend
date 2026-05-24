@@ -21,7 +21,7 @@ export function ContactLocationSection() {
 
   return (
     <section>
-      <h3 className="mb-3 text-xl font-semibold text-brand-primary">Contacto y Ubicación</h3>
+      <h3 className="mb-5 text-xl font-semibold text-brand-primary">Contacto y Ubicación</h3>
       <div className="overflow-hidden rounded-2xl border border-brand-neutral-200 divide-y divide-brand-neutral-100">
         <OrgConfigFormRow label="Correo electrónico corporativo">
           <TextField

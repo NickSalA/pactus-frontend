@@ -15,7 +15,7 @@ export function BasicDataSection() {
 
   return (
     <section>
-      <h3 className="mb-3 text-xl font-semibold text-brand-primary">Datos Básicos</h3>
+      <h3 className="mb-5 text-xl font-semibold text-brand-primary">Datos Básicos</h3>
       <div className="overflow-hidden rounded-2xl border border-brand-neutral-200 divide-y divide-brand-neutral-100">
         <OrgConfigFormRow label="Razón social o nombre">
           <TextField
