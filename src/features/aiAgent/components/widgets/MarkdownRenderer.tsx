@@ -4,6 +4,15 @@ type MarkdownRendererProps = {
   content: string;
 };
 
+const TOKEN_LINE_REGEX = /📊\s*Tokens de entrada:\s*\d+\s*\|\s*Tokens de salida:\s*\d+/;
+
+function removeTokenLines(text: string): string {
+  return text
+    .split('\n')
+    .filter((line) => !TOKEN_LINE_REGEX.test(line.trim()))
+    .join('\n');
+}
+
 // ---------------------------------------------------------------------------
 // Inline parser – bold, italic, inline-code, 'highlighted' spans
 // ---------------------------------------------------------------------------
@@ -294,20 +303,6 @@ function parseMarkdownTable(lines: string[]): ReactNode | null {
 }
 
 // ---------------------------------------------------------------------------
-// Token usage helpers
-// ---------------------------------------------------------------------------
-const TOKEN_REGEX =
-  /📊\s*Tokens de entrada:\s*(\d+)\s*\|\s*Tokens de salida:\s*(\d+)/;
-
-function formatTokenCount(n: number): string {
-  if (n >= 1000) {
-    const k = n / 1000;
-    return `${Number.isInteger(k) ? k : k.toFixed(1)}k`;
-  }
-  return String(n);
-}
-
-// ---------------------------------------------------------------------------
 // Block types
 // ---------------------------------------------------------------------------
 type Block =
@@ -318,7 +313,6 @@ type Block =
   | { type: 'code'; lang: string; lines: string[] }
   | { type: 'blockquote'; lines: string[] }
   | { type: 'table'; lines: string[] }
-  | { type: 'tokenUsage'; input: number; output: number }
   | { type: 'hr' };
 
 // ---------------------------------------------------------------------------
@@ -345,32 +339,11 @@ function parseBlocks(rawLines: string[]): Block[] {
       continue;
     }
 
-    // Horizontal rule — check if the next non-empty line is a token usage line,
-    // in which case we skip the hr and let the token line be parsed as tokenUsage.
+    // Horizontal rule
     if (/^(-{3,}|\*{3,}|_{3,})$/.test(line.trim())) {
-      const nextLine = rawLines[i + 1]?.trim() ?? '';
-      if (TOKEN_REGEX.test(nextLine)) {
-        // Skip the hr; the token line will be handled in the next iteration
-        i++;
-        continue;
-      }
       blocks.push({ type: 'hr' });
       i++;
       continue;
-    }
-
-    // Token usage line (📊 Tokens de entrada: N | Tokens de salida: N)
-    {
-      const tokenMatch = line.match(TOKEN_REGEX);
-      if (tokenMatch) {
-        blocks.push({
-          type: 'tokenUsage',
-          input: parseInt(tokenMatch[1], 10),
-          output: parseInt(tokenMatch[2], 10),
-        });
-        i++;
-        continue;
-      }
     }
 
     // Heading
@@ -461,9 +434,9 @@ function renderBlock(block: Block, index: number): ReactNode {
   switch (block.type) {
     case 'heading': {
       const classMap: Record<1 | 2 | 3, string> = {
-        1: 'mt-4 mb-2 text-lg font-bold text-slate-800',
-        2: 'mt-3 mb-2 text-base font-bold text-slate-800',
-        3: 'mt-3 mb-1 text-sm font-bold text-slate-700 uppercase tracking-wide',
+        1: 'mt-6 mb-3 text-2xl font-bold text-slate-800',
+        2: 'mt-5 mb-2 text-xl font-bold text-slate-800',
+        3: 'mt-4 mb-2 text-base font-semibold text-slate-700 uppercase tracking-wide',
       };
       return (
         <div key={index} className={classMap[block.level]}>
@@ -474,7 +447,7 @@ function renderBlock(block: Block, index: number): ReactNode {
 
     case 'paragraph':
       return (
-        <p key={index} className="mb-2 leading-relaxed text-slate-700">
+        <p key={index} className="mb-4 leading-relaxed text-slate-700">
           {block.lines.map((line, li) => (
             <span key={li}>
               {parseInline(line)}
@@ -492,10 +465,10 @@ function renderBlock(block: Block, index: number): ReactNode {
       }
 
       return (
-        <ul key={index} className="mb-2 ml-1 space-y-1.5 list-none">
+        <ul key={index} className="mb-4 ml-1 space-y-2 list-none">
           {block.items.map((item, ii) => (
-            <li key={ii} className="flex items-start gap-2 text-slate-700">
-              <span className="mt-1.75 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400" />
+            <li key={ii} className="flex items-start gap-3 text-slate-700">
+              <span className="mt-1.75 h-2 w-2 shrink-0 rounded-full bg-blue-400" />
               <span className="leading-relaxed">{parseInline(item)}</span>
             </li>
           ))}
@@ -556,23 +529,6 @@ function renderBlock(block: Block, index: number): ReactNode {
         </div>
       );
 
-    case 'tokenUsage':
-      return (
-        <div
-          key={index}
-          className="mt-3 flex items-center gap-3 border-t border-slate-100 pt-2"
-        >
-          <span className="flex items-center gap-0.5 text-[11px] text-slate-400">
-            <span className="text-blue-400">↓</span>
-            <span className="ml-0.5">{formatTokenCount(block.input)}</span>
-          </span>
-          <span className="flex items-center gap-0.5 text-[11px] text-slate-400">
-            <span className="text-emerald-500">↑</span>
-            <span className="ml-0.5">{formatTokenCount(block.output)}</span>
-          </span>
-        </div>
-      );
-
     case 'hr':
       return <hr key={index} className="my-3 border-slate-200" />;
 
@@ -585,7 +541,8 @@ function renderBlock(block: Block, index: number): ReactNode {
 // Main component
 // ---------------------------------------------------------------------------
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
-  const lines = content.split('\n');
+  const cleanContent = removeTokenLines(content);
+  const lines = cleanContent.split('\n');
   const blocks = parseBlocks(lines);
   return (
     <div className="min-w-0">
