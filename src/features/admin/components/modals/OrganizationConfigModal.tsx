@@ -1,21 +1,13 @@
 'use client';
 
-import { useForm, FormProvider } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 import { Save } from 'lucide-react';
 import { AdminModalShell } from '@/features/admin/components/shared/AdminModalShell';
-import type { AdminOrganizationConfigValues } from '@/features/admin/lib/organizationConfig.schema';
+import { useOrganizationConfigForm } from '@/features/admin/hooks/useOrganizationConfigForm';
 import { BasicDataSection } from '@/features/admin/components/form/BasicDataSection';
 import { ContactLocationSection } from '@/features/admin/components/form/ContactLocationSection';
 import { LegalRepresentationSection } from '@/features/admin/components/form/LegalRepresentationSection';
 import { AccreditationPermitsSection } from '@/features/admin/components/form/AccreditationPermitsSection';
-
-// SCRUM-32: replace with zodResolver + useMyOrganization default values + handleSubmit
-const EMPTY_DEFAULTS: AdminOrganizationConfigValues = {
-  name: '', ruc: '', isActive: true,
-  email: '', phone: '', city: '', jurisdiction: '', address: '',
-  legalRepName: '', legalRepDni: '', companyType: '', objetoSocial: '',
-  autorizacionEntidad: '', autorizacionEmitidaPor: '', autorizacionFecha: '',
-};
 
 type OrganizationConfigModalProps = {
   onClose: () => void;
@@ -23,11 +15,11 @@ type OrganizationConfigModalProps = {
 };
 
 export function OrganizationConfigModal({ onClose, open }: OrganizationConfigModalProps) {
-  // SCRUM-32: replace with useForm({ resolver: zodResolver(adminOrganizationConfigSchema), defaultValues: fromAPI })
-  const methods = useForm<AdminOrganizationConfigValues>({ defaultValues: EMPTY_DEFAULTS });
+  const { form, onSubmit } = useOrganizationConfigForm();
+  const isSubmitting = form.formState.isSubmitting;
 
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...form}>
       <AdminModalShell
         title="Configuración de la organización"
         onClose={onClose}
@@ -36,10 +28,12 @@ export function OrganizationConfigModal({ onClose, open }: OrganizationConfigMod
           <div className="flex justify-end">
             <button
               type="button"
-              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25"
+              disabled={isSubmitting}
+              onClick={() => void form.handleSubmit(onSubmit)()}
+              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-70"
             >
               <Save className="h-4 w-4" />
-              Guardar cambios
+              {isSubmitting ? 'Guardando...' : 'Guardar cambios'}
             </button>
           </div>
         }
