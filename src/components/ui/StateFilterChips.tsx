@@ -54,7 +54,9 @@ export function StateFilterChips({
             <span
               className="rounded-full px-1.5 text-[11px] font-semibold tabular-nums"
               style={{
-                backgroundColor: isActive ? hexToRgba(a, 0.25) : hexToRgba(a, 0.1),
+                backgroundColor: isActive
+                  ? hexToRgba(a, 0.25)
+                  : hexToRgba(a, 0.1),
                 color: a,
                 minWidth: '20px',
                 minHeight: '20px',
