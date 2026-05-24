@@ -23,12 +23,6 @@ const UNASSIGNED_FOLDER: ContractFolder = {
   name: 'Sin carpeta',
 };
 
-const sortFoldersByName = (folders: ContractFolder[]): ContractFolder[] => {
-  return [...folders].sort((left, right) =>
-    left.name.localeCompare(right.name, 'es'),
-  );
-};
-
 const createTemporaryFolderId = (): number => -Date.now();
 
 export function useContractsCollection() {
@@ -88,7 +82,7 @@ export function useContractsCollection() {
         name: folder.name,
         owner_role: folder.owner_role,
       }));
-      setFolderState([UNASSIGNED_FOLDER, ...sortFoldersByName(apiFolders)]);
+      setFolderState([UNASSIGNED_FOLDER, ...apiFolders]);
     }
   }, [foldersData]);
 
@@ -154,7 +148,8 @@ export function useContractsCollection() {
         );
         return [
           UNASSIGNED_FOLDER,
-          ...sortFoldersByName([...customFolders, optimisticFolder]),
+          ...customFolders,
+          optimisticFolder,
         ];
       });
       setActiveFolderId(optimisticFolderId);
@@ -175,7 +170,8 @@ export function useContractsCollection() {
           );
           return [
             UNASSIGNED_FOLDER,
-            ...sortFoldersByName([...customFolders, nextFolder]),
+            ...customFolders,
+            nextFolder,
           ];
         });
         setActiveFolderId(createdFolder.id);
