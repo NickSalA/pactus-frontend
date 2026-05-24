@@ -10,8 +10,8 @@ import {
 import {
   getDocumentStateClasses,
   getDocumentStateLabel,
-  getDocumentTypeLabel,
 } from '@/lib/document.utils';
+import { DocumentTypeBadge } from '@/components/ui/DocumentTypeBadge';
 import { getVisiblePageNumbers } from '@/lib/utils';
 import { Select } from '@/components/ui/Select';
 import type { DocumentFlatten } from '@/types/ui.types';
@@ -151,9 +151,7 @@ export function ContractsTable({
                     {contract.client}
                   </td>
                   <td className="px-4 py-3 text-slate-600">
-                    <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
-                      {getDocumentTypeLabel(contract.contract_type)}
-                    </span>
+                    <DocumentTypeBadge type={contract.contract_type} />
                   </td>
                   <td className="px-4 py-3 tabular-nums text-slate-600">
                     {contract.start_date}
