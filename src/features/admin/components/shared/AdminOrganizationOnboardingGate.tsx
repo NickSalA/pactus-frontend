@@ -1,7 +1,7 @@
 'use client';
 
 import { useMyOrganization } from '@/queries/hooks/organizations/queries';
-import { isAdminOrganizationOnboardingComplete } from '@/features/admin/lib/admin-organization-onboarding.utils';
+import { isAdminOrganizationOnboardingComplete } from '@/features/admin/lib/adminOrganizationOnboardingUtils';
 import { AdminOrganizationOnboardingModal } from '@/features/admin/components/modals/AdminOrganizationOnboardingModal';
 import { canAccessAdminConsole } from '@/lib/permissions';
 import { useAuthStore } from '@/store';

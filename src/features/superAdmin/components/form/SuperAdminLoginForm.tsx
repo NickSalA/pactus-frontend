@@ -2,7 +2,7 @@
 
 import { Loader2, Lock, Mail, ShieldCheck } from 'lucide-react';
 import type { UseFormReturn } from 'react-hook-form';
-import type { SuperAdminLoginValues } from '@/features/superAdmin/lib/super-admin.schema';
+import type { SuperAdminLoginValues } from '@/features/superAdmin/lib/superAdminSchema';
 
 type SuperAdminLoginFormProps = {
   error: string | null;

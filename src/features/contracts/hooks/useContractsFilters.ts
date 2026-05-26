@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 import {
   filterContracts,
   type DocumentFilterValue,
-} from '@/features/contracts/lib/contracts-utils';
+} from '@/features/contracts/lib/contractsUtils';
 import type { DocumentFlatten } from '@/types/ui.types';
 
 export type SortOrder = 'newest' | 'oldest';

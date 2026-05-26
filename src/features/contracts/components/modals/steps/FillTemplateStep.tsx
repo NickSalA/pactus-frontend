@@ -10,7 +10,7 @@ import {
   User,
 } from 'lucide-react';
 import type { ApiTemplateResponse, ApiTemplateField } from '@/types/api';
-import type { FieldSection } from '@/features/contracts/lib/field-utils';
+import type { FieldSection } from '@/features/contracts/lib/fieldUtils';
 import type { FieldSectionNavItem } from '@/features/contracts/types/FieldSectionNavItem';
 import type { DynamicFieldValues } from '@/features/contracts/hooks/useContractGeneration';
 import { FieldSectionHorizontalStepper } from '@/features/contracts/components/ui/FieldSectionHorizontalStepper';

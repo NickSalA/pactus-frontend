@@ -8,7 +8,7 @@ import {
   parseOptionalNumber,
   type FormState,
   type ServiceItemDraft,
-} from '@/features/contracts/lib/contract-form.utils';
+} from '@/features/contracts/lib/contractFormUtils';
 import { useServices } from '@/queries/hooks/contracts/queries';
 import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiDocumentServiceItemRequest } from '@/types/api';

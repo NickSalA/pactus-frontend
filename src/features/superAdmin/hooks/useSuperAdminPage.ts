@@ -14,7 +14,7 @@ import {
   superAdminLoginSchema,
   type SuperAdminCreateOrganizationValues,
   type SuperAdminLoginValues,
-} from '@/features/superAdmin/lib/super-admin.schema';
+} from '@/features/superAdmin/lib/superAdminSchema';
 
 const SUCCESS_REDIRECT_DELAY = 1300;
 

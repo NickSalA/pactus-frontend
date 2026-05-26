@@ -6,9 +6,9 @@ import {
 } from '@/lib/document.utils';
 import {
   type Step1Draft,
-} from '@/features/contracts/lib/contract-form.utils';
+} from '@/features/contracts/lib/contractFormUtils';
 import { HelpTip } from '@/features/contracts/components/form/HelpTip';
-import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
+import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
 import { ApiDocumentType } from '@/types/api';
 import { Select } from '@/components/ui/Select';
 

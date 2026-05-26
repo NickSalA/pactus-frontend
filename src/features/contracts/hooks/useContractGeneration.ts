@@ -25,14 +25,14 @@ import type {
   ApiTemplateResponse,
   ApiServiceResponse,
 } from '@/types/api';
-import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
+import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
 import {
   buildTemplateFieldSections,
   type FieldSection,
   type FieldSectionDefinition,
   getFieldPlaceholder,
   shouldUseTextarea,
-} from '@/features/contracts/lib/field-utils';
+} from '@/features/contracts/lib/fieldUtils';
 import type { FieldSectionNavItem } from '@/features/contracts/types/FieldSectionNavItem';
 
 type Flow =

@@ -1,5 +1,5 @@
 import type { ApiOrganizationResponse, ApiOrganizationUpdateRequest } from '@/types/api';
-import type { AdminOrganizationOnboardingValues } from '@/features/admin/types/admin-organization-onboarding.types';
+import type { AdminOrganizationOnboardingValues } from '@/features/admin/types/adminOrganizationOnboardingTypes';
 
 export function mapOrganizationToOnboardingValues(
   organization: ApiOrganizationResponse,

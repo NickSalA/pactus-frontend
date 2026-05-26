@@ -1,5 +1,5 @@
 import { Upload, X } from 'lucide-react';
-import { getFileTypeBadge } from '@/features/contracts/lib/contract-form.utils';
+import { getFileTypeBadge } from '@/features/contracts/lib/contractFormUtils';
 import type { DocumentFlatten } from '@/types/ui.types';
 
 type ContractFormDocumentSectionProps = {

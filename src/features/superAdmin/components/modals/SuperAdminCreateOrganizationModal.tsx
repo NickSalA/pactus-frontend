@@ -2,7 +2,7 @@
 
 import { Building2, CheckCircle2, Loader2, LogOut, Mail } from 'lucide-react';
 import type { UseFormReturn } from 'react-hook-form';
-import type { SuperAdminCreateOrganizationValues } from '@/features/superAdmin/lib/super-admin.schema';
+import type { SuperAdminCreateOrganizationValues } from '@/features/superAdmin/lib/superAdminSchema';
 
 type SuperAdminCreateOrganizationModalProps = {
   adminName: string;

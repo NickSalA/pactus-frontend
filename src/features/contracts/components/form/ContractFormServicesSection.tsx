@@ -5,7 +5,7 @@ import {
   parseOptionalNumber,
   type FormState,
   type ServiceItemDraft,
-} from '@/features/contracts/lib/contract-form.utils';
+} from '@/features/contracts/lib/contractFormUtils';
 import { HelpTip } from '@/features/contracts/components/form/HelpTip';
 import { ApiServiceResponse } from '@/types/api';
 import { Select } from '@/components/ui/Select';

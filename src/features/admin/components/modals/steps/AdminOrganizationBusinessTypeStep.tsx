@@ -1,8 +1,8 @@
 import { Controller, useFormContext } from 'react-hook-form';
-import { ADMIN_ORGANIZATION_BUSINESS_TYPES } from '@/features/admin/lib/admin-organization-onboarding.constants';
+import { ADMIN_ORGANIZATION_BUSINESS_TYPES } from '@/features/admin/lib/adminOrganizationOnboardingConstants';
 import { AdminOrganizationBusinessTypeOption } from '@/features/admin/components/ui/AdminOrganizationBusinessTypeOption';
 import { AdminOrganizationFieldError } from '@/features/admin/components/ui/AdminOrganizationFieldError';
-import type { AdminOrganizationOnboardingValues } from '@/features/admin/types/admin-organization-onboarding.types';
+import type { AdminOrganizationOnboardingValues } from '@/features/admin/types/adminOrganizationOnboardingTypes';
 
 export function AdminOrganizationBusinessTypeStep() {
   const {

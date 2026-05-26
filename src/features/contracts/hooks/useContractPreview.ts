@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import {
   hasContractPreviewFile,
   supportsInlineContractPreview,
-} from '@/features/contracts/lib/contracts-preview.utils';
+} from '@/features/contracts/lib/contractsPreviewUtils';
 import { useDocumentFileUrl } from '@/queries/hooks/contracts/queries';
 import type { DocumentFlatten } from '@/types/ui.types';
 

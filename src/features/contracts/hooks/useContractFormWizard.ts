@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import type { FormState, Step1Draft } from "@/features/contracts/lib/contract-form.utils";
+import type { FormState, Step1Draft } from "@/features/contracts/lib/contractFormUtils";
 
 export type ContractFormStep = 1 | 2 | 3;
 

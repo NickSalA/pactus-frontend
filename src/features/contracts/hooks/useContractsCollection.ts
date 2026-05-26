@@ -13,7 +13,7 @@ import {
 import { filterVisibleDocuments } from '@/lib/permissions';
 import { useAuthStore } from '@/store';
 import type { DocumentFlatten } from '@/types/ui.types';
-import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
+import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
 
 const UNASSIGNED_FOLDER_ID = 0;
 const UNASSIGNED_FOLDER: ContractFolder = {

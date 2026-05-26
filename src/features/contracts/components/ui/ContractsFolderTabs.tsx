@@ -10,7 +10,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
+import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
 
 type ContractsFolderTabsProps = {
   activeFolder: ContractFolder;

@@ -14,7 +14,7 @@ import type {
   AdminOrganizationBusinessType,
   AdminOrganizationOnboardingStep,
   AdminOrganizationOnboardingValues,
-} from '@/features/admin/types/admin-organization-onboarding.types';
+} from '@/features/admin/types/adminOrganizationOnboardingTypes';
 
 export const ADMIN_ORGANIZATION_ONBOARDING_DEFAULT_VALUES: AdminOrganizationOnboardingValues = {
   name: '',

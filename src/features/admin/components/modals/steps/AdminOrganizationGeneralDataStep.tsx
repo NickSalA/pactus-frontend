@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { useFormContext } from 'react-hook-form';
 import { AdminOrganizationTextField } from '@/features/admin/components/ui/AdminOrganizationTextField';
-import type { AdminOrganizationOnboardingValues } from '@/features/admin/types/admin-organization-onboarding.types';
+import type { AdminOrganizationOnboardingValues } from '@/features/admin/types/adminOrganizationOnboardingTypes';
 
 export function AdminOrganizationGeneralDataStep() {
   const {

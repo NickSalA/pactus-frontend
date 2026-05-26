@@ -28,7 +28,7 @@ import {
 } from '@/features/contracts/components/modals/steps';
 import { useContractGeneration } from '@/features/contracts/hooks/useContractGeneration';
 import type { DocumentFlatten } from '@/types/ui.types';
-import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
+import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
 import type { ApiDocumentType } from '@/types/api';
 import { getDocumentTypeLabel } from '@/lib/document.utils';
 import { getTemplateFieldCount } from '@/lib/templateFields';

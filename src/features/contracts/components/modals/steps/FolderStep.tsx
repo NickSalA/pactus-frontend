@@ -3,7 +3,7 @@
 import { Select } from '@/components/ui/Select';
 import { LabeledField } from '@/features/contracts/components/ui/LabeledField';
 import { StepHeading } from '@/features/contracts/components/ui/StepHeading';
-import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
+import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
 
 type FolderStepProps = {
   currentWizardStep: number;

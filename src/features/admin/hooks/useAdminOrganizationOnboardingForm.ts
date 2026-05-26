@@ -3,10 +3,10 @@
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { ADMIN_ORGANIZATION_ONBOARDING_DEFAULT_VALUES } from '@/features/admin/lib/admin-organization-onboarding.constants';
-import { adminOrganizationOnboardingSchema } from '@/features/admin/lib/admin-organization-onboarding.schema';
-import { mapOrganizationToOnboardingValues } from '@/features/admin/lib/admin-organization-onboarding.payload';
-import type { AdminOrganizationOnboardingValues } from '@/features/admin/types/admin-organization-onboarding.types';
+import { ADMIN_ORGANIZATION_ONBOARDING_DEFAULT_VALUES } from '@/features/admin/lib/adminOrganizationOnboardingConstants';
+import { adminOrganizationOnboardingSchema } from '@/features/admin/lib/adminOrganizationOnboardingSchema';
+import { mapOrganizationToOnboardingValues } from '@/features/admin/lib/adminOrganizationOnboardingPayload';
+import type { AdminOrganizationOnboardingValues } from '@/features/admin/types/adminOrganizationOnboardingTypes';
 import type { ApiOrganizationResponse } from '@/types/api';
 
 export function useAdminOrganizationOnboardingForm(

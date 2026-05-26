@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ADMIN_ORGANIZATION_BUSINESS_TYPE_VALUES } from '@/features/admin/lib/admin-organization-onboarding.constants';
+import { ADMIN_ORGANIZATION_BUSINESS_TYPE_VALUES } from '@/features/admin/lib/adminOrganizationOnboardingConstants';
 
 const businessTypeValues = new Set<string>(ADMIN_ORGANIZATION_BUSINESS_TYPE_VALUES);
 

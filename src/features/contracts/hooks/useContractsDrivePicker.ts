@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { openGooglePicker, type GooglePickerFile } from "@/lib/googlePicker";
 import { useImportGoogleDriveFiles } from "@/queries/hooks/contracts/mutations";
-import { mergeDriveSelections } from "@/features/contracts/lib/contracts-utils";
+import { mergeDriveSelections } from "@/features/contracts/lib/contractsUtils";
 import { useAuthStore } from "@/store";
 
 export function useContractsDrivePicker() {

@@ -5,11 +5,11 @@ import type { UseFormReturn } from 'react-hook-form';
 import {
   ADMIN_ORGANIZATION_ONBOARDING_LAST_STEP,
   ADMIN_ORGANIZATION_ONBOARDING_STEPS,
-} from '@/features/admin/lib/admin-organization-onboarding.constants';
+} from '@/features/admin/lib/adminOrganizationOnboardingConstants';
 import type {
   AdminOrganizationOnboardingStepId,
   AdminOrganizationOnboardingValues,
-} from '@/features/admin/types/admin-organization-onboarding.types';
+} from '@/features/admin/types/adminOrganizationOnboardingTypes';
 
 type UseAdminOrganizationOnboardingStepsProps = {
   form: UseFormReturn<AdminOrganizationOnboardingValues>;

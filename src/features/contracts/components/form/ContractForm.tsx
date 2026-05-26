@@ -4,9 +4,9 @@ import { Check, Plus } from 'lucide-react';
 import {
   formatCurrencyValue,
   formatFormDate,
-} from '@/features/contracts/lib/contract-form.utils';
+} from '@/features/contracts/lib/contractFormUtils';
 import { useContractForm } from '@/features/contracts/hooks/useContractForm';
-import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
+import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
 import {
   getDocumentStateLabel,
   getDocumentTypeLabel,

@@ -12,8 +12,8 @@ import { AdminOrganizationGeneralDataStep } from '@/features/admin/components/mo
 import { AdminOrganizationLegalDataStep } from '@/features/admin/components/modals/steps/AdminOrganizationLegalDataStep';
 import { useAdminOrganizationOnboardingForm } from '@/features/admin/hooks/useAdminOrganizationOnboardingForm';
 import { useAdminOrganizationOnboardingSteps } from '@/features/admin/hooks/useAdminOrganizationOnboardingSteps';
-import { buildAdminOrganizationOnboardingPayload } from '@/features/admin/lib/admin-organization-onboarding.payload';
-import type { AdminOrganizationOnboardingStepId } from '@/features/admin/types/admin-organization-onboarding.types';
+import { buildAdminOrganizationOnboardingPayload } from '@/features/admin/lib/adminOrganizationOnboardingPayload';
+import type { AdminOrganizationOnboardingStepId } from '@/features/admin/types/adminOrganizationOnboardingTypes';
 import { useUpdateMyOrganization } from '@/queries/hooks/organizations/mutations';
 import type { ApiOrganizationResponse } from '@/types/api';
 

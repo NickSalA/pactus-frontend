@@ -1,7 +1,7 @@
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ADMIN_ORGANIZATION_ONBOARDING_STEPS } from '@/features/admin/lib/admin-organization-onboarding.constants';
-import type { AdminOrganizationOnboardingStepId } from '@/features/admin/types/admin-organization-onboarding.types';
+import { ADMIN_ORGANIZATION_ONBOARDING_STEPS } from '@/features/admin/lib/adminOrganizationOnboardingConstants';
+import type { AdminOrganizationOnboardingStepId } from '@/features/admin/types/adminOrganizationOnboardingTypes';
 
 type AdminOrganizationOnboardingProgressProps = {
   currentStep: AdminOrganizationOnboardingStepId;

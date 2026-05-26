@@ -2,7 +2,7 @@
 
 import { type ReactNode } from 'react';
 import { Plus, Search } from 'lucide-react';
-import { FILTER_OPTIONS } from '@/features/contracts/lib/contracts-utils';
+import { FILTER_OPTIONS } from '@/features/contracts/lib/contractsUtils';
 import { CONTRACT_STATUS_COLORS } from '@/lib/contractStatusColors';
 import type {
   DateRange,
@@ -14,7 +14,7 @@ import { DateRangePicker } from '@/components/ui/DateRangePicker';
 import { SearchIndicator } from '@/components/ui/SearchIndicator';
 import { StateFilterChips } from '@/components/ui/StateFilterChips';
 import type { DocumentFlatten } from '@/types/ui.types';
-import type { DocumentFilterValue } from '@/features/contracts/lib/contracts-utils';
+import type { DocumentFilterValue } from '@/features/contracts/lib/contractsUtils';
 
 type ContractsActionsBarProps = {
   contracts: DocumentFlatten[];

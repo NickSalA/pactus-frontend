@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { isAllowedFile } from '@/features/contracts/lib/contract-form.utils';
+import { isAllowedFile } from '@/features/contracts/lib/contractFormUtils';
 import type { DocumentFlatten } from '@/types/ui.types';
 
 type UseContractFormFileOptions = {

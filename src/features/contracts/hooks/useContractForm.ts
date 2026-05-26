@@ -4,8 +4,8 @@ import { useCallback, useState } from 'react';
 import {
   buildFormStateWithDefaultType,
   type FormState,
-} from '@/features/contracts/lib/contract-form.utils';
-import { buildContractFormDataPayload } from '@/features/contracts/lib/contract-form-payloads';
+} from '@/features/contracts/lib/contractFormUtils';
+import { buildContractFormDataPayload } from '@/features/contracts/lib/contractFormPayloads';
 import { useContractFormFile } from '@/features/contracts/hooks/useContractFormFile';
 import { useContractFormServices } from '@/features/contracts/hooks/useContractFormServices';
 import {
@@ -24,7 +24,7 @@ import {
 import { useAuthStore } from '@/store';
 import { ApiDocumentState } from '@/types/api';
 import type { DocumentFlatten } from '@/types/ui.types';
-import type { ContractFolder } from '@/features/contracts/lib/contracts-utils';
+import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
 
 type ContractFormProps = {
   readonly availableFolders?: readonly ContractFolder[];
