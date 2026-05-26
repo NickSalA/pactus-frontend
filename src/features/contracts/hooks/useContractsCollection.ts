@@ -141,7 +141,6 @@ export function useContractsCollection() {
         name,
       };
 
-      const previousActiveFolderId = activeFolderId;
       setFolderState((previousFolders) => {
         const customFolders = previousFolders.filter(
           (folder) => !folder.isSystem,
@@ -152,7 +151,6 @@ export function useContractsCollection() {
           optimisticFolder,
         ];
       });
-      setActiveFolderId(optimisticFolderId);
 
       try {
         const createdFolder = await createFolderMutation({ name });
@@ -174,16 +172,14 @@ export function useContractsCollection() {
             nextFolder,
           ];
         });
-        if (activeFolderId === optimisticFolderId) {
-          setActiveFolderId(createdFolder.id);
-        }
       } catch (err) {
         setFolderState((previousFolders) =>
           previousFolders.filter((folder) => folder.id !== optimisticFolderId),
         );
-        setActiveFolderId(previousActiveFolderId);
         throw new Error(
-          err instanceof Error ? err.message : 'No se pudo crear la carpeta.',
+          err instanceof Error
+            ? err.message
+            : 'No se pudo crear la carpeta.',
         );
       }
     },
