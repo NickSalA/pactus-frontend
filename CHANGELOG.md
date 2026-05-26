@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/NickSalA/pactus-frontend/compare/v2.0.1...v2.0.2) (2026-05-26)
+
+
+### Bug Fixes
+
+* Fixed incorrect redirection /dashboard ([3fe9b7c](https://github.com/NickSalA/pactus-frontend/commit/3fe9b7c7947bbac31d93b1931c0c2c7c5dd0e742))
+
 ## [2.0.1](https://github.com/NickSalA/pactus-frontend/compare/v2.0.0...v2.0.1) (2026-05-26)
 
 
