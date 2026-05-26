@@ -110,7 +110,7 @@ export function ContractsActionsBar({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center relative">
+      <div className="flex flex-wrap items-center relative gap-2">
         <StateFilterChips
           items={chips}
           value={filter}
