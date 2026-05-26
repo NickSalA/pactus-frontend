@@ -253,7 +253,7 @@ export default function LoginPage() {
                 </p>
               </>
             ) : (
-              <div className="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50/50 p-5">
+              <div className="rounded-xl border border-emerald-200 bg-linear-to-br from-emerald-50 to-teal-50/50 p-5">
                 <div className="mb-4 flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500">
                     <svg
@@ -285,7 +285,7 @@ export default function LoginPage() {
                       className="h-13 w-13 rounded-full object-cover shadow-sm ring-2 ring-white"
                     />
                   ) : (
-                    <div className="flex h-13 w-13 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-lg font-bold text-white shadow-sm">
+                    <div className="flex h-13 w-13 items-center justify-center rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-lg font-bold text-white shadow-sm">
                       {authUser.name.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -301,7 +301,7 @@ export default function LoginPage() {
                   onClick={() =>
                     router.push(getDefaultRouteForRole(authUser.role))
                   }
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/30"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/30"
                 >
                   <span>
                     Ir al {getDefaultRouteLabelForRole(authUser.role)}

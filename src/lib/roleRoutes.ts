@@ -8,7 +8,7 @@ export function getDefaultRouteForRole(role: RoleValue): string {
   }
 
   if (role === 'ADMIN' || role === 'Administrador') {
-    return '/admin/dashboard';
+    return '/admin/access';
   }
 
   if (role === 'MANAGER') {
