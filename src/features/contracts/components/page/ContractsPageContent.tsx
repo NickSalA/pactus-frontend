@@ -1,19 +1,21 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import { ContractsActionsBar } from "@/features/contracts/components/page/ContractsActionsBar";
-import { ContractsDriveSelection } from "@/features/contracts/components/page/ContractsDriveSelection";
-import { ContractsEmptyState } from "@/features/contracts/components/page/ContractsEmptyState";
-import { ContractsFolderTabs } from "@/features/contracts/components/page/ContractsFolderTabs";
-import { ContractsImportMenu } from "@/features/contracts/components/page/ContractsImportMenu";
-import { ContractsTable } from "@/features/contracts/components/page/ContractsTable";
-import { ContractDeleteModal } from "@/features/contracts/components/modals/ContractDeleteModal";
-import { ContractFormModal } from "@/features/contracts/components/modals/ContractFormModal";
-import { ContractPreviewModal } from "@/features/contracts/components/modals/ContractPreviewModal";
-import { NewContractModal } from "@/features/contracts/components/modals/NewContractModal";
-import { TableBulkActionBar } from "@/components/ui/TableBulkActionBar";
-import { useContractsPage } from "@/features/contracts/hooks/use-contracts-page";
-import type { Document, UserRole } from "@/types/api.types";
+import { useCallback, useEffect, useState } from 'react';
+import { ContractsActionsBar } from '@/features/contracts/components/ui/ContractsActionsBar';
+import { ContractsDriveSelection } from '@/features/contracts/components/ui/ContractsDriveSelection';
+import { ContractsEmptyState } from '@/features/contracts/components/ui/ContractsEmptyState';
+import { ContractsFolderTabs } from '@/features/contracts/components/ui/ContractsFolderTabs';
+import { ContractsImportMenu } from '@/features/contracts/components/ui/ContractsImportMenu';
+import { ContractsTable } from '@/features/contracts/components/ui/ContractsTable';
+import { ContractDeleteModal } from '@/features/contracts/components/modals/ContractDeleteModal';
+import { ContractFormModal } from '@/features/contracts/components/modals/ContractFormModal';
+import { ContractPreviewModal } from '@/features/contracts/components/modals/ContractPreviewModal';
+import { NewContractModal } from '@/features/contracts/components/modals/NewContractModal';
+import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { useContractsPage } from '@/features/contracts/hooks/useContractsPage';
+import type { DocumentFlatten } from '@/types/ui.types';
+import { ApiUserRole } from '@/types/api';
 
 type ContractsPageContentProps = {
   shouldOpenCreateModal?: boolean;
@@ -56,7 +58,17 @@ export function ContractsPageContent({
     }
   }, [page, selectedIds]);
 
-  if (page.loading) {
+  // TODO: Comment out to disable import functionality
+  const driveImportMenu = undefined;
+  { /* page.canImportContract ? (
+    <ContractsImportMenu
+      isImportingDriveFiles={page.isImportingDriveFiles}
+      isOpeningDrivePicker={page.isOpeningDrivePicker}
+      onOpenDrive={page.openDrivePicker}
+    />
+  ) : undefined */ }
+
+  if (page.isLoading) {
     return (
       <div className="flex h-full flex-col items-center justify-center">
         <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
@@ -68,7 +80,7 @@ export function ContractsPageContent({
   if (page.error) {
     return (
       <div className="flex h-full flex-col items-center justify-center">
-        <p className="mb-4 text-red-500">{page.error}</p>
+        <p className="mb-4 text-red-500">{page.error.message}</p>
         <button
           onClick={() => {
             void page.reloadContracts();
@@ -83,13 +95,10 @@ export function ContractsPageContent({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="mb-4 flex flex-shrink-0 flex-col gap-1">
-        <h1 className="text-2xl font-semibold text-slate-800">Gestion de Contratos</h1>
-        <p className="text-sm text-slate-500">
-          {page.filteredContracts.length} contrato{page.filteredContracts.length !== 1 ? "s" : ""} en{" "}
-          {page.activeFolder.name}
-        </p>
-      </div>
+      <PageHeader
+        title="Gestion de Contratos"
+        subtitle={`${page.filteredContracts.length} contrato${page.filteredContracts.length !== 1 ? 's' : ''} en ${page.activeFolder.name}`}
+      />
 
       <ContractsFolderTabs
         activeFolder={page.activeFolder}
@@ -100,49 +109,6 @@ export function ContractsPageContent({
         onDeleteFolder={page.deleteFolder}
         onRenameFolder={page.renameFolder}
         onSelectFolder={page.selectFolder}
-      />
-
-      {page.canCreateContract && (
-        <NewContractModal
-          availableFolders={page.availableFolders}
-          defaultFolderId={page.activeFolder.id === 0 ? null : page.activeFolder.id}
-          onClose={page.closeCreateForm}
-          onSubmit={page.addContract}
-          open={page.showForm}
-        />
-      )}
-
-      {page.canEditContract && (
-        <ContractFormModal
-          availableFolders={page.availableFolders}
-          editMode
-          initialData={page.contractToEdit ?? undefined}
-          onClose={page.closeEditForm}
-          onSubmit={page.updateContract}
-          open={page.showEditForm && Boolean(page.contractToEdit)}
-        />
-      )}
-
-      {page.canDeleteContract && (
-        <ContractDeleteModal
-          contractName={page.contractToDelete?.name ?? null}
-          deleting={page.deleting}
-          onClose={page.closeDeleteModal}
-          onConfirm={() => {
-            void page.confirmDelete();
-          }}
-          open={page.showDeleteModal}
-        />
-      )}
-
-      <ContractPreviewModal
-        contract={page.previewContract}
-        error={page.previewError}
-        loading={page.previewLoading}
-        onClose={page.closePreview}
-        onOpenInNewTab={page.openPreviewInNewTab}
-        open={page.showPreview}
-        previewUrl={page.previewUrl}
       />
 
       {page.canImportContract && page.drivePickerError && (
@@ -163,6 +129,7 @@ export function ContractsPageContent({
         </div>
       )}
 
+      {/* TODO: Comment out to disable import functionality
       {page.canImportContract && (
         <ContractsDriveSelection
           activeFolderName={page.activeFolder.name}
@@ -178,19 +145,14 @@ export function ContractsPageContent({
           }}
           selectedFiles={page.selectedDriveFiles}
         />
-      )}
+      )} */}
 
       {page.isEmpty ? (
         <ContractsEmptyState
-          importControl={page.canImportContract ? (
-            <ContractsImportMenu
-              align="left"
-              isImportingDriveFiles={page.isImportingDriveFiles}
-              isOpeningDrivePicker={page.isOpeningDrivePicker}
-              onOpenDrive={page.openDrivePicker}
-            />
-          ) : undefined}
-          onCreateContract={page.canCreateContract ? page.openCreateForm : undefined}
+          importControl={driveImportMenu}
+          onCreateContract={
+            page.canCreateContract ? page.openCreateForm : undefined
+          }
         />
       ) : (
         <>
@@ -198,14 +160,10 @@ export function ContractsPageContent({
             contracts={page.activeContracts}
             dateRange={page.dateRange}
             filter={page.filter}
-            importControl={page.canImportContract ? (
-              <ContractsImportMenu
-                isImportingDriveFiles={page.isImportingDriveFiles}
-                isOpeningDrivePicker={page.isOpeningDrivePicker}
-                onOpenDrive={page.openDrivePicker}
-              />
-            ) : undefined}
-            onCreateContract={page.canCreateContract ? page.openCreateForm : undefined}
+            importControl={driveImportMenu}
+            onCreateContract={
+              page.canCreateContract ? page.openCreateForm : undefined
+            }
             onDateRangeChange={page.changeDateRange}
             onFilterChange={page.changeFilter}
             onSearchChange={page.changeSearch}
@@ -228,27 +186,76 @@ export function ContractsPageContent({
             </div>
           )}
 
-          <ContractsTable
-            canDelete={page.canDeleteContract}
-            canEdit={page.canEditContract}
-            contracts={page.paginatedContracts}
-            userRole={page.userRole as UserRole | null}
-            currentPage={page.safeCurrentPage}
-            filteredCount={page.filteredContracts.length}
-            itemsPerPage={page.itemsPerPage}
-            onDelete={page.openDeleteModal}
-            onEdit={page.openEditForm}
-            onItemsPerPageChange={page.changeItemsPerPage}
-            onPageChange={page.changePage}
-            onToggleSelect={page.canDeleteContract ? toggleSelectContract : undefined}
-            onView={(contract: Document) => {
-              void page.viewContract(contract);
-            }}
-            selectedIds={page.canDeleteContract ? selectedIds : undefined}
-            startIndex={page.startIndex}
-            totalPages={page.totalPages}
-          />
+          <div className="flex-1 min-h-0">
+            <ContractsTable
+              canDelete={page.canDeleteContract}
+              canEdit={page.canEditContract}
+              contracts={page.paginatedContracts}
+              userRole={page.userRole as ApiUserRole | null}
+              currentPage={page.safeCurrentPage}
+              filteredCount={page.filteredContracts.length}
+              itemsPerPage={page.itemsPerPage}
+              onDelete={page.openDeleteModal}
+              onEdit={page.openEditForm}
+              onItemsPerPageChange={page.changeItemsPerPage}
+              onPageChange={page.changePage}
+              onToggleSelect={
+                page.canDeleteContract ? toggleSelectContract : undefined
+              }
+              onView={(contract: DocumentFlatten) => {
+                void page.viewContract(contract);
+              }}
+              selectedIds={page.canDeleteContract ? selectedIds : undefined}
+              startIndex={page.startIndex}
+              totalPages={page.totalPages}
+            />
+          </div>
         </>
+      )}
+
+      <ContractPreviewModal
+        contract={page.previewContract!}
+        error={page.previewError}
+        loading={page.previewLoading}
+        onClose={page.closePreview}
+        onOpenInNewTab={page.openPreviewInNewTab}
+        open={page.showPreview}
+        previewUrl={page.previewUrl}
+      />
+
+      {page.canCreateContract && (
+        <NewContractModal
+          availableFolders={page.availableFolders}
+          defaultFolderId={
+            page.activeFolder.id === 0 ? null : page.activeFolder.id
+          }
+          onClose={page.closeCreateForm}
+          onSubmit={page.addContract}
+          open={page.showForm}
+        />
+      )}
+
+      {page.canEditContract && (
+        <ContractFormModal
+          availableFolders={page.availableFolders}
+          editMode
+          initialData={page.contractToEdit ?? undefined}
+          onClose={page.closeEditForm}
+          onSubmit={page.updateContract}
+          open={page.showEditForm && Boolean(page.contractToEdit)}
+        />
+      )}
+
+      {page.canDeleteContract && (
+        <ContractDeleteModal
+          contractName={page.contractToDelete?.client ?? null}
+          deleting={page.deleting}
+          onClose={page.closeDeleteModal}
+          onConfirm={() => {
+            void page.confirmDelete();
+          }}
+          open={page.showDeleteModal}
+        />
       )}
     </div>
   );

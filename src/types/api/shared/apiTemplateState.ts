@@ -1,0 +1,1 @@
+export type ApiTemplateState = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';

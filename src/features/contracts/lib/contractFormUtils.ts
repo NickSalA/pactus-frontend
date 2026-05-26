@@ -1,0 +1,181 @@
+import {
+  getDocumentPrimaryCurrency,
+  getDocumentTotalValue,
+} from '@/lib/document.utils';
+import {
+  ApiCurrencyType,
+  ApiServiceResponse,
+  ApiDocumentState,
+  ApiDocumentType,
+} from '@/types/api';
+
+import type { DocumentFlatten } from '@/types/ui.types';
+
+export type ServiceItemDraft = {
+  key: string;
+  service_id: string;
+  description: string;
+  value: string;
+  start_date: string;
+  end_date: string;
+};
+
+export type ServiceItemDraftField = keyof Omit<ServiceItemDraft, 'key'>;
+
+export type FormState = {
+  name: string;
+  client: string;
+  folder_id: number | null;
+  type: ApiDocumentType;
+  start_date: string;
+  end_date: string;
+  state: ApiDocumentState;
+  contract_currency: ApiCurrencyType;
+  service_items: ServiceItemDraft[];
+};
+
+export type Step1Draft = Pick<
+  FormState,
+  | 'name'
+  | 'client'
+  | 'folder_id'
+  | 'type'
+  | 'state'
+  | 'start_date'
+  | 'end_date'
+  | 'contract_currency'
+>;
+
+const ALLOWED_EXTENSIONS = new Set(['pdf', 'xlsx', 'xls', 'doc', 'docx']);
+
+const createDraftKey = (): string =>
+  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : Math.random().toString(36).slice(2, 10);
+
+const getFileExt = (filename: string): string =>
+  filename.split('.').pop()?.toLowerCase() ?? '';
+
+export const createEmptyServiceItem = (
+  start: string,
+  end: string,
+): ServiceItemDraft => ({
+  key: createDraftKey(),
+  service_id: '',
+  description: '',
+  value: '',
+  start_date: start,
+  end_date: end,
+});
+
+export const buildFormState = (document?: DocumentFlatten): FormState => ({
+  name: document?.client ?? '',
+  client: document?.client ?? '',
+  folder_id: document?.folder_id ?? null,
+  type: document?.contract_type ?? 'COMPANY',
+  start_date: document?.start_date ?? '',
+  end_date: document?.end_date ?? '',
+  state: document?.state ?? 'ACTIVE',
+  contract_currency: document
+    ? (getDocumentPrimaryCurrency(document) ?? 'USD')
+    : 'USD',
+  service_items:
+    document?.service_items.map((item) => ({
+      key: createDraftKey(),
+      service_id: String(item.service_id),
+      description: item.description ?? '',
+      value: String(item.value),
+      start_date: item.start_date,
+      end_date: item.end_date,
+    })) ?? [],
+});
+
+export const buildFormStateWithDefaultType = (
+  document: DocumentFlatten | undefined,
+  defaultType: ApiDocumentType,
+): FormState => ({
+  ...buildFormState(document),
+  type: document?.contract_type ?? defaultType,
+});
+
+export const parseOptionalNumber = (value: string): number | undefined => {
+  const trimmedValue = value.trim();
+
+  if (!trimmedValue) {
+    return undefined;
+  }
+
+  const parsedNumber = Number(trimmedValue);
+  return Number.isFinite(parsedNumber) ? parsedNumber : undefined;
+};
+
+export const formatCurrencyValue = (value: number): string => {
+  return value.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
+export const formatFormDate = (date: string): string => {
+  if (!date) {
+    return '-';
+  }
+
+  const [year, month, day] = date.split('-');
+  return `${day}/${month}/${year}`;
+};
+
+export const isAllowedFile = (filename: string): boolean =>
+  ALLOWED_EXTENSIONS.has(getFileExt(filename));
+
+export const getFileTypeBadge = (
+  filename: string,
+): { label: string; bg: string; text: string } => {
+  const extension = getFileExt(filename);
+
+  if (extension === 'pdf') {
+    return { label: 'PDF', bg: 'bg-red-100', text: 'text-red-600' };
+  }
+
+  if (extension === 'xlsx' || extension === 'xls') {
+    return { label: 'XLS', bg: 'bg-green-100', text: 'text-green-600' };
+  }
+
+  if (extension === 'doc' || extension === 'docx') {
+    return { label: 'DOC', bg: 'bg-blue-100', text: 'text-blue-600' };
+  }
+
+  return { label: 'FILE', bg: 'bg-slate-100', text: 'text-slate-600' };
+};
+
+export const getServiceOptions = (
+  services: ApiServiceResponse[],
+  draftItems: ServiceItemDraft[],
+): ApiServiceResponse[] => {
+  const servicesById = new Map<string, ApiServiceResponse>();
+
+  services.forEach((service) => {
+    servicesById.set(String(service.id), service);
+  });
+
+  draftItems.forEach((item) => {
+    if (item.service_id && !servicesById.has(item.service_id)) {
+      servicesById.set(item.service_id, {
+        id: Number(item.service_id),
+        name: `Servicio #${item.service_id}`,
+        is_active: true,
+        documents_count: 0,
+        created_at: new Date(0).toISOString(),
+        updated_at: new Date(0).toISOString(),
+      });
+    }
+  });
+
+  return Array.from(servicesById.values()).sort((a, b) =>
+    a.name.localeCompare(b.name, 'es'),
+  );
+};
+
+export const getInitialContractTotal = (document?: DocumentFlatten): number => {
+  return document ? getDocumentTotalValue(document) : 0;
+};

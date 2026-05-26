@@ -1,0 +1,1 @@
+export type ApiTopRankingSortBy = 'volume' | 'value';

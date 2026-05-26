@@ -1,6 +1,6 @@
-import { Upload, X } from "lucide-react";
-import { getFileTypeBadge } from "@/features/contracts/lib/contract-form.utils";
-import type { Document } from "@/types/api.types";
+import { Upload, X } from 'lucide-react';
+import { getFileTypeBadge } from '@/features/contracts/lib/contractFormUtils';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 type ContractFormDocumentSectionProps = {
   dragActive: boolean;
@@ -9,7 +9,7 @@ type ContractFormDocumentSectionProps = {
   file: File | null;
   fileError: boolean;
   hasValidFile: boolean;
-  initialData?: Document;
+  initialData?: DocumentFlatten;
   keepOriginalFile: boolean;
   onDisableOriginalFile: () => void;
   onDrag: (event: React.DragEvent) => void;
@@ -22,7 +22,9 @@ const FileBadge = ({ filename }: { filename: string }) => {
   const badge = getFileTypeBadge(filename);
 
   return (
-    <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${badge.bg}`}>
+    <div
+      className={`flex h-9 w-9 items-center justify-center rounded-lg ${badge.bg}`}
+    >
       <span className={`text-xs font-bold ${badge.text}`}>{badge.label}</span>
     </div>
   );
@@ -53,12 +55,14 @@ export function ContractFormDocumentSection({
       {editMode && keepOriginalFile && !file && (
         <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 p-3">
           <div className="flex items-center gap-3">
-            <FileBadge filename={initialData?.file_name ?? ""} />
+            <FileBadge filename={initialData?.file_name ?? ''} />
             <div>
               <p className="text-sm font-medium text-slate-700">
-                {initialData?.file_name ?? "Documento actual"}
+                {initialData?.file_name ?? 'Documento actual'}
               </p>
-              <p className="text-xs text-slate-500">Archivo actual del contrato</p>
+              <p className="text-xs text-slate-500">
+                Archivo actual del contrato
+              </p>
             </div>
           </div>
           <button
@@ -79,7 +83,9 @@ export function ContractFormDocumentSection({
               <p className="text-sm font-medium text-slate-700">{file.name}</p>
               <p className="text-xs text-slate-500">
                 {(file.size / 1024).toFixed(1)} KB
-                {editMode && <span className="ml-2 text-blue-600">(Nuevo archivo)</span>}
+                {editMode && (
+                  <span className="ml-2 text-blue-600">(Nuevo archivo)</span>
+                )}
               </p>
             </div>
           </div>
@@ -101,15 +107,17 @@ export function ContractFormDocumentSection({
           onDrop={onDrop}
           className={`rounded-xl border-2 border-dashed p-8 text-center transition-all ${
             dragActive
-              ? "border-blue-500 bg-blue-50"
+              ? 'border-blue-500 bg-blue-50'
               : fileError
-                ? "border-red-300 bg-red-50/30 hover:border-red-400"
-                : "border-slate-300 bg-slate-50/30 hover:border-slate-400"
+                ? 'border-red-300 bg-red-50/30 hover:border-red-400'
+                : 'border-slate-300 bg-slate-50/30 hover:border-slate-400'
           }`}
         >
-          <Upload className={`mx-auto mb-2 h-8 w-8 ${fileError ? "text-red-400" : "text-slate-400"}`} />
+          <Upload
+            className={`mx-auto mb-2 h-8 w-8 ${fileError ? 'text-red-400' : 'text-slate-400'}`}
+          />
           <p className="mb-1 text-sm text-slate-600">
-            Arrastra tu archivo aqui o{" "}
+            Arrastra tu archivo aqui o{' '}
             <label className="cursor-pointer font-medium text-blue-600 hover:underline">
               selecciona un archivo
               <input
@@ -120,9 +128,13 @@ export function ContractFormDocumentSection({
               />
             </label>
           </p>
-          <p className="text-xs text-slate-400">Formatos permitidos: PDF, Excel, Word</p>
+          <p className="text-xs text-slate-400">
+            Formatos permitidos: PDF, Excel, Word
+          </p>
           {fileError && (
-            <p className="mt-2 text-xs text-red-500">Debes subir un archivo valido para continuar.</p>
+            <p className="mt-2 text-xs text-red-500">
+              Debes subir un archivo valido para continuar.
+            </p>
           )}
         </div>
       )}

@@ -1,0 +1,1 @@
+export type ApiNotificationType = 'critical' | 'warning' | 'info';

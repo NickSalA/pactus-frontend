@@ -3,7 +3,8 @@
 import { Bell, FileStack, FolderKanban, Shield, ShieldCheck, Users, Wrench } from "lucide-react";
 import { AdminModuleCard } from "@/features/admin/components/cards/AdminModuleCard";
 import { AdminSummaryCard } from "@/features/admin/components/cards/AdminSummaryCard";
-import { useAdminDashboard } from "@/features/admin/hooks/use-admin-dashboard";
+import { useAdminDashboard } from "@/features/admin/hooks/useAdminDashboard";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export function AdminDashboardPageContent() {
   const page = useAdminDashboard();
@@ -51,19 +52,10 @@ export function AdminDashboardPageContent() {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-[32px] border border-slate-200/70 bg-white px-8 py-7 shadow-sm shadow-slate-200/70">
-        <div className="flex items-start gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-            <ShieldCheck className="h-6 w-6" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Panel de Administración</h1>
-            <p className="mt-1 text-sm text-slate-500">
-              Gestiona usuarios, alertas, plantillas y configuraciones del sistema
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        title="Panel de Administración"
+        subtitle="Gestiona usuarios, alertas, plantillas y configuraciones del sistema"
+      />
 
       <section>
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Resumen del Sistema</p>

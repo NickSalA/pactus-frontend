@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type AdminModalShellProps = {
   children: ReactNode;
@@ -9,17 +10,23 @@ type AdminModalShellProps = {
   footer?: ReactNode;
   onClose: () => void;
   open: boolean;
+  size?: 'md' | 'lg';
   title: string;
 };
 
-export function AdminModalShell({ children, description, footer, onClose, open, title }: AdminModalShellProps) {
+const sizeClasses: Record<'md' | 'lg', string> = {
+  md: 'max-w-3xl',
+  lg: 'max-w-5xl',
+};
+
+export function AdminModalShell({ children, description, footer, onClose, open, size = 'md', title }: AdminModalShellProps) {
   if (!open) {
     return null;
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm">
-      <div className="w-full max-w-3xl rounded-[28px] bg-white shadow-2xl shadow-slate-900/10">
+      <div className={cn('w-full rounded-[28px] bg-white shadow-2xl shadow-slate-900/10', sizeClasses[size])}>
         <div className="flex items-start justify-between border-b border-slate-200/80 px-6 py-5">
           <div>
             <h2 className="text-2xl font-semibold text-slate-900">{title}</h2>

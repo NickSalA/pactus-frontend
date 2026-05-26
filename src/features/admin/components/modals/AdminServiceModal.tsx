@@ -1,31 +1,39 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Save } from "lucide-react";
-import { AdminModalShell } from "@/features/admin/components/shared/AdminModalShell";
-import type {
-  ServiceCatalogItem,
-  ServiceCatalogItemCreateRequest,
-  ServiceCatalogItemUpdateRequest,
-} from "@/types/api.types";
+import { useState } from 'react';
+import { Save } from 'lucide-react';
+import { AdminModalShell } from '@/features/admin/components/shared/AdminModalShell';
+import {
+  ApiServiceResponse,
+  ApiServiceCreateRequest,
+  ApiServiceUpdateRequest,
+} from '@/types/api';
 
 type AdminServiceModalProps = {
   isSubmitting: boolean;
   onClose: () => void;
-  onSubmit: (payload: ServiceCatalogItemCreateRequest | ServiceCatalogItemUpdateRequest) => Promise<void>;
+  onSubmit: (
+    payload: ApiServiceCreateRequest | ApiServiceUpdateRequest,
+  ) => Promise<void>;
   open: boolean;
-  service: ServiceCatalogItem | null;
+  service: ApiServiceResponse | null;
 };
 
-export function AdminServiceModal({ isSubmitting, onClose, onSubmit, open, service }: AdminServiceModalProps) {
-  const [name, setName] = useState(service?.name ?? "");
+export function AdminServiceModal({
+  isSubmitting,
+  onClose,
+  onSubmit,
+  open,
+  service,
+}: AdminServiceModalProps) {
+  const [name, setName] = useState(service?.name ?? '');
   const [isActive, setIsActive] = useState(service?.is_active ?? true);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
     const normalizedName = name.trim();
     if (!normalizedName) {
-      setError("Ingresa un nombre válido para el servicio.");
+      setError('Ingresa un nombre válido para el servicio.');
       return;
     }
 
@@ -33,7 +41,9 @@ export function AdminServiceModal({ isSubmitting, onClose, onSubmit, open, servi
       setError(null);
       await onSubmit({ name: normalizedName, is_active: isActive });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo guardar el servicio.");
+      setError(
+        err instanceof Error ? err.message : 'No se pudo guardar el servicio.',
+      );
     }
   };
 
@@ -56,20 +66,26 @@ export function AdminServiceModal({ isSubmitting, onClose, onSubmit, open, servi
               void handleSubmit();
             }}
             disabled={isSubmitting}
-            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:opacity-70"
           >
             <Save className="h-4 w-4" />
-            {isSubmitting ? "Guardando..." : service ? "Guardar cambios" : "Crear servicio"}
+            {isSubmitting
+              ? 'Guardando...'
+              : service
+                ? 'Guardar cambios'
+                : 'Crear servicio'}
           </button>
         </div>
       }
       onClose={onClose}
       open={open}
-      title={service ? "Editar Servicio" : "Nuevo Servicio"}
+      title={service ? 'Editar Servicio' : 'Nuevo Servicio'}
     >
       <div className="space-y-5">
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">Nombre del servicio</label>
+          <label className="mb-2 block text-sm font-medium text-slate-700">
+            Nombre del servicio
+          </label>
           <input
             type="text"
             value={name}
@@ -90,11 +106,16 @@ export function AdminServiceModal({ isSubmitting, onClose, onSubmit, open, servi
 
         {service && (
           <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-            Este servicio aparece en {service.documents_count} contrato{service.documents_count === 1 ? "" : "s"}.
+            Este servicio aparece en {service.documents_count} contrato
+            {service.documents_count === 1 ? '' : 's'}.
           </div>
         )}
 
-        {error && <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
+        {error && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+          </div>
+        )}
       </div>
     </AdminModalShell>
   );

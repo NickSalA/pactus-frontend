@@ -1,27 +1,30 @@
-import dynamic from "next/dynamic";
-import { X } from "lucide-react";
-import type { ContractFolder } from "@/features/contracts/lib/contracts-utils";
-import type { Document } from "@/types/api.types";
+import dynamic from 'next/dynamic';
+import { X } from 'lucide-react';
+import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
+import type { DocumentFlatten } from '@/types/ui.types';
 
 type ContractFormModalProps = {
   availableFolders?: readonly ContractFolder[];
   editMode?: boolean;
-  initialData?: Document;
+  initialData?: DocumentFlatten;
   onClose: () => void;
-  onSubmit: (contract: Document) => void;
+  onSubmit: (contract: DocumentFlatten) => void;
   open: boolean;
 };
 
-const ContractForm = dynamic(() => import("@/features/contracts/components/form/ContractForm"), {
-  loading: () => (
-    <div className="flex h-full items-center justify-center p-8">
-      <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-slate-700" />
-        Cargando formulario...
+const ContractForm = dynamic(
+  () => import('@/features/contracts/components/form/ContractForm'),
+  {
+    loading: () => (
+      <div className="flex h-full items-center justify-center p-8">
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-slate-700" />
+          Cargando formulario...
+        </div>
       </div>
-    </div>
-  ),
-});
+    ),
+  },
+);
 
 export function ContractFormModal({
   availableFolders,
@@ -36,9 +39,12 @@ export function ContractFormModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
-        className="relative flex h-[700px] w-full max-w-[650px] flex-col rounded-2xl bg-white shadow-2xl"
+        className="relative flex h-175 w-full max-w-162.5 flex-col rounded-2xl bg-white shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
         <button

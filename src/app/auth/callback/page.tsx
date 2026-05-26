@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { logout as clearApiSession, setApiAccessToken } from "@/lib/api";
-import { supabase } from "@/lib/supabaseClient";
-import { useAuthStore } from "@/store";
-import { resolveSessionUser } from "@/features/auth/lib/resolve-session-user";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { logout as clearApiSession, setApiAccessToken } from '@/api';
+import { supabase } from '@/lib/supabaseClient';
+import { useAuthStore } from '@/store';
+import { resolveSessionUser } from '@/lib/authUser';
+import { getDefaultRouteForRole } from '@/lib/roleRoutes';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -20,10 +21,11 @@ export default function AuthCallbackPage() {
         setError(null);
 
         const currentUrl = new URL(window.location.href);
-        const code = currentUrl.searchParams.get("code");
+        const code = currentUrl.searchParams.get('code');
 
         if (code) {
-          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+          const { error: exchangeError } =
+            await supabase.auth.exchangeCodeForSession(code);
           if (exchangeError) {
             throw exchangeError;
           }
@@ -45,20 +47,16 @@ export default function AuthCallbackPage() {
         if (session) {
           setApiAccessToken(session.access_token);
           const authUser = await resolveSessionUser(session);
-          
+
           if (!mounted) {
             return;
           }
 
-          if (authUser.role === "ADMIN" || authUser.role === "Administrador") {
-            router.replace("/admin");
-          } else {
-            router.replace("/dashboard");
-          }
+          router.replace(getDefaultRouteForRole(authUser.role));
           return;
         }
 
-        router.replace("/login");
+        router.replace('/login');
       } catch (err) {
         await supabase.auth.signOut();
         clearApiSession();
@@ -66,7 +64,11 @@ export default function AuthCallbackPage() {
         if (!mounted) {
           return;
         }
-        setError(err instanceof Error ? err.message : "Error al completar la autenticación");
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Error al completar la autenticación',
+        );
       }
     };
 
@@ -80,8 +82,12 @@ export default function AuthCallbackPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
       <section className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-        <h1 className="text-xl font-semibold text-slate-900">Procesando inicio de sesión</h1>
-        <p className="mt-2 text-sm text-slate-600">Espera un momento mientras validamos tu sesión.</p>
+        <h1 className="text-xl font-semibold text-slate-900">
+          Procesando inicio de sesión
+        </h1>
+        <p className="mt-2 text-sm text-slate-600">
+          Espera un momento mientras validamos tu sesión.
+        </p>
         {error && (
           <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
             {error}

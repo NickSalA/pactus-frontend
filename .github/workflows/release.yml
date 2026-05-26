@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-
 jobs:
   release:
     name: Release
@@ -17,30 +16,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      - name: Cache Node modules
-        uses: actions/cache@v4
-        id: npm-cache
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          path: node_modules
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
-
-      - name: Install semantic-release plugins
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm install -D @semantic-release/changelog @semantic-release/git
+          version: latest
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # 👇 Agrega estas líneas modificándolas con tus datos
           GIT_AUTHOR_NAME: "Matt Garman"
-          GIT_AUTHOR_EMAIL: "matt.garman@gmail.com"
+          GIT_AUTHOR_EMAIL: "matt.garman@example.com"
           GIT_COMMITTER_NAME: "Matt Garman"
-          GIT_COMMITTER_EMAIL: "matt.garman@gmail.com"
-        run: npx semantic-release
+          GIT_COMMITTER_EMAIL: "matt.garman@example.com"
+        run: pnpm exec semantic-release
