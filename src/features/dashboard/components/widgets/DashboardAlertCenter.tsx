@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import { ApiDashboardAlertCategory, ApiDashboardAlertItem } from '@/types/api';
+import { useAuthStore } from '@/store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 type DashboardAlertCenterProps = {
@@ -29,9 +30,11 @@ function AlertCard({
 }) {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
+  const userRole = useAuthStore((state) => state.user?.role ?? null);
 
   const handleClick = () => {
-    router.push('/contracts');
+    const prefix = userRole?.toLowerCase() ?? 'hr';
+    router.push('/' + prefix + '/contracts');
   };
 
   return (
@@ -39,22 +42,26 @@ function AlertCard({
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="flex w-full items-center justify-between gap-3 rounded-xl border bg-gray-50 p-4 text-left transition-colors"
+      className="flex items-center justify-between gap-3 rounded-xl border bg-gray-50 p-4 text-left transition-colors"
       style={{
         borderColor: isHovered ? `${accentColor}66` : '#e5e7eb',
       }}
     >
-      <div className="flex items-center gap-2 min-w-0">
+      <div className="flex items-center gap-3">
         <span
           className="h-2 w-2 rounded-full shrink-0"
           style={{ backgroundColor: accentColor }}
         />
-        <span className="text-sm font-medium text-slate-800 truncate">
-          {item.name}
-        </span>
-        {item.detail && (
-          <span className="text-xs text-gray-500 truncate">{item.detail}</span>
-        )}
+        <div className="flex flex-col gap-0 min-w-0">
+          <span className="text-sm font-medium text-slate-800 truncate max-w-56">
+            {item.name}
+          </span>
+          {item.detail && (
+            <span className="text-xs text-gray-500 truncate">
+              {item.detail}
+            </span>
+          )}
+        </div>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <span
@@ -101,22 +108,22 @@ export function DashboardAlertCenter({
   const accentColor = selectedAlert?.color.accent ?? '#64748B';
 
   return (
-    <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md gap-0">
-      <CardHeader className="mb-4 p-0">
+    <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md gap-4">
+      <CardHeader className="p-0">
         <CardTitle className="text-lg font-semibold text-slate-800">
           Centro de Alertas
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex-1 flex overflow-y-auto p-0 gap-4">
-        <div className="mb-4 flex flex-col items-stretch justify-center gap-2">
+      <CardContent className="flex-1 flex p-0 gap-4">
+        <div className="flex flex-col items-stretch justify-center gap-2">
           {tabs.map((tab, index) => (
             <button
               key={index}
               onClick={() => setSelectedIndex(index)}
               onMouseEnter={() => setHoveredTabIndex(index)}
               onMouseLeave={() => setHoveredTabIndex(null)}
-              className={`flex flex-1 flex-col justify-center items-center gap-px rounded-lg p-3 text-center transition-colors ${
+              className={`flex w-48 flex-1 flex-col justify-center items-center gap-px rounded-lg p-3 text-center transition-colors ${
                 selectedIndex === index ? 'font-medium' : 'text-gray-500'
               }`}
               style={
