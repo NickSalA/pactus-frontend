@@ -90,6 +90,7 @@ export function ContractsFolderTabs({
   const [isDeleteBlockedOpen, setIsDeleteBlockedOpen] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteConfirmFolderName, setDeleteConfirmFolderName] = useState('');
 
   const activeFolderSummary = useMemo(() => {
     if (activeFolder.isSystem) {
@@ -166,6 +167,7 @@ export function ContractsFolderTabs({
       return;
     }
 
+    setDeleteConfirmFolderName(activeFolder.name);
     setIsDeleteConfirmOpen(true);
   };
 
@@ -176,6 +178,7 @@ export function ContractsFolderTabs({
 
     setIsDeleteConfirmOpen(false);
     setDeleteError(null);
+    setDeleteConfirmFolderName('');
   };
 
   const confirmDelete = async () => {
@@ -184,6 +187,7 @@ export function ContractsFolderTabs({
       setDeleteError(null);
       await onDeleteFolder(activeFolder.id);
       setIsDeleteConfirmOpen(false);
+      setDeleteConfirmFolderName('');
     } catch (err) {
       setDeleteError(
         err instanceof Error ? err.message : 'No se pudo eliminar la carpeta.',
@@ -375,7 +379,7 @@ export function ContractsFolderTabs({
         <div className="space-y-4">
           <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-700">
             Se eliminara{' '}
-            <span className="font-semibold">{activeFolder.name}</span>. Esta
+            <span className="font-semibold">{deleteConfirmFolderName}</span>. Esta
             accion no se puede deshacer.
           </div>
           {deleteError && (
@@ -410,7 +414,7 @@ export function ContractsFolderTabs({
               <p className="font-semibold text-red-800">Accion bloqueada</p>
               <p className="mt-1">
                 La carpeta{' '}
-                <span className="font-semibold">{activeFolder.name}</span> tiene{' '}
+                <span className="font-semibold">{deleteConfirmFolderName}</span> tiene{' '}
                 {activeFolder.documents_count} contrato
                 {activeFolder.documents_count === 1 ? '' : 's'} asociado
                 {activeFolder.documents_count === 1 ? '' : 's'}. Mueve o
