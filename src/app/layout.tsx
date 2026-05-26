@@ -25,7 +25,7 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'ContractAI - Inteligencia para los Contratos Modernos',
+  title: 'Pactus - Inteligencia para los Contratos Modernos',
   description:
     'Optimiza contratos y consultas legales con inteligencia artificial de nivel empresarial. Precisión, rapidez y control para documentación legal de alto impacto.',
   icons: {
@@ -42,7 +42,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={cn('font-sans', geist.variable, montserrat.variable, ibmPlexSans.variable)}>
+    <html
+      lang="es"
+      className={cn(
+        'font-sans',
+        geist.variable,
+        montserrat.variable,
+        ibmPlexSans.variable,
+      )}
+    >
       <body className={`${inter.variable} font-sans antialiased`}>
         <QueryProvider>
           <AuthBootstrap>{children}</AuthBootstrap>
