@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { canAccessAdminConsole } from "@/lib/permissions";
-import { useAuthStore } from "@/store";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { canAccessAdminConsole } from '@/lib/permissions';
+import { useAuthStore } from '@/store';
 
 export function useAdminGuard() {
   const router = useRouter();
@@ -14,7 +14,7 @@ export function useAdminGuard() {
 
   useEffect(() => {
     if (!isHydrating && (!isAuthenticated || !isAdmin)) {
-      router.replace("/dashboard");
+      router.replace('/');
     }
   }, [isAdmin, isAuthenticated, isHydrating, router]);
 
