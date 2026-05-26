@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/NickSalA/pactus-frontend/compare/v2.0.0...v2.0.1) (2026-05-26)
+
+
+### Bug Fixes
+
+* Fixed incorrect redirection ([415707a](https://github.com/NickSalA/pactus-frontend/commit/415707a3605fc4c5f5c13341f772da32a7b449a8))
+
 # [2.0.0](https://github.com/NickSalA/pactus-frontend/compare/v1.0.1...v2.0.0) (2026-05-26)
 
 
