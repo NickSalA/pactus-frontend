@@ -47,7 +47,7 @@ export function AdminOrganizationOnboardingModal({
       await updateOrganizationMutation.mutateAsync(
         buildAdminOrganizationOnboardingPayload(form.getValues()),
       );
-      router.replace('/admin/dashboard');
+      router.replace('/admin/access');
     } catch (error) {
       setSubmitError(
         error instanceof Error
@@ -79,8 +79,13 @@ export function AdminOrganizationOnboardingModal({
           <Card className="gap-0 overflow-visible rounded-3xl border-brand-blue-100 bg-brand-neutral-50 py-0 shadow-xl">
             <header className="px-5 pt-5 sm:px-6 sm:pt-6">
               <div className="mb-2 flex items-center gap-2 text-brand-primary">
-                <Handshake className="h-7 w-7 fill-brand-primary/10" aria-hidden="true" />
-                <span className="text-display-large-logo leading-none">Pactus</span>
+                <Handshake
+                  className="h-7 w-7 fill-brand-primary/10"
+                  aria-hidden="true"
+                />
+                <span className="text-display-large-logo leading-none">
+                  Pactus
+                </span>
               </div>
               <h1
                 id="admin-organization-onboarding-title"
@@ -89,7 +94,8 @@ export function AdminOrganizationOnboardingModal({
                 Configurando tu organizacion
               </h1>
               <p className="text-label-main-regular mt-2 text-brand-neutral-500">
-                Completa estos datos una sola vez para activar tu panel de administrador.
+                Completa estos datos una sola vez para activar tu panel de
+                administrador.
               </p>
             </header>
 
