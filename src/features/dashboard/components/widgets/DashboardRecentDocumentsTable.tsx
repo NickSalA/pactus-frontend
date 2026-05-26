@@ -1,5 +1,10 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Ellipsis, FileText } from 'lucide-react';
+import { useAuthStore } from '@/store';
 import {
   Card,
   CardContent,
@@ -36,6 +41,11 @@ export function DashboardRecentDocumentsTable({
   totalPages,
   totalRecords,
 }: DashboardRecentDocumentsTableProps) {
+  const router = useRouter();
+  const userRole = useAuthStore((state) => state.user?.role ?? null);
+  const prefix = userRole?.toLowerCase() ?? 'hr';
+  const contractsHref = '/' + prefix + '/contracts';
+
   if (isLoading) {
     return (
       <Card className="flex h-full flex-col rounded-2xl bg-white p-5 shadow-md">
@@ -120,7 +130,7 @@ export function DashboardRecentDocumentsTable({
                 </td>
                 <td className="px-6 py-4 text-right align-middle">
                   <Link
-                    href="/contracts"
+                    href={contractsHref}
                     className="inline-flex rounded-lg p-2 text-slate-500 transition-colors duration-200 hover:bg-slate-100 hover:text-slate-700"
                   >
                     <Ellipsis className="h-5 w-5" />
