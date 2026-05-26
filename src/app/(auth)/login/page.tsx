@@ -1,13 +1,17 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { GOOGLE_DRIVE_SCOPE } from "@/lib/googlePicker";
-import { getDefaultRouteForRole, getDefaultRouteLabelForRole } from "@/lib/roleRoutes";
-import { supabase } from "@/lib/supabaseClient";
-import { useAuthStore } from "@/store";
+import { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { GOOGLE_DRIVE_SCOPE } from '@/lib/googlePicker';
+import {
+  getDefaultRouteForRole,
+  getDefaultRouteLabelForRole,
+} from '@/lib/roleRoutes';
+import { supabase } from '@/lib/supabaseClient';
+import { useAuthStore } from '@/store';
+import { Handshake } from 'lucide-react';
 
 type AuthUserPreview = {
   name: string;
@@ -24,8 +28,8 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
 
   const callbackUrl = useMemo(() => {
-    if (typeof window === "undefined") {
-      return "";
+    if (typeof window === 'undefined') {
+      return '';
     }
     return `${window.location.origin}/auth/callback`;
   }, []);
@@ -45,7 +49,7 @@ export default function LoginPage() {
       setError(null);
 
       const { error: signInError } = await supabase.auth.signInWithOAuth({
-        provider: "google",
+        provider: 'google',
         options: {
           redirectTo: callbackUrl,
           scopes: GOOGLE_DRIVE_SCOPE,
@@ -56,7 +60,11 @@ export default function LoginPage() {
         throw signInError;
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo iniciar sesión con Google");
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudo iniciar sesión con Google',
+      );
       setIsSigningIn(false);
     }
   };
@@ -65,42 +73,46 @@ export default function LoginPage() {
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50/50">
       {/* Nebula Background Effects */}
       <div
-        className="pointer-events-none absolute -right-40 -top-40 h-[800px] w-[800px] rounded-full"
+        className="pointer-events-none absolute -right-40 -top-40 h-200 w-200 rounded-full"
         style={{
-          background: "linear-gradient(180deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%)",
-          filter: "blur(100px)",
+          background:
+            'linear-gradient(180deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%)',
+          filter: 'blur(100px)',
           opacity: 0.2,
         }}
       />
       <div
-        className="pointer-events-none absolute -left-20 -top-60 h-[600px] w-[600px] rounded-full"
+        className="pointer-events-none absolute -left-20 -top-60 h-150 w-150 rounded-full"
         style={{
-          background: "linear-gradient(180deg, #22d3ee 0%, #06b6d4 50%, #0891b2 100%)",
-          filter: "blur(90px)",
+          background:
+            'linear-gradient(180deg, #22d3ee 0%, #06b6d4 50%, #0891b2 100%)',
+          filter: 'blur(90px)',
           opacity: 0.18,
         }}
       />
       <div
-        className="pointer-events-none absolute -bottom-48 -left-32 h-[750px] w-[750px] rounded-full"
+        className="pointer-events-none absolute -bottom-48 -left-32 h-187.5 w-187.5 rounded-full"
         style={{
-          background: "linear-gradient(180deg, #a78bfa 0%, #8b5cf6 50%, #7c3aed 100%)",
-          filter: "blur(100px)",
+          background:
+            'linear-gradient(180deg, #a78bfa 0%, #8b5cf6 50%, #7c3aed 100%)',
+          filter: 'blur(100px)',
           opacity: 0.2,
         }}
       />
       <div
-        className="pointer-events-none absolute -bottom-32 -right-20 h-[650px] w-[650px] rounded-full"
+        className="pointer-events-none absolute -bottom-32 -right-20 h-162.5 w-162.5 rounded-full"
         style={{
-          background: "linear-gradient(180deg, #818cf8 0%, #6366f1 50%, #4f46e5 100%)",
-          filter: "blur(90px)",
+          background:
+            'linear-gradient(180deg, #818cf8 0%, #6366f1 50%, #4f46e5 100%)',
+          filter: 'blur(90px)',
           opacity: 0.18,
         }}
       />
       <div
-        className="pointer-events-none absolute left-1/2 top-1/3 h-[350px] w-[350px] -translate-x-1/2 rounded-full"
+        className="pointer-events-none absolute left-1/2 top-1/3 h-87.5 w-87.5 -translate-x-1/2 rounded-full"
         style={{
-          background: "radial-gradient(circle, #60a5fa 0%, transparent 70%)",
-          filter: "blur(70px)",
+          background: 'radial-gradient(circle, #60a5fa 0%, transparent 70%)',
+          filter: 'blur(70px)',
           opacity: 0.12,
         }}
       />
@@ -109,13 +121,13 @@ export default function LoginPage() {
       <div
         className="pointer-events-none fixed inset-0 opacity-[0.02]"
         style={{
-          backgroundImage: "radial-gradient(#4f46e5 0.5px, transparent 0.5px)",
-          backgroundSize: "24px 24px",
+          backgroundImage: 'radial-gradient(#4f46e5 0.5px, transparent 0.5px)',
+          backgroundSize: '24px 24px',
         }}
       />
 
       {/* Main Card */}
-      <section className="relative z-10 w-full max-w-[480px] px-6">
+      <section className="relative z-10 w-full max-w-120 px-6">
         <div
           className="flex flex-col items-center rounded-[2rem] border border-indigo-200/60 bg-white/95 px-10 pb-12 pt-20 backdrop-blur-sm"
           style={{
@@ -129,26 +141,21 @@ export default function LoginPage() {
         >
           {/* Logo */}
           <div className="mb-10">
-            <Image
-              src="/logo-contractAI-azul.png"
-              alt="ContractAI"
-              width={80}
-              height={80}
-              className="rounded-xl object-contain"
-            />
+            <Handshake size={72} className="text-brand-primary" />
           </div>
 
           {/* Branding & Messaging */}
           <div className="mb-14 text-center">
             {/* Gradient Title */}
-            <h1 className="mb-4 bg-gradient-to-r from-blue-800 via-blue-600 to-blue-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent">
+            <h1 className="mb-4 text-brand-primary bg-clip-text text-4xl font-bold tracking-tight">
               Pactus
             </h1>
             <h2 className="mb-5 text-xl font-medium text-slate-700">
               Bienvenido de nuevo
             </h2>
-            <p className="mx-auto max-w-[300px] text-sm leading-relaxed text-slate-500">
-              Automatiza, analiza y optimiza tus contratos con el poder de la inteligencia artificial
+            <p className="mx-auto max-w-75 text-sm leading-relaxed text-slate-500">
+              Automatiza, analiza y optimiza tus contratos con el poder de la
+              inteligencia artificial
             </p>
           </div>
 
@@ -176,7 +183,9 @@ export default function LoginPage() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   />
                 </svg>
-                <span className="text-sm text-slate-600">Cargando sesión...</span>
+                <span className="text-sm text-slate-600">
+                  Cargando sesión...
+                </span>
               </div>
             ) : !authUser ? (
               <>
@@ -204,7 +213,9 @@ export default function LoginPage() {
                     />
                   </svg>
                   <span className="text-sm font-medium text-slate-600 transition-colors group-hover:text-slate-800">
-                    {isSigningIn ? "Redirigiendo..." : "Iniciar sesión con Google"}
+                    {isSigningIn
+                      ? 'Redirigiendo...'
+                      : 'Iniciar sesión con Google'}
                   </span>
                 </button>
 
@@ -224,14 +235,14 @@ export default function LoginPage() {
                 )}
 
                 <p className="mt-6 text-center text-xs leading-5 text-slate-500">
-                  Al continuar, aceptas nuestros{" "}
+                  Al continuar, aceptas nuestros{' '}
                   <Link
                     href="/terms-of-service"
                     className="font-medium text-slate-700 underline underline-offset-4 hover:text-slate-950"
                   >
                     Términos de Servicio
-                  </Link>{" "}
-                  y la{" "}
+                  </Link>{' '}
+                  y la{' '}
                   <Link
                     href="/privacy-policy"
                     className="font-medium text-slate-700 underline underline-offset-4 hover:text-slate-950"
@@ -259,7 +270,9 @@ export default function LoginPage() {
                       />
                     </svg>
                   </div>
-                  <p className="text-sm font-semibold text-emerald-700">Sesión activa</p>
+                  <p className="text-sm font-semibold text-emerald-700">
+                    Sesión activa
+                  </p>
                 </div>
 
                 <div className="mb-5 flex items-center gap-4">
@@ -277,16 +290,22 @@ export default function LoginPage() {
                     </div>
                   )}
                   <div>
-                    <p className="font-semibold text-slate-800">{authUser.name}</p>
+                    <p className="font-semibold text-slate-800">
+                      {authUser.name}
+                    </p>
                     <p className="text-sm text-slate-500">{authUser.email}</p>
                   </div>
                 </div>
 
                 <button
-                  onClick={() => router.push(getDefaultRouteForRole(authUser.role))}
+                  onClick={() =>
+                    router.push(getDefaultRouteForRole(authUser.role))
+                  }
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/30"
                 >
-                  <span>Ir al {getDefaultRouteLabelForRole(authUser.role)}</span>
+                  <span>
+                    Ir al {getDefaultRouteLabelForRole(authUser.role)}
+                  </span>
                   <svg
                     className="h-4 w-4"
                     fill="none"
