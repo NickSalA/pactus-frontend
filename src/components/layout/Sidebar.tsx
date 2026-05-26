@@ -50,12 +50,12 @@ const buildMainMenuItems = (role: ApiUserRole): MenuItem[] => {
 };
 
 const adminMenuItems: MenuItem[] = [
-  {
-    name: 'Dashboard',
-    href: '/admin/dashboard',
-    icon: LayoutDashboard,
-    match: 'exact',
-  },
+  // {
+  //   name: 'Dashboard',
+  //   href: '/admin/dashboard',
+  //   icon: LayoutDashboard,
+  //   match: 'exact',
+  // },
   {
     name: 'Gestión de Accesos',
     href: '/admin/access',
@@ -101,9 +101,10 @@ export default function Sidebar() {
 
   const hasAdminAccess = canAccessAdminConsole(userRole);
   const isAdminConsole = hasAdminAccess && pathname.startsWith('/admin');
-  const mainMenuItems = userRole && userRole !== 'SUPERADMIN'
-    ? buildMainMenuItems(userRole as ApiUserRole)
-    : [];
+  const mainMenuItems =
+    userRole && userRole !== 'SUPERADMIN'
+      ? buildMainMenuItems(userRole as ApiUserRole)
+      : [];
   const menuItems = isAdminConsole
     ? adminMenuItems
     : hasAdminAccess
