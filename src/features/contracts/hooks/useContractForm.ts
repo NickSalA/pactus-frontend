@@ -105,6 +105,7 @@ export function useContractForm({
     onBeforePrev: resetNewService,
     setForm,
     validateStep2,
+    skipServicesStep: form.type !== 'COMPANY',
   });
 
   const { mutateAsync: uploadDocumentMutation } = useUploadDocument();
