@@ -176,6 +176,13 @@ export default function ContractForm({
   );
 
   const showServicesSection = formState.form.type === 'COMPANY';
+  const formSteps = showServicesSection
+    ? (['Datos generales', 'Servicios', 'Documento'] as const)
+    : (['Datos generales', 'Documento'] as const);
+  const visualStep =
+    showServicesSection || formState.currentStep !== 3
+      ? formState.currentStep
+      : 2;
 
   const servicesSection = (
     <ContractFormServicesSection
@@ -202,7 +209,7 @@ export default function ContractForm({
         <h2 className="mb-4 text-xl font-semibold text-slate-800">
           {editMode ? 'Editar Contrato' : 'Nuevo Contrato'}
         </h2>
-        <ContractFormProgress currentStep={formState.currentStep} />
+        <ContractFormProgress currentStep={visualStep} steps={formSteps} />
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
