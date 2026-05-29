@@ -90,19 +90,7 @@ const components: Components = {
   ),
   thead: ({ children }) => (
     <thead className="border-b border-slate-200 bg-linear-to-r from-slate-50 to-blue-50/30">
-      {children}Contratos Labor Trabajador Posición Salario Moneda Inicio Fin
-      Estado Valentina Milagros Rivas Soto No especificado 2140 PEN 2024-08-01
-      2025-01-31 EXPIRED Luciana Paola Cárdenas Mejía No especificado 2050 PEN
-      2025-01-15 2025-07-14 EXPIRED Martín Alejandro Huerta Pineda No
-      especificado 2350 PEN 2025-03-01 2025-08-31 EXPIRED Daniela Sofía Lozano
-      Méndez No especificado 2300 PEN 2026-02-01 2026-09-30 ACTIVE Martín
-      Alejandro Huerta Pineda No especificado 2700 PEN 2026-03-01 2026-12-31
-      ACTIVE Camila Beatriz Salazar Gutiérrez No especificado 2450 PEN
-      2026-03-15 2026-08-31 ACTIVE Renzo Iván Cabrera Loyola No especificado
-      2550 PEN 2026-04-01 2026-12-31 ACTIVE Luciana Paola Cárdenas Mejía No
-      especificado 2180 PEN 2026-04-15 2026-10-31 ACTIVE Mathias Davalos Velazco
-      scsdcer 0 USD 2026-05-18 2026-05-30 PENDING_SIGNATURE Nick Salcedo asdsad
-      0 USD 2026-05-20 2026-05-30 PENDING_SIGNATURE
+      {children}
     </thead>
   ),
   th: ({ children }) => (
