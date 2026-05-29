@@ -123,7 +123,7 @@ export function DashboardAlertCenter({
               onClick={() => setSelectedIndex(index)}
               onMouseEnter={() => setHoveredTabIndex(index)}
               onMouseLeave={() => setHoveredTabIndex(null)}
-              className={`flex w-48 flex-1 flex-col justify-center items-center gap-px rounded-lg p-3 text-center transition-colors ${
+              className={`flex w-48 text-xs flex-1 flex-col justify-center items-center gap-px rounded-lg p-3 text-center transition-colors ${
                 selectedIndex === index ? 'font-medium' : 'text-gray-500'
               }`}
               style={
@@ -141,14 +141,10 @@ export function DashboardAlertCenter({
                     }
               }
             >
-              <span className="text-xl font-extrabold leading-none">
-                {tab.count}
-              </span>
-              <span className="text-sm font-extrabold leading-tight">
-                {tab.label}
-              </span>
+              <span className="font-extrabold leading-none">{tab.count}</span>
+              <span className="font-extrabold leading-tight">{tab.label}</span>
               {tab.dueTo && (
-                <span className="text-sm font-extrabold leading-tight">
+                <span className="font-extrabold leading-tight">
                   {tab.dueTo} dias
                 </span>
               )}
