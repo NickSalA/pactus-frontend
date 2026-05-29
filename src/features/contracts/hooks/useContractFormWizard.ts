@@ -10,6 +10,7 @@ type UseContractFormWizardOptions = {
   onBeforePrev?: () => void;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
   validateStep2: () => string | null;
+  skipServicesStep?: boolean;
 };
 
 type FieldChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement>;
@@ -19,6 +20,7 @@ export function useContractFormWizard({
   onBeforePrev,
   setForm,
   validateStep2,
+  skipServicesStep = false,
 }: UseContractFormWizardOptions) {
   const [currentStep, setCurrentStep] = useState<ContractFormStep>(1);
   const [stepError, setStepError] = useState<string | null>(null);
@@ -71,7 +73,7 @@ export function useContractFormWizard({
         return;
       }
 
-      navigateToStep(2);
+      navigateToStep(skipServicesStep ? 3 : 2);
       return;
     }
 
@@ -85,12 +87,16 @@ export function useContractFormWizard({
 
       navigateToStep(3);
     }
-  }, [currentStep, navigateToStep, validateStep1, validateStep2]);
+  }, [currentStep, navigateToStep, skipServicesStep, validateStep1, validateStep2]);
 
   const goPrev = useCallback(() => {
     onBeforePrev?.();
-    navigateToStep((currentStep - 1) as ContractFormStep);
-  }, [currentStep, navigateToStep, onBeforePrev]);
+    navigateToStep(
+      currentStep === 3 && skipServicesStep
+        ? 1
+        : ((currentStep - 1) as ContractFormStep),
+    );
+  }, [currentStep, navigateToStep, onBeforePrev, skipServicesStep]);
 
   const openSummary1 = useCallback(() => {
     const snapshot: Step1Draft = {
