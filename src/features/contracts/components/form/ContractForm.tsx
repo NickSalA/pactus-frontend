@@ -175,6 +175,8 @@ export default function ContractForm({
     </div>
   );
 
+  const showServicesSection = formState.form.type === 'COMPANY';
+
   const servicesSection = (
     <ContractFormServicesSection
       addingService={formState.addingService}
@@ -232,10 +234,12 @@ export default function ContractForm({
                 {summary1Content}
               </ContractFormSummaryAccordion>
 
-              <div>
-                {servicesHeader}
-                {servicesSection}
-              </div>
+              {showServicesSection && (
+                <div>
+                  {servicesHeader}
+                  {servicesSection}
+                </div>
+              )}
             </div>
           )}
 
@@ -254,20 +258,22 @@ export default function ContractForm({
                 {summary1Content}
               </ContractFormSummaryAccordion>
 
-              <ContractFormSummaryAccordion
-                expanded={formState.summary2Expanded}
-                maxHeightClass="max-h-[800px]"
-                onToggle={() =>
-                  formState.setSummary2Expanded((previous) => !previous)
-                }
-                preview={servicesPreview}
-                title="Servicios"
-              >
-                <div className="border-t border-slate-200 bg-white px-4 pb-4 pt-3">
-                  {servicesSummaryHeader}
-                  {servicesSection}
-                </div>
-              </ContractFormSummaryAccordion>
+              {showServicesSection && (
+                <ContractFormSummaryAccordion
+                  expanded={formState.summary2Expanded}
+                  maxHeightClass="max-h-[800px]"
+                  onToggle={() =>
+                    formState.setSummary2Expanded((previous) => !previous)
+                  }
+                  preview={servicesPreview}
+                  title="Servicios"
+                >
+                  <div className="border-t border-slate-200 bg-white px-4 pb-4 pt-3">
+                    {servicesSummaryHeader}
+                    {servicesSection}
+                  </div>
+                </ContractFormSummaryAccordion>
+              )}
 
               <ContractFormDocumentSection
                 dragActive={formState.dragActive}

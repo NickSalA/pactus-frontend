@@ -86,6 +86,8 @@ export function useContractForm({
   } = servicesState;
 
   const validateStep2 = useCallback((): string | null => {
+    if (form.type !== 'COMPANY') return null;
+
     if (addingService) {
       return 'Guarda o cancela el servicio actual antes de continuar.';
     }
@@ -96,7 +98,7 @@ export function useContractForm({
     } catch (err) {
       return err instanceof Error ? err.message : 'Error en los servicios.';
     }
-  }, [addingService, buildServiceItemsPayload]);
+  }, [addingService, buildServiceItemsPayload, form.type]);
 
   const wizardState = useContractFormWizard({
     form,
