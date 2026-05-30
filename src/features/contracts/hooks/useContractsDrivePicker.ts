@@ -4,12 +4,19 @@ import { useCallback, useState } from "react";
 import { openGooglePicker, type GooglePickerFile } from "@/lib/googlePicker";
 import { useImportGoogleDriveFiles } from "@/queries/hooks/contracts/mutations";
 import { mergeDriveSelections } from "@/features/contracts/lib/contractsUtils";
-import { useAuthStore } from "@/store";
+import { useAuthStore, useContractImportStore } from "@/store";
 
-export function useContractsDrivePicker() {
+type UseContractsDrivePickerOptions = {
+  folderId?: number | null;
+};
+
+export function useContractsDrivePicker({
+  folderId = null,
+}: UseContractsDrivePickerOptions = {}) {
   const googleLoginHint = useAuthStore((state) => state.user?.email ?? null);
   const [isOpeningDrivePicker, setIsOpeningDrivePicker] = useState(false);
   const [isImportingDriveFiles, setIsImportingDriveFiles] = useState(false);
+  const [isDriveImportReviewOpen, setIsDriveImportReviewOpen] = useState(false);
   const [drivePickerError, setDrivePickerError] = useState<string | null>(null);
   const [driveImportError, setDriveImportError] = useState<string | null>(null);
   const [driveImportMessage, setDriveImportMessage] = useState<string | null>(null);
@@ -18,6 +25,8 @@ export function useContractsDrivePicker() {
   const [selectedDriveFiles, setSelectedDriveFiles] = useState<GooglePickerFile[]>([]);
 
   const { mutateAsync: importDriveFiles } = useImportGoogleDriveFiles();
+  const startImportSession = useContractImportStore((state) => state.startImportSession);
+  const markImportRequestFailed = useContractImportStore((state) => state.markImportRequestFailed);
 
   const openDrivePicker = useCallback(async () => {
     setDrivePickerError(null);
@@ -39,6 +48,7 @@ export function useContractsDrivePicker() {
       setGoogleDriveAccessToken(result.accessToken);
       setGoogleDriveAccessTokenExpiresAt(result.accessTokenExpiresAt);
       setSelectedDriveFiles((files) => mergeDriveSelections(files, result.files));
+      setIsDriveImportReviewOpen(true);
     } catch (err) {
       setDrivePickerError(
         err instanceof Error ? err.message : "No se pudo abrir el selector de Google Drive.",
@@ -62,34 +72,43 @@ export function useContractsDrivePicker() {
       return;
     }
 
+    const filesToImport = selectedDriveFiles;
+    const sessionId = startImportSession(filesToImport);
+
+    setIsDriveImportReviewOpen(false);
+    setSelectedDriveFiles([]);
     setIsImportingDriveFiles(true);
 
     try {
       const result = await importDriveFiles({
         accessToken: googleDriveAccessToken,
-        files: selectedDriveFiles,
+        files: filesToImport,
+        folderId,
       });
       const skippedMessage =
         result.skipped_files > 0
           ? ` Se omitieron ${result.skipped_files} carpeta${result.skipped_files === 1 ? "" : "s"}.`
           : "";
 
-      setDriveImportMessage(
-        `${result.message} ${result.queued_files} archivo${result.queued_files === 1 ? "" : "s"} enviado${result.queued_files === 1 ? "" : "s"} al backend.${skippedMessage}`,
-      );
+      setDriveImportMessage(skippedMessage.trim() || null);
     } catch (err) {
-      setDriveImportError(
-        err instanceof Error ? err.message : "No se pudieron enviar los archivos seleccionados.",
-      );
+      const message =
+        err instanceof Error ? err.message : "No se pudieron enviar los archivos seleccionados.";
+      markImportRequestFailed(sessionId, message);
+      setDriveImportError(message);
     } finally {
       setIsImportingDriveFiles(false);
     }
-  }, [googleDriveAccessToken, selectedDriveFiles]);
+  }, [folderId, googleDriveAccessToken, importDriveFiles, markImportRequestFailed, selectedDriveFiles, startImportSession]);
 
   const clearDriveSelection = useCallback(() => {
     setSelectedDriveFiles([]);
     setDriveImportError(null);
     setDriveImportMessage(null);
+  }, []);
+
+  const closeDriveImportReview = useCallback(() => {
+    setIsDriveImportReviewOpen(false);
   }, []);
 
   const removeDriveFile = useCallback((fileId: string) => {
@@ -98,10 +117,12 @@ export function useContractsDrivePicker() {
 
   return {
     clearDriveSelection,
+    closeDriveImportReview,
     driveImportError,
     driveImportMessage,
     drivePickerError,
     importSelectedDriveFiles,
+    isDriveImportReviewOpen,
     isImportingDriveFiles,
     isOpeningDrivePicker,
     openDrivePicker,
