@@ -14,42 +14,6 @@ type ChatHistorySidebarProps = {
   onDeleteConversation: (id: number) => void;
 };
 
-function PanelCollapseIcon() {
-  return (
-    <svg
-      className="h-5 w-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={1.75}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
-      />
-    </svg>
-  );
-}
-
-function PanelExpandIcon() {
-  return (
-    <svg
-      className="h-5 w-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={1.75}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13 5l7 7-7 7M5 5l7 7-7 7"
-      />
-    </svg>
-  );
-}
-
 function TrashIcon() {
   return (
     <svg
@@ -171,7 +135,10 @@ export function ChatHistorySidebar({
 
                 if (isEditing) {
                   return (
-                    <div key={conversation.id} className="relative">
+                    <div
+                      key={conversation.id}
+                      className="flex items-center gap-3 px-4 py-3 border border-blue-300 bg-white rounded-lg shadow-md"
+                    >
                       <input
                         ref={editInputRef}
                         type="text"
@@ -179,9 +146,9 @@ export function ChatHistorySidebar({
                         onChange={(e) => setEditValue(e.target.value)}
                         onBlur={() => handleEditSave(conversation.id)}
                         onKeyDown={(e) => handleKeyDown(e, conversation.id)}
-                        className="w-full rounded-lg border border-blue-300 bg-white px-3 py-2.5 pr-16 text-sm font-medium text-slate-700 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="flex-1 min-w-0 truncate text-sm font-medium text-slate-700 focus:outline-none"
                       />
-                      <div className="absolute inset-y-0 right-2 flex items-center gap-1">
+                      <div className="flex items-center gap-1 pl-4">
                         <button
                           onClick={() => handleEditSave(conversation.id)}
                           className="rounded p-1 text-emerald-500 hover:bg-emerald-50"
@@ -202,25 +169,41 @@ export function ChatHistorySidebar({
                 }
 
                 return (
-                  <div key={conversation.id} className="group relative">
-                    <Button
-                      onClick={() => onSelectConversation(conversation.id)}
-                      text={conversation.title}
-                      variant={'normal'}
-                      size="big"
-                      className="w-full justify-center text-brand-neutral-500 shadow-md"
-                    />
-                    <div className="absolute inset-y-0 right-2 hidden group-hover:flex items-center gap-1">
+                  <div
+                    key={conversation.id}
+                    onClick={() => onSelectConversation(conversation.id)}
+                    className={`flex items-center gap-3 px-4 py-3 border rounded-lg shadow-md cursor-pointer ${
+                      isActive
+                        ? 'border-transparent bg-brand-primary'
+                        : 'border-slate-200 bg-neutral-50'
+                    }`}
+                  >
+                    <span
+                      className={`flex-1 min-w-0 truncate text-label-main-bold ${
+                        isActive ? 'text-white' : 'text-brand-neutral-500'
+                      }`}
+                    >
+                      {conversation.title}
+                    </span>
+                    <div className={`flex items-center gap-1 pl-4 ${isActive ? 'text-white/80' : ''}`}>
                       <button
                         onClick={(e) => handleEditStart(conversation, e)}
-                        className="rounded p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
+                        className={`rounded p-1 ${
+                          isActive
+                            ? 'text-white/80 hover:bg-white/10 hover:text-white'
+                            : 'text-slate-400 hover:bg-slate-200 hover:text-slate-600'
+                        }`}
                         title="Editar título"
                       >
                         <EditIcon />
                       </button>
                       <button
                         onClick={(e) => handleDelete(conversation.id, e)}
-                        className="rounded p-1 text-slate-400 hover:bg-red-100 hover:text-red-600"
+                        className={`rounded p-1 ${
+                          isActive
+                            ? 'text-white/80 hover:bg-white/10 hover:text-white'
+                            : 'text-slate-400 hover:bg-red-100 hover:text-red-600'
+                        }`}
                         title="Eliminar conversación"
                       >
                         <TrashIcon />
