@@ -1,10 +1,11 @@
-import type { ApiConversationList, ApiConversationRead } from '@/types/api';
+import type { ApiChartData, ApiConversationList, ApiConversationRead } from '@/types/api';
 
 export type ChatMessage = {
   id: string;
   sender: 'user' | 'bot';
   content: string;
   timestamp: Date;
+  chart?: ApiChartData;
 };
 
 export const CHAT_SUGGESTIONS = [
