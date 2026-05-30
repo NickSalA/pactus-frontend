@@ -8,7 +8,7 @@ import {
   type ChangeEvent,
   type KeyboardEvent,
 } from 'react';
-import { useSendMessage } from '@/queries/hooks/chat/mutations';
+import { useSendMessage, useUpdateConversation, useDeleteConversation } from '@/queries/hooks/chat/mutations';
 import {
   useConversation,
   useConversations,
@@ -54,6 +54,20 @@ export function useAIAgentPage() {
   }, []);
 
   const { mutateAsync: sendMessageMutation } = useSendMessage();
+  const { mutateAsync: updateConversationMutation } = useUpdateConversation();
+  const { mutateAsync: deleteConversationMutation } = useDeleteConversation();
+
+  const handleUpdateConversation = useCallback(async (id: number, title: string) => {
+    await updateConversationMutation({ id, title });
+  }, [updateConversationMutation]);
+
+  const handleDeleteConversation = useCallback(async (id: number) => {
+    if (threadId === id) {
+      setMessages([]);
+      setThreadId(undefined);
+    }
+    await deleteConversationMutation(id);
+  }, [deleteConversationMutation, threadId]);
 
   const submitCurrentMessage = useCallback(async () => {
     const trimmedValue = inputValue.trim();
@@ -168,6 +182,8 @@ export function useAIAgentPage() {
     handleFormSubmit,
     handleInputChange,
     handleSuggestionSelect,
+    handleUpdateConversation,
+    handleDeleteConversation,
     inputValue,
     isConversationLoading,
     isHistoryLoading,
