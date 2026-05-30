@@ -12,6 +12,7 @@ import {
   uploadDocument,
 } from '@/api';
 import type {
+  ApiDocumentCreateRequest,
   ApiDocumentMultipartCreateRequest,
   ApiDocumentMultipartUpdateRequest,
   ApiFolderCreateRequest,
@@ -123,11 +124,15 @@ export const useImportGoogleDriveFiles = () => {
   return useMutation({
     mutationFn: ({
       accessToken,
+      document,
       files,
+      folderId,
     }: {
       accessToken: string;
+      document?: ApiDocumentCreateRequest;
       files: GooglePickerFile[];
-    }) => importGoogleDriveFiles(accessToken, files),
+      folderId?: number | null;
+    }) => importGoogleDriveFiles(accessToken, files, { document, folderId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CONTRACTS_KEY });
     },

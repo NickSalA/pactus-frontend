@@ -2,6 +2,7 @@ import type { GooglePickerFile } from '@/lib/googlePicker';
 import { GOOGLE_DRIVE_SCOPE } from '@/lib/googlePicker';
 import { isDriveFolder } from '@/lib/googlePicker';
 import {
+  ApiDocumentCreateRequest,
   ApiDocumentUpdateRequest,
   ApiIntegrationImportRequest,
   ApiIntegrationImportResponse,
@@ -15,10 +16,15 @@ export type GoogleDriveImportResponse = ApiIntegrationImportResponse & {
   skipped_files: number;
 };
 
-// TODO Quitar boton de "Importar en contratos"
+type ImportGoogleDriveFilesOptions = {
+  document?: ApiDocumentCreateRequest;
+  folderId?: number | null;
+};
+
 export async function importGoogleDriveFiles(
   accessToken: string,
   files: GooglePickerFile[],
+  options: ImportGoogleDriveFilesOptions = {},
 ): Promise<GoogleDriveImportResponse> {
   const importableFiles = files.filter((file) => !isDriveFolder(file));
   const skippedFiles = files.length - importableFiles.length;
@@ -35,6 +41,11 @@ export async function importGoogleDriveFiles(
     );
   }
 
+  const documentPayload = {
+    ...(options.document ?? {}),
+    folder_id: options.folderId ?? options.document?.folder_id ?? null,
+  } satisfies DriveImportDocumentPayload;
+
   const response = await apiPost<ApiIntegrationImportResponse>(
     '/integrations/drive/import',
     {
@@ -44,11 +55,15 @@ export async function importGoogleDriveFiles(
       },
       files: importableFiles.map((file) => ({
         file_id: file.id,
-        document: {} satisfies DriveImportDocumentPayload,
+        document: documentPayload,
       })),
     } satisfies ApiIntegrationImportRequest,
     { timeout: TIMEOUTS.UPLOAD },
   );
+
+  // TODO: conectar progreso real cuando backend exponga endpoints tipo:
+  // GET /integrations/drive/imports/{import_id}
+  // POST /integrations/drive/imports/{import_id}/retry-failed
 
   return {
     ...response,
