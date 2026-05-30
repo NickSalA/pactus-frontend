@@ -179,3 +179,16 @@ export const getDocumentFileLabel = (
 ): string => {
   return readString(document.file_name) ?? 'Sin archivo';
 };
+
+export const getDocumentSourceFileId = (
+  document: Pick<DocumentFlatten, 'form_data'>,
+): string | null => {
+  const source = document.form_data.source;
+
+  if (!source || typeof source !== 'object' || Array.isArray(source)) {
+    return null;
+  }
+
+  const fileId = (source as Record<string, unknown>).file_id;
+  return typeof fileId === 'string' && fileId.trim() ? fileId : null;
+};

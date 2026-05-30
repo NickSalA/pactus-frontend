@@ -260,6 +260,7 @@ export function useContractsCollection() {
     activeFolder,
     activeFolderId,
     addContract,
+    documents,
     createFolder,
     deleteFolder,
     error,

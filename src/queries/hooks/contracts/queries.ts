@@ -3,10 +3,17 @@ import { getDocumentById, getDocumentFolders, getDocuments, getDocumentFileUrl, 
 
 const CONTRACTS_KEY = ["contracts"] as const;
 
-export const useDocuments = () =>
+type UseDocumentsOptions = {
+  enabled?: boolean;
+  refetchInterval?: number | false;
+};
+
+export const useDocuments = (options: UseDocumentsOptions = {}) =>
   useQuery({
     queryKey: CONTRACTS_KEY,
     queryFn: () => getDocuments(),
+    enabled: options.enabled ?? true,
+    refetchInterval: options.refetchInterval,
   });
 
 export const useDocumentById = (id: number) =>

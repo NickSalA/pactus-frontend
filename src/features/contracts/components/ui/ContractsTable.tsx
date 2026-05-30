@@ -4,6 +4,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Eye,
+  LoaderCircle,
   Pencil,
   Trash2,
 } from 'lucide-react';
@@ -14,6 +15,7 @@ import {
 import { DocumentTypeBadge } from '@/components/ui/DocumentTypeBadge';
 import { getVisiblePageNumbers } from '@/lib/utils';
 import { Select } from '@/components/ui/Select';
+import type { ContractImportFile } from '@/store/contractImportStore';
 import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiUserRole } from '@/types/api';
 
@@ -32,6 +34,7 @@ type ContractsTableProps = {
   onView: (contract: DocumentFlatten) => void;
   selectedIds?: Set<number>;
   startIndex: number;
+  temporaryImportFiles?: ContractImportFile[];
   totalPages: number;
   userRole?: ApiUserRole | null;
 };
@@ -51,6 +54,7 @@ export function ContractsTable({
   onView,
   selectedIds,
   startIndex,
+  temporaryImportFiles = [],
   totalPages,
   userRole,
 }: ContractsTableProps) {
@@ -118,6 +122,41 @@ export function ContractsTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
+            {temporaryImportFiles.map((file) => (
+              <tr
+                key={`import-${file.id}`}
+                className="bg-brand-blue-50/60 transition-colors"
+              >
+                {showCheckboxes && <td className="px-4 py-3" />}
+                <td className="px-4 py-3 text-slate-600">
+                  <div className="min-w-0">
+                    <p className="font-medium text-slate-700">
+                      Analizando contrato...
+                    </p>
+                    <p className="mt-0.5 truncate text-xs text-slate-500">
+                      {file.name}
+                    </p>
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-slate-500">Pendiente</td>
+                <td className="px-4 py-3 text-slate-500">--</td>
+                <td className="px-4 py-3 text-slate-500">--</td>
+                {showServicesColumn && (
+                  <td className="px-4 py-3 text-slate-500">--</td>
+                )}
+                <td className="px-4 py-3 text-center">
+                  <span className="inline-flex items-center rounded-full bg-brand-blue-100 px-2.5 py-1 text-xs font-medium text-brand-primary ring-1 ring-brand-primary/20">
+                    Análisis IA
+                  </span>
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center justify-center">
+                    <LoaderCircle className="h-4 w-4 animate-spin text-brand-primary" />
+                  </div>
+                </td>
+              </tr>
+            ))}
+
             {contracts.map((contract, index) => {
               const serviceCount = contract.service_items?.length ?? 0;
 

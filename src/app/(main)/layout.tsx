@@ -1,4 +1,5 @@
 import Sidebar from '@/components/layout/Sidebar';
+import { ContractImportFloatingWidget } from '@/components/layout/ContractImportFloatingWidget';
 
 export default function MainLayout({
   children,
@@ -11,6 +12,7 @@ export default function MainLayout({
         <Sidebar />
       </aside>
       <main className="flex-1 p-6 min-h-0 overflow-visible">{children}</main>
+      <ContractImportFloatingWidget />
     </div>
   );
 }
