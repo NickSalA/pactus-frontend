@@ -1,5 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { Trash2, Pencil } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { ApiConversationList } from '@/types/api';
 import { Button } from '@/components/ui/button';
 
@@ -162,17 +173,40 @@ export function ChatHistorySidebar({
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
-                      <button
-                        onClick={(e) => handleDelete(conversation.id, e)}
-                        className={`rounded p-1 ${
-                          isActive
-                            ? 'text-white/80 hover:bg-white/10 hover:text-white'
-                            : 'text-slate-400 hover:bg-red-100 hover:text-red-600'
-                        }`}
-                        title="Eliminar conversación"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+<AlertDialog>
+                        <AlertDialogTrigger
+                          onClick={(e) => e.stopPropagation()}
+                          className={`rounded p-1 ${
+                            isActive
+                              ? 'text-white/80 hover:bg-white/10 hover:text-white'
+                              : 'text-slate-400 hover:bg-red-100 hover:text-red-600'
+                          }`}
+                          title="Eliminar conversación"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Eliminar conversación</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              ¿Estás seguro de que deseas eliminar esta conversación? Esta acción no se puede deshacer.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel onClick={(e) => e.stopPropagation()}>
+                              Cancelar
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(conversation.id, e);
+                              }}
+                            >
+                              Eliminar
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 );
