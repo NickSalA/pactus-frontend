@@ -82,9 +82,7 @@ export function useContractsPage({
   const activeImportFiles = useMemo(
     () =>
       importSession?.status === 'running'
-        ? importSession.files.filter(
-            (file) => file.status !== 'COMPLETED' && file.status !== 'FAILED',
-          )
+        ? importSession.files
         : EMPTY_IMPORT_FILES,
     [importSession],
   );

@@ -1,7 +1,11 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { openGooglePicker, type GooglePickerFile } from "@/lib/googlePicker";
+import {
+  isDriveFolder,
+  openGooglePicker,
+  type GooglePickerFile,
+} from "@/lib/googlePicker";
 import { useImportGoogleDriveFiles } from "@/queries/hooks/contracts/mutations";
 import { mergeDriveSelections } from "@/features/contracts/lib/contractsUtils";
 import { useAuthStore, useContractImportStore } from "@/store";
@@ -20,13 +24,25 @@ export function useContractsDrivePicker({
   const [drivePickerError, setDrivePickerError] = useState<string | null>(null);
   const [driveImportError, setDriveImportError] = useState<string | null>(null);
   const [driveImportMessage, setDriveImportMessage] = useState<string | null>(null);
-  const [googleDriveAccessToken, setGoogleDriveAccessToken] = useState<string | null>(null);
-  const [googleDriveAccessTokenExpiresAt, setGoogleDriveAccessTokenExpiresAt] = useState<number | null>(null);
-  const [selectedDriveFiles, setSelectedDriveFiles] = useState<GooglePickerFile[]>([]);
+  const [googleDriveAccessToken, setGoogleDriveAccessToken] = useState<
+    string | null
+  >(null);
+  const [googleDriveAccessTokenExpiresAt, setGoogleDriveAccessTokenExpiresAt] =
+    useState<number | null>(null);
+  const [selectedDriveFiles, setSelectedDriveFiles] = useState<
+    GooglePickerFile[]
+  >([]);
 
   const { mutateAsync: importDriveFiles } = useImportGoogleDriveFiles();
-  const startImportSession = useContractImportStore((state) => state.startImportSession);
-  const markImportRequestFailed = useContractImportStore((state) => state.markImportRequestFailed);
+  const startImportSession = useContractImportStore(
+    (state) => state.startImportSession,
+  );
+  const attachJobToSession = useContractImportStore(
+    (state) => state.attachJobToSession,
+  );
+  const markImportRequestFailed = useContractImportStore(
+    (state) => state.markImportRequestFailed,
+  );
 
   const openDrivePicker = useCallback(async () => {
     setDrivePickerError(null);
@@ -47,11 +63,15 @@ export function useContractsDrivePicker({
 
       setGoogleDriveAccessToken(result.accessToken);
       setGoogleDriveAccessTokenExpiresAt(result.accessTokenExpiresAt);
-      setSelectedDriveFiles((files) => mergeDriveSelections(files, result.files));
+      setSelectedDriveFiles((files) =>
+        mergeDriveSelections(files, result.files),
+      );
       setIsDriveImportReviewOpen(true);
     } catch (err) {
       setDrivePickerError(
-        err instanceof Error ? err.message : "No se pudo abrir el selector de Google Drive.",
+        err instanceof Error
+          ? err.message
+          : "No se pudo abrir el selector de Google Drive.",
       );
     } finally {
       setIsOpeningDrivePicker(false);
@@ -63,16 +83,39 @@ export function useContractsDrivePicker({
     setDriveImportMessage(null);
 
     if (!googleDriveAccessToken) {
-      setDriveImportError("Vuelve a abrir Google Drive para autorizar la importacion de archivos.");
+      setDriveImportError(
+        "Vuelve a abrir Google Drive para autorizar la importacion de archivos.",
+      );
       return;
     }
 
     if (selectedDriveFiles.length === 0) {
-      setDriveImportError("Selecciona al menos un archivo antes de iniciar la importacion.");
+      setDriveImportError(
+        "Selecciona al menos un archivo antes de iniciar la importacion.",
+      );
       return;
     }
 
-    const filesToImport = selectedDriveFiles;
+    const currentSession = useContractImportStore.getState().session;
+    if (currentSession?.status === "running") {
+      setDriveImportError(
+        "Ya hay una importacion en progreso. Espera a que termine antes de iniciar otra.",
+      );
+      return;
+    }
+
+    const filesToImport = selectedDriveFiles.filter(
+      (file) => !isDriveFolder(file),
+    );
+    const skippedFolders = selectedDriveFiles.length - filesToImport.length;
+
+    if (filesToImport.length === 0) {
+      setDriveImportError(
+        "Selecciona al menos un archivo de Google Drive. Las carpetas no se pueden importar.",
+      );
+      return;
+    }
+
     const sessionId = startImportSession(filesToImport);
 
     setIsDriveImportReviewOpen(false);
@@ -85,21 +128,37 @@ export function useContractsDrivePicker({
         files: filesToImport,
         folderId,
       });
+      attachJobToSession(sessionId, result.job_id);
+
+      const skippedCount = skippedFolders + result.skipped_files;
       const skippedMessage =
-        result.skipped_files > 0
-          ? ` Se omitieron ${result.skipped_files} carpeta${result.skipped_files === 1 ? "" : "s"}.`
+        skippedCount > 0
+          ? `Se omitieron ${skippedCount} carpeta${skippedCount === 1 ? "" : "s"}.`
           : "";
 
-      setDriveImportMessage(skippedMessage.trim() || null);
+      setDriveImportMessage(
+        skippedMessage ||
+          "Importacion iniciada. Puedes seguir el progreso en el indicador inferior.",
+      );
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "No se pudieron enviar los archivos seleccionados.";
+        err instanceof Error
+          ? err.message
+          : "No se pudieron enviar los archivos seleccionados.";
       markImportRequestFailed(sessionId, message);
       setDriveImportError(message);
     } finally {
       setIsImportingDriveFiles(false);
     }
-  }, [folderId, googleDriveAccessToken, importDriveFiles, markImportRequestFailed, selectedDriveFiles, startImportSession]);
+  }, [
+    attachJobToSession,
+    folderId,
+    googleDriveAccessToken,
+    importDriveFiles,
+    markImportRequestFailed,
+    selectedDriveFiles,
+    startImportSession,
+  ]);
 
   const clearDriveSelection = useCallback(() => {
     setSelectedDriveFiles([]);
@@ -112,7 +171,9 @@ export function useContractsDrivePicker({
   }, []);
 
   const removeDriveFile = useCallback((fileId: string) => {
-    setSelectedDriveFiles((files) => files.filter((file) => file.id !== fileId));
+    setSelectedDriveFiles((files) =>
+      files.filter((file) => file.id !== fileId),
+    );
   }, []);
 
   return {
