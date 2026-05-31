@@ -1,90 +1,107 @@
 import { create } from 'zustand';
 import type { GooglePickerFile } from '@/lib/googlePicker';
+import type {
+  ApiIntegrationImportEventData,
+  ApiIntegrationImportFilePhase,
+  ApiIntegrationImportJobStatus,
+} from '@/types/api';
 
-export type ContractImportFileStatus =
-  | 'QUEUED'
-  | 'UPLOADING'
-  | 'EXTRACTING_METADATA'
-  | 'AI_ANALYSIS'
-  | 'CREATING_RECORD'
-  | 'COMPLETED'
-  | 'FAILED';
+export type ContractImportFileStatus = ApiIntegrationImportFilePhase;
 
 export type ContractImportSessionStatus =
   | 'running'
   | 'completed'
-  | 'completed_with_errors';
+  | 'completed_with_errors'
+  | 'failed';
 
 export type ContractImportFile = GooglePickerFile & {
   error?: string;
   status: ContractImportFileStatus;
 };
 
-export type ContractImportFileProgress = {
-  error?: string;
-  fileId: string;
-  status: ContractImportFileStatus;
-};
-
 export type ContractImportSession = {
+  backendStatus: ApiIntegrationImportJobStatus;
   files: ContractImportFile[];
   finishedAt: number | null;
   id: string;
   isExpanded: boolean;
+  jobId: string | null;
   startedAt: number;
   status: ContractImportSessionStatus;
+  streamError?: string;
 };
 
 type ContractImportState = {
   session: ContractImportSession | null;
-  applyBackendProgress: (updates: ContractImportFileProgress[]) => void;
+  applyImportEvent: (event: ApiIntegrationImportEventData) => void;
+  attachJobToSession: (sessionId: string, jobId: string) => void;
   closeImportWidget: () => void;
-  markCompletedBySourceFileIds: (fileIds: string[]) => void;
   markImportRequestFailed: (sessionId: string, message: string) => void;
-  retryFailedFiles: () => void;
+  markImportStreamFailed: (jobId: string, message: string) => void;
   setImportWidgetExpanded: (isExpanded: boolean) => void;
   startImportSession: (files: GooglePickerFile[]) => string;
 };
 
 const createSessionId = () => `contract-import-${Date.now()}`;
+const CRITICAL_JOB_ERROR = 'La importacion fallo criticamente.';
 
-const mergeImportFiles = (
-  currentFiles: ContractImportFile[],
-  nextFiles: GooglePickerFile[],
-): ContractImportFile[] => {
-  const filesById = new Map(currentFiles.map((file) => [file.id, file]));
-
-  nextFiles.forEach((file) => {
-    if (!filesById.has(file.id)) {
-      filesById.set(file.id, { ...file, status: 'QUEUED' });
-    }
-  });
-
-  return Array.from(filesById.values());
-};
+const isTerminalFileStatus = (status: ContractImportFileStatus): boolean =>
+  status === 'COMPLETED' || status === 'FAILED';
 
 const resolveSessionStatus = (
   files: ContractImportFile[],
+  backendStatus: ApiIntegrationImportJobStatus = 'RUNNING',
 ): ContractImportSessionStatus => {
-  if (files.some((file) => file.status === 'FAILED')) {
-    return files.every(
-      (file) => file.status === 'COMPLETED' || file.status === 'FAILED',
-    )
-      ? 'completed_with_errors'
-      : 'running';
+  if (backendStatus === 'FAILED') {
+    return 'failed';
   }
 
-  return files.every((file) => file.status === 'COMPLETED')
-    ? 'completed'
-    : 'running';
+  if (backendStatus === 'COMPLETED') {
+    return files.some((file) => file.status === 'FAILED')
+      ? 'completed_with_errors'
+      : 'completed';
+  }
+
+  if (!files.every((file) => isTerminalFileStatus(file.status))) {
+    return 'running';
+  }
+
+  return files.some((file) => file.status === 'FAILED')
+    ? 'completed_with_errors'
+    : 'completed';
 };
 
 const resolveFinishedAt = (
-  files: ContractImportFile[],
+  status: ContractImportSessionStatus,
   previousFinishedAt: number | null,
 ): number | null => {
-  const status = resolveSessionStatus(files);
   return status === 'running' ? null : previousFinishedAt ?? Date.now();
+};
+
+const syncFilesWithImportEvent = (
+  currentFiles: ContractImportFile[],
+  event: ApiIntegrationImportEventData,
+): ContractImportFile[] => {
+  const backendFilesById = new Map(
+    event.files.map((file) => [file.file_id, file]),
+  );
+
+  return currentFiles.map((file) => {
+    const backendFile = backendFilesById.get(file.id);
+    let status = backendFile?.phase ?? file.status;
+    let error = backendFile?.error ?? file.error;
+
+    if (event.status === 'FAILED' && status !== 'COMPLETED') {
+      status = 'FAILED';
+      error = error ?? event.error ?? CRITICAL_JOB_ERROR;
+    }
+
+    return {
+      ...file,
+      error: error ?? undefined,
+      status,
+    };
+  });
 };
 
 export const useContractImportStore = create<ContractImportState>(
@@ -93,115 +110,61 @@ export const useContractImportStore = create<ContractImportState>(
 
     startImportSession: (files) => {
       const currentSession = get().session;
-      const sessionId =
-        currentSession?.status === 'running'
-          ? currentSession.id
-          : createSessionId();
+      if (currentSession?.status === 'running') {
+        return currentSession.id;
+      }
 
-      set((state) => {
-        if (state.session?.status === 'running') {
-          return {
-            session: {
-              ...state.session,
-              files: mergeImportFiles(state.session.files, files),
-              isExpanded: false,
-              status: 'running',
-            },
-          };
-        }
+      const sessionId = createSessionId();
 
-        return {
-          session: {
-            files: files.map((file) => ({ ...file, status: 'QUEUED' })),
-            finishedAt: null,
-            id: sessionId,
-            isExpanded: false,
-            startedAt: Date.now(),
-            status: 'running',
-          },
-        };
+      set({
+        session: {
+          backendStatus: 'RUNNING',
+          files: files.map((file) => ({ ...file, status: 'PENDING' })),
+          finishedAt: null,
+          id: sessionId,
+          isExpanded: false,
+          jobId: null,
+          startedAt: Date.now(),
+          status: 'running',
+        },
       });
 
       return sessionId;
     },
 
-    applyBackendProgress: (updates) => {
-      if (updates.length === 0) {
-        return;
-      }
-
+    attachJobToSession: (sessionId, jobId) => {
       set((state) => {
-        if (!state.session) {
-          return state;
-        }
-
-        const updatesByFileId = new Map(
-          updates.map((update) => [update.fileId, update]),
-        );
-        let hasChanges = false;
-        const files = state.session.files.map((file) => {
-          const update = updatesByFileId.get(file.id);
-          if (!update) {
-            return file;
-          }
-
-          if (file.status !== update.status || file.error !== update.error) {
-            hasChanges = true;
-            return { ...file, error: update.error, status: update.status };
-          }
-
-          return file;
-        });
-
-        if (!hasChanges) {
+        if (!state.session || state.session.id !== sessionId) {
           return state;
         }
 
         return {
           session: {
             ...state.session,
-            files,
-            finishedAt: resolveFinishedAt(files, state.session.finishedAt),
-            status: resolveSessionStatus(files),
+            jobId,
+            streamError: undefined,
           },
         };
       });
     },
 
-    markCompletedBySourceFileIds: (fileIds) => {
-      if (fileIds.length === 0) {
-        return;
-      }
-
+    applyImportEvent: (event) => {
       set((state) => {
-        if (!state.session || state.session.status !== 'running') {
+        if (!state.session || state.session.jobId !== event.job_id) {
           return state;
         }
 
-        const completedIds = new Set(fileIds);
-        let hasChanges = false;
-        const files = state.session.files.map((file) => {
-          if (completedIds.has(file.id) && file.status !== 'FAILED') {
-            if (file.status !== 'COMPLETED') {
-              hasChanges = true;
-            }
-
-            return { ...file, status: 'COMPLETED' as const };
-          }
-
-          return file;
-        });
-
-        if (!hasChanges) {
-          return state;
-        }
+        const files = syncFilesWithImportEvent(state.session.files, event);
+        const status = resolveSessionStatus(files, event.status);
 
         return {
           session: {
             ...state.session,
+            backendStatus: event.status,
             files,
-            finishedAt: resolveFinishedAt(files, state.session.finishedAt),
-            status: resolveSessionStatus(files),
+            finishedAt: resolveFinishedAt(status, state.session.finishedAt),
+            status,
+            streamError: undefined,
           },
         };
       });
@@ -222,33 +185,30 @@ export const useContractImportStore = create<ContractImportState>(
         return {
           session: {
             ...state.session,
+            backendStatus: 'FAILED',
             files,
             finishedAt: Date.now(),
-            status: 'completed_with_errors',
+            status: 'failed',
+            streamError: undefined,
           },
         };
       });
     },
 
-    retryFailedFiles: () => {
-      // TODO: conectar con POST /integrations/drive/imports/{import_id}/retry-failed cuando backend lo exponga.
+    markImportStreamFailed: (jobId, message) => {
       set((state) => {
-        if (!state.session) {
+        if (
+          !state.session ||
+          state.session.jobId !== jobId ||
+          state.session.status !== 'running'
+        ) {
           return state;
         }
-
-        const files = state.session.files.map((file) =>
-          file.status === 'FAILED'
-            ? { ...file, error: undefined, status: 'QUEUED' as const }
-            : file,
-        );
 
         return {
           session: {
             ...state.session,
-            files,
-            finishedAt: null,
-            status: 'running',
+            streamError: message,
           },
         };
       });

@@ -119,8 +119,6 @@ export const useDeleteDocumentFolder = () => {
 };
 
 export const useImportGoogleDriveFiles = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({
       accessToken,
@@ -133,9 +131,6 @@ export const useImportGoogleDriveFiles = () => {
       files: GooglePickerFile[];
       folderId?: number | null;
     }) => importGoogleDriveFiles(accessToken, files, { document, folderId }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: CONTRACTS_KEY });
-    },
   });
 };
 
