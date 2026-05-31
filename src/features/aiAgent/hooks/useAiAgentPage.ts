@@ -58,10 +58,6 @@ export function useAIAgentPage() {
   }, [messages]);
 
   useEffect(() => {
-    console.log('[AI Agent] Messages:', messages);
-  }, [messages]);
-
-  useEffect(() => {
     if (conversationData) {
       setMessages(mapConversationToMessages(conversationData));
     }
@@ -145,8 +141,6 @@ export function useAIAgentPage() {
         message: userMessage.content,
         thread_id: threadId,
       });
-
-      console.log('[AI Agent] Response:', response);
 
       const botMessage: ChatMessage = {
         id: `bot-${Date.now()}`,
