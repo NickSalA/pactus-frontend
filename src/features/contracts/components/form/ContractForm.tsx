@@ -180,8 +180,6 @@ export default function ContractForm({
   const formSteps = showServicesSection
     ? (['Datos generales', 'Servicios', 'Documento'] as const)
     : (['Datos generales', 'Documento'] as const);
-  // Without the services step the wizard jumps from GENERAL to DOCUMENT internally,
-  // so we remap DOCUMENT → visual SERVICES to keep the progress bar in sync.
   const visualStep =
     showServicesSection || formState.currentStep !== CONTRACT_STEPS.DOCUMENT
       ? formState.currentStep
