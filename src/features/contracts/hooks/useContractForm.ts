@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react';
 import {
   buildFormStateWithDefaultType,
+  hasServicesStep,
   type FormState,
 } from '@/features/contracts/lib/contractFormUtils';
 import { buildContractFormDataPayload } from '@/features/contracts/lib/contractFormPayloads';
@@ -86,7 +87,7 @@ export function useContractForm({
   } = servicesState;
 
   const validateStep2 = useCallback((): string | null => {
-    if (form.type !== 'COMPANY') return null;
+    if (!hasServicesStep(form.type)) return null;
 
     if (addingService) {
       return 'Guarda o cancela el servicio actual antes de continuar.';
@@ -105,7 +106,7 @@ export function useContractForm({
     onBeforePrev: resetNewService,
     setForm,
     validateStep2,
-    skipServicesStep: form.type !== 'COMPANY',
+    skipServicesStep: !hasServicesStep(form.type),
   });
 
   const { mutateAsync: uploadDocumentMutation } = useUploadDocument();
