@@ -2,9 +2,9 @@
 
 import { Check, Plus } from 'lucide-react';
 import {
+  CONTRACT_STEPS,
   formatCurrencyValue,
   formatFormDate,
-  hasServicesStep,
 } from '@/features/contracts/lib/contractFormUtils';
 import { useContractForm } from '@/features/contracts/hooks/useContractForm';
 import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
@@ -176,16 +176,16 @@ export default function ContractForm({
     </div>
   );
 
-  const showServicesSection = hasServicesStep(formState.form.type);
+  const { showServicesSection } = formState;
   const formSteps = showServicesSection
     ? (['Datos generales', 'Servicios', 'Documento'] as const)
     : (['Datos generales', 'Documento'] as const);
-  // Without the services step the wizard jumps from step 1 to step 3 internally,
-  // so we remap step 3 → visual step 2 to keep the progress bar in sync.
+  // Without the services step the wizard jumps from GENERAL to DOCUMENT internally,
+  // so we remap DOCUMENT → visual SERVICES to keep the progress bar in sync.
   const visualStep =
-    showServicesSection || formState.currentStep !== 3
+    showServicesSection || formState.currentStep !== CONTRACT_STEPS.DOCUMENT
       ? formState.currentStep
-      : 2;
+      : CONTRACT_STEPS.SERVICES;
 
   const servicesSection = (
     <ContractFormServicesSection
@@ -219,7 +219,7 @@ export default function ContractForm({
         <div
           className={`transition-opacity duration-150 ${formState.visible ? 'opacity-100' : 'opacity-0'}`}
         >
-          {formState.currentStep === 1 && (
+          {formState.currentStep === CONTRACT_STEPS.GENERAL && (
             <ContractFormGeneralFields
               allowedDocumentTypes={formState.allowedDocumentTypes}
               data={formState.form}
@@ -229,7 +229,7 @@ export default function ContractForm({
             />
           )}
 
-          {formState.currentStep === 2 && (
+          {formState.currentStep === CONTRACT_STEPS.SERVICES && (
             <div className="space-y-5">
               <ContractFormSummaryAccordion
                 expanded={formState.summary1Expanded}
@@ -253,7 +253,7 @@ export default function ContractForm({
             </div>
           )}
 
-          {formState.currentStep === 3 && (
+          {formState.currentStep === CONTRACT_STEPS.DOCUMENT && (
             <div className="space-y-5">
               <ContractFormSummaryAccordion
                 expanded={formState.summary1Expanded}
@@ -325,14 +325,14 @@ export default function ContractForm({
       <div className="mt-4 flex shrink-0 items-center justify-between gap-3 border-t border-slate-100 pt-4">
         <button
           type="button"
-          onClick={formState.currentStep === 1 ? onClose : formState.goPrev}
+          onClick={formState.currentStep === CONTRACT_STEPS.GENERAL ? onClose : formState.goPrev}
           disabled={formState.loading}
           className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
         >
-          {formState.currentStep === 1 ? 'Volver' : '← Anterior'}
+          {formState.currentStep === CONTRACT_STEPS.GENERAL ? 'Volver' : '← Anterior'}
         </button>
 
-        {formState.currentStep < 3 ? (
+        {formState.currentStep < CONTRACT_STEPS.DOCUMENT ? (
           <button
             type="button"
             onClick={formState.goNext}
