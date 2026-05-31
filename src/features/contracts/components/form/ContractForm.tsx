@@ -4,6 +4,7 @@ import { Check, Plus } from 'lucide-react';
 import {
   formatCurrencyValue,
   formatFormDate,
+  hasServicesStep,
 } from '@/features/contracts/lib/contractFormUtils';
 import { useContractForm } from '@/features/contracts/hooks/useContractForm';
 import type { ContractFolder } from '@/features/contracts/lib/contractsUtils';
@@ -175,10 +176,12 @@ export default function ContractForm({
     </div>
   );
 
-  const showServicesSection = formState.form.type === 'COMPANY';
+  const showServicesSection = hasServicesStep(formState.form.type);
   const formSteps = showServicesSection
     ? (['Datos generales', 'Servicios', 'Documento'] as const)
     : (['Datos generales', 'Documento'] as const);
+  // Without the services step the wizard jumps from step 1 to step 3 internally,
+  // so we remap step 3 → visual step 2 to keep the progress bar in sync.
   const visualStep =
     showServicesSection || formState.currentStep !== 3
       ? formState.currentStep
