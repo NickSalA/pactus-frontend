@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import type { FormState, Step1Draft } from "@/features/contracts/lib/contractFormUtils";
+import { CONTRACT_STEPS, type FormState, type Step1Draft } from "@/features/contracts/lib/contractFormUtils";
 
 export type ContractFormStep = 1 | 2 | 3;
 
@@ -10,6 +10,7 @@ type UseContractFormWizardOptions = {
   onBeforePrev?: () => void;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
   validateStep2: () => string | null;
+  skipServicesStep?: boolean;
 };
 
 type FieldChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement>;
@@ -19,6 +20,7 @@ export function useContractFormWizard({
   onBeforePrev,
   setForm,
   validateStep2,
+  skipServicesStep = false,
 }: UseContractFormWizardOptions) {
   const [currentStep, setCurrentStep] = useState<ContractFormStep>(1);
   const [stepError, setStepError] = useState<string | null>(null);
@@ -63,7 +65,7 @@ export function useContractFormWizard({
   }, []);
 
   const goNext = useCallback(() => {
-    if (currentStep === 1) {
+    if (currentStep === CONTRACT_STEPS.GENERAL) {
       const validationError = validateStep1();
 
       if (validationError) {
@@ -71,11 +73,11 @@ export function useContractFormWizard({
         return;
       }
 
-      navigateToStep(2);
+      navigateToStep(skipServicesStep ? CONTRACT_STEPS.DOCUMENT : CONTRACT_STEPS.SERVICES);
       return;
     }
 
-    if (currentStep === 2) {
+    if (currentStep === CONTRACT_STEPS.SERVICES) {
       const step2Error = validateStep2();
 
       if (step2Error) {
@@ -83,14 +85,18 @@ export function useContractFormWizard({
         return;
       }
 
-      navigateToStep(3);
+      navigateToStep(CONTRACT_STEPS.DOCUMENT);
     }
-  }, [currentStep, navigateToStep, validateStep1, validateStep2]);
+  }, [currentStep, navigateToStep, skipServicesStep, validateStep1, validateStep2]);
 
   const goPrev = useCallback(() => {
     onBeforePrev?.();
-    navigateToStep((currentStep - 1) as ContractFormStep);
-  }, [currentStep, navigateToStep, onBeforePrev]);
+    navigateToStep(
+      currentStep === CONTRACT_STEPS.DOCUMENT && skipServicesStep
+        ? CONTRACT_STEPS.GENERAL
+        : ((currentStep - 1) as ContractFormStep),
+    );
+  }, [currentStep, navigateToStep, onBeforePrev, skipServicesStep]);
 
   const openSummary1 = useCallback(() => {
     const snapshot: Step1Draft = {

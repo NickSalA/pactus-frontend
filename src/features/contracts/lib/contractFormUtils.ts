@@ -179,3 +179,12 @@ export const getServiceOptions = (
 export const getInitialContractTotal = (document?: DocumentFlatten): number => {
   return document ? getDocumentTotalValue(document) : 0;
 };
+
+export const hasServicesStep = (type: ApiDocumentType): boolean =>
+  type === 'COMPANY';
+
+export const CONTRACT_STEPS = {
+  GENERAL: 1,
+  SERVICES: 2,
+  DOCUMENT: 3,
+} as const;

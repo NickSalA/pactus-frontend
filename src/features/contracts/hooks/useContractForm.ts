@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react';
 import {
   buildFormStateWithDefaultType,
+  hasServicesStep,
   type FormState,
 } from '@/features/contracts/lib/contractFormUtils';
 import { buildContractFormDataPayload } from '@/features/contracts/lib/contractFormPayloads';
@@ -86,6 +87,8 @@ export function useContractForm({
   } = servicesState;
 
   const validateStep2 = useCallback((): string | null => {
+    if (!hasServicesStep(form.type)) return null;
+
     if (addingService) {
       return 'Guarda o cancela el servicio actual antes de continuar.';
     }
@@ -96,13 +99,14 @@ export function useContractForm({
     } catch (err) {
       return err instanceof Error ? err.message : 'Error en los servicios.';
     }
-  }, [addingService, buildServiceItemsPayload]);
+  }, [addingService, buildServiceItemsPayload, form.type]);
 
   const wizardState = useContractFormWizard({
     form,
     onBeforePrev: resetNewService,
     setForm,
     validateStep2,
+    skipServicesStep: !hasServicesStep(form.type),
   });
 
   const { mutateAsync: uploadDocumentMutation } = useUploadDocument();
@@ -276,6 +280,7 @@ export function useContractForm({
     addingService,
     allowedDocumentTypes,
     availableFolders,
+    showServicesSection: hasServicesStep(form.type),
     cancelNewService,
     closeSummary1,
     contractTotal,

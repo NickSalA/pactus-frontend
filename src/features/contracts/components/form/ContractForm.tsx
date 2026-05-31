@@ -2,6 +2,7 @@
 
 import { Check, Plus } from 'lucide-react';
 import {
+  CONTRACT_STEPS,
   formatCurrencyValue,
   formatFormDate,
 } from '@/features/contracts/lib/contractFormUtils';
@@ -175,6 +176,15 @@ export default function ContractForm({
     </div>
   );
 
+  const { showServicesSection } = formState;
+  const formSteps = showServicesSection
+    ? (['Datos generales', 'Servicios', 'Documento'] as const)
+    : (['Datos generales', 'Documento'] as const);
+  const visualStep =
+    showServicesSection || formState.currentStep !== CONTRACT_STEPS.DOCUMENT
+      ? formState.currentStep
+      : CONTRACT_STEPS.SERVICES;
+
   const servicesSection = (
     <ContractFormServicesSection
       addingService={formState.addingService}
@@ -200,14 +210,14 @@ export default function ContractForm({
         <h2 className="mb-4 text-xl font-semibold text-slate-800">
           {editMode ? 'Editar Contrato' : 'Nuevo Contrato'}
         </h2>
-        <ContractFormProgress currentStep={formState.currentStep} />
+        <ContractFormProgress currentStep={visualStep} steps={formSteps} />
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
         <div
           className={`transition-opacity duration-150 ${formState.visible ? 'opacity-100' : 'opacity-0'}`}
         >
-          {formState.currentStep === 1 && (
+          {formState.currentStep === CONTRACT_STEPS.GENERAL && (
             <ContractFormGeneralFields
               allowedDocumentTypes={formState.allowedDocumentTypes}
               data={formState.form}
@@ -217,7 +227,7 @@ export default function ContractForm({
             />
           )}
 
-          {formState.currentStep === 2 && (
+          {formState.currentStep === CONTRACT_STEPS.SERVICES && (
             <div className="space-y-5">
               <ContractFormSummaryAccordion
                 expanded={formState.summary1Expanded}
@@ -232,14 +242,16 @@ export default function ContractForm({
                 {summary1Content}
               </ContractFormSummaryAccordion>
 
-              <div>
-                {servicesHeader}
-                {servicesSection}
-              </div>
+              {showServicesSection && (
+                <div>
+                  {servicesHeader}
+                  {servicesSection}
+                </div>
+              )}
             </div>
           )}
 
-          {formState.currentStep === 3 && (
+          {formState.currentStep === CONTRACT_STEPS.DOCUMENT && (
             <div className="space-y-5">
               <ContractFormSummaryAccordion
                 expanded={formState.summary1Expanded}
@@ -254,20 +266,22 @@ export default function ContractForm({
                 {summary1Content}
               </ContractFormSummaryAccordion>
 
-              <ContractFormSummaryAccordion
-                expanded={formState.summary2Expanded}
-                maxHeightClass="max-h-[800px]"
-                onToggle={() =>
-                  formState.setSummary2Expanded((previous) => !previous)
-                }
-                preview={servicesPreview}
-                title="Servicios"
-              >
-                <div className="border-t border-slate-200 bg-white px-4 pb-4 pt-3">
-                  {servicesSummaryHeader}
-                  {servicesSection}
-                </div>
-              </ContractFormSummaryAccordion>
+              {showServicesSection && (
+                <ContractFormSummaryAccordion
+                  expanded={formState.summary2Expanded}
+                  maxHeightClass="max-h-[800px]"
+                  onToggle={() =>
+                    formState.setSummary2Expanded((previous) => !previous)
+                  }
+                  preview={servicesPreview}
+                  title="Servicios"
+                >
+                  <div className="border-t border-slate-200 bg-white px-4 pb-4 pt-3">
+                    {servicesSummaryHeader}
+                    {servicesSection}
+                  </div>
+                </ContractFormSummaryAccordion>
+              )}
 
               <ContractFormDocumentSection
                 dragActive={formState.dragActive}
@@ -309,14 +323,14 @@ export default function ContractForm({
       <div className="mt-4 flex shrink-0 items-center justify-between gap-3 border-t border-slate-100 pt-4">
         <button
           type="button"
-          onClick={formState.currentStep === 1 ? onClose : formState.goPrev}
+          onClick={formState.currentStep === CONTRACT_STEPS.GENERAL ? onClose : formState.goPrev}
           disabled={formState.loading}
           className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
         >
-          {formState.currentStep === 1 ? 'Volver' : '← Anterior'}
+          {formState.currentStep === CONTRACT_STEPS.GENERAL ? 'Volver' : '← Anterior'}
         </button>
 
-        {formState.currentStep < 3 ? (
+        {formState.currentStep < CONTRACT_STEPS.DOCUMENT ? (
           <button
             type="button"
             onClick={formState.goNext}
