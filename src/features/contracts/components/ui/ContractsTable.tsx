@@ -1,4 +1,5 @@
 import {
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -7,6 +8,7 @@ import {
   LoaderCircle,
   Pencil,
   Trash2,
+  X,
 } from 'lucide-react';
 import {
   getDocumentStateClasses,
@@ -15,7 +17,10 @@ import {
 import { DocumentTypeBadge } from '@/components/ui/DocumentTypeBadge';
 import { getVisiblePageNumbers } from '@/lib/utils';
 import { Select } from '@/components/ui/Select';
-import type { ContractImportFile } from '@/store/contractImportStore';
+import type {
+  ContractImportFile,
+  ContractImportFileStatus,
+} from '@/store/contractImportStore';
 import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiUserRole } from '@/types/api';
 
@@ -37,6 +42,30 @@ type ContractsTableProps = {
   temporaryImportFiles?: ContractImportFile[];
   totalPages: number;
   userRole?: ApiUserRole | null;
+};
+
+const TEMP_IMPORT_ROW_LABELS: Record<ContractImportFileStatus, string> = {
+  PENDING: 'Importación en cola...',
+  DATABASE: 'Guardando contrato...',
+  KNOWLEDGE_BASE: 'Indexando conocimiento...',
+  COMPLETED: 'Contrato importado',
+  FAILED: 'Error al importar',
+};
+
+const TEMP_IMPORT_BADGE_LABELS: Record<ContractImportFileStatus, string> = {
+  PENDING: 'En cola',
+  DATABASE: 'Base de datos',
+  KNOWLEDGE_BASE: 'Base de conocimientos',
+  COMPLETED: 'Listo',
+  FAILED: 'Error',
+};
+
+const TEMP_IMPORT_BADGE_CLASSES: Record<ContractImportFileStatus, string> = {
+  PENDING: 'bg-brand-neutral-100 text-brand-neutral-600 ring-brand-neutral-200',
+  DATABASE: 'bg-brand-yellow-500/10 text-brand-yellow-500 ring-brand-yellow-500/20',
+  KNOWLEDGE_BASE: 'bg-brand-blue-100 text-brand-primary ring-brand-primary/20',
+  COMPLETED: 'bg-brand-green-50 text-brand-green-600 ring-brand-green-500/20',
+  FAILED: 'bg-brand-red-100 text-brand-red-500 ring-brand-red-500/20',
 };
 
 export function ContractsTable({
@@ -122,40 +151,54 @@ export function ContractsTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {temporaryImportFiles.map((file) => (
-              <tr
-                key={`import-${file.id}`}
-                className="bg-brand-blue-50/60 transition-colors"
-              >
-                {showCheckboxes && <td className="px-4 py-3" />}
-                <td className="px-4 py-3 text-slate-600">
-                  <div className="min-w-0">
-                    <p className="font-medium text-slate-700">
-                      Analizando contrato...
-                    </p>
-                    <p className="mt-0.5 truncate text-xs text-slate-500">
-                      {file.name}
-                    </p>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-slate-500">Pendiente</td>
-                <td className="px-4 py-3 text-slate-500">--</td>
-                <td className="px-4 py-3 text-slate-500">--</td>
-                {showServicesColumn && (
+            {temporaryImportFiles.map((file) => {
+              const badgeClass = TEMP_IMPORT_BADGE_CLASSES[file.status];
+
+              return (
+                <tr
+                  key={`import-${file.id}`}
+                  className="bg-brand-blue-50/60 transition-colors"
+                >
+                  {showCheckboxes && <td className="px-4 py-3" />}
+                  <td className="px-4 py-3 text-slate-600">
+                    <div className="min-w-0">
+                      <p className="font-medium text-slate-700">
+                        {TEMP_IMPORT_ROW_LABELS[file.status]}
+                      </p>
+                      <p className="mt-0.5 truncate text-xs text-slate-500">
+                        {file.name}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-slate-500">
+                    {TEMP_IMPORT_BADGE_LABELS[file.status]}
+                  </td>
                   <td className="px-4 py-3 text-slate-500">--</td>
-                )}
-                <td className="px-4 py-3 text-center">
-                  <span className="inline-flex items-center rounded-full bg-brand-blue-100 px-2.5 py-1 text-xs font-medium text-brand-primary ring-1 ring-brand-primary/20">
-                    Análisis IA
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center justify-center">
-                    <LoaderCircle className="h-4 w-4 animate-spin text-brand-primary" />
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  <td className="px-4 py-3 text-slate-500">--</td>
+                  {showServicesColumn && (
+                    <td className="px-4 py-3 text-slate-500">--</td>
+                  )}
+                  <td className="px-4 py-3 text-center">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ${badgeClass}`}
+                    >
+                      {TEMP_IMPORT_BADGE_LABELS[file.status]}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-center">
+                      {file.status === 'COMPLETED' ? (
+                        <CheckCircle2 className="h-4 w-4 text-brand-green-500" />
+                      ) : file.status === 'FAILED' ? (
+                        <X className="h-4 w-4 text-brand-red-500" />
+                      ) : (
+                        <LoaderCircle className="h-4 w-4 animate-spin text-brand-primary" />
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
 
             {contracts.map((contract, index) => {
               const serviceCount = contract.service_items?.length ?? 0;

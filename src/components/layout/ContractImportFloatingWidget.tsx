@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   CheckCircle2,
@@ -11,29 +10,77 @@ import {
   RotateCcw,
   X,
 } from 'lucide-react';
-import { getDocumentSourceFileId } from '@/lib/document.utils';
-import { useDocuments } from '@/queries/hooks/contracts/queries';
+import { useDriveImportEvents } from '@/queries/hooks/contracts/importEvents';
 import { useAuthStore, useContractImportStore } from '@/store';
 import type { ContractImportFileStatus } from '@/store/contractImportStore';
 
 const STATUS_LABELS: Record<ContractImportFileStatus, string> = {
-  QUEUED: 'Pendiente',
-  UPLOADING: 'Cargando',
-  EXTRACTING_METADATA: 'Extrayendo metadatos',
-  AI_ANALYSIS: 'Analizando con IA',
-  CREATING_RECORD: 'Creando contrato',
+  PENDING: 'En cola',
+  DATABASE: 'Base de datos',
+  KNOWLEDGE_BASE: 'Base de conocimientos',
   COMPLETED: 'Listo',
   FAILED: 'Error',
 };
 
 const STATUS_DOT_CLASSES: Record<ContractImportFileStatus, string> = {
-  QUEUED: 'bg-brand-neutral-300',
-  UPLOADING: 'bg-brand-primary',
-  EXTRACTING_METADATA: 'bg-brand-blue-500',
-  AI_ANALYSIS: 'bg-brand-blue-600',
-  CREATING_RECORD: 'bg-brand-yellow-500',
+  PENDING: 'bg-brand-neutral-300',
+  DATABASE: 'bg-brand-yellow-500',
+  KNOWLEDGE_BASE: 'bg-brand-blue-600',
   COMPLETED: 'bg-brand-green-500',
   FAILED: 'bg-brand-red-500',
+};
+
+type PhaseStepState = 'active' | 'done' | 'failed' | 'pending';
+
+const PHASE_STEP_CLASSES: Record<PhaseStepState, string> = {
+  active: 'border-brand-blue-200 bg-brand-blue-50 text-brand-primary',
+  done: 'border-brand-green-500/20 bg-brand-green-50 text-brand-green-600',
+  failed: 'border-brand-red-500/20 bg-brand-red-100 text-brand-red-500',
+  pending: 'border-brand-neutral-200 bg-white text-brand-neutral-500',
+};
+
+const getPhaseStepIcon = (state: PhaseStepState) => {
+  if (state === 'done') {
+    return <CheckCircle2 className="h-3.5 w-3.5" />;
+  }
+
+  if (state === 'failed') {
+    return <X className="h-3.5 w-3.5" />;
+  }
+
+  if (state === 'active') {
+    return <LoaderCircle className="h-3.5 w-3.5 animate-spin" />;
+  }
+
+  return <span className="h-2 w-2 rounded-full bg-current opacity-40" />;
+};
+
+const getFileStepStates = (
+  status: ContractImportFileStatus,
+  error?: string,
+): { database: PhaseStepState; knowledgeBase: PhaseStepState } => {
+  const failedInKnowledgeBase = error?.toLowerCase().includes('conocimiento');
+
+  if (status === 'FAILED') {
+    return {
+      database: failedInKnowledgeBase ? 'done' : 'failed',
+      knowledgeBase: failedInKnowledgeBase ? 'failed' : 'pending',
+    };
+  }
+
+  if (status === 'COMPLETED') {
+    return { database: 'done', knowledgeBase: 'done' };
+  }
+
+  if (status === 'KNOWLEDGE_BASE') {
+    return { database: 'done', knowledgeBase: 'active' };
+  }
+
+  if (status === 'DATABASE') {
+    return { database: 'active', knowledgeBase: 'pending' };
+  }
+
+  return { database: 'pending', knowledgeBase: 'pending' };
 };
 
 const getContractsPath = (role: string | null | undefined): string => {
@@ -54,33 +101,30 @@ export function ContractImportFloatingWidget() {
   const pathname = usePathname();
   const userRole = useAuthStore((state) => state.user?.role ?? null);
   const session = useContractImportStore((state) => state.session);
+  const applyImportEvent = useContractImportStore(
+    (state) => state.applyImportEvent,
+  );
   const closeImportWidget = useContractImportStore(
     (state) => state.closeImportWidget,
   );
-  const markCompletedBySourceFileIds = useContractImportStore(
-    (state) => state.markCompletedBySourceFileIds,
+  const markImportStreamFailed = useContractImportStore(
+    (state) => state.markImportStreamFailed,
   );
   const setImportWidgetExpanded = useContractImportStore(
     (state) => state.setImportWidgetExpanded,
   );
 
   const isRunning = session?.status === 'running';
-  const { data: documents } = useDocuments({
-    enabled: isRunning,
-    refetchInterval: isRunning ? 5000 : false,
+  const jobId = session?.jobId ?? null;
+
+  useDriveImportEvents({
+    enabled: isRunning && Boolean(jobId),
+    jobId,
+    onError: markImportStreamFailed,
+    onFileUpdate: applyImportEvent,
+    onInitialState: applyImportEvent,
+    onJobComplete: applyImportEvent,
   });
-
-  useEffect(() => {
-    if (!session || !documents) {
-      return;
-    }
-
-    const importedSourceFileIds = documents
-      .map(getDocumentSourceFileId)
-      .filter((fileId): fileId is string => Boolean(fileId));
-
-    markCompletedBySourceFileIds(importedSourceFileIds);
-  }, [documents, markCompletedBySourceFileIds, session]);
 
   if (!session || session.files.length === 0) {
     return null;
@@ -95,18 +139,24 @@ export function ContractImportFloatingWidget() {
   ).length;
   const resolvedCount = completedCount + failedCount;
   const progress = Math.round((resolvedCount / totalCount) * 100);
-  const hasErrors = failedCount > 0;
+  const hasErrors = failedCount > 0 || session.status === 'failed';
   const isFinished = session.status !== 'running';
-  const title = isFinished
-    ? hasErrors
-      ? 'Importación completada con errores'
-      : 'Importación completada'
-    : 'Importando contratos';
-  const summary = isFinished
-    ? hasErrors
-      ? `${completedCount} importados · ${failedCount} fallido${failedCount === 1 ? '' : 's'}`
-      : `${completedCount} contrato${completedCount === 1 ? '' : 's'} importado${completedCount === 1 ? '' : 's'} correctamente`
-    : `${resolvedCount} de ${totalCount} archivos`;
+  const canDismiss = isFinished || Boolean(session.streamError);
+  let title = 'Importando contratos';
+  let summary = `${resolvedCount} de ${totalCount} archivos`;
+
+  if (isFinished) {
+    if (session.status === 'failed') {
+      title = 'Importación fallida';
+      summary = `${failedCount} archivo${failedCount === 1 ? '' : 's'} con error`;
+    } else if (hasErrors) {
+      title = 'Importación completada con errores';
+      summary = `${completedCount} importados · ${failedCount} fallido${failedCount === 1 ? '' : 's'}`;
+    } else {
+      title = 'Importación completada';
+      summary = `${completedCount} contrato${completedCount === 1 ? '' : 's'} importado${completedCount === 1 ? '' : 's'} correctamente`;
+    }
+  }
 
   const handleViewContracts = () => {
     const contractsPath = getContractsPath(userRole);
@@ -139,24 +189,22 @@ export function ContractImportFloatingWidget() {
             </div>
           </div>
 
-          {!isFinished && (
-            <button
-              type="button"
-              onClick={() => setImportWidgetExpanded(!session.isExpanded)}
-              className="rounded-lg p-1 text-brand-neutral-500 transition-colors hover:bg-brand-neutral-100 hover:text-brand-neutral-800"
-              aria-label={
-                session.isExpanded
-                  ? 'Contraer importación'
-                  : 'Expandir importación'
-              }
-            >
-              {session.isExpanded ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronUp className="h-4 w-4" />
-              )}
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => setImportWidgetExpanded(!session.isExpanded)}
+            className="rounded-lg p-1 text-brand-neutral-500 transition-colors hover:bg-brand-neutral-100 hover:text-brand-neutral-800"
+            aria-label={
+              session.isExpanded
+                ? 'Contraer importación'
+                : 'Expandir importación'
+            }
+          >
+            {session.isExpanded ? (
+              <ChevronDown className="h-4 w-4" />
+            ) : (
+              <ChevronUp className="h-4 w-4" />
+            )}
+          </button>
         </div>
 
         {!isFinished && (
@@ -171,42 +219,74 @@ export function ContractImportFloatingWidget() {
                 style={{ width: `${progress}%` }}
               />
             </div>
+            {session.streamError && (
+              <p className="mt-2 text-xs text-brand-red-500">
+                {session.streamError}
+              </p>
+            )}
           </div>
         )}
 
-        {!isFinished && session.isExpanded && (
+        {session.isExpanded && (
           <div className="mt-4 space-y-2 border-t border-brand-neutral-200 pt-3">
-            {session.files.map((file) => (
-              <div
-                key={file.id}
-                className="flex items-center justify-between gap-3 rounded-xl bg-brand-neutral-50 px-3 py-2"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-xs font-medium text-brand-neutral-700">
-                    {file.name}
-                  </p>
-                  <p className="mt-0.5 flex items-center gap-1.5 text-xs text-brand-neutral-500">
-                    <span
-                      className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT_CLASSES[file.status]}`}
-                    />
-                    {STATUS_LABELS[file.status]}
-                  </p>
+            {session.files.map((file) => {
+              const steps = getFileStepStates(file.status, file.error);
+
+              return (
+                <div
+                  key={file.id}
+                  className="rounded-xl bg-brand-neutral-50 px-3 py-2"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-xs font-medium text-brand-neutral-700">
+                        {file.name}
+                      </p>
+                      <p className="mt-0.5 flex items-center gap-1.5 text-xs text-brand-neutral-500">
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT_CLASSES[file.status]}`}
+                        />
+                        {STATUS_LABELS[file.status]}
+                      </p>
+                    </div>
+                    {file.status === 'COMPLETED' ? (
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-green-500" />
+                    ) : file.status === 'FAILED' ? (
+                      <X className="h-4 w-4 shrink-0 text-brand-red-500" />
+                    ) : (
+                      <LoaderCircle className="h-4 w-4 shrink-0 animate-spin text-brand-primary" />
+                    )}
+                  </div>
+
+                  <div className="mt-2 grid grid-cols-2 gap-2 text-[11px] font-medium">
+                    <div
+                      className={`flex items-center gap-1.5 rounded-lg border px-2 py-1 ${PHASE_STEP_CLASSES[steps.database]}`}
+                    >
+                      {getPhaseStepIcon(steps.database)}
+                      Base de datos
+                    </div>
+                    <div
+                      className={`flex items-center gap-1.5 rounded-lg border px-2 py-1 ${PHASE_STEP_CLASSES[steps.knowledgeBase]}`}
+                    >
+                      {getPhaseStepIcon(steps.knowledgeBase)}
+                      Base de conocimientos
+                    </div>
+                  </div>
+
+                  {file.error && (
+                    <p className="mt-2 text-xs text-brand-red-500">
+                      {file.error}
+                    </p>
+                  )}
                 </div>
-                {file.status === 'COMPLETED' ? (
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-green-500" />
-                ) : file.status === 'FAILED' ? (
-                  <X className="h-4 w-4 shrink-0 text-brand-red-500" />
-                ) : (
-                  <LoaderCircle className="h-4 w-4 shrink-0 animate-spin text-brand-primary" />
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
-        {isFinished && (
+        {canDismiss && (
           <div className="mt-4 flex flex-wrap items-center justify-end gap-2 border-t border-brand-neutral-200 pt-3">
-            {hasErrors && (
+            {isFinished && hasErrors && (
               <button
                 type="button"
                 disabled
@@ -217,13 +297,15 @@ export function ContractImportFloatingWidget() {
                 Reintentar fallidos
               </button>
             )}
-            <button
-              type="button"
-              onClick={handleViewContracts}
-              className="rounded-xl bg-brand-primary px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-brand-primary-dark"
-            >
-              Ver contratos
-            </button>
+            {isFinished && (
+              <button
+                type="button"
+                onClick={handleViewContracts}
+                className="rounded-xl bg-brand-primary px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-brand-primary-dark"
+              >
+                Ver contratos
+              </button>
+            )}
             <button
               type="button"
               onClick={closeImportWidget}
