@@ -4,6 +4,7 @@ import {
   BarChart,
   Bar,
   Cell,
+  LabelList,
   LineChart,
   Line,
   PieChart,
@@ -70,7 +71,11 @@ function BarChartWidget({ chart }: { chart: ApiChartData }) {
         />
         <Bar dataKey={dataKey} radius={[0, 4, 4, 0]}>
           {chart.data.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={color} fillOpacity={0.85 - index * 0.05} />
+            <Cell
+              key={`cell-${index}`}
+              fill={color}
+              fillOpacity={0.85 - index * 0.05}
+            />
           ))}
         </Bar>
       </BarChart>
@@ -146,6 +151,12 @@ function PieChartWidget({ chart }: { chart: ApiChartData }) {
               fillOpacity={0.85 - index * 0.05}
             />
           ))}
+          <LabelList
+            dataKey={categoryKey}
+            position="outside"
+            fill="#64748B"
+            fontSize={11}
+          />
         </Pie>
         <Tooltip
           cursor={{ fill: 'transparent' }}
