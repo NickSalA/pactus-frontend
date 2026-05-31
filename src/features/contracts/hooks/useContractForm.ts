@@ -280,6 +280,7 @@ export function useContractForm({
     addingService,
     allowedDocumentTypes,
     availableFolders,
+    showServicesSection: hasServicesStep(form.type),
     cancelNewService,
     closeSummary1,
     contractTotal,
