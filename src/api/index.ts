@@ -38,7 +38,11 @@ export {
   updateOrganizationMemberNotifications,
   type OrganizationListFilters,
 } from './organizations';
-export { importGoogleDriveFiles } from './integrations';
+export {
+  importGoogleDriveFiles,
+  streamGoogleDriveImportEvents,
+} from './integrations';
+export type { GoogleDriveImportEventHandlers } from './integrations';
 export {
   archiveTemplate,
   createTemplate,
