@@ -8,7 +8,11 @@ import {
   type ChangeEvent,
   type KeyboardEvent,
 } from 'react';
-import { useSendMessage, useUpdateConversation, useDeleteConversation } from '@/queries/hooks/chat/mutations';
+import {
+  useSendMessage,
+  useUpdateConversation,
+  useDeleteConversation,
+} from '@/queries/hooks/chat/mutations';
 import {
   useConversation,
   useConversations,
@@ -24,7 +28,9 @@ export function useAIAgentPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [threadId, setThreadId] = useState<number | undefined>(undefined);
   const [showHistory, setShowHistory] = useState(true);
-  const [conversationsState, setConversationsState] = useState<ApiConversationList[]>([]);
+  const [conversationsState, setConversationsState] = useState<
+    ApiConversationList[]
+  >([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -65,44 +71,48 @@ export function useAIAgentPage() {
   const { mutateAsync: updateConversationMutation } = useUpdateConversation();
   const { mutateAsync: deleteConversationMutation } = useDeleteConversation();
 
-  const handleUpdateConversation = useCallback(async (id: number, title: string) => {
-    const previousConversations = conversationsState;
+  const handleUpdateConversation = useCallback(
+    async (id: number, title: string) => {
+      const previousConversations = conversationsState;
 
-    setConversationsState((current) =>
-      current.map((conv) =>
-        conv.id === id ? { ...conv, title } : conv
-      )
-    );
+      setConversationsState((current) =>
+        current.map((conv) => (conv.id === id ? { ...conv, title } : conv)),
+      );
 
-    try {
-      await updateConversationMutation({ id, title });
-    } catch {
-      setConversationsState(previousConversations);
-    }
-  }, [conversationsState, updateConversationMutation]);
-
-  const handleDeleteConversation = useCallback(async (id: number) => {
-    const previousConversations = conversationsState;
-    const previousThreadId = threadId;
-
-    setConversationsState((current) =>
-      current.filter((conv) => conv.id !== id)
-    );
-
-    if (threadId === id) {
-      setMessages([]);
-      setThreadId(undefined);
-    }
-
-    try {
-      await deleteConversationMutation(id);
-    } catch {
-      setConversationsState(previousConversations);
-      if (threadId === id) {
-        setThreadId(previousThreadId);
+      try {
+        await updateConversationMutation({ id, title });
+      } catch {
+        setConversationsState(previousConversations);
       }
-    }
-  }, [conversationsState, threadId, deleteConversationMutation]);
+    },
+    [conversationsState, updateConversationMutation],
+  );
+
+  const handleDeleteConversation = useCallback(
+    async (id: number) => {
+      const previousConversations = conversationsState;
+      const previousThreadId = threadId;
+
+      setConversationsState((current) =>
+        current.filter((conv) => conv.id !== id),
+      );
+
+      if (threadId === id) {
+        setMessages([]);
+        setThreadId(undefined);
+      }
+
+      try {
+        await deleteConversationMutation(id);
+      } catch {
+        setConversationsState(previousConversations);
+        if (threadId === id) {
+          setThreadId(previousThreadId);
+        }
+      }
+    },
+    [conversationsState, threadId, deleteConversationMutation],
+  );
 
   const submitCurrentMessage = useCallback(async () => {
     const trimmedValue = inputValue.trim();
@@ -136,6 +146,7 @@ export function useAIAgentPage() {
         id: `bot-${Date.now()}`,
         sender: 'bot',
         content: response.response,
+        chart: response.chart,
         timestamp: new Date(),
       };
 
@@ -211,7 +222,8 @@ export function useAIAgentPage() {
   );
 
   return {
-    conversations: conversationsState.length > 0 ? conversationsState : conversations,
+    conversations:
+      conversationsState.length > 0 ? conversationsState : conversations,
     handleComposerKeyDown,
     handleComposerSubmit,
     handleFormSubmit,

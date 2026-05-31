@@ -1,10 +1,15 @@
-import type { ApiConversationList, ApiConversationRead } from '@/types/api';
+import type {
+  ApiChartData,
+  ApiConversationList,
+  ApiConversationRead,
+} from '@/types/api';
 
 export type ChatMessage = {
   id: string;
   sender: 'user' | 'bot';
   content: string;
   timestamp: Date;
+  chart?: ApiChartData;
 };
 
 export const CHAT_SUGGESTIONS = [
@@ -35,6 +40,7 @@ export const mapConversationToMessages = (
   return conversation.content.map((message, index) => ({
     id: `loaded-${index}`,
     sender: message.role === 'user' ? 'user' : 'bot',
+    chart: message.chart,
     content: message.content,
     timestamp: new Date(message.timestamp),
   }));
