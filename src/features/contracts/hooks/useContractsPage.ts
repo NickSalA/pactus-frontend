@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
   canCreateContracts,
   canCreateFolders,
@@ -14,13 +14,16 @@ import { useContractsDrivePicker } from '@/features/contracts/hooks/useContracts
 import { useContractsFilters } from '@/features/contracts/hooks/useContractsFilters';
 import { useContractsModalState } from '@/features/contracts/hooks/useContractsModalState';
 import { useDeleteDocument } from '@/queries/hooks/contracts/mutations';
-import { useAuthStore } from '@/store';
+import { useAuthStore, useContractImportStore } from '@/store';
+import type { ContractImportFile } from '@/store/contractImportStore';
 import type { DocumentFlatten } from '@/types/ui.types';
 import { ApiDocumentType } from '@/types/api';
 
 type UseContractsPageOptions = {
   shouldOpenCreateModal?: boolean;
 };
+
+const EMPTY_IMPORT_FILES: ContractImportFile[] = [];
 
 export function useContractsPage({
   shouldOpenCreateModal = false,
@@ -34,6 +37,7 @@ export function useContractsPage({
     activeContracts,
     activeFolder,
     addContract,
+    documents,
     createFolder: createCollectionFolder,
     deleteFolder: deleteCollectionFolder,
     error,
@@ -74,18 +78,31 @@ export function useContractsPage({
 
   const { mutateAsync: deleteDocument } = useDeleteDocument();
 
+  const importSession = useContractImportStore((state) => state.session);
+  const activeImportFiles = useMemo(
+    () =>
+      importSession?.status === 'running'
+        ? importSession.files
+        : EMPTY_IMPORT_FILES,
+    [importSession],
+  );
+
   const {
     clearDriveSelection,
+    closeDriveImportReview,
     driveImportError,
     driveImportMessage,
     drivePickerError,
     importSelectedDriveFiles,
+    isDriveImportReviewOpen,
     isImportingDriveFiles,
     isOpeningDrivePicker,
     openDrivePicker,
     removeDriveFile,
     selectedDriveFiles,
-  } = useContractsDrivePicker();
+  } = useContractsDrivePicker({
+    folderId: activeFolder.id === 0 ? null : activeFolder.id,
+  });
 
   const {
     closeCreateForm,
@@ -291,6 +308,7 @@ export function useContractsPage({
   return {
     activeContracts,
     activeFolder,
+    activeImportFiles,
     addContract,
     bulkDeleteContracts,
     changeDateRange,
@@ -309,6 +327,7 @@ export function useContractsPage({
     changePage,
     changeSearch,
     clearDriveSelection,
+    closeDriveImportReview,
     closeCreateForm,
     closeDeleteModal,
     closeEditForm,
@@ -326,7 +345,9 @@ export function useContractsPage({
     filter,
     filteredContracts,
     folders,
+    documents,
     importSelectedDriveFiles: handleImportSelectedDriveFiles,
+    isDriveImportReviewOpen,
     isEmpty,
     isImportingDriveFiles,
     isOpeningDrivePicker,

@@ -1,4 +1,4 @@
-export { sendMessage, getConversations, getConversationById } from './chat';
+export { sendMessage, getConversations, getConversationById, updateConversation, deleteConversation } from './chat';
 export { getCurrentUser } from './auth';
 export {
   createDocumentFolder,
@@ -38,7 +38,11 @@ export {
   updateOrganizationMemberNotifications,
   type OrganizationListFilters,
 } from './organizations';
-export { importGoogleDriveFiles } from './integrations';
+export {
+  importGoogleDriveFiles,
+  streamGoogleDriveImportEvents,
+} from './integrations';
+export type { GoogleDriveImportEventHandlers } from './integrations';
 export {
   archiveTemplate,
   createTemplate,

@@ -28,14 +28,6 @@ export function DashboardHRPageContent() {
 
       <section className="grid grid-rows-[1fr_1fr] gap-4 grid-cols-[1fr_1fr] flex-1 min-h-0 overflow-visible">
         <div className="row-span-2">
-          <DashboardAreaChart
-            data={areaChart!}
-            isLoading={isLoading}
-            documentType="LABOR"
-          />
-        </div>
-        <DashboardAlertCenter alerts={alerts} isLoading={isLoading} />
-        <div className="col-start-2">
           <DashboardRecentDocumentsTable
             documents={recentContracts}
             isLoading={isLoading}
@@ -45,6 +37,16 @@ export function DashboardHRPageContent() {
             startIndex={0}
             endIndex={recentContracts.length}
             onPageChange={() => {}}
+          />
+        </div>
+        <div className="min-h-0">
+          <DashboardAlertCenter alerts={alerts} isLoading={isLoading} />
+        </div>
+        <div className="col-start-2">
+          <DashboardAreaChart
+            data={areaChart!}
+            isLoading={isLoading}
+            documentType="LABOR"
           />
         </div>
       </section>

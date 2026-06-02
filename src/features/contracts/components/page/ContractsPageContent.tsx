@@ -2,13 +2,13 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ContractsActionsBar } from '@/features/contracts/components/ui/ContractsActionsBar';
-import { ContractsDriveSelection } from '@/features/contracts/components/ui/ContractsDriveSelection';
 import { ContractsEmptyState } from '@/features/contracts/components/ui/ContractsEmptyState';
 import { ContractsFolderTabs } from '@/features/contracts/components/ui/ContractsFolderTabs';
-import { ContractsImportMenu } from '@/features/contracts/components/ui/ContractsImportMenu';
+import { ContractsImportButton } from '@/features/contracts/components/ui/ContractsImportButton';
 import { ContractsTable } from '@/features/contracts/components/ui/ContractsTable';
 import { ContractDeleteModal } from '@/features/contracts/components/modals/ContractDeleteModal';
 import { ContractFormModal } from '@/features/contracts/components/modals/ContractFormModal';
+import { ContractsImportReviewModal } from '@/features/contracts/components/modals/ContractsImportReviewModal';
 import { ContractPreviewModal } from '@/features/contracts/components/modals/ContractPreviewModal';
 import { NewContractModal } from '@/features/contracts/components/modals/NewContractModal';
 import { TableBulkActionBar } from '@/components/ui/TableBulkActionBar';
@@ -58,15 +58,12 @@ export function ContractsPageContent({
     }
   }, [page, selectedIds]);
 
-  // TODO: Comment out to disable import functionality
-  const driveImportMenu = undefined;
-  { /* page.canImportContract ? (
-    <ContractsImportMenu
-      isImportingDriveFiles={page.isImportingDriveFiles}
+  const driveImportButton = page.canImportContract ? (
+    <ContractsImportButton
       isOpeningDrivePicker={page.isOpeningDrivePicker}
       onOpenDrive={page.openDrivePicker}
     />
-  ) : undefined */ }
+  ) : undefined;
 
   if (page.isLoading) {
     return (
@@ -129,27 +126,9 @@ export function ContractsPageContent({
         </div>
       )}
 
-      {/* TODO: Comment out to disable import functionality
-      {page.canImportContract && (
-        <ContractsDriveSelection
-          activeFolderName={page.activeFolder.name}
-          isImportingDriveFiles={page.isImportingDriveFiles}
-          isOpeningDrivePicker={page.isOpeningDrivePicker}
-          onClearSelection={page.clearDriveSelection}
-          onImportSelection={() => {
-            void page.importSelectedDriveFiles();
-          }}
-          onRemoveFile={page.removeDriveFile}
-          onSelectMore={() => {
-            void page.openDrivePicker();
-          }}
-          selectedFiles={page.selectedDriveFiles}
-        />
-      )} */}
-
       {page.isEmpty ? (
         <ContractsEmptyState
-          importControl={driveImportMenu}
+          importControl={driveImportButton}
           onCreateContract={
             page.canCreateContract ? page.openCreateForm : undefined
           }
@@ -160,7 +139,7 @@ export function ContractsPageContent({
             contracts={page.activeContracts}
             dateRange={page.dateRange}
             filter={page.filter}
-            importControl={driveImportMenu}
+            importControl={driveImportButton}
             onCreateContract={
               page.canCreateContract ? page.openCreateForm : undefined
             }
@@ -191,6 +170,7 @@ export function ContractsPageContent({
               canDelete={page.canDeleteContract}
               canEdit={page.canEditContract}
               contracts={page.paginatedContracts}
+              temporaryImportFiles={page.activeImportFiles}
               userRole={page.userRole as ApiUserRole | null}
               currentPage={page.safeCurrentPage}
               filteredCount={page.filteredContracts.length}
@@ -222,6 +202,24 @@ export function ContractsPageContent({
         open={page.showPreview}
         previewUrl={page.previewUrl}
       />
+
+      {page.canImportContract && (
+        <ContractsImportReviewModal
+          isImporting={page.isImportingDriveFiles}
+          isOpeningDrivePicker={page.isOpeningDrivePicker}
+          onAddMore={() => {
+            void page.openDrivePicker();
+          }}
+          onClearAll={page.clearDriveSelection}
+          onClose={page.closeDriveImportReview}
+          onImport={() => {
+            void page.importSelectedDriveFiles();
+          }}
+          onRemoveFile={page.removeDriveFile}
+          open={page.isDriveImportReviewOpen}
+          selectedFiles={page.selectedDriveFiles}
+        />
+      )}
 
       {page.canCreateContract && (
         <NewContractModal

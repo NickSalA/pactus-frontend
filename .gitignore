@@ -41,6 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 MIGRATION_TANSTACK_QUERY.md
+TEST_CHARTS_PROMPTS.md
 styles.jsonPlan confirmado: Modularización de TemplatesSection
 Estructura final
 src/features/templates/components/

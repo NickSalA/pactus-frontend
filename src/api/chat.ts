@@ -1,7 +1,7 @@
-import { ApiConversationList, ApiConversationRead } from '@/types/api';
+import { ApiConversationList, ApiConversationRead, ApiConversationUpdateRequest } from '@/types/api';
 import { ApiChatRequest, ApiChatResponse } from '@/types/api';
 import { TIMEOUTS } from './constants';
-import { apiPost, apiGet } from './axiosInstance';
+import { apiPost, apiGet, apiPatch, apiDelete } from './axiosInstance';
 
 export async function sendMessage(
   data: ApiChatRequest,
@@ -23,4 +23,17 @@ export async function getConversationById(
   return apiGet<ApiConversationRead>(`/conversations/${id}`, {
     timeout: TIMEOUTS.DEFAULT,
   });
+}
+
+export async function updateConversation(
+  id: number,
+  data: ApiConversationUpdateRequest,
+): Promise<ApiConversationRead> {
+  return apiPatch<ApiConversationRead>(`/conversations/${id}`, data, {
+    timeout: TIMEOUTS.DEFAULT,
+  });
+}
+
+export async function deleteConversation(id: number): Promise<void> {
+  await apiDelete(`/conversations/${id}`, { timeout: TIMEOUTS.DEFAULT });
 }

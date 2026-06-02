@@ -1,5 +1,6 @@
 import type { RefObject } from 'react';
 import type { ChatMessage } from '@/features/aiAgent/lib/utils';
+import { ChartRenderer } from './ChartRenderer';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { RobotIcon } from '@/features/aiAgent/components/ui/RobotIcon';
 
@@ -27,6 +28,7 @@ export function ChatMessageList({
                 <RobotIcon size="sm" />
               </div>
               <div className="min-w-0 flex-1 pt-1">
+                {message.chart && <ChartRenderer chart={message.chart} />}
                 <div className="text-[15px] leading-relaxed text-slate-700">
                   <MarkdownRenderer content={message.content} />
                 </div>
