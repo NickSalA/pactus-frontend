@@ -1,3 +1,37 @@
+# [2.1.0](https://github.com/NickSalA/pactus-frontend/compare/v2.0.2...v2.1.0) (2026-06-02)
+
+
+### Bug Fixes
+
+* add skipServicesStep flag to bypass step 2 in wizard navigation ([7a01361](https://github.com/NickSalA/pactus-frontend/commit/7a01361d2de8ba56b83deb3ab28e41c31d128cfd))
+* hide services section and show 2-step progress for LABOR contracts ([3b20717](https://github.com/NickSalA/pactus-frontend/commit/3b20717a5ee0243527c7e73cb6cc8715e6de3e52))
+* Incorrect text copied to the MarkdownRenderer eliminated ([92a70ba](https://github.com/NickSalA/pactus-frontend/commit/92a70ba06c02b364ea57d738d82d440d3a15e1da))
+* skip services step and validation for LABOR contract type ([b6e55ea](https://github.com/NickSalA/pactus-frontend/commit/b6e55ea4dffc84197f343347cfc46b846a45c406))
+
+
+### Features
+
+* add CONTRACT_STEPS constant to eliminate magic step numbers ([8e316be](https://github.com/NickSalA/pactus-frontend/commit/8e316be905fdc0cb35924a8af8c8b62ffdb10d6b))
+* add Drive import review flow ([0e6aa8d](https://github.com/NickSalA/pactus-frontend/commit/0e6aa8d97a9e9e5fc872c90342d0676f9505f259))
+* add Drive import SSE API contract ([fb8289c](https://github.com/NickSalA/pactus-frontend/commit/fb8289cd7026def2a44afb28f7497f387087af5f))
+* add hasServicesStep helper to centralize contract type check ([5323d2b](https://github.com/NickSalA/pactus-frontend/commit/5323d2b49c276c853923ec5e6d742da54427735c))
+* add import session store ([a658d2b](https://github.com/NickSalA/pactus-frontend/commit/a658d2b547f978c992a6ad1705efba33fed53753))
+* **ai-agent:** add chart rendering and labels display for pie charts ([09d85d8](https://github.com/NickSalA/pactus-frontend/commit/09d85d8112a9b79668a37d1d3270d1aa632af6f7))
+* **ai-agent:** add chart rendering support for chatbot responses ([f8b8663](https://github.com/NickSalA/pactus-frontend/commit/f8b8663c596c8536caa3d8510ed05d15e0f9380c))
+* **ai-agent:** add chart rendering support for chatbot responses ([723285b](https://github.com/NickSalA/pactus-frontend/commit/723285b898f6c9442173bce5b447b77b855aca77))
+* **ai-agent:** add conversation update and delete functionality ([a9af326](https://github.com/NickSalA/pactus-frontend/commit/a9af326eed84bcebe92ae39465e9ccb42a1c8420))
+* **ai-agent:** add delete confirmation modal with AlertDialog ([d902fc8](https://github.com/NickSalA/pactus-frontend/commit/d902fc826728e102be7c30bbad8ee6366f5fc587))
+* **ai-agent:** add optimistic updates for conversation rename and delete ([5c3b776](https://github.com/NickSalA/pactus-frontend/commit/5c3b7763d248603d2f59bba5194fd449da90563e))
+* **ai-agent:** add optional chart field to ChatMessage type ([e91d5fc](https://github.com/NickSalA/pactus-frontend/commit/e91d5fc3b1cc9852c76e0c1b02c5c6b1236e321c))
+* **ai-agent:** improve ChatHistorySidebar styling and make entire row clickable ([a973e90](https://github.com/NickSalA/pactus-frontend/commit/a973e90924d3e3abedac4b5d07abc66afaab19e1))
+* **api:** align API types with OpenAPI specification ([94bff14](https://github.com/NickSalA/pactus-frontend/commit/94bff141fdbbe3256acb121d3e3d85d1362d2c95))
+* Conditionally render services section based on form type ([3fe6da0](https://github.com/NickSalA/pactus-frontend/commit/3fe6da086a03adec15c8d7a0138f5968c9fe895b))
+* show background import progress ([6b1b7b2](https://github.com/NickSalA/pactus-frontend/commit/6b1b7b23dc0c12451ab52d4db192777c13e3b940))
+* show Drive import phase progress ([661a1ef](https://github.com/NickSalA/pactus-frontend/commit/661a1efeba47e863702ced1d6687e28947332f69))
+* track Drive import jobs in global store ([a47fd2f](https://github.com/NickSalA/pactus-frontend/commit/a47fd2f02b62838536d2195c46927d746fce0c89))
+* wire Drive import flow to SSE jobs ([9f39f03](https://github.com/NickSalA/pactus-frontend/commit/9f39f0375fca195c8e1e4fd878825870ee52846e))
+* wire Google Drive import API ([ebe4fb6](https://github.com/NickSalA/pactus-frontend/commit/ebe4fb6d80702aa7f6aec46de9d574bae13f9289))
+
 ## [2.0.2](https://github.com/NickSalA/pactus-frontend/compare/v2.0.1...v2.0.2) (2026-05-26)
 
 
