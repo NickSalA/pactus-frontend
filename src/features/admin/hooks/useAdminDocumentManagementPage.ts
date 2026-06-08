@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAdminGuard } from "@/features/admin/hooks/useAdminGuard";
 
-export type DocumentManagementSection = "folders" | "masters" | "templates";
+export type DocumentManagementSection = "masters" | "templates";
 export type DocumentManagementCatalog = "document-types" | "services";
 
 const DEFAULT_SECTION: DocumentManagementSection = "templates";
@@ -18,7 +18,7 @@ export function useAdminDocumentManagementPage() {
 
   const activeSection = useMemo<DocumentManagementSection>(() => {
     const section = searchParams.get("section");
-    if (section === "folders" || section === "masters" || section === "templates") {
+    if (section === "masters" || section === "templates") {
       return section;
     }
     return DEFAULT_SECTION;
