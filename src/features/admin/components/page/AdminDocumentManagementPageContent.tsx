@@ -8,7 +8,6 @@ import { TemplateViewModal } from '@/components/modals/TemplateViewModal';
 import { TemplateHeader } from '@/components/templates/TemplateHeader';
 import { TemplatesFilterBar } from '@/components/templates/TemplatesFilterBar';
 import { TemplatesTable } from '@/components/templates/TemplatesTable';
-import { AdminFoldersSection } from '@/features/admin/components/sections/AdminFoldersSection';
 import { AdminMastersSection } from '@/features/admin/components/sections/AdminMastersSection';
 import { useAdminDocumentManagementPage } from '@/features/admin/hooks/useAdminDocumentManagementPage';
 import { useTemplates } from '@/hooks/useTemplates';
@@ -49,7 +48,6 @@ export function AdminDocumentManagementPageContent() {
           onChange={page.setActiveSection}
           tabs={[
             { id: 'templates', label: 'Plantillas de Contratos' },
-            { id: 'folders', label: 'Gestor de Carpetas' },
             { id: 'masters', label: 'Gestión de servicios' },
           ]}
         />
@@ -138,11 +136,6 @@ export function AdminDocumentManagementPageContent() {
               onClose={templatesSection.closeViewer}
             />
           </div>
-        </div>
-      )}
-      {page.activeSection === 'folders' && (
-        <div className="flex-1 min-h-0">
-          <AdminFoldersSection />
         </div>
       )}
       {page.activeSection === 'masters' && (
