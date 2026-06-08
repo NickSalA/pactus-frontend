@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { useDocumentFolders, useDocuments, useServicesAdmin } from '@/queries/hooks/contracts/queries';
 import { useNotificationRules } from '@/queries/hooks/notifications/queries';
-import { useOrganizationMembers } from '@/queries/hooks/organizations/queries';
+import { useMembers } from '@/queries/hooks/admin/queries';
 import { useTemplates } from '@/queries/hooks/templates/queries';
 import { useAdminGuard } from '@/features/admin/hooks/useAdminGuard';
 
@@ -36,7 +36,7 @@ export function useAdminDashboard() {
     isLoading: membersLoading,
     error: membersError,
     refetch: reloadMembers,
-  } = useOrganizationMembers();
+  } = useMembers();
 
   const {
     data: rules = [],
