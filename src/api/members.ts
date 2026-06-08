@@ -5,7 +5,8 @@ import type {
   ApiUserUpdateRequest,
 } from '@/types/api';
 import { TIMEOUTS } from './constants';
-import { apiDelete, apiGet, apiPatch, apiPost } from './axiosInstance';
+import { apiGet, apiPatch, apiPost } from './axiosInstance';
+import { deleteUser, updateUser } from './users';
 
 const normalizeMember = (member: OrganizationMember): OrganizationMember => ({
   ...member,
@@ -33,18 +34,10 @@ export async function createMember(
   );
 }
 
-export async function updateMemberRole(
+export const updateMemberRole = (
   memberId: number,
   payload: ApiUserUpdateRequest,
-): Promise<OrganizationMember> {
-  return normalizeMember(
-    await apiPatch<OrganizationMember>(
-      `/user/${memberId}`,
-      payload,
-      { timeout: TIMEOUTS.AUTH },
-    ),
-  );
-}
+): Promise<OrganizationMember> => updateUser(memberId, payload);
 
 export async function updateMemberNotifications(
   memberId: number,
@@ -59,6 +52,5 @@ export async function updateMemberNotifications(
   );
 }
 
-export async function deleteMember(userId: number): Promise<void> {
-  await apiDelete<void>(`/user/${userId}`, { timeout: TIMEOUTS.AUTH });
-}
+export const deleteMember = (userId: number): Promise<void> =>
+  deleteUser(userId);
