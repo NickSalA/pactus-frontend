@@ -121,7 +121,7 @@ export function AdminMastersSection({
             <ErrorBanner error={servicesSection.error} />
           )}
 
-          <section className="overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-sm shadow-slate-200/70">
+          <section className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-sm shadow-slate-200/70">
             {selectedServiceIds.size > 0 && (
               <div className="border-b border-slate-200/80 px-6 py-4">
                 <TableBulkActionBar
@@ -135,7 +135,7 @@ export function AdminMastersSection({
                 />
               </div>
             )}
-            <div className="flex-1 max-h-full overflow-auto">
+            <div className="flex-1 min-h-0 overflow-y-auto">
               <table className="min-w-full divide-y divide-slate-200/80 text-left">
                 <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
                   <tr>
