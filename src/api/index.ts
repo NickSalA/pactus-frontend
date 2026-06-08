@@ -27,17 +27,21 @@ export {
 } from './notifications';
 export {
   createOrganization,
-  createOrganizationMember,
   deleteOrganization,
   getMyOrganization,
   getOrganization,
-  getOrganizationMembers,
   listOrganizations,
   updateMyOrganization,
   updateOrganization,
-  updateOrganizationMemberNotifications,
   type OrganizationListFilters,
 } from './organizations';
+export {
+  createMember,
+  deleteMember,
+  getMembers,
+  updateMemberNotifications,
+  updateMemberRole,
+} from './members';
 export {
   importGoogleDriveFiles,
   streamGoogleDriveImportEvents,
@@ -68,3 +72,4 @@ export {
   getTopServices,
 } from './dashboard';
 export { setApiAccessToken, onApiSessionChange, logout } from './token-store';
+export { deleteUser, getMe, updateUser } from './users';
