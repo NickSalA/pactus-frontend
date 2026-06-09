@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import { ScrollText } from "lucide-react";
-import { AdminSegmentedTabs } from "@/features/admin/components/shared/AdminSegmentedTabs";
-import { useAdminAuditPage } from "@/features/admin/hooks/useAdminAuditPage";
-import { PageHeader } from "@/components/ui/PageHeader";
+import { ScrollText } from 'lucide-react';
+import { AdminSegmentedTabs } from '@/features/admin/components/shared/AdminSegmentedTabs';
+import { useAdminAuditPage } from '@/features/admin/hooks/useAdminAuditPage';
+import { AdminAuditUsersTable } from '@/features/admin/components/tables/AdminAuditUsersTable';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 const PLACEHOLDER_TABS = [
   { id: 'users' as const, label: 'Actividad de Usuarios' },
@@ -46,7 +47,9 @@ export function AdminAuditPageContent() {
         <p className="text-base text-red-600">{page.error}</p>
         <button
           type="button"
-          onClick={() => { void page.reload(); }}
+          onClick={() => {
+            void page.reload();
+          }}
           className="rounded-2xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
         >
           Reintentar
@@ -56,7 +59,7 @@ export function AdminAuditPageContent() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="flex h-full flex-col gap-4">
       <PageHeader
         title="Auditoría"
         subtitle="Visualiza y controla los registros de actividad del sistema"
@@ -68,7 +71,9 @@ export function AdminAuditPageContent() {
         tabs={PLACEHOLDER_TABS}
       />
 
-      {page.activeTab === 'users' && <EmptyState />}
+      {page.activeTab === 'users' && (
+        <AdminAuditUsersTable items={page.users} />
+      )}
       {page.activeTab === 'chatbot' && <EmptyState />}
     </div>
   );
