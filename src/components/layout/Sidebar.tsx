@@ -7,6 +7,7 @@ import {
   FileStack,
   FileText,
   LayoutDashboard,
+  ScrollText,
   Settings2,
   ShieldCheck,
   Users,
@@ -72,6 +73,12 @@ const adminMenuItems: MenuItem[] = [
     name: 'Gestión Documental',
     href: '/admin/document-management',
     icon: Settings2,
+    match: 'prefix',
+  },
+  {
+    name: 'Auditoría',
+    href: '/admin/audit',
+    icon: ScrollText,
     match: 'prefix',
   },
 ];
