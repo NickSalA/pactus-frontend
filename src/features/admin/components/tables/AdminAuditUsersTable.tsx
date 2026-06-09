@@ -1,6 +1,6 @@
 import type { ApiAuditUserActivityResponse } from '@/types/api';
 import { AuditUserInfo } from '@/features/admin/components/ui/AuditUserInfo';
-import { ACTION_LABELS, ACTION_COLORS } from '@/features/admin/lib/auditUtils';
+import { USER_ACTION_LABELS, USER_ACTION_COLORS } from '@/features/admin/lib/auditUtils';
 
 type AdminAuditUsersTableProps = {
   items: ApiAuditUserActivityResponse[];
@@ -58,9 +58,9 @@ export function AdminAuditUsersTable({ items }: AdminAuditUsersTableProps) {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${ACTION_COLORS[item.action]}`}
+                          className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${USER_ACTION_COLORS[item.action]}`}
                         >
-                          {ACTION_LABELS[item.action]}
+                          {USER_ACTION_LABELS[item.action]}
                         </span>
                       </td>
                       <td className="px-6 py-4">

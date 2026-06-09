@@ -1,26 +1,15 @@
 'use client';
 
-import { ScrollText } from 'lucide-react';
 import { AdminSegmentedTabs } from '@/features/admin/components/shared/AdminSegmentedTabs';
 import { useAdminAuditPage } from '@/features/admin/hooks/useAdminAuditPage';
 import { AdminAuditUsersTable } from '@/features/admin/components/tables/AdminAuditUsersTable';
+import { AdminAuditChatbotTable } from '@/features/admin/components/tables/AdminAuditChatbotTable';
 import { PageHeader } from '@/components/ui/PageHeader';
 
-const PLACEHOLDER_TABS = [
+const AUDIT_TABS = [
   { id: 'users' as const, label: 'Actividad de Usuarios' },
   { id: 'chatbot' as const, label: 'Actividad de Chatbot' },
 ];
-
-function EmptyState() {
-  return (
-    <div className="flex h-full min-h-[40vh] items-center justify-center rounded-2xl border-2 border-dashed border-slate-200">
-      <div className="flex flex-col items-center gap-3 text-slate-400">
-        <ScrollText className="h-12 w-12" />
-        <p className="text-sm font-medium">No hay datos para mostrar</p>
-      </div>
-    </div>
-  );
-}
 
 export function AdminAuditPageContent() {
   const page = useAdminAuditPage();
@@ -68,13 +57,15 @@ export function AdminAuditPageContent() {
       <AdminSegmentedTabs
         activeTab={page.activeTab}
         onChange={page.setActiveTab}
-        tabs={PLACEHOLDER_TABS}
+        tabs={AUDIT_TABS}
       />
 
       {page.activeTab === 'users' && (
         <AdminAuditUsersTable items={page.users} />
       )}
-      {page.activeTab === 'chatbot' && <EmptyState />}
+      {page.activeTab === 'chatbot' && (
+  <AdminAuditChatbotTable items={page.chatbot} />
+)}
     </div>
   );
 }

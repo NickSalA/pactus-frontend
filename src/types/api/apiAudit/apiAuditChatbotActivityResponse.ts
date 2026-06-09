@@ -7,7 +7,7 @@ export interface ApiAuditChatbotActivityResponse {
   actor_name: string | null;
   actor_role: string;
   action: ApiAuditChatbotActivityAction;
-  conversation_id: number | null;
+  conversation_title: string | null;
   input_tokens: number | null;
   output_tokens: number | null;
   total_tokens: number | null;
