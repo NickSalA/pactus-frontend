@@ -1,7 +1,8 @@
 'use client';
 
-import { Plus, Users } from 'lucide-react';
 import { AddMemberModal } from '@/features/admin/components/modals/AddMemberModal';
+import { DeleteMemberModal } from '@/features/admin/components/modals/DeleteMemberModal';
+import { EditMemberModal } from '@/features/admin/components/modals/EditMemberModal';
 import { AdminMembersTable } from '@/features/admin/components/tables/AdminMembersTable';
 import { useAdminMembers } from '@/features/admin/hooks/useAdminMembers';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -38,22 +39,42 @@ export function AdminAccessPageContent() {
         </div>
       )}
 
+      <div className="flex-1 min-h-0">
       <AdminMembersTable
+        activeMembers={page.stats.activeMembers}
         isSaving={page.saving}
         members={page.members}
+        onDeleteMember={page.openDeleteModal}
+        onEditMember={page.openEditModal}
         onToggleNotifications={(memberId, receivesNotifications) =>
           page.updateMemberNotifications(memberId, receivesNotifications)
         }
-        activeMembers={page.stats.activeMembers}
-        totalMembers={page.stats.totalMembers}
         openAddModal={page.openAddModal}
+        totalMembers={page.stats.totalMembers}
       />
+      </div>
 
       <AddMemberModal
         isSubmitting={page.saving}
         onClose={page.closeAddModal}
         onSubmit={page.addMember}
         open={page.isAddModalOpen}
+      />
+
+      <EditMemberModal
+        isSubmitting={page.saving}
+        member={page.editMemberToEdit}
+        onClose={page.closeEditModal}
+        onSubmit={page.updateMemberRole}
+        open={page.isEditModalOpen}
+      />
+
+      <DeleteMemberModal
+        isSubmitting={page.saving}
+        member={page.deleteMemberToConfirm}
+        onClose={page.closeDeleteModal}
+        onConfirm={page.removeMember}
+        open={page.isDeleteModalOpen}
       />
     </div>
   );

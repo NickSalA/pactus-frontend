@@ -32,7 +32,7 @@ export function TablePagination({
   const visiblePageNumbers = getVisiblePageNumbers(currentPage, totalPages);
 
   return (
-    <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200/80 bg-slate-50/50 px-4 py-3 sm:flex-row">
+    <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200/80 bg-white px-4 py-3 sm:flex-row">
       <div className="flex items-center gap-4 text-sm text-slate-600">
         <span>
           Mostrando{' '}

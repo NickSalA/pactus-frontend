@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import {
   getMyOrganization,
   getOrganization,
-  getOrganizationMembers,
   listOrganizations,
   type OrganizationListFilters,
 } from '@/api';
@@ -14,7 +13,6 @@ export const organizationQueryKeys = {
   list: (filters: OrganizationListFilters = {}) =>
     ['organizations', 'list', filters] as const,
   me: ['organizations', 'me'] as const,
-  members: ['organizations', 'members'] as const,
 };
 
 export const useOrganizations = (filters: OrganizationListFilters = {}) =>
@@ -37,10 +35,4 @@ export const useMyOrganization = (options: { enabled?: boolean } = {}) =>
     enabled: options.enabled ?? true,
     queryKey: organizationQueryKeys.me,
     queryFn: () => getMyOrganization(),
-  });
-
-export const useOrganizationMembers = () =>
-  useQuery({
-    queryKey: organizationQueryKeys.members,
-    queryFn: () => getOrganizationMembers(),
   });
