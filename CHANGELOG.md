@@ -1,3 +1,34 @@
+# [2.2.0](https://github.com/NickSalA/pactus-frontend/compare/v2.1.0...v2.2.0) (2026-06-09)
+
+
+### Bug Fixes
+
+* **admin:** fix AdminMembersTable height to be content-adaptive with scroll ([86969d0](https://github.com/NickSalA/pactus-frontend/commit/86969d02bc0f70468487b04968dd024383f29e05))
+* **admin:** restore pagination footer visibility and preserve horizontal scroll in services table ([1772bdb](https://github.com/NickSalA/pactus-frontend/commit/1772bdb8d790cc6ef9a7ab38da5d67753a967e17))
+* **admin:** restore pagination footer visibility in services table ([865e1f8](https://github.com/NickSalA/pactus-frontend/commit/865e1f8dec2e4ac19574bd0b4748e4344d2babd0))
+* **admin:** wrap AdminMembersTable with flex-1 min-h-0 for correct layout ([dacba06](https://github.com/NickSalA/pactus-frontend/commit/dacba0638036fbff37ea3e516276d3fe086eed06))
+* **ui:** set solid background on TablePagination footer ([30464ec](https://github.com/NickSalA/pactus-frontend/commit/30464ec00ab8d1b53b58ad1746e4d5c72c66f12a))
+
+
+### Features
+
+* **admin:** add DeleteMemberModal with AdminModalShell ([4591af8](https://github.com/NickSalA/pactus-frontend/commit/4591af8ec7e4e239e1d25012915832bfd6f4263b))
+* **admin:** add EditMemberModal with RHF and Zod validation ([6c7323c](https://github.com/NickSalA/pactus-frontend/commit/6c7323ccac5dc0d6a9d8133b847a739b5dc96e9f))
+* **admin:** add Zod schemas for member management forms ([c345ab8](https://github.com/NickSalA/pactus-frontend/commit/c345ab8c17abb267f40acc068aed7c82b51e36f8))
+* **admin:** remove Gestor de Carpetas tab from document management ([49eefd2](https://github.com/NickSalA/pactus-frontend/commit/49eefd265bc0f9eab5e96c48ab7383360f441ce5))
+* **admin:** rewrite AddMemberModal with RHF and Zod validation ([aa4a457](https://github.com/NickSalA/pactus-frontend/commit/aa4a4575ade90c8245d684b72a7d7fe4de8db0f8))
+* **api:** add members API layer with CRUD endpoints ([61b90c0](https://github.com/NickSalA/pactus-frontend/commit/61b90c09c949a6357317204d44f13f99ffe5ab56))
+* **api:** add users API layer with getMe, updateUser, deleteUser ([1383d73](https://github.com/NickSalA/pactus-frontend/commit/1383d734e0575181c3680d83f8f0ee8272c3dbbd))
+* **audit:** add Admin Audit Chatbot table and integrate with user activity logs ([e2fc2ee](https://github.com/NickSalA/pactus-frontend/commit/e2fc2ee92ae3dac61e0807a3745fee35a4256ab2))
+* **audit:** add Admin Audit page and integrate with sidebar menu ([4f8f594](https://github.com/NickSalA/pactus-frontend/commit/4f8f59472a4f5dc55c09e57d2f0b29c666a89693))
+* **audit:** add types for chatbot and user activity audit logs ([7ff660a](https://github.com/NickSalA/pactus-frontend/commit/7ff660a9e759e15057378e1facaff0bac89577eb))
+* **audit:** add user and chatbot activity query functions and types ([cc34c93](https://github.com/NickSalA/pactus-frontend/commit/cc34c93c6d2f85858ba026d9ddca9dd6bb5233a8))
+* **audit:** enhance Admin Audit page with user activity table and utility functions ([4c700c9](https://github.com/NickSalA/pactus-frontend/commit/4c700c9234a003cc06e2bce9c5046b8efe4ecb82))
+* **audit:** implement admin audit page hook for user and chatbot activity ([077dbc3](https://github.com/NickSalA/pactus-frontend/commit/077dbc3ffa84101b6f0209144663a08c77ee7ebc))
+* **queries:** add admin query and mutation hooks for member management ([7769361](https://github.com/NickSalA/pactus-frontend/commit/776936116bb1168ad10abdee5e357dbb4d305458))
+* **types:** add ApiUserUpdateRequest type ([7966b7a](https://github.com/NickSalA/pactus-frontend/commit/7966b7a899607d7fef5a9bc2c37a2737911707a1))
+* **types:** export ApiUserUpdateRequest from apiUser barrel ([fd74927](https://github.com/NickSalA/pactus-frontend/commit/fd7492721b690272119e577fb07428f2f085342f))
+
 # [2.1.0](https://github.com/NickSalA/pactus-frontend/compare/v2.0.2...v2.1.0) (2026-06-02)
 
 
