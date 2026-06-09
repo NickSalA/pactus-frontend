@@ -1,0 +1,29 @@
+import { apiGet } from './axiosInstance';
+import { TIMEOUTS } from './constants';
+import type {
+  ApiAuditUserActivityListResponse,
+  ApiAuditChatbotActivityListResponse,
+} from '@/types/api';
+
+export type AuditQueryParams = {
+  limit?: number;
+  offset?: number;
+};
+
+export async function listUserActivity(
+  params: AuditQueryParams = {},
+): Promise<ApiAuditUserActivityListResponse> {
+  return apiGet<ApiAuditUserActivityListResponse>('/audit/users', {
+    params,
+    timeout: TIMEOUTS.DEFAULT,
+  });
+}
+
+export async function listChatbotActivity(
+  params: AuditQueryParams = {},
+): Promise<ApiAuditChatbotActivityListResponse> {
+  return apiGet<ApiAuditChatbotActivityListResponse>('/audit/chatbot', {
+    params,
+    timeout: TIMEOUTS.DEFAULT,
+  });
+}

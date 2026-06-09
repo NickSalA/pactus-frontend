@@ -60,6 +60,7 @@ export {
   updateTemplate,
   type TemplateListFilters,
 } from './templates';
+export { listUserActivity, listChatbotActivity, type AuditQueryParams } from './audit';
 export { TIMEOUTS } from './constants';
 export {
   getAreaChartCompany,
