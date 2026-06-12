@@ -9,7 +9,7 @@ import ContactFooter from '@/components/home/ContactFooter';
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-white">
       <Navbar />
       <HeroSection />
       <AboutSection />

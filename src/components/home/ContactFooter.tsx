@@ -1,26 +1,6 @@
 import Link from 'next/link';
-import { Handshake, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
-
-const contactItems = [
-  {
-    icon: Mail,
-    label: 'nicksalcedo717@gmail.com',
-    href: 'mailto:nicksalcedo717@gmail.com',
-  },
-  { icon: Phone, label: '+51 991 258 717', href: 'tel:+51991258717' },
-  { icon: MapPin, label: 'Lima, Perú', href: null },
-  {
-    icon: Linkedin,
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/nick-salcedo-alfaro-42972925a/',
-  },
-];
-
-const links = [
-  { href: '/login', label: 'Iniciar sesión' },
-  { href: '/privacy-policy', label: 'Política de Privacidad' },
-  { href: '/terms-of-service', label: 'Términos de Servicio' },
-];
+import BrandMark from './shared/BrandMark';
+import { contactItems, footerLinks } from './landingContent';
 
 export default function ContactFooter() {
   return (
@@ -30,12 +10,7 @@ export default function ContactFooter() {
     >
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.1fr_0.9fr_0.7fr]">
         <div>
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-brand-primary">
-              <Handshake size={26} />
-            </span>
-            <span className="text-display-large-logo">Pactus</span>
-          </div>
+          <BrandMark variant="light" />
           <p className="mt-5 max-w-md leading-7 text-white/70">
             Plataforma de gestión y análisis legal impulsada por IA para
             automatizar contratos, consultas y documentación empresarial.
@@ -76,7 +51,7 @@ export default function ContactFooter() {
         <div>
           <h3 className="text-lg font-semibold">Enlaces</h3>
           <div className="mt-5 flex flex-col gap-3">
-            {links.map((link) => (
+            {footerLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}

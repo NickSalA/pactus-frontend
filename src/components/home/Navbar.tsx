@@ -1,37 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import { Handshake } from 'lucide-react';
-
-const navItems = [
-  { href: '#quienes-somos', label: 'Quiénes somos' },
-  { href: '#mision-vision', label: 'Misión y visión' },
-  { href: '#capacidades', label: 'Capacidades' },
-  { href: '#ia-rag', label: 'IA RAG' },
-  { href: '#contacto', label: 'Contacto' },
-];
+import Link from 'next/link';
+import { navItems } from './landingContent';
+import { useSmoothScroll } from './shared/useSmoothScroll';
 
 export default function Navbar() {
-  const scrollToSection = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-    href: string,
-  ) => {
-    event.preventDefault();
-
-    const section = document.querySelector(href);
-
-    if (!section) return;
-
-    const navbarOffset = 132;
-    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-
-    window.scrollTo({
-      top: sectionTop - navbarOffset,
-      behavior: 'smooth',
-    });
-
-    window.history.pushState(null, '', href);
-  };
+  const scrollToSection = useSmoothScroll(132);
 
   return (
     <header className="sticky top-0 z-30 border-b border-brand-neutral-200/80 bg-white/90 backdrop-blur-xl">

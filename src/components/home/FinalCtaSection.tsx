@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import CtaButton from './shared/CtaButton';
 
 export default function FinalCtaSection() {
   return (
@@ -13,19 +12,12 @@ export default function FinalCtaSection() {
           con inteligencia artificial fundamentada en tus propios documentos.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-          <Link
-            href="/login"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-primary px-7 py-4 font-semibold text-white transition-colors hover:bg-brand-primary-dark"
-          >
+          <CtaButton href="/login" variant="primary" showArrow>
             Iniciar sesión
-            <ArrowRight size={18} />
-          </Link>
-          <Link
-            href="#contacto"
-            className="inline-flex items-center justify-center rounded-2xl border border-brand-neutral-300 bg-white px-7 py-4 font-semibold text-brand-neutral-800 transition-colors hover:border-brand-blue-200 hover:bg-brand-blue-50 hover:text-brand-primary"
-          >
+          </CtaButton>
+          <CtaButton href="#contacto" variant="secondary">
             Contactar
-          </Link>
+          </CtaButton>
         </div>
       </div>
     </section>
