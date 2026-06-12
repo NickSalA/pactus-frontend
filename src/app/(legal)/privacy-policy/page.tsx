@@ -43,9 +43,6 @@ export default function PrivacyPolicyPage() {
   return (
     <article className="space-y-8 text-brand-neutral-700">
       <header className="border-b border-brand-neutral-200 pb-8">
-        <span className="inline-flex rounded-full bg-brand-blue-50 px-4 py-2 text-sm font-semibold uppercase tracking-[0.18em] text-brand-primary">
-          Documento legal
-        </span>
         <h1 className="mt-5 text-4xl font-bold tracking-tight text-brand-neutral-900 sm:text-5xl">
           Política de Privacidad de Pactus
         </h1>
@@ -122,7 +119,10 @@ export default function PrivacyPolicyPage() {
       </LegalSection>
 
       <LegalSection title="3. Uso de servicios de terceros">
-        <p>Podemos compartir o procesar datos mediante los siguientes proveedores:</p>
+        <p>
+          Podemos compartir o procesar datos mediante los siguientes
+          proveedores:
+        </p>
         <ul className="list-disc space-y-2 pl-6">
           <li>
             <strong>Supabase</strong>: autenticación, base de datos y
@@ -146,7 +146,10 @@ export default function PrivacyPolicyPage() {
             <strong>Azure Key Vault</strong>: gestión de credenciales
           </li>
         </ul>
-        <p>Estos proveedores procesan datos bajo sus propias políticas de privacidad.</p>
+        <p>
+          Estos proveedores procesan datos bajo sus propias políticas de
+          privacidad.
+        </p>
       </LegalSection>
 
       <LegalSection title="4. Protección de datos">
@@ -191,8 +194,8 @@ export default function PrivacyPolicyPage() {
 
       <LegalSection title="8. Usuarios empresariales">
         <p>
-          Pactus está dirigido a organizaciones. Los datos pueden ser gestionados
-          por administradores de la organización del usuario.
+          Pactus está dirigido a organizaciones. Los datos pueden ser
+          gestionados por administradores de la organización del usuario.
         </p>
       </LegalSection>
 
@@ -215,8 +218,8 @@ export default function PrivacyPolicyPage() {
             href="mailto:nicksalcedo717@gmail.com"
           >
             nicksalcedo717@gmail.com
-          </a>
-          {' '}o al teléfono{' '}
+          </a>{' '}
+          o al teléfono{' '}
           <a
             className="font-semibold text-brand-primary underline underline-offset-4"
             href="tel:+51991258717"
