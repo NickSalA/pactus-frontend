@@ -23,7 +23,10 @@ const flow = [
 
 export default function RagAiSection() {
   return (
-    <section id="ia-rag" className="bg-brand-blue-50 px-6 py-20 lg:px-8">
+    <section
+      id="ia-rag"
+      className="scroll-mt-36 bg-brand-blue-50 px-6 py-20 lg:px-8"
+    >
       <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-brand-primary p-8 text-white shadow-2xl shadow-brand-primary/20 lg:p-12">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1fr] lg:items-center">
           <div>

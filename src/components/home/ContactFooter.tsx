@@ -26,7 +26,7 @@ export default function ContactFooter() {
   return (
     <footer
       id="contacto"
-      className="bg-brand-neutral-900 px-6 py-14 text-white lg:px-8"
+      className="scroll-mt-36 bg-brand-neutral-900 px-6 py-14 text-white lg:px-8"
     >
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.1fr_0.9fr_0.7fr]">
         <div>

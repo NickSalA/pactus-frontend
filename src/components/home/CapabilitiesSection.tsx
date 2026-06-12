@@ -62,7 +62,10 @@ const capabilities = [
 
 export default function CapabilitiesSection() {
   return (
-    <section id="capacidades" className="bg-white px-6 py-20 lg:px-8">
+    <section
+      id="capacidades"
+      className="scroll-mt-36 bg-white px-6 py-20 lg:px-8"
+    >
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
           <span className="text-sm font-semibold uppercase tracking-[0.24em] text-brand-primary">

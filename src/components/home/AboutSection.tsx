@@ -23,7 +23,10 @@ const highlights = [
 
 export default function AboutSection() {
   return (
-    <section id="quienes-somos" className="bg-white px-6 py-20 lg:px-8">
+    <section
+      id="quienes-somos"
+      className="scroll-mt-36 bg-white px-6 py-20 lg:px-8"
+    >
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1fr] lg:items-center">
           <div>

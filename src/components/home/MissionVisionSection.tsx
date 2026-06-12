@@ -19,7 +19,7 @@ export default function MissionVisionSection() {
   return (
     <section
       id="mision-vision"
-      className="bg-brand-neutral-900 px-6 py-20 text-white lg:px-8"
+      className="scroll-mt-36 bg-brand-neutral-900 px-6 py-20 text-white lg:px-8"
     >
       <div className="mx-auto max-w-7xl">
         <div className="max-w-3xl">
