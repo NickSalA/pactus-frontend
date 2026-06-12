@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Handshake } from 'lucide-react';
+import LegalScrollTop from './LegalScrollTop';
 
 export default function LegalLayout({
   children,
@@ -8,7 +9,8 @@ export default function LegalLayout({
 }>) {
   return (
     <main className="min-h-screen bg-gradient-to-br from-white via-brand-blue-50/60 to-white text-brand-neutral-900">
-      <header className="border-b border-brand-neutral-200/80 bg-white/90 backdrop-blur-xl">
+      <LegalScrollTop />
+      <header className="sticky top-0 z-30 border-b border-brand-neutral-200/80 bg-white/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-5 sm:flex-row sm:items-center sm:justify-between lg:px-8">
           <Link href="/" className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-blue-50 text-brand-primary ring-1 ring-brand-blue-100">
