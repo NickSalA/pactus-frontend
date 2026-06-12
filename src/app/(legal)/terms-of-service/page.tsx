@@ -28,9 +28,6 @@ export default function TermsOfServicePage() {
   return (
     <article className="space-y-8 text-brand-neutral-700">
       <header className="border-b border-brand-neutral-200 pb-8">
-        <span className="inline-flex rounded-full bg-brand-blue-50 px-4 py-2 text-sm font-semibold uppercase tracking-[0.18em] text-brand-primary">
-          Documento legal
-        </span>
         <h1 className="mt-5 text-4xl font-bold tracking-tight text-brand-neutral-900 sm:text-5xl">
           Términos de Servicio de Pactus
         </h1>
@@ -68,7 +65,9 @@ export default function TermsOfServicePage() {
 
       <LegalSection title="3. Cuentas">
         <ul className="list-disc space-y-2 pl-6">
-          <li>El usuario es responsable de mantener la seguridad de su cuenta</li>
+          <li>
+            El usuario es responsable de mantener la seguridad de su cuenta
+          </li>
           <li>El acceso puede ser gestionado por su organización</li>
           <li>Podemos suspender cuentas que incumplan estos términos</li>
         </ul>
@@ -77,7 +76,9 @@ export default function TermsOfServicePage() {
       <LegalSection title="4. Datos y contenido">
         <ul className="list-disc space-y-2 pl-6">
           <li>El usuario mantiene la propiedad de sus datos</li>
-          <li>Pactus puede procesar la información para proporcionar el servicio</li>
+          <li>
+            Pactus puede procesar la información para proporcionar el servicio
+          </li>
           <li>No reclamamos propiedad sobre los documentos del usuario</li>
         </ul>
       </LegalSection>
@@ -89,8 +90,8 @@ export default function TermsOfServicePage() {
           <li>Permisos otorgados por el usuario</li>
         </ul>
         <p>
-          El usuario puede revocar el acceso en cualquier momento desde su cuenta
-          de Google.
+          El usuario puede revocar el acceso en cualquier momento desde su
+          cuenta de Google.
         </p>
       </LegalSection>
 
@@ -138,8 +139,8 @@ export default function TermsOfServicePage() {
             href="mailto:nicksalcedo717@gmail.com"
           >
             nicksalcedo717@gmail.com
-          </a>
-          {' '}o al teléfono{' '}
+          </a>{' '}
+          o al teléfono{' '}
           <a
             className="font-semibold text-brand-primary underline underline-offset-4"
             href="tel:+51991258717"
