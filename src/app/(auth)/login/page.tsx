@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { GOOGLE_DRIVE_SCOPE } from '@/lib/googlePicker';
 import {
   getDefaultRouteForRole,
   getDefaultRouteLabelForRole,
@@ -52,7 +51,6 @@ export default function LoginPage() {
         provider: 'google',
         options: {
           redirectTo: callbackUrl,
-          scopes: GOOGLE_DRIVE_SCOPE,
         },
       });
 

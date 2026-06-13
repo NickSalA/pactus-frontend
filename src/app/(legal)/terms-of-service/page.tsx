@@ -20,7 +20,7 @@ export default function TermsOfServicePage() {
         <ul className="list-disc space-y-2 pl-6">
           <li>Iniciar sesión mediante Google</li>
           <li>Crear, gestionar y almacenar contratos</li>
-          <li>Importar documentos desde Google Drive</li>
+          <li>Importar documentos seleccionados desde Google Drive</li>
           <li>Utilizar herramientas de inteligencia artificial para análisis y generación de contenido</li>
         </ul>
       </section>
@@ -60,7 +60,11 @@ export default function TermsOfServicePage() {
           <li>Políticas de Google</li>
           <li>Permisos otorgados por el usuario</li>
         </ul>
-        <p>El usuario puede revocar el acceso en cualquier momento desde su cuenta de Google.</p>
+        <p>
+          El acceso a Google Drive se solicita solo al iniciar el flujo de importación y se limita a los
+          archivos seleccionados por el usuario. El usuario puede revocar el acceso en cualquier momento
+          desde su cuenta de Google.
+        </p>
       </section>
 
       <section className="space-y-4">
