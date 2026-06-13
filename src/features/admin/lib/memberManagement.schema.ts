@@ -8,7 +8,7 @@ export const addMemberSchema = z.object({
     .min(1, 'Ingresa un correo electrónico.')
     .email('El correo electrónico no es válido.'),
   role: z.enum(MEMBER_ROLES, {
-    errorMap: () => ({ message: 'Selecciona un rol válido.' }),
+    error: 'Selecciona un rol válido.',
   }),
 });
 
@@ -16,7 +16,7 @@ export type AddMemberValues = z.infer<typeof addMemberSchema>;
 
 export const editMemberSchema = z.object({
   role: z.enum(MEMBER_ROLES, {
-    errorMap: () => ({ message: 'Selecciona un rol válido.' }),
+    error: 'Selecciona un rol válido.',
   }),
 });
 

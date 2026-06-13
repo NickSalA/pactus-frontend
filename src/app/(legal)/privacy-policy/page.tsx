@@ -56,7 +56,7 @@ export default function PrivacyPolicyPage() {
           <p>Si el usuario inicia sesión con Google o conecta su cuenta:</p>
           <ul className="list-disc space-y-2 pl-6">
             <li>Información básica del perfil (nombre, email, foto)</li>
-            <li>Acceso a archivos de Google Drive solo cuando el usuario lo autoriza explícitamente</li>
+            <li>Acceso limitado a archivos de Google Drive seleccionados explícitamente por el usuario</li>
             <li>Los archivos se utilizan únicamente para importación y procesamiento dentro de la aplicación</li>
           </ul>
         </div>
@@ -69,7 +69,7 @@ export default function PrivacyPolicyPage() {
           <li>Proporcionar acceso a la plataforma</li>
           <li>Gestionar usuarios y organizaciones</li>
           <li>Crear, almacenar y organizar contratos</li>
-          <li>Importar y procesar documentos desde Google Drive</li>
+          <li>Importar y procesar documentos seleccionados desde Google Drive</li>
           <li>Mejorar la experiencia del usuario</li>
           <li>Generar respuestas mediante inteligencia artificial</li>
           <li>Enviar notificaciones y comunicaciones relevantes</li>
