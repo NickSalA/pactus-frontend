@@ -1,31 +1,44 @@
-import Link from 'next/link';
-import Image from 'next/image';
+'use client';
+
 import { Handshake } from 'lucide-react';
+import Link from 'next/link';
+import { navItems } from './landingContent';
+import { useSmoothScroll } from './shared/useSmoothScroll';
 
 export default function Navbar() {
-  return (
-    <header className="flex flex-col gap-4 border-b border-gray-100 px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-12">
-      <Link href="/" className="flex items-center gap-3">
-        <Handshake className="text-brand-primary" size={32} />
-        <span className="text-body-main-bold text-brand-primary font-semibold">
-          Pactus
-        </span>
-      </Link>
+  const scrollToSection = useSmoothScroll(132);
 
-      <nav className="flex flex-wrap items-center gap-4 text-sm text-slate-600 sm:justify-end">
-        <Link
-          href="/privacy-policy"
-          className="transition-colors hover:text-slate-950"
-        >
-          Política de Privacidad
+  return (
+    <header className="sticky top-0 z-30 border-b border-brand-neutral-200/80 bg-white/90 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+        <Link href="/" className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-blue-50 text-brand-primary ring-1 ring-brand-blue-100">
+            <Handshake size={26} />
+          </span>
+          <span className="text-display-large-logo text-brand-primary">
+            Pactus
+          </span>
         </Link>
-        <Link
-          href="/terms-of-service"
-          className="transition-colors hover:text-slate-950"
-        >
-          Términos de Servicio
-        </Link>
-      </nav>
+
+        <nav className="flex flex-wrap items-center gap-3 text-sm text-brand-neutral-600 lg:justify-end">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={(event) => scrollToSection(event, item.href)}
+              className="rounded-full px-3 py-2 transition-colors hover:bg-brand-blue-50 hover:text-brand-primary"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link
+            href="/login"
+            className="rounded-full bg-brand-primary px-5 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-brand-primary-dark"
+          >
+            Iniciar sesión
+          </Link>
+        </nav>
+      </div>
     </header>
   );
 }

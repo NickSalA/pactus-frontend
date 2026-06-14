@@ -1,45 +1,59 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import { Sparkles } from 'lucide-react';
+import FeaturePill from './shared/FeaturePill';
+import CtaButton from './shared/CtaButton';
+import { heroHighlights } from './landingContent';
 
 export default function HeroSection() {
   return (
-    <section className="flex items-center justify-between px-24 py-16 max-w-400 mx-auto min-h-[calc(100vh-100px)]">
-      <div className="max-w-2xl -mt-16 pr-8">
-        <span className="inline-flex items-center gap-2 text-brand-primary text-base font-medium mb-6">
-          <span className="w-6 h-6 bg-brand-primary rounded-full flex items-center justify-center">
-            <span className="text-white text-sm">✓</span>
-          </span>
-          GESTIÓN INTELIGENTE DE CONTRATOS
-        </span>
+    <section className="relative overflow-hidden bg-gradient-to-br from-white via-brand-blue-50/60 to-white">
+      <div className="absolute left-1/2 top-10 h-80 w-80 -translate-x-1/2 rounded-full bg-brand-primary/10 blur-3xl" />
+      <div className="relative mx-auto grid min-h-[calc(100vh-88px)] max-w-7xl items-center gap-14 px-6 py-16 lg:grid-cols-[1fr_0.95fr] lg:px-8 lg:py-24">
+        <div className="max-w-3xl">
+          <FeaturePill variant="pill" icon={Sparkles}>
+            IA contractual con respuestas basadas en documentos reales
+          </FeaturePill>
 
-        <p className="text-6xl font-bold leading-tight mb-8">
-          Inteligencia para los{' '}
-          <span className="text-brand-primary">Contratos Modernos</span>
-        </p>
+          <h1 className="mt-6 text-5xl font-bold leading-[1.02] tracking-tight text-brand-neutral-900 sm:text-6xl lg:text-7xl">
+            Inteligencia para los{' '}
+            <span className="text-brand-primary">Contratos Modernos</span>
+          </h1>
 
-        <p className="text-gray-600 text-xl mb-10 leading-relaxed">
-          Optimiza contratos y consultas con inteligencia artificial de nivel
-          empresarial. Precisión, rapidez y control para documentación de alto
-          impacto.
-        </p>
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-brand-neutral-600 sm:text-xl">
+            Pactus automatiza la gestión contractual con inteligencia artificial
+            y arquitectura RAG, permitiendo consultar, analizar y generar
+            documentos con respuestas fundamentadas en tus propios contratos.
+          </p>
 
-        <Link
-          href="/login"
-          className="inline-block bg-brand-primary text-white px-10 py-5 rounded-lg text-xl font-medium hover:bg-brand-primary-dark transition-colors"
-        >
-          Iniciar sesión
-        </Link>
-      </div>
+          <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+            <CtaButton href="/login" variant="primary" showArrow>
+              Iniciar sesión
+            </CtaButton>
+            <CtaButton href="#capacidades" variant="secondary">
+              Conocer capacidades
+            </CtaButton>
+          </div>
 
-      <div className="hidden lg:block -mt-16 shrink-0">
-        <Image
-          src="/imagen-ContractAI-laptop.png"
-          alt="ContractAI Platform"
-          width={750}
-          height={600}
-          className="rounded-2xl"
-          priority
-        />
+          <div className="mt-10 grid gap-3 text-sm text-brand-neutral-600 sm:grid-cols-3">
+            {heroHighlights.map((item) => (
+              <FeaturePill key={item}>{item}</FeaturePill>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative">
+          <div className="absolute -inset-4 rounded-[2rem] bg-brand-primary/10 blur-2xl" />
+          <div className="relative rounded-[2rem] border border-brand-blue-100 bg-white p-3 shadow-2xl shadow-brand-primary/10">
+            <Image
+              src="/imagen-ContractAI-laptop.png"
+              alt="Vista de la plataforma Pactus"
+              width={750}
+              height={600}
+              className="rounded-[1.4rem]"
+              priority
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
