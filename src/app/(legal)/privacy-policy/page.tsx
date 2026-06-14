@@ -111,7 +111,7 @@ export default function PrivacyPolicyPage() {
           <li>Proporcionar acceso a la plataforma</li>
           <li>Gestionar usuarios y organizaciones</li>
           <li>Crear, almacenar y organizar contratos</li>
-          <li>Importar y procesar documentos desde Google Drive</li>
+          <li>Importar y procesar documentos seleccionados desde Google Drive</li>
           <li>Mejorar la experiencia del usuario</li>
           <li>Generar respuestas mediante inteligencia artificial</li>
           <li>Enviar notificaciones y comunicaciones relevantes</li>
