@@ -3,6 +3,8 @@ import { TIMEOUTS } from './constants';
 import type {
   ApiAuditUserActivityListResponse,
   ApiAuditChatbotActivityListResponse,
+  ApiAuditTemplateActivityListResponse,
+  ApiAuditContractActivityListResponse,
 } from '@/types/api';
 
 export type AuditQueryParams = {
@@ -23,6 +25,24 @@ export async function listChatbotActivity(
   params: AuditQueryParams = {},
 ): Promise<ApiAuditChatbotActivityListResponse> {
   return apiGet<ApiAuditChatbotActivityListResponse>('/audit/chatbot', {
+    params,
+    timeout: TIMEOUTS.DEFAULT,
+  });
+}
+
+export async function listTemplateActivity(
+  params: AuditQueryParams = {},
+): Promise<ApiAuditTemplateActivityListResponse> {
+  return apiGet<ApiAuditTemplateActivityListResponse>('/audit/templates', {
+    params,
+    timeout: TIMEOUTS.DEFAULT,
+  });
+}
+
+export async function listContractActivity(
+  params: AuditQueryParams = {},
+): Promise<ApiAuditContractActivityListResponse> {
+  return apiGet<ApiAuditContractActivityListResponse>('/audit/contracts', {
     params,
     timeout: TIMEOUTS.DEFAULT,
   });

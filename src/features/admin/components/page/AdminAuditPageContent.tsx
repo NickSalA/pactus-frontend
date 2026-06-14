@@ -4,11 +4,15 @@ import { AdminSegmentedTabs } from '@/features/admin/components/shared/AdminSegm
 import { useAdminAuditPage } from '@/features/admin/hooks/useAdminAuditPage';
 import { AdminAuditUsersTable } from '@/features/admin/components/tables/AdminAuditUsersTable';
 import { AdminAuditChatbotTable } from '@/features/admin/components/tables/AdminAuditChatbotTable';
+import { AdminAuditTemplatesTable } from '@/features/admin/components/tables/AdminAuditTemplatesTable';
+import { AdminAuditContractsTable } from '@/features/admin/components/tables/AdminAuditContractsTable';
 import { PageHeader } from '@/components/ui/PageHeader';
 
 const AUDIT_TABS = [
   { id: 'users' as const, label: 'Actividad de Usuarios' },
   { id: 'chatbot' as const, label: 'Actividad de Chatbot' },
+  { id: 'contracts' as const, label: 'Contratos' },
+  { id: 'templates' as const, label: 'Plantillas' },
 ];
 
 export function AdminAuditPageContent() {
@@ -64,8 +68,14 @@ export function AdminAuditPageContent() {
         <AdminAuditUsersTable items={page.users} />
       )}
       {page.activeTab === 'chatbot' && (
-  <AdminAuditChatbotTable items={page.chatbot} />
-)}
+        <AdminAuditChatbotTable items={page.chatbot} />
+      )}
+      {page.activeTab === 'contracts' && (
+        <AdminAuditContractsTable items={page.contracts} />
+      )}
+      {page.activeTab === 'templates' && (
+        <AdminAuditTemplatesTable items={page.templates} />
+      )}
     </div>
   );
 }
