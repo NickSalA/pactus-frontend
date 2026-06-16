@@ -1,3 +1,41 @@
+# [2.3.0](https://github.com/NickSalA/pactus-frontend/compare/v2.2.0...v2.3.0) (2026-06-16)
+
+
+### Bug Fixes
+
+* **privacy-policy, terms-of-service:** remove unnecessary legal document label and improve text formatting ([91f033a](https://github.com/NickSalA/pactus-frontend/commit/91f033a0a19f30560ff3449cfbe6c69874c9ec96))
+
+
+### Features
+
+* **audit:** add AdminAuditContractsTable component ([b51b100](https://github.com/NickSalA/pactus-frontend/commit/b51b1008ea4a66bab59932f69298d9021ff08f72))
+* **audit:** add AdminAuditTemplatesTable component ([6a22b62](https://github.com/NickSalA/pactus-frontend/commit/6a22b62ad04c5eb38ff7e1ab3810c42539f34dc5))
+* **audit:** add ApiAuditContractActivityAction type ([a95c84c](https://github.com/NickSalA/pactus-frontend/commit/a95c84c056f43de603dae4f80807455bf4e239fc))
+* **audit:** add ApiAuditContractActivityListResponse type ([196815e](https://github.com/NickSalA/pactus-frontend/commit/196815e6cc23797ffadfac1fc4801c5d1b3d9374))
+* **audit:** add ApiAuditContractActivityResponse interface ([27f90a8](https://github.com/NickSalA/pactus-frontend/commit/27f90a861f867cfb53d9cf3a1a0c39bf70029adc))
+* **audit:** add ApiAuditTemplateActivityAction type ([325f784](https://github.com/NickSalA/pactus-frontend/commit/325f784faca6512031bf2f4f259fb792d52588e7))
+* **audit:** add ApiAuditTemplateActivityListResponse type ([bc4585b](https://github.com/NickSalA/pactus-frontend/commit/bc4585b39be11b8e6d6f06ab01eed5b0003c5488))
+* **audit:** add ApiAuditTemplateActivityResponse interface ([63ae2db](https://github.com/NickSalA/pactus-frontend/commit/63ae2db3952aae1dafb2ff63c71a611077569a8e))
+* **audit:** add Contratos and Plantillas tabs to audit page ([a8fa2c2](https://github.com/NickSalA/pactus-frontend/commit/a8fa2c279e02adeeefbd4ae615c6b8b918212726))
+* **audit:** add labels and colors for template and contract actions ([65e5fc8](https://github.com/NickSalA/pactus-frontend/commit/65e5fc83a33fc43e89c9a5f37bd28e0fe1902dae))
+* **audit:** add listTemplateActivity and listContractActivity API functions ([fc84ae9](https://github.com/NickSalA/pactus-frontend/commit/fc84ae982799cc94190f44278e1b8f788d659e73))
+* **audit:** add useTemplateActivity and useContractActivity query hooks ([481dbd0](https://github.com/NickSalA/pactus-frontend/commit/481dbd03c24d0b676368e3d6e06f925ac76145a3))
+* **audit:** export new audit API functions ([6c1a583](https://github.com/NickSalA/pactus-frontend/commit/6c1a583a9578ea15a29fcf17c230b17d4f9fc8ef))
+* **audit:** export new contract and template activity types ([212e80d](https://github.com/NickSalA/pactus-frontend/commit/212e80d4b33a4200d8a284f32933c751dc241208))
+* **audit:** extend useAdminAuditPage with templates and contracts tabs ([3635782](https://github.com/NickSalA/pactus-frontend/commit/363578264ee319f0042247e3c0d75edc7c5e0ef8))
+* **audit:** extract shared AdminAuditFormattedDate component ([a574681](https://github.com/NickSalA/pactus-frontend/commit/a574681d9272579e8f7e161676688a116ee11ffd))
+* **home:** add additional sections to HomePage for enhanced content presentation ([59b268b](https://github.com/NickSalA/pactus-frontend/commit/59b268bfb09aa6cb3a51cf77a49ba1b474acddb6))
+* **home:** add smooth scrolling behavior and update section classes for better UX ([ea81cf3](https://github.com/NickSalA/pactus-frontend/commit/ea81cf3e0446db9ba23490f012e559434c26b884))
+* **home:** implement landing page structure with new sections and components ([801886f](https://github.com/NickSalA/pactus-frontend/commit/801886ff285040a1a8fa72e3fea0a40b9b117f41))
+* **home:** implement public landing page with multiple sections and responsive design ([7228fb8](https://github.com/NickSalA/pactus-frontend/commit/7228fb8a4b71332cbee16075065529ff772f30bb))
+* **home:** remove unused sections from HomePage component for cleaner layout ([7c4ab05](https://github.com/NickSalA/pactus-frontend/commit/7c4ab059565f95c614845ac36578104f5384f835))
+* **legal:** add LegalScrollTop component for automatic scroll to top on route change ([79f4b4e](https://github.com/NickSalA/pactus-frontend/commit/79f4b4e6338b9b291e27d6c41c14376da0320c5f))
+* **legal:** remove redundant legal document label and improve text formatting in Privacy Policy and Terms of Service pages ([88b802a](https://github.com/NickSalA/pactus-frontend/commit/88b802a536bcfa3359ecd3238a097530bff96a55))
+* **legal:** update layout and content for Legal, Privacy Policy, and Terms of Service pages ([f0c5366](https://github.com/NickSalA/pactus-frontend/commit/f0c5366d908f18cca31ca2b42ceb73db984dac2c))
+* migrate google drive import to drive file ([730155c](https://github.com/NickSalA/pactus-frontend/commit/730155c29b125f92f3665f9c1f8547dcab23c462))
+* **navbar:** implement smooth scrolling for navigation links ([e567e71](https://github.com/NickSalA/pactus-frontend/commit/e567e71bb3eb8f3851e3d372f55322d96195a07e))
+* update member role schema for zod validation ([fc623ed](https://github.com/NickSalA/pactus-frontend/commit/fc623ed254ef8f9b443b032c73f0a02ed28d3038))
+
 # [2.2.0](https://github.com/NickSalA/pactus-frontend/compare/v2.1.0...v2.2.0) (2026-06-09)
 
 
