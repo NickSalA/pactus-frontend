@@ -10,7 +10,7 @@ const GOOGLE_INTERACTIVE_ERROR_CODES = new Set([
   "login_required",
 ]);
 
-export const GOOGLE_DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.readonly";
+export const GOOGLE_DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file";
 
 const scriptPromises = new Map<string, Promise<void>>();
 let pickerLibraryPromise: Promise<void> | null = null;

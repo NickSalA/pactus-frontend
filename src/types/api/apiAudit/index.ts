@@ -1,6 +1,12 @@
 export type { ApiAuditUserActivityAction } from './apiAuditUserActivityAction';
 export type { ApiAuditChatbotActivityAction } from './apiAuditChatbotActivityAction';
+export type { ApiAuditTemplateActivityAction } from './apiAuditTemplateActivityAction';
+export type { ApiAuditContractActivityAction } from './apiAuditContractActivityAction';
 export type { ApiAuditUserActivityResponse } from './apiAuditUserActivityResponse';
 export type { ApiAuditChatbotActivityResponse } from './apiAuditChatbotActivityResponse';
+export type { ApiAuditTemplateActivityResponse } from './apiAuditTemplateActivityResponse';
+export type { ApiAuditContractActivityResponse } from './apiAuditContractActivityResponse';
 export type { ApiAuditUserActivityListResponse } from './apiAuditUserActivityListResponse';
 export type { ApiAuditChatbotActivityListResponse } from './apiAuditChatbotActivityListResponse';
+export type { ApiAuditTemplateActivityListResponse } from './apiAuditTemplateActivityListResponse';
+export type { ApiAuditContractActivityListResponse } from './apiAuditContractActivityListResponse';
