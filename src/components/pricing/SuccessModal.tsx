@@ -25,7 +25,7 @@ export default function SuccessModal({
   data,
 }: SuccessModalProps) {
   return (
-    <AlertDialog open={true} onOpenChange={(open) => !open && onClose()}>
+    <AlertDialog open={open} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogMedia>

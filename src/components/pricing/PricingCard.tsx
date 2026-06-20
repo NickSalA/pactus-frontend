@@ -26,16 +26,17 @@ export default function PricingCard({ plan, features }: PricingCardProps) {
   const [subscriptionResult, setSubscriptionResult] =
     useState<ApiBillingConfirmSubscriptionResponse | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const priceLabel = plan.billing === 'month' ? '/mes' : '/año';
   const isValidEmail = /^[^\s@]+@gmail\.com$/.test(email.trim());
 
-  const mutation = useConfirmPayPalSubscription({
+  const { mutate, isPending } = useConfirmPayPalSubscription({
     onSuccess: (data) => {
       setSubscriptionResult(data);
       setShowSuccess(true);
     },
     onError: (error) => {
-      console.error('Error al confirmar suscripción:', error);
+      setErrorMessage(error.message);
     },
   });
 
@@ -83,34 +84,52 @@ export default function PricingCard({ plan, features }: PricingCardProps) {
             placeholder="tu@correo.com"
             icon={<Mail size={16} />}
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrorMessage(null);
+            }}
           />
 
-          <div className={cn(!isValidEmail && 'pointer-events-none opacity-50')}>
-            <PayPalButtons
-              style={{
-                shape: 'rect',
-                color: 'gold',
-                label: 'subscribe',
-                height: 48,
-              }}
-              createSubscription={(data, actions) => {
-                return actions.subscription.create({
-                  plan_id: plan.planId,
-                  custom_id: email.trim(),
-                });
-              }}
-              onApprove={async (data) => {
-                mutation.mutate({
-                  subscription_id: data.subscriptionID ?? '',
-                  email: email.trim(),
-                });
-              }}
-              onError={(err) => {
-                console.error('Error en PayPal:', err);
-              }}
-            />
-          </div>
+          {isPending ? (
+            <div className="flex items-center justify-center py-6">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-primary border-t-transparent" />
+              <span className="ml-3 text-sm text-brand-neutral-600">
+                Confirmando suscripción...
+              </span>
+            </div>
+          ) : (
+            <div className={cn(!isValidEmail && 'pointer-events-none opacity-50', showSuccess && 'hidden')}>
+              <PayPalButtons
+                style={{
+                  shape: 'rect',
+                  color: 'gold',
+                  label: 'subscribe',
+                  height: 48,
+                }}
+                createSubscription={(data, actions) => {
+                  return actions.subscription.create({
+                    plan_id: plan.planId,
+                    custom_id: email.trim(),
+                  });
+                }}
+                onApprove={async (data) => {
+                  mutate({
+                    subscription_id: data.subscriptionID ?? '',
+                    email: email.trim(),
+                  });
+                }}
+                onError={(err) => {
+                  console.error('Error en PayPal:', err);
+                }}
+              />
+            </div>
+          )}
+
+          {errorMessage && (
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {errorMessage}
+            </div>
+          )}
         </CardFooter>
       </Card>
 
