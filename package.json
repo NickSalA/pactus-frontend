@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+produc    "@paypal/react-paypal-js": "^10.0.0",
     "@supabase/supabase-js": "^2.100.0",
     "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-query-devtools": "^5.100.10",
