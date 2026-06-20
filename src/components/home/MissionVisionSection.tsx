@@ -1,7 +1,7 @@
 import LandingSection from './shared/LandingSection';
 import SectionHeader from './shared/SectionHeader';
 import IconCard from './shared/IconCard';
-import { missionVisionItems } from './landingContent';
+import { missionVisionItems } from '@/lib/landingContent';
 
 export default function MissionVisionSection() {
   return (
