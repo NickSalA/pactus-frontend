@@ -5,7 +5,7 @@ export default function PricingGrid() {
   return (
     <section className="flex flex-col items-center">
       <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-brand-neutral-900 sm:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight text-brand-primary sm:text-5xl">
           Planes
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-brand-neutral-600">

@@ -60,7 +60,7 @@ export default function PricingCard({ plan, features }: PricingCardProps) {
             {plan.title}
           </p>
           <p className="mt-2">
-            <span className="text-5xl font-bold tracking-tight text-brand-neutral-900">
+            <span className="text-5xl font-bold tracking-tight text-brand-primary">
               ${plan.price}
             </span>
             <span className="ml-1 text-base text-brand-neutral-500">
