@@ -56,7 +56,7 @@ export default function PricingCard({ plan, features }: PricingCardProps) {
         ))}
       </CardContent>
 
-      <CardFooter className="flex-col gap-2 border-t pt-4">
+      <CardFooter className="w-full flex-col items-stretch gap-2 border-t p-4">
         <PayPalButtons
           style={{
             shape: 'rect',
