@@ -11,3 +11,4 @@ export * from './apiDashboard';
 export * from './apiIntegration';
 export * from './apiChat';
 export * from './apiAudit';
+export * from './apiBilling';
