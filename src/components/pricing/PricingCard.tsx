@@ -1,7 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import { Check } from 'lucide-react';
+import { Check, Mail } from 'lucide-react';
 import type { Plan } from '@/types/pricing';
 import {
   Card,
@@ -9,6 +10,7 @@ import {
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
+import { TextField } from '@/components/ui/TextField';
 import { cn } from '@/lib/utils';
 
 interface PricingCardProps {
@@ -17,7 +19,9 @@ interface PricingCardProps {
 }
 
 export default function PricingCard({ plan, features }: PricingCardProps) {
+  const [email, setEmail] = useState('');
   const priceLabel = plan.billing === 'month' ? '/mes' : '/año';
+  const isValidEmail = /^[^\s@]+@gmail\.com$/.test(email.trim());
 
   return (
     <Card
@@ -56,30 +60,45 @@ export default function PricingCard({ plan, features }: PricingCardProps) {
         ))}
       </CardContent>
 
-      <CardFooter className="w-full flex-col items-stretch gap-2 border-t p-4">
-        <PayPalButtons
-          style={{
-            shape: 'rect',
-            color: 'gold',
-            label: 'subscribe',
-            height: 48,
-          }}
-          createSubscription={(data, actions) => {
-            return actions.subscription.create({
-              plan_id: plan.planId,
-            });
-          }}
-          onApprove={async (data) => {
-            console.log('Suscripción aprobada:', data);
-            // TODO: Conectar con el backend
-            // POST /api/payments/subscribe
-            // Body: { subscriptionId: data.subscriptionID, planId: plan.planId }
-            // Persistir la suscripción en la base de datos
-          }}
-          onError={(err) => {
-            console.error('Error en PayPal:', err);
-          }}
+      <CardFooter className="w-full flex-col items-stretch gap-3 border-t p-4">
+        <TextField
+          type="email"
+          placeholder="tu@correo.com"
+          icon={<Mail size={16} />}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
+
+        <div className={cn(!isValidEmail && 'pointer-events-none opacity-50')}>
+          <PayPalButtons
+            style={{
+              shape: 'rect',
+              color: 'gold',
+              label: 'subscribe',
+              height: 48,
+            }}
+            createSubscription={(data, actions) => {
+              return actions.subscription.create({
+                plan_id: plan.planId,
+                custom_id: email.trim(),
+              });
+            }}
+            onApprove={async (data) => {
+              console.log('Suscripción aprobada:', {
+                subscriptionId: data.subscriptionID,
+                planId: plan.planId,
+                email: email.trim(),
+              });
+              // TODO: Conectar con el backend
+              // POST /api/payments/subscribe
+              // Body: { subscriptionId, planId, email }
+              // Persistir la suscripción en la base de datos
+            }}
+            onError={(err) => {
+              console.error('Error en PayPal:', err);
+            }}
+          />
+        </div>
       </CardFooter>
     </Card>
   );
