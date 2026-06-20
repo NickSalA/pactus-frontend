@@ -13,7 +13,7 @@ export default function PricingGrid() {
         </p>
       </div>
 
-      <div className="mt-12 flex flex-col items-center justify-center gap-8 lg:flex-row lg:items-stretch">
+      <div className="mt-12 flex w-full flex-col items-center justify-center gap-8 lg:flex-row lg:items-stretch">
         {plans.map((plan) => (
           <PricingCard key={plan.id} plan={plan} features={planFeatures} />
         ))}

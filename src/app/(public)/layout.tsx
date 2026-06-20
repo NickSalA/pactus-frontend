@@ -44,7 +44,7 @@ export default function PublicLayout({
       </header>
 
       <PayPalProvider>
-        <div className="mx-auto max-w-7xl px-6 py-14 sm:px-8 lg:px-10">
+        <div className="mx-auto w-full max-w-6xl px-6 py-14 sm:px-8 lg:px-10">
           {children}
         </div>
       </PayPalProvider>

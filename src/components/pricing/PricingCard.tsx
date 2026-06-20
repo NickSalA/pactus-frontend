@@ -3,7 +3,12 @@
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import { Check } from 'lucide-react';
 import type { Plan } from '@/types/pricing';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 interface PricingCardProps {
@@ -17,7 +22,7 @@ export default function PricingCard({ plan, features }: PricingCardProps) {
   return (
     <Card
       className={cn(
-        'relative flex w-full max-w-sm flex-col',
+        'relative flex w-full max-w-sm flex-col overflow-visible',
         plan.highlighted &&
           'ring-2 ring-brand-primary shadow-xl shadow-brand-primary/10',
       )}
