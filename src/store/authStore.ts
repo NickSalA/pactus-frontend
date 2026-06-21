@@ -6,6 +6,7 @@ interface AuthState {
   accessToken: string | null;
   isAuthenticated: boolean;
   isHydrating: boolean;
+  subscriptionActive: boolean | null;
   setAccessToken: (accessToken: string | null) => void;
   setHydrating: (isHydrating: boolean) => void;
   setUser: (user: AuthDisplayUser) => void;
@@ -18,6 +19,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   isAuthenticated: false,
   isHydrating: true,
+  subscriptionActive: null,
   setAccessToken: (accessToken) =>
     set((state) => ({
       accessToken,
@@ -31,6 +33,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       user,
       isAuthenticated: true,
       accessToken: state.accessToken,
+      subscriptionActive: user.subscriptionActive,
     })),
   setSession: (user, accessToken) =>
     set({
@@ -38,6 +41,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       accessToken,
       isAuthenticated: true,
       isHydrating: false,
+      subscriptionActive: user.subscriptionActive,
     }),
   logout: () =>
     set({
@@ -45,5 +49,6 @@ export const useAuthStore = create<AuthState>((set) => ({
       accessToken: null,
       isAuthenticated: false,
       isHydrating: false,
+      subscriptionActive: null,
     }),
 }));
