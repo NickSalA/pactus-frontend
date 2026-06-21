@@ -1,5 +1,6 @@
 export { sendMessage, getConversations, getConversationById, updateConversation, deleteConversation } from './chat';
 export { getCurrentUser } from './auth';
+export { confirmPayPalSubscription } from './billing';
 export {
   createDocumentFolder,
   createServiceCatalogItem,

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { Sparkles } from 'lucide-react';
 import FeaturePill from './shared/FeaturePill';
 import CtaButton from './shared/CtaButton';
-import { heroHighlights } from './landingContent';
+import { heroHighlights } from '@/lib/landingContent';
 
 export default function HeroSection() {
   return (

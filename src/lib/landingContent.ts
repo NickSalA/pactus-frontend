@@ -26,6 +26,7 @@ export const navItems = [
   { href: '#capacidades', label: 'Capacidades' },
   { href: '#ia-rag', label: 'IA RAG' },
   { href: '#contacto', label: 'Contacto' },
+  { href: '/pricing', label: 'Planes' },
 ] as const;
 
 export const heroHighlights = [
@@ -154,6 +155,7 @@ export const contactItems = [
 
 export const footerLinks = [
   { href: '/login', label: 'Iniciar sesión' },
+  { href: '/pricing', label: 'Planes' },
   { href: '/privacy-policy', label: 'Política de Privacidad' },
   { href: '/terms-of-service', label: 'Términos de Servicio' },
 ];

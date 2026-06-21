@@ -11,6 +11,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.76.0(react@19.2.3))
+      '@paypal/react-paypal-js':
+        specifier: ^10.0.0
+        version: 10.0.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@supabase/supabase-js':
         specifier: ^2.100.0
         version: 2.105.4
@@ -732,6 +735,18 @@ packages:
 
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
+
+  '@paypal/paypal-js@10.0.0':
+    resolution: {integrity: sha512-IOAA8Ls7A5WXH8vV8Lbh+QTyVsQWbmqzCMvNFmGO/56D+7i5OMXhjzG2Qhz0WHSiVe+IutqJMWPX2dHJXA7Kgw==}
+
+  '@paypal/react-paypal-js@10.0.0':
+    resolution: {integrity: sha512-65ry+7rJE2sjwPGrW2pSPM8ye2pYxIFO/DpAd0QfkJ56FHc281paAHc5OTg/cZf88UUXkn7hltLDZ60CRfjIrQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+      react-dom: ^16.8.0 || ^17 || ^18 || ^19
+
+  '@paypal/sdk-constants@1.0.158':
+    resolution: {integrity: sha512-OrX2kN4gsBl6fG1GS1ewsNk7TTqYmdtUMVaJ+wAzPhsv9M7dfni95WuJdt4pMALOo5ioZeJ05a16BUSca5IC+Q==}
 
   '@pnpm/config.env-replace@1.1.0':
     resolution: {integrity: sha512-htyl8TWnKL7K/ESFa1oW2UB5lVDxuF5DpM7tBi6Hu2LNL3mWkIzNLG6N4zoCUP1lCKNxWy/3iu8mS8MvToGd6w==}
@@ -3074,6 +3089,9 @@ packages:
   hermes-parser@0.25.1:
     resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
 
+  hi-base32@0.5.1:
+    resolution: {integrity: sha512-EmBBpvdYh/4XxsnUybsPag6VikPYnN30td+vQk+GI3qpahVEG9+gTkG0aXVxTjBqQ5T6ijbWIu77O+C5WFWsnA==}
+
   highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
 
@@ -4296,6 +4314,9 @@ packages:
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
 
+  promise-polyfill@8.3.0:
+    resolution: {integrity: sha512-H5oELycFml5yto/atYqmjyigJoAo3+OXwolYiH7OfQuYlAqhxNvTfiNMbV9hsC6Yp83yE5r2KTVmtrG6R9i6Pg==}
+
   prompts@2.4.2:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
     engines: {node: '>= 6'}
@@ -4577,6 +4598,9 @@ packages:
   serve-static@2.2.1:
     resolution: {integrity: sha512-xRXBn0pPqQTVQiC8wyQrKs2MOlX24zQ0POGaj0kultvoOCstBQM5yvOhAVSUwOMjQtTvsPWoNCHfPGwaaQJhTw==}
     engines: {node: '>= 18'}
+
+  server-only@0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
 
   set-cookie-parser@3.1.0:
     resolution: {integrity: sha512-kjnC1DXBHcxaOaOXBHBeRtltsDG2nUiUni+jP92M9gYdW12rsmx92UsfpH7o5tDRs7I1ZZPSQJQGv3UaRfCiuw==}
@@ -5868,6 +5892,22 @@ snapshots:
       outvariant: 1.4.3
 
   '@open-draft/until@2.1.0': {}
+
+  '@paypal/paypal-js@10.0.0':
+    dependencies:
+      promise-polyfill: 8.3.0
+
+  '@paypal/react-paypal-js@10.0.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+    dependencies:
+      '@paypal/paypal-js': 10.0.0
+      '@paypal/sdk-constants': 1.0.158
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+      server-only: 0.0.1
+
+  '@paypal/sdk-constants@1.0.158':
+    dependencies:
+      hi-base32: 0.5.1
 
   '@pnpm/config.env-replace@1.1.0': {}
 
@@ -8446,6 +8486,8 @@ snapshots:
     dependencies:
       hermes-estree: 0.25.1
 
+  hi-base32@0.5.1: {}
+
   highlight.js@10.7.3: {}
 
   hono@4.12.18: {}
@@ -9718,6 +9760,8 @@ snapshots:
 
   process-nextick-args@2.0.1: {}
 
+  promise-polyfill@8.3.0: {}
+
   prompts@2.4.2:
     dependencies:
       kleur: 3.0.3
@@ -10159,6 +10203,8 @@ snapshots:
       send: 1.2.1
     transitivePeerDependencies:
       - supports-color
+
+  server-only@0.0.1: {}
 
   set-cookie-parser@3.1.0: {}
 

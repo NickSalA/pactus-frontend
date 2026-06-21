@@ -2,7 +2,7 @@
 
 import { Handshake } from 'lucide-react';
 import Link from 'next/link';
-import { navItems } from './landingContent';
+import { navItems } from '@/lib/landingContent';
 import { useSmoothScroll } from './shared/useSmoothScroll';
 
 export default function Navbar() {
@@ -25,7 +25,11 @@ export default function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              onClick={(event) => scrollToSection(event, item.href)}
+              onClick={(event) => {
+                if (item.href.startsWith('#')) {
+                  scrollToSection(event, item.href);
+                }
+              }}
               className="rounded-full px-3 py-2 transition-colors hover:bg-brand-blue-50 hover:text-brand-primary"
             >
               {item.label}
