@@ -16,6 +16,7 @@ export type AuthDisplayUser = {
   email: string;
   role: ApiUserRole | string;
   avatarUrl: string | null;
+  subscriptionActive: boolean;
 };
 
 const ROLE_LABELS: Record<ApiUserRole, string> = {
@@ -81,6 +82,7 @@ export const mapSupabaseUserToAuthUser = (
     email,
     role: 'WORKER',
     avatarUrl: metadata.avatar_url || null,
+    subscriptionActive: true,
   };
 };
 
@@ -94,6 +96,7 @@ export const mapBackendUserToAuthUser = (
   email: user.email,
   role: user.role,
   avatarUrl: user.avatar_url || null,
+  subscriptionActive: user.subscription_active ?? true,
 });
 
 export const resolveSessionUser = async (
