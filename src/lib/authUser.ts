@@ -96,7 +96,7 @@ export const mapBackendUserToAuthUser = (
   email: user.email,
   role: user.role,
   avatarUrl: user.avatar_url || null,
-  subscriptionActive: user.subscription_active ?? true,
+  subscriptionActive: user.subscription_active ?? false,
 });
 
 export const resolveSessionUser = async (
