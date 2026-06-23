@@ -1,3 +1,37 @@
+# [2.4.0](https://github.com/NickSalA/pactus-frontend/compare/v2.3.0...v2.4.0) (2026-06-23)
+
+
+### Bug Fixes
+
+* **axios:** guard SSR window access and reject on 402 instead of hanging promise ([a889862](https://github.com/NickSalA/pactus-frontend/commit/a889862e3aaecd9193fc8aff6c466fff7bcc9599))
+* **login:** ensure logout is called even if supabase signOut fails ([b69e93a](https://github.com/NickSalA/pactus-frontend/commit/b69e93ae974dbf3c614be2f71c10e42c3f2039d6))
+* **package:** correct formatting of @paypal/react-paypal-js dependency ([e287970](https://github.com/NickSalA/pactus-frontend/commit/e287970b184b549a8778575764c48b908c743102))
+* **pricing:** adjust CardFooter styling for better layout consistency ([bdd2720](https://github.com/NickSalA/pactus-frontend/commit/bdd272067d24e9587e877db11122e55c5dd3baa6))
+
+
+### Features
+
+* **api:** redirect to pricing on 402 Payment Required response ([8ff0596](https://github.com/NickSalA/pactus-frontend/commit/8ff0596b42c2905c5bd0c5f4ce3fcd89df602ee7))
+* **auth:** add subscriptionActive to AuthDisplayUser and update mappers ([2828271](https://github.com/NickSalA/pactus-frontend/commit/282827158c82a38da68259d2c515e95c3f461dd9))
+* **auth:** connect subscription_active from backend response ([81ff1a4](https://github.com/NickSalA/pactus-frontend/commit/81ff1a40c18a317c0c13492011894cb4e17e293e))
+* **billing:** add subscription status response type ([9be3867](https://github.com/NickSalA/pactus-frontend/commit/9be38670d3d42aa743acc01c4ceda1ee7714b991))
+* **billing:** export subscription status response type ([a5aafa3](https://github.com/NickSalA/pactus-frontend/commit/a5aafa35a125bd7ade26feb22b3dc4612b8f11b8))
+* **dependencies:** add @paypal/react-paypal-js for PayPal integration ([e13c5ad](https://github.com/NickSalA/pactus-frontend/commit/e13c5ad8c5827ec51445500fba5a7e2fce49adb2))
+* **layout:** wrap main layout with PaywallGuard ([f65c7f1](https://github.com/NickSalA/pactus-frontend/commit/f65c7f1ac6b5498db67c46b2e2688529f533db54))
+* **login:** add switch account option on active session ([5b3cfaa](https://github.com/NickSalA/pactus-frontend/commit/5b3cfaa7e44ea6d69c63a28fee0c75d7cc2cc609))
+* **payments:** implement PayPal subscription confirmation flow and add success modal ([da1596e](https://github.com/NickSalA/pactus-frontend/commit/da1596eec87a383752bec09ca4e718c5d3499495))
+* **payments:** integrate PayPal subscription flow and update content imports ([55fba0e](https://github.com/NickSalA/pactus-frontend/commit/55fba0e5e7ee84bcdb46ac5c8ae4584c76618fc9))
+* **paywall:** add PaywallGuard component to redirect inactive subscriptions ([fdfc811](https://github.com/NickSalA/pactus-frontend/commit/fdfc811ed8477a0f0d64975e1cee553bc8561343))
+* **pricing:** adjust layout and improve responsiveness for PayPal integration ([f201ac2](https://github.com/NickSalA/pactus-frontend/commit/f201ac2e46e38cf5f91c0951554d3006670be148))
+* **pricing:** enhance PricingCard with email input and integrate PayPal subscription flow ([5226dcb](https://github.com/NickSalA/pactus-frontend/commit/5226dcb58aec097f6250eb9dfd41c07636ab441d))
+* **pricing:** enhance PricingCard with error handling and loading state for PayPal subscription ([ccf8c45](https://github.com/NickSalA/pactus-frontend/commit/ccf8c45d4532f2bb1b4cef13f0c1a93f90ef39bd))
+* **pricing:** update text color for PricingCard and PricingGrid headings to enhance visual consistency ([c8053cc](https://github.com/NickSalA/pactus-frontend/commit/c8053ccf57ada8d2578f74b30f352f41e4fcbc9b))
+* **store:** add subscriptionActive state to authStore ([fd5de2c](https://github.com/NickSalA/pactus-frontend/commit/fd5de2cfa470db0cf502cd94e31e95908dd59f62))
+* **types:** add optional subscription_active field to User type ([9379dc1](https://github.com/NickSalA/pactus-frontend/commit/9379dc15c0740176eb387d044bd251a438e8eace))
+* **types:** make subscription_active required in User type ([49f89bd](https://github.com/NickSalA/pactus-frontend/commit/49f89bd9c261cef2bbf2839cb1b7a0aaf187ef16))
+* **users:** add optional subscription_active field to ApiUserResponse ([ffcd5bb](https://github.com/NickSalA/pactus-frontend/commit/ffcd5bbf7f8ebb5ffea0986143bfd53e956daab7))
+* **users:** make subscription_active required in ApiUserResponse ([3d7d842](https://github.com/NickSalA/pactus-frontend/commit/3d7d842cc9dcb34c8cae3456ac3ff85e499faf05))
+
 # [2.3.0](https://github.com/NickSalA/pactus-frontend/compare/v2.2.0...v2.3.0) (2026-06-16)
 
 
