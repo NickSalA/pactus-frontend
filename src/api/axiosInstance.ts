@@ -37,8 +37,10 @@ axiosInstance.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response?.status === 402) {
-      window.location.replace('/pricing');
-      return new Promise(() => {});
+      if (typeof window !== 'undefined') {
+        window.location.replace('/pricing');
+      }
+      return Promise.reject(error);
     }
     const message = parseErrorMessage(error);
     return Promise.reject(new Error(message));
