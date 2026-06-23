@@ -36,6 +36,12 @@ axiosInstance.interceptors.response.use(
     return response.data;
   },
   (error: AxiosError) => {
+    if (error.response?.status === 402) {
+      if (typeof window !== 'undefined') {
+        window.location.replace('/pricing');
+      }
+      return Promise.reject(error);
+    }
     const message = parseErrorMessage(error);
     return Promise.reject(new Error(message));
   },

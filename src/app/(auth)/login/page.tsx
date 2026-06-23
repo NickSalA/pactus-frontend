@@ -21,7 +21,7 @@ type AuthUserPreview = {
 
 export default function LoginPage() {
   const router = useRouter();
-  const { isHydrating, user } = useAuthStore();
+  const { isHydrating, user, logout } = useAuthStore();
 
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +41,14 @@ export default function LoginPage() {
         role: user.role,
       }
     : null;
+
+  const handleSwitchAccount = async () => {
+    try {
+      await supabase.auth.signOut();
+    } finally {
+      logout();
+    }
+  };
 
   const handleGoogleLogin = async () => {
     try {
@@ -317,6 +325,13 @@ export default function LoginPage() {
                       d="M13 7l5 5m0 0l-5 5m5-5H6"
                     />
                   </svg>
+                </button>
+
+                <button
+                  onClick={handleSwitchAccount}
+                  className="mt-3 w-full text-center text-sm text-slate-400 underline underline-offset-4 transition-colors hover:text-slate-600"
+                >
+                  Iniciar sesión con otra cuenta
                 </button>
               </div>
             )}
