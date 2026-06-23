@@ -43,8 +43,11 @@ export default function LoginPage() {
     : null;
 
   const handleSwitchAccount = async () => {
-    await supabase.auth.signOut();
-    logout();
+    try {
+      await supabase.auth.signOut();
+    } finally {
+      logout();
+    }
   };
 
   const handleGoogleLogin = async () => {
