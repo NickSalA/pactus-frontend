@@ -1,7 +1,7 @@
 import LandingSection from './shared/LandingSection';
 import SectionHeader from './shared/SectionHeader';
 import IconCard from './shared/IconCard';
-import { aboutHighlights } from './landingContent';
+import { aboutHighlights } from '@/lib/landingContent';
 
 export default function AboutSection() {
   return (

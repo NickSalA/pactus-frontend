@@ -1,7 +1,7 @@
 import LandingSection from './shared/LandingSection';
 import SectionHeader from './shared/SectionHeader';
 import IconCard from './shared/IconCard';
-import { capabilities } from './landingContent';
+import { capabilities } from '@/lib/landingContent';
 
 export default function CapabilitiesSection() {
   return (

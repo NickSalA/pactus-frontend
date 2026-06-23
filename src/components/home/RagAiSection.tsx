@@ -1,5 +1,5 @@
 import LandingSection from './shared/LandingSection';
-import { ragFlow, ragFeatures } from './landingContent';
+import { ragFlow, ragFeatures } from '@/lib/landingContent';
 
 export default function RagAiSection() {
   return (

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import BrandMark from './shared/BrandMark';
-import { contactItems, footerLinks } from './landingContent';
+import { contactItems, footerLinks } from '@/lib/landingContent';
 
 export default function ContactFooter() {
   return (

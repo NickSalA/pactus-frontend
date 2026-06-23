@@ -12,4 +12,5 @@ export interface ApiUserResponse {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  subscription_active: boolean;
 }

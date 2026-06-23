@@ -1,6 +1,3 @@
-// src/types/api.types.ts
-// Tipos TypeScript para la API de ContractIA
-
 import {
   ApiDocumentCompanyContractRequest,
   ApiDocumentLaborContractResponse,
@@ -25,6 +22,7 @@ export interface User {
   is_active?: boolean;
   created_at?: string;
   updated_at?: string;
+  subscription_active: boolean;
 }
 
 export type OrganizationMember = User;
