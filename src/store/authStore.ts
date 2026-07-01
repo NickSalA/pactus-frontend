@@ -9,7 +9,7 @@ interface AuthState {
   subscriptionActive: boolean | null;
   setAccessToken: (accessToken: string | null) => void;
   setHydrating: (isHydrating: boolean) => void;
-  setSubscriptionActive: (subscriptionActive: boolean) => void;
+  setSubscriptionActive: (subscriptionActive: boolean | null) => void;
   setUser: (user: AuthDisplayUser) => void;
   setSession: (user: AuthDisplayUser, accessToken: string | null) => void;
   logout: () => void;
