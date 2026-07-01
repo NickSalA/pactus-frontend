@@ -5,6 +5,7 @@ import axios, {
 } from 'axios';
 import { getApiBaseUrl } from './constants';
 import { getAccessToken } from './token-store';
+import { useAuthStore } from '@/store';
 
 const parseErrorMessage = (error: AxiosError): string => {
   if (error.response?.data && typeof error.response.data === 'object') {
@@ -36,9 +37,10 @@ axiosInstance.interceptors.response.use(
     return response.data;
   },
   (error: AxiosError) => {
-    if (error.response?.status === 402) {
-      if (typeof window !== 'undefined') {
-        window.location.replace('/pricing');
+    if (error.response?.status === 403) {
+      const { isAuthenticated, setSubscriptionActive } = useAuthStore.getState();
+      if (isAuthenticated) {
+        setSubscriptionActive(false);
       }
       return Promise.reject(error);
     }
