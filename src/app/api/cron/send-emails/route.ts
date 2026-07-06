@@ -31,6 +31,7 @@ export async function GET(request: Request) {
       headers: {
         "Content-Type": "application/json",
         "X-Cron-Secret": cronSecret,
+        "X-App-Secret": process.env.BACKEND_CLIENT_API_KEY || "",
       },
     });
 
