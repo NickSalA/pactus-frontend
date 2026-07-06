@@ -1,3 +1,16 @@
+# [2.5.0](https://github.com/NickSalA/pactus-frontend/compare/v2.4.0...v2.5.0) (2026-07-06)
+
+
+### Bug Fixes
+
+* **auth:** update setSubscriptionActive to accept null value ([7247d4f](https://github.com/NickSalA/pactus-frontend/commit/7247d4f733adb05728d8dfed951e17fb42cf895b))
+* **auth:** update subscription state on 403 error response ([80a5e0b](https://github.com/NickSalA/pactus-frontend/commit/80a5e0b2095b709d822ceebc8b2663a641e350c2))
+
+
+### Features
+
+* **audit:** add AI token usage tracking and reporting functionality ([1536380](https://github.com/NickSalA/pactus-frontend/commit/1536380d4fd325d507c0beb53c3505a427492b12))
+
 # [2.4.0](https://github.com/NickSalA/pactus-frontend/compare/v2.3.0...v2.4.0) (2026-06-23)
 
 
