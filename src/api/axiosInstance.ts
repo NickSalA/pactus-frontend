@@ -23,6 +23,13 @@ export const axiosInstance: AxiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    if (typeof window === 'undefined') {
+      const apiKey = process.env.BACKEND_CLIENT_API_KEY;
+      if (apiKey) {
+        config.headers['X-App-Secret'] = apiKey;
+      }
+    }
+
     const token = await getAccessToken();
     if (token && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${token}`;

@@ -29,6 +29,9 @@ export async function GET(request: Request) {
     const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, "");
     const response = await fetch(`${baseUrl}/`, {
       method: "GET",
+      headers: {
+        "X-App-Secret": process.env.BACKEND_CLIENT_API_KEY || "",
+      },
       signal: controller.signal,
     });
 
