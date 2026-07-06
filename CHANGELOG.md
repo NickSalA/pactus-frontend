@@ -1,3 +1,12 @@
+# [2.6.0](https://github.com/NickSalA/pactus-frontend/compare/v2.5.0...v2.6.0) (2026-07-06)
+
+
+### Features
+
+* Add X-App-Secret header to API routes and server-side requests ([#29](https://github.com/NickSalA/pactus-frontend/issues/29)) ([c2f2b47](https://github.com/NickSalA/pactus-frontend/commit/c2f2b47f840a61b93b0bcf981d332d76a2eef1ad))
+* **api:** add X-App-Secret header to cron email and warmup routes ([701ccc5](https://github.com/NickSalA/pactus-frontend/commit/701ccc5709f42fafe30fe821870ccb71bb76b15e))
+* **api:** add X-App-Secret header to server-side requests using environment variable ([808c8b5](https://github.com/NickSalA/pactus-frontend/commit/808c8b545ff645050efb3cd6b7f5710a467bb13e))
+
 # [2.5.0](https://github.com/NickSalA/pactus-frontend/compare/v2.4.0...v2.5.0) (2026-07-06)
 
 
