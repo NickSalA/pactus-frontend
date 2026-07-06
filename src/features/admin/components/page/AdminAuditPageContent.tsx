@@ -6,6 +6,7 @@ import { AdminAuditUsersTable } from '@/features/admin/components/tables/AdminAu
 import { AdminAuditChatbotTable } from '@/features/admin/components/tables/AdminAuditChatbotTable';
 import { AdminAuditTemplatesTable } from '@/features/admin/components/tables/AdminAuditTemplatesTable';
 import { AdminAuditContractsTable } from '@/features/admin/components/tables/AdminAuditContractsTable';
+import { AdminAuditAITokenUsageTable } from '@/features/admin/components/tables/AdminAuditAITokenUsageTable';
 import { PageHeader } from '@/components/ui/PageHeader';
 
 const AUDIT_TABS = [
@@ -13,6 +14,7 @@ const AUDIT_TABS = [
   { id: 'chatbot' as const, label: 'Actividad de Chatbot' },
   { id: 'contracts' as const, label: 'Contratos' },
   { id: 'templates' as const, label: 'Plantillas' },
+  { id: 'ai-usage' as const, label: 'Consumo de IA' },
 ];
 
 export function AdminAuditPageContent() {
@@ -75,6 +77,9 @@ export function AdminAuditPageContent() {
       )}
       {page.activeTab === 'templates' && (
         <AdminAuditTemplatesTable items={page.templates} />
+      )}
+      {page.activeTab === 'ai-usage' && (
+        <AdminAuditAITokenUsageTable items={page.aiUsage} />
       )}
     </div>
   );

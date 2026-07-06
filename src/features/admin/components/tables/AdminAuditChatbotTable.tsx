@@ -1,59 +1,11 @@
-import { ArrowDown, ArrowUp } from 'lucide-react';
 import type { ApiAuditChatbotActivityResponse } from '@/types/api';
 import { AuditChatbotUserInfo } from '@/features/admin/components/ui/AuditChatbotUserInfo';
-import { CHATBOT_ACTION_LABELS, CHATBOT_ACTION_COLORS, formatNumber, formatCost } from '@/features/admin/lib/auditUtils';
+import { AdminAuditFormattedDate as FormattedDate } from '@/features/admin/components/ui/AdminAuditFormattedDate';
+import { CHATBOT_ACTION_LABELS, CHATBOT_ACTION_COLORS } from '@/features/admin/lib/auditUtils';
 
 type AdminAuditChatbotTableProps = {
   items: ApiAuditChatbotActivityResponse[];
 };
-
-function TokensCell({
-  input_tokens,
-  input_cost_usd,
-  output_tokens,
-  output_cost_usd,
-}: Pick<
-  ApiAuditChatbotActivityResponse,
-  'input_tokens' | 'input_cost_usd' | 'output_tokens' | 'output_cost_usd'
->) {
-  return (
-    <div className="flex flex-col gap-1 text-xs">
-      <span className="flex items-center gap-1.5 text-slate-600">
-        <ArrowUp className="h-3 w-3 text-emerald-500" />
-        <span className="font-medium text-slate-900">
-          {formatNumber(input_tokens)}
-        </span>
-        <span className="text-slate-400">
-          (${formatCost(input_cost_usd)})
-        </span>
-      </span>
-      <span className="flex items-center gap-1.5 text-slate-600">
-        <ArrowDown className="h-3 w-3 text-blue-500" />
-        <span className="font-medium text-slate-900">
-          {formatNumber(output_tokens)}
-        </span>
-        <span className="text-slate-400">
-          (${formatCost(output_cost_usd)})
-        </span>
-      </span>
-    </div>
-  );
-}
-
-function FormattedDate({ date }: { date: string }) {
-  const d = new Date(date);
-  return (
-    <span className="text-sm text-slate-500">
-      {d.toLocaleDateString('es-ES', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      })}
-    </span>
-  );
-}
 
 export function AdminAuditChatbotTable({
   items,
@@ -85,8 +37,7 @@ export function AdminAuditChatbotTable({
                     <th className="px-6 py-4">Usuario</th>
                     <th className="px-6 py-4">Acción</th>
                     <th className="px-6 py-4">Conversación</th>
-                    <th className="px-6 py-4">Modelo</th>
-                    <th className="px-6 py-4">Tokens</th>
+                    <th className="px-6 py-4">Fecha</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200/80 bg-white text-sm text-slate-700">
@@ -112,21 +63,7 @@ export function AdminAuditChatbotTable({
                         {item.conversation_title ?? '—'}
                       </td>
                       <td className="px-6 py-4">
-                        {item.model_used ? (
-                          <span className="inline-flex rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
-                            {item.model_used}
-                          </span>
-                        ) : (
-                          <span className="text-sm text-slate-400">—</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4">
-                        <TokensCell
-                          input_tokens={item.input_tokens}
-                          input_cost_usd={item.input_cost_usd}
-                          output_tokens={item.output_tokens}
-                          output_cost_usd={item.output_cost_usd}
-                        />
+                        <FormattedDate date={item.created_at} />
                       </td>
                     </tr>
                   ))}

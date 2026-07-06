@@ -5,11 +5,20 @@ import type {
   ApiAuditChatbotActivityListResponse,
   ApiAuditTemplateActivityListResponse,
   ApiAuditContractActivityListResponse,
+  ApiAuditAITokenUsageListResponse,
+  ApiAuditAITokenUsageSource,
 } from '@/types/api';
 
 export type AuditQueryParams = {
   limit?: number;
   offset?: number;
+};
+
+export type AITokenUsageQueryParams = AuditQueryParams & {
+  user_id?: number;
+  source?: ApiAuditAITokenUsageSource;
+  start_date?: string;
+  end_date?: string;
 };
 
 export async function listUserActivity(
@@ -43,6 +52,15 @@ export async function listContractActivity(
   params: AuditQueryParams = {},
 ): Promise<ApiAuditContractActivityListResponse> {
   return apiGet<ApiAuditContractActivityListResponse>('/audit/contracts', {
+    params,
+    timeout: TIMEOUTS.DEFAULT,
+  });
+}
+
+export async function listAITokenUsage(
+  params: AITokenUsageQueryParams = {},
+): Promise<ApiAuditAITokenUsageListResponse> {
+  return apiGet<ApiAuditAITokenUsageListResponse>('/audit/ai-usage', {
     params,
     timeout: TIMEOUTS.DEFAULT,
   });
