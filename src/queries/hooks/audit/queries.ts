@@ -4,7 +4,9 @@ import {
   listChatbotActivity,
   listTemplateActivity,
   listContractActivity,
+  listAITokenUsage,
   type AuditQueryParams,
+  type AITokenUsageQueryParams,
 } from '@/api';
 
 const AUDIT_KEY = ['audit'] as const;
@@ -31,4 +33,10 @@ export const useContractActivity = (params: AuditQueryParams = {}) =>
   useQuery({
     queryKey: [...AUDIT_KEY, 'contracts', params] as const,
     queryFn: () => listContractActivity(params),
+  });
+
+export const useAITokenUsage = (params: AITokenUsageQueryParams = {}) =>
+  useQuery({
+    queryKey: [...AUDIT_KEY, 'ai-usage', params] as const,
+    queryFn: () => listAITokenUsage(params),
   });

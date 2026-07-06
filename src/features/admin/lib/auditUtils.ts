@@ -3,6 +3,7 @@ import type {
   ApiAuditChatbotActivityAction,
   ApiAuditTemplateActivityAction,
   ApiAuditContractActivityAction,
+  ApiAuditAITokenUsageSource,
 } from '@/types/api';
 
 export const USER_ACTION_LABELS: Record<ApiAuditUserActivityAction, string> = {
@@ -65,15 +66,17 @@ export const CONTRACT_ACTION_COLORS: Record<ApiAuditContractActivityAction, stri
   DELETED: 'bg-red-100 text-red-700',
 };
 
-export function formatUsd(value: number | null): string {
-  if (value === null || value === undefined) return '—';
-  return value.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 4,
-    maximumFractionDigits: 6,
-  });
-}
+export const AI_TOKEN_SOURCE_LABELS: Record<ApiAuditAITokenUsageSource, string> = {
+  CHATBOT: 'Chatbot',
+  TEMPLATES: 'Plantillas',
+  INTEGRATIONS: 'Integraciones',
+};
+
+export const AI_TOKEN_SOURCE_COLORS: Record<ApiAuditAITokenUsageSource, string> = {
+  CHATBOT: 'bg-violet-100 text-violet-700',
+  TEMPLATES: 'bg-amber-100 text-amber-700',
+  INTEGRATIONS: 'bg-sky-100 text-sky-700',
+};
 
 export function formatNumber(value: number | null): string {
   if (value === null || value === undefined) return '—';
@@ -86,3 +89,5 @@ export function formatCost(value: number | string | null | undefined): string {
   if (isNaN(num)) return '—';
   return num.toFixed(10).replace(/\.?0+$/, '');
 }
+
+

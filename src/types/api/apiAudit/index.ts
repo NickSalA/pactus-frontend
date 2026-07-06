@@ -10,3 +10,6 @@ export type { ApiAuditUserActivityListResponse } from './apiAuditUserActivityLis
 export type { ApiAuditChatbotActivityListResponse } from './apiAuditChatbotActivityListResponse';
 export type { ApiAuditTemplateActivityListResponse } from './apiAuditTemplateActivityListResponse';
 export type { ApiAuditContractActivityListResponse } from './apiAuditContractActivityListResponse';
+export type { ApiAuditAITokenUsageSource } from './apiAuditAITokenUsageSource';
+export type { ApiAuditAITokenUsageResponse } from './apiAuditAITokenUsageResponse';
+export type { ApiAuditAITokenUsageListResponse } from './apiAuditAITokenUsageListResponse';

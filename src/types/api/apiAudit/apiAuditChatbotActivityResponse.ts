@@ -8,12 +8,5 @@ export interface ApiAuditChatbotActivityResponse {
   actor_role: string;
   action: ApiAuditChatbotActivityAction;
   conversation_title: string | null;
-  input_tokens: number | null;
-  output_tokens: number | null;
-  total_tokens: number | null;
-  input_cost_usd: number | null;
-  output_cost_usd: number | null;
-  total_cost_usd: number | null;
-  model_used: string | null;
   created_at: string;
 }
